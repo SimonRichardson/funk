@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jasmine Spec Runner</title>
+    <meta charset="utf-8" />
+
+    <!-- Jasmine -->
+    <link rel="shortcut icon" type="image/png" href="../../lib/jasmine-1.2.0.rc3/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="../../lib/jasmine-1.2.0.rc3/jasmine.css">
+
+    <script type="text/javascript" src="../../lib/jasmine-1.2.0.rc3/jasmine.js"></script>
+    <script type="text/javascript" src="../../lib/jasmine-1.2.0.rc3/jasmine-html.js"></script>
+
+    <!-- include source files here... -->
+    <script type="text/javascript" src="../../src/main/js/funk/funk.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/error/ArgumentError.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/error/NoSuchElementError.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/error/RangeError.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/error/TypeError.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/util/eq.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/util/isAbstract.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/util/ne.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/util/require.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/util/verifyType.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/Product.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/ProductIterator.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/option/Option.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/option/None.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/option/Some.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/Wildcard.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/collections/Iterator.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/collections/List.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/collections/Nil.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/collections/NilIterator.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/collections/Range.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/collections/toList.js"></script>
+    <script type="text/javascript" src="../../src/main/js/funk/collections/util/Iterator.js"></script>
+
+    <!-- include custom matchers files here... -->
+    <script type="text/javascript" src="js/matchers/StrictEquality.js"></script>
+    <script type="text/javascript" src="js/matchers/TypeEquality.js"></script>
+
+    <!-- include custom test utility files here... -->
+    <script type="text/javascript" src="js/utils/fail.js"></script>
+    <script type="text/javascript" src="js/utils/indentity.js"></script>
+    <script type="text/javascript" src="js/utils/mapTrue.js"></script>
+    <script type="text/javascript" src="js/utils/mapFalse.js"></script>
+
+    <!-- include test files here... -->
+    <script type="text/javascript" src="js/funk/collections/TestNil.js"></script>
+    <script type="text/javascript" src="js/funk/option/TestNone.js"></script>
+    <script type="text/javascript" src="js/funk/option/TestSome.js"></script>
+    <script type="text/javascript" src="js/funk/TestWildcard.js"></script>
+
+    <script type="text/javascript">
+        (function() {
+            var jasmineEnv = jasmine.getEnv();
+            jasmineEnv.updateInterval = 1000;
+
+            var htmlReporter = new jasmine.HtmlReporter();
+
+            jasmineEnv.addReporter(htmlReporter);
+
+            jasmineEnv.specFilter = function(spec) {
+                return htmlReporter.specFilter(spec);
+            };
+
+            var currentWindowOnload = window.onload;
+
+            window.onload = function() {
+                if (currentWindowOnload) {
+                    currentWindowOnload();
+                }
+                execJasmine();
+            };
+
+            function execJasmine() {
+                jasmineEnv.execute();
+            }
+
+        })();
+    </script>
+
+</head>
+
+<body>
+</body>
+</html>
