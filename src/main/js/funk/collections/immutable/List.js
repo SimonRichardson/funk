@@ -1,6 +1,26 @@
 funk.collection = funk.collection || {};
 funk.collection.immutable = funk.collection.immutable || {};
 funk.collection.immutable.List = (function(){
+    var makeString = function(list, separator){
+        var total = this.size(),
+            last = total - 1,
+            buffer = "",
+            p = list,
+            i = 0;
+
+        for(i=0; i<total; ++i){
+            buffer += p.head();
+
+            if(i < last){
+                buffer += separator;
+            }
+
+            p = p.tail();
+        }
+
+        return buffer;
+    };
+
     var ListImpl = function(head, tail){
         this._head = funk.option.some(head);
         this._tail = tail;
@@ -389,8 +409,8 @@ funk.collection.immutable.List = (function(){
             }
         }
 
-        return tuple2(  m > 0 ? left[0] : funk.collection.immutable.nil(),
-                        o > 0 ? right[0] : funk.collection.immutable.nil());
+        return funk.tuple.tuple2(m > 0 ? left[0] : funk.collection.immutable.nil(),
+                                 o > 0 ? right[0] : funk.collection.immutable.nil());
     };
     ListImpl.prototype.reduceLeft = function(func){
         var value = this.head();
@@ -497,6 +517,156 @@ funk.collection.immutable.List = (function(){
         }
 
         return buffer[0];
+    };
+    ListImpl.prototype.toArray = function(){
+        var total = this.size(),
+            array = [],
+            p = this,
+            i = 0;
+        for(i=0; i<total; i++){
+            array[i] = p.head();
+            p = p.tail();
+        }
+        return array;
+    };
+    ListImpl.prototype.zip = function(value){
+        var total = Math.min(this.size(), value.size()),
+            last = total - 1,
+            buffer = [],
+            i = 0,
+            j = 0;
+
+        var p = this,
+            q = value;
+
+        for(i=0; i<total; ++i){
+            buffer[i] = new this._newListCtor(funk.tuple.tuple2(p.head(), q.head()), null);
+            p = p.tail();
+            q = q.tail();
+        }
+
+        buffer[last]._tail = funk.collection.immutable.nil();
+
+        for(i=0, j=1; i<last; ++i, ++j){
+            buffer[i]._tail = buffer[j];
+        }
+
+        return buffer[0];
+    };
+    ListImpl.prototype.zipWithIndex = function(value){
+        var total = this.size(),
+            last = total - 1,
+            buffer = [],
+            i = 0,
+            j = 0;
+
+        var p = this;
+
+        for(i=0; i<total; ++i){
+            buffer[i] = new this._newListCtor(funk.tuple.tuple2(p.head(), i), null);
+            p = p.tail();
+        }
+
+        buffer[last]._tail = funk.collection.immutable.nil();
+
+        for(i=0, j=1; i<last; ++i, ++j){
+            buffer[i]._tail = buffer[j];
+        }
+
+        return buffer[0];
+    };
+    ListImpl.prototype.findIndexOf = function(func){
+        var index = 0,
+            p = this;
+        while(p.nonEmpty()){
+            if(func(p.head())){
+                return index;
+            }
+
+            p = p.tail();
+            index++;
+        }
+
+        return -1;
+    };
+    ListImpl.prototype.flatten = function(){
+        return this.flatMap(function(x) {
+            return x === funk.util.verifiedType(x, funk.collection.List) ? x : funk.collection.toList(x);
+        });
+    };
+    ListImpl.prototype.indexOf = function(value){
+        var index = 0,
+            p = this;
+        while(p.nonEmpty()){
+            if(funk.util.eq(p.head(), value)){
+                return index;
+            }
+            p = p.tail();
+            index++;
+        }
+        return -1;
+    };
+    ListImpl.prototype.iterator = function(){
+        return new funk.collection.immutable.ListIterator(this);
+    };
+    ListImpl.prototype.append = function(value){
+        var total = this.size(),
+            buffer = [],
+            p = this,
+            i = 0,
+            j = 0;
+
+        while(p.nonEmpty()){
+            buffer[i++] = new this._newListCtor(p.head(), null);
+            p = p.tail();
+        }
+
+        buffer[total] = new this._newListCtor(value, funk.collection.immutable.nil());
+
+        for(i=0, j=1; i<total; ++i, ++j){
+            buffer[i]._tail = buffer[j];
+        }
+
+        return buffer[0];
+    };
+    ListImpl.prototype.appendAll = function(value){
+        funk.util.verifiedType(value, funk.collection.List);
+
+        var total = this.size(),
+            last = total - 1,
+            buffer = [],
+            p = this,
+            i = 0,
+            j = 0;
+
+        while(p.nonEmpty()){
+            buffer[i++] = new this._newListCtor(p.head(), null);
+            p = p.tail();
+        }
+
+        buffer[last]._tail = value;
+
+        for(i=0, j=1; i<total; ++i, ++j){
+            buffer[i]._tail = buffer[j];
+        }
+
+        return buffer[0];
+    };
+    ListImpl.prototype.prependIterator = function(iterator){
+        funk.util.verifiedType(iterator, funk.collection.Iterator);
+        return this.prependAll(iterator.toList());
+    };
+    ListImpl.prototype.appendIterator = function(iterator){
+        funk.util.verifiedType(iterator, funk.collection.Iterator);
+        return this.appendAll(iterator.toList());
+    };
+    ListImpl.prototype.prependIterable = function(iterable){
+        funk.util.verifiedType(iterable, funk.collection.Iterable);
+        return this.prependAll(iterable.iterator.toList());
+    };
+    ListImpl.prototype.appendIterable = function(iterable){
+        funk.util.verifiedType(iterable, funk.collection.Iterable);
+        return this.appendAll(iterable.iterator.toList());
     };
     ListImpl.prototype.name = "List";
     return ListImpl;

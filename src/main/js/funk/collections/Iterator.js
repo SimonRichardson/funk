@@ -3,6 +3,7 @@ funk.collection.Iterator = (function(){
     "use strict";
     var IteratorImpl = function(){};
     IteratorImpl.prototype = {};
+    IteratorImpl.prototype.constructor = IteratorImpl;
     IteratorImpl.prototype.name = "Iterator";
     IteratorImpl.prototype.hasNext = function(){
         return false;

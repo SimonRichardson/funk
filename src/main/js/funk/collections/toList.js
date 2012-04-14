@@ -33,7 +33,7 @@ funk.collection.toList = function(value){
 
         return result;
     } else {
-        return list(value);
+        return funk.collection.list(value);
     }
 };
 
