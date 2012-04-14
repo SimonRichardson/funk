@@ -1,4 +1,7 @@
+```javascript
 "HELLO WORLD" == toList("dlrow olleh").map(_.toUpperCase).reduceRight(_.plus_)
+```
+
 # Introduction
 The Funk library supports functional development in ActionScript3. Some of its key features are:
 
