@@ -353,6 +353,151 @@ funk.collection.immutable.List = (function(){
 
         return buffer[0];
     };
+    ListImpl.prototype.partition = function(func){
+        var left = [],
+            right = [];
+
+        var i = 0,
+            j = 0,
+            m = 0,
+            o = 0;
+
+        var p = this;
+        
+        while(p.nonEmpty()){
+            var l = new this._newListCtor(p.head(), funk.collection.immutable.nil());
+            if(func(p.head())){
+                left[i++] = l;
+            } else {
+                right[j++] = l;
+            }
+            p = p.tail();
+        }
+
+        m = i - 1;
+        o = j - 1;
+
+        if(m > 0) {
+            for(i=0, j=1; i<m; ++i, ++j) {
+                left[i]._tail = left[j];
+            }
+        }
+
+        if(o > 0) {
+            for(i=0, j=1; i<o; ++i, ++j) {
+                right[i]._tail = right[j];
+            }
+        }
+
+        return tuple2(  m > 0 ? left[0] : funk.collection.immutable.nil(),
+                        o > 0 ? right[0] : funk.collection.immutable.nil());
+    };
+    ListImpl.prototype.reduceLeft = function(func){
+        var value = this.head();
+        var p = this._tail;
+        while(p.nonEmpty()){
+            value = func(value, p.head());
+            p = p.tail();
+        }
+        // TODO (Simon) make sure it's an option
+        return value;
+    };
+    ListImpl.prototype.reduceRight = function(func){
+        var buffer = this.toArray(),
+            value = buffer.pop(),
+            index = buffer.length;
+        while(--index > -1){
+            value = func(value, buffer[index]);
+        }
+        // TODO (Simon) make sure it's an option
+        return value;
+    };
+    ListImpl.prototype.reverse = function(){
+        var result = funk.collection.immutable.nil(),
+            p = this;
+        while(p.nonEmpty()){
+            result = result.prepend(p.head());
+            p = p.tail();
+        }
+        return result;
+    };
+    ListImpl.prototype.tail = function(){
+        return this._tail;
+    };
+    ListImpl.prototype.take = function(index){
+        funk.util.require(index >= 0, "index must be positive.");
+
+        if(index > this.size()) {
+            return this;
+        } else if(0 === index) {
+            return funk.collection.immutable.nil();
+        }
+
+        var buffer = [],
+            last = index - 1,
+            p = this,
+            i = 0,
+            j = 0;
+
+        for(i=0; i<index; ++i){
+            buffer[i] = new this._newListCtor(p.head(), null);
+            p = p.tail();
+        }
+
+        buffer[last]._tail = funk.collection.immutable.nil();
+
+        for(i=0, j=1; i<last; ++i, ++j){
+            buffer[i]._tail = buffer[j];
+        }
+
+        return buffer[0];
+    };
+    ListImpl.prototype.takeRight = function(index){
+        funk.util.require(index >= 0, "index must be positive.");
+
+        if(index > this.size()){
+            return this;
+        } else if(0 == index){
+            return funk.collection.immutable.nil();
+        }
+
+        index = this.size() - index;
+        if(index <= 0){
+            return this;
+        }
+
+        var p = this;
+        for(var i=0; i<index; ++i){
+            p = p.tail();
+        }
+        return p;
+    };
+    ListImpl.prototype.takeWhile = function(func){
+        var buffer = [],
+            p = this,
+            i = 0,
+            j = 0,
+            n = 0;
+        while(p.nonEmpty()){
+            if(func(p)){
+                buffer[n++] = new this._newListCtor(p.head(), null);
+                p = p.tail();
+            } else {
+                break;
+            }
+        }
+
+        var m = n - 1;
+        if(m <= 0) {
+            return funk.collection.immutable.nil();
+        }
+
+        for(i=0, j=1; i<m; ++i, ++j){
+            buffer[i]._tail = buffer[j];
+        }
+
+        return buffer[0];
+    };
     ListImpl.prototype.name = "List";
     return ListImpl;
 })();
