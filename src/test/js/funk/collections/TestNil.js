@@ -17,6 +17,119 @@ describe("funk", function () {
                 expect(nil().hasDefinedSize()).toBeTruthy();
             });
 
+            it("should not call count", function(){
+                nil().count(function(){
+                    fail();
+                });
+            });
+
+            describe("when drop on nil", function(){
+
+                it("should return nil when calling drop", function(){
+                    expect(nil().drop(0)).toBeStrictlyEqualTo(nil());
+                });
+
+                it("should throw argument error when passing -1 to drop", function(){
+                    expect(funk.closure(nil().drop, -1)).toThrow(new funk.error.ArgumentError());
+                });
+
+                it("should return nil when calling dropRight", function(){
+                    expect(nil().dropRight(0)).toBeStrictlyEqualTo(nil());
+                });
+
+                it("should throw argument error when passing -1 to dropRight", function(){
+                    expect(funk.closure(nil().dropRight, -1)).toThrow(new funk.error.ArgumentError());
+                });
+
+                it("should return nil when calling mapTrue on dropWhile", function(){
+                    expect(nil().dropWhile(mapTrue)).toBeStrictlyEqualTo(nil());
+                });
+
+                it("should not throw an error when calling dropWhile on nil", function(){
+                    expect(nil().dropWhile(function(){
+                        fail();
+                    })).toBeStrictlyEqualTo(nil());
+                });
+            });
+
+            describe("when exits on nil", function() {
+
+                it("should return false when calling mapTrue on exists", function(){
+                    expect(nil().exists(mapTrue)).toBeFalsy();
+                });
+
+                it("should not throw an error when calling exists on nil", function(){
+                    expect(nil().exists(function(){
+                        fail();
+                    })).toBeFalsy();
+                });
+            });
+
+            describe("when filter on nil", function() {
+
+                it("should return nil when calling mapFalse on filter", function(){
+                    expect(nil().filter(mapFalse)).toBeStrictlyEqualTo(nil());
+                });
+
+                it("should not throw an error when calling filter on nil", function(){
+                    expect(nil().filter(function(){
+                        fail();
+                    })).toBeStrictlyEqualTo(nil())
+                });
+            });
+
+            describe("when filterNot on nil", function() {
+
+                it("should return nil when calling mapFalse on filterNot", function(){
+                    expect(nil().filterNot(mapFalse)).toBeStrictlyEqualTo(nil());
+                });
+
+                it("should not throw an error when calling filterNot on nil", function(){
+                    expect(nil().filterNot(function(){
+                        fail();
+                    })).toBeStrictlyEqualTo(nil())
+                });
+            });
+
+            describe("when find on nil", function() {
+
+                it("should return nil when calling mapTrue on find", function(){
+                    expect(nil().find(mapTrue)).toBeStrictlyEqualTo(none());
+                });
+
+                it("should not throw an error when calling find on nil", function(){
+                    expect(nil().find(function(){
+                        fail();
+                    })).toBeStrictlyEqualTo(none())
+                });
+            });
+
+            describe("when findIndexOf on nil", function() {
+
+                it("should return -1 when calling mapTrue on findIndexOf", function(){
+                    expect(nil().findIndexOf(mapTrue)).toBeStrictlyEqualTo(-1);
+                });
+
+                it("should not throw an error when calling findIndexOf on nil", function(){
+                    expect(nil().findIndexOf(function(){
+                        fail();
+                    })).toBeStrictlyEqualTo(-1)
+                });
+            });
+
+            describe("when flatMap on nil", function() {
+
+                it("should return nil when calling indentity on flatMap", function(){
+                    expect(nil().flatMap(indentity)).toBeStrictlyEqualTo(nil());
+                });
+
+                it("should not throw an error when calling flatMap on nil", function(){
+                    expect(nil().flatMap(function(){
+                        fail();
+                    })).toBeStrictlyEqualTo(nil())
+                });
+            });
+
             describe("when contains on nil", function () {
 
                 it("should not contain null", function () {
