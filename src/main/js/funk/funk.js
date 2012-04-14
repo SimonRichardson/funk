@@ -54,7 +54,17 @@ funk.toArray = function(obj){
     return [];
 };
 funk.has = function(obj, key) {
-    return funk.natives.object.hasOwnProperty.call(obj, key);
+    if(funk.isDefined(obj) && funk.isDefined(key)) {
+        // Try the undefined check first, as it seems to be more
+        // reliable that hasOwnProperty
+        var exists = 'undefined' !== typeof obj[key];
+        if(!exists) {
+            return funk.natives.object.hasOwnProperty.call(obj, key);
+        }
+        return true;
+    }
+    return false;
+
 };
 funk.each = function(obj, iterator, context){
     if(funk.isDefined(obj)) {

@@ -113,7 +113,7 @@ describe("funk", function () {
                     expect(
                         function () {
                             some(value).flatMap(indentity);
-                        }).toThrow(new funk.error.TypeError());
+                        }).toBeThrown(new funk.error.TypeError());
                 });
             });
 

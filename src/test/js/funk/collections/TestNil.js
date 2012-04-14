@@ -30,7 +30,7 @@ describe("funk", function () {
                 });
 
                 it("should throw argument error when passing -1 to drop", function(){
-                    expect(funk.closure(nil().drop, -1)).toThrow(new funk.error.ArgumentError());
+                    expect(funk.closure(nil().drop, -1)).toThrow(new funk.error.ArgumentError("index must be positive."));
                 });
 
                 it("should return nil when calling dropRight", function(){
@@ -38,7 +38,7 @@ describe("funk", function () {
                 });
 
                 it("should throw argument error when passing -1 to dropRight", function(){
-                    expect(funk.closure(nil().dropRight, -1)).toThrow(new funk.error.ArgumentError());
+                    expect(funk.closure(nil().dropRight, -1)).toThrow(new funk.error.ArgumentError("index must be positive."));
                 });
 
                 it("should return nil when calling mapTrue on dropWhile", function(){
@@ -127,6 +127,36 @@ describe("funk", function () {
                     expect(nil().flatMap(function(){
                         fail();
                     })).toBeStrictlyEqualTo(nil())
+                });
+            });
+
+            describe("when flatten on nil", function() {
+
+                it("should return nil when calling flatten", function(){
+                    expect(nil().flatten()).toBeStrictlyEqualTo(nil());
+                });
+            });
+
+            describe("when fold on nil", function() {
+
+                it("should return 0 when calling foldLeft", function(){
+                    expect(nil().foldLeft(0, _.invoke("plus"))).toBeStrictlyEqualTo(0);
+                });
+
+                it("should not throw an error when calling foldLeft on nil", function(){
+                    expect(nil().foldLeft(0, function(x, y){
+                        fail();
+                    })).toBeStrictlyEqualTo(0)
+                });
+
+                it("should return 0 when calling foldRight", function(){
+                    expect(nil().foldRight(0, _.invoke("plus"))).toBeStrictlyEqualTo(0);
+                });
+
+                it("should not throw an error when calling foldRight on nil", function(){
+                    expect(nil().foldRight(0, function(x, y){
+                        fail();
+                    })).toBeStrictlyEqualTo(0)
                 });
             });
 

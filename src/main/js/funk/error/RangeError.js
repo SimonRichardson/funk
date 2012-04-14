@@ -2,6 +2,10 @@ funk.error = funk.error || {};
 funk.error.RangeError = (function(){
     "use strict";
     var RangeErrorImpl = function(msg){
+        if(funk.isDefined(msg)) {
+            this.message = msg;
+        }
+
         Error.apply(this, arguments);
     };
     RangeErrorImpl.prototype = new Error();
