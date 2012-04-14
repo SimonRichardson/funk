@@ -1,9 +1,11 @@
 funk.collection = funk.collection || {};
-funk.collection.Nil = (function(){
+funk.collection.immutable = funk.collection.immutable || {};
+funk.collection.immutable.Nil = (function(){
     "use strict";
     var NilImpl = function(){};
     NilImpl.prototype = new funk.collection.List();
-
+    NilImpl.prototype.constructor = NilImpl;
+    NilImpl.prototype.name = "Nil";
     NilImpl.prototype.head = function(){
         return funk.option.none();
     };
@@ -160,13 +162,13 @@ funk.collection.Nil = (function(){
     return NilImpl;
 })();
 
-funk.collection.NIL = new funk.collection.Nil();
-funk.collection.nil = function(){
+funk.collection.immutable.NIL = new funk.collection.immutable.Nil();
+funk.collection.immutable.nil = function(){
     if(arguments.length > 0) {
         throw new funk.error.ArgumentError('Unexpected arguments');
     }
-    return funk.collection.NIL;
+    return funk.collection.immutable.NIL;
 };
 
 // Alias
-var nil = funk.collection.nil;
+var nil = funk.collection.immutable.nil;
