@@ -99,8 +99,11 @@ deleteButton.onClick(
 var modulo = function(n, x) { return x % n }
 var mod3 = curry(modulo, 3)
 console.log(7 % 3, modulo(3, 7), mod3(7))
+```
 
 ## Using the option type
+
+```javascript
 var User = (function(){
 	var UserImpl = function(){}
 	UserImpl.prototype = {}
