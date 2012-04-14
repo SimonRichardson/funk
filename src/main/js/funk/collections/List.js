@@ -179,7 +179,7 @@ funk.collection.List = (function(){
 
 funk.collection.list = function(){
     "use strict";
-    var result = funk.collection.nil();
+    var result = funk.collection.immutable.nil();
     var items = funk.toArray(arguments);
     var index = items.length;
 
@@ -189,3 +189,6 @@ funk.collection.list = function(){
 
     return result;
 };
+
+// Alias
+var list = funk.collection.list;
