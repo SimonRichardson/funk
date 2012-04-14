@@ -148,6 +148,31 @@ funk.collection.List = (function(){
     ListImpl.prototype.productPrefix = function(){
         funk.util.isAbstract();
     };
+    ListImpl.fill = function(n){
+        return function(x){
+            var list = nil();
+            while(--n > -1) {
+                list = list.prepend(x());
+            }
+            return list;
+        }
+    };
+    ListImpl.fromArray = function(array){
+        var list = nil();
+        var index = array.length;
+        while(--index > -1) {
+            list = list.prepend(array[index]);
+        }
+        return list;
+    };
+    ListImpl.fromString = function(string){
+        var list = nil();
+        var index = string.length;
+        while(--index > -1) {
+            list = list.prepend(string.substr(index, 1));
+        }
+        return list;
+    };
     ListImpl.prototype.name = "List";
     return ListImpl;
 })();
