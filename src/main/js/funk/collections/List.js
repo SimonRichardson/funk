@@ -82,9 +82,6 @@ funk.collection.List = (function(){
     ListImpl.prototype.tail = function(){
         funk.util.isAbstract();
     };
-    ListImpl.prototype.tailOption = function(){
-        funk.util.isAbstract();
-    };
     ListImpl.prototype.take = function(index){
         funk.util.isAbstract();
     };
