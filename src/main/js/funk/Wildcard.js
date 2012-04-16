@@ -10,16 +10,26 @@ funk.Wildcard = (function(){
         var args = funk.toArray(arguments);
         args.shift();
 
-        return function(x) {
-            if(!funk.has(x, name)) {
-                throw new funk.error.TypeError("No such method " + name);
+        if(funk.has(this, name)) {
+            // Invoke wildcard methods over object methods
+            return function(x){
+                var innerArgs = funk.toArray(arguments);
+                innerArgs.shift();
+
+                return this[name].apply(x, args.concat(innerArgs));
             }
+        } else {
+            return function(x) {
+                if(!funk.has(x, name)) {
+                    throw new funk.error.TypeError("No such method " + name);
+                }
 
-            var innerArgs = funk.toArray(arguments);
-            innerArgs.shift();
+                var innerArgs = funk.toArray(arguments);
+                innerArgs.shift();
 
-            return x[name].apply(x, args.concat(innerArgs));
-        };
+                return x[name].apply(x, args.concat(innerArgs));
+            };
+        }
     };
     WildcardImpl.prototype.binaryNot = function(value) {
         return ~value;

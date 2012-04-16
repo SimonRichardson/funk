@@ -5,20 +5,24 @@ funk.option.When = function(option, cases){
             if(funk.has(cases, 'none')) {
                 return cases.none();
             } else {
-                throw new funk.error.NoSuchElementError('Expected none in cases');
+                if(funk.has(cases, 'any')) {
+                    return cases.any();
+                } else {
+                    throw new funk.error.NoSuchElementError('Expected none in cases');
+                }
             }
         } else if(option instanceof funk.option.Some) {
             if(funk.has(cases, 'some')) {
                 return cases.some(option.get());
             } else {
-                throw new funk.error.NoSuchElementError('Expected some in cases');
+                if(funk.has(cases, 'any')) {
+                    return cases.any(option.get());
+                } else {
+                    throw new funk.error.NoSuchElementError('Expected some in cases');
+                }
             }
         } else {
-            if(funk.has(cases, 'any')) {
-                return cases.any();
-            } else {
-                throw new funk.error.TypeError("Expected: funk.option.Option, Actual: " + option);
-            }
+            throw new funk.error.TypeError("Expected: funk.option.Option, Actual: " + option);
         }
     }
 };
