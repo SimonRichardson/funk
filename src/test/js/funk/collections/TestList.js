@@ -278,6 +278,91 @@ describe("funk", function () {
                 });
             });
 
+            describe("when foldRight", function () {
+
+                it("should foldRight with plus_", function () {
+                    var n = 100;
+                    expect(range.to(1, n).foldRight(0, _.plus_)).toBeEqualTo(n * (n + 1) / 2);
+                });
+
+                it("should foldRight with invoke plus_", function () {
+                    var n = 100;
+                    expect(range.to(1, n).foldRight(0, _.invoke("plus_"))).toBeEqualTo(n * (n + 1) / 2);
+                });
+
+                it("should foldRight example 2 with plus_", function () {
+                    var n = 100;
+                    expect(range.to(1, n + 1).foldRight(0, _.plus_)).toBeEqualTo((n + 1) * ((n + 1) + 1) / 2);
+                });
+
+                it("should foldRight example 2 with invoke plus_", function () {
+                    var n = 100;
+                    expect(range.to(1, n + 1).foldRight(0, _.invoke("plus_"))).toBeEqualTo((n + 1) * ((n + 1) + 1) / 2);
+                });
+
+                it("should foldRight string with map", function () {
+                    expect(toList("tset").map(_.toUpperCase).foldRight("#", _.plus_)).toBeEqualTo("#" + "test".toUpperCase());
+                });
+
+                it("should foldRight string with invoke map", function () {
+                    expect(toList("tset").map(_.invoke("toUpperCase")).foldRight("#", _.invoke("plus_"))).toBeEqualTo("#" + "test".toUpperCase());
+                });
+            });
+
+            describe("when forall", function () {
+
+                it("should be true", function () {
+                    expect(range.to(1, 10).forall(mapTrue)).toBeTruthy();
+                });
+
+                it("should be false", function () {
+                    expect(range.to(1, 10).forall(mapFalse)).toBeFalsy();
+                });
+
+                it("should all be less than 11", function () {
+                    expect(range.to(1, 10).forall(_.lessThan(11))).toBeTruthy();
+                });
+
+                it("should invoke less than 11", function () {
+                    expect(range.to(1, 10).forall(_.invoke("lessThan", 11))).toBeTruthy();
+                });
+
+                it("should all be less than 10", function () {
+                    expect(range.to(1, 10).forall(_.lessThan(10))).toBeFalsy();
+                });
+
+                it("should invoke less than 10", function () {
+                    expect(range.to(1, 10).forall(_.invoke("lessThan", 10))).toBeFalsy();
+                });
+            });
+
+            describe("when foreach", function () {
+
+                it("should equal 10", function(){
+                    var total = 10;
+                    var i = 0;
+
+                    range.until(0, total).foreach(function(x){
+                        expect(i++).toBeStrictlyEqualTo(when(x, {
+                            none: function(){
+                                fail();
+                            },
+                            some: function(value){
+                                return value;
+                            }
+                        }));
+                    });
+
+                    expect(i).toBeStrictlyEqualTo(total);
+                })
+            });
+
+            describe("when get", function () {
+
+                it("should match range", function(){
+                    expect(range.until(0, 10).equals(range.until(0, 10))).toBeTruthy();
+                })
+            });
         });
     });
 });
