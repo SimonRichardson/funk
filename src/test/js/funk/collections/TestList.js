@@ -110,6 +110,29 @@ describe("funk", function () {
                     expect(value.dropRight(0)).toBeStrictlyEqualTo(value);
                 });
             });
+
+            describe("when dropWhile", function () {
+
+                it("should drop all contents", function () {
+                    expect(list(1, 2, 3, 4).dropWhile(mapTrue)).toBeStrictlyEqualTo(nil());
+                });
+
+                it("should not drop any contents and should equal itself", function () {
+                    var value = list(1, 2, 3, 4);
+                    expect(value.dropWhile(mapFalse)).toBeStrictlyEqualTo(value);
+                });
+
+                it("should drop even until odd", function () {
+                    expect(list(2, 4, 6, 1).dropWhile(mapEven).size()).toBeStrictlyEqualTo(1);
+                });
+            });
+
+            describe("when exists", function () {
+
+                it("should 1 exist", function () {
+                    expect(list(1).exists(mapTrue)).toBeTruthy();
+                });
+            });
         });
     });
 });
