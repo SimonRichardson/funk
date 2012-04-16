@@ -1,5 +1,5 @@
 funk.option = funk.option || {};
-funk.option.when = function(option, cases){
+funk.option.When = function(option, cases){
     if(option === funk.util.verifiedType(option, funk.option.Option)) {
         if(option instanceof funk.option.None) {
             if(funk.has(cases, 'none')) {
@@ -9,7 +9,7 @@ funk.option.when = function(option, cases){
             }
         } else if(option instanceof funk.option.Some) {
             if(funk.has(cases, 'some')) {
-                return cases.some();
+                return cases.some(option.get());
             } else {
                 throw new funk.error.NoSuchElementError('Expected some in cases');
             }
@@ -22,6 +22,7 @@ funk.option.when = function(option, cases){
         }
     }
 };
+funk.option.when = funk.option.When;
 
 // Alias
-var when = funk.option.when;
+var when = funk.option.When;
