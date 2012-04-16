@@ -24,7 +24,7 @@ describe("funk", function () {
             describe("when count", function () {
 
                 it("should have 5 even items", function () {
-                    expect(list(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).count(_.isEven())).toBeStrictlyEqualTo(5);
+                    expect(list(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).count(_.isEven)).toBeStrictlyEqualTo(5);
                 });
 
                 it("should have 5 even items when calling invoke", function () {
@@ -32,7 +32,7 @@ describe("funk", function () {
                 });
 
                 it("should have 5 even items when calling Range.to", function () {
-                    expect(range.to(1, 10).count(_.isEven())).toBeStrictlyEqualTo(5);
+                    expect(range.to(1, 10).count(_.isEven)).toBeStrictlyEqualTo(5);
                 });
 
                 it("should have 5 even items when calling Range.to when calling invoke", function () {
@@ -45,6 +45,10 @@ describe("funk", function () {
 
                 it("should have 0 items that are greater than 10 when calling Range.to when calling invoke", function () {
                     expect(range.to(1, 10).count(_.invoke('greaterThan', 10))).toBeStrictlyEqualTo(0);
+                });
+
+                it("should have 5 items that are greater than 10 when calling Range.to when calling invoke", function () {
+                    expect(range.to(1, 10).count(_.invoke('greaterThan', 5))).toBeStrictlyEqualTo(5);
                 });
             });
 
@@ -150,11 +154,11 @@ describe("funk", function () {
                 });
 
                 it("should filter even items", function () {
-                    expect(list(2, 4, 6, 8, 10).equals(range.to(1, 10).filter(_.isEven()))).toBeTruthy();
+                    expect(list(2, 4, 6, 8, 10).equals(range.to(1, 10).filter(_.isEven))).toBeTruthy();
                 });
 
                 it("should not equal filter even items", function () {
-                    expect(list(1, 4, 6, 8, 10).equals(range.to(1, 10).filter(_.isEven()))).toBeFalsy();
+                    expect(list(1, 4, 6, 8, 10).equals(range.to(1, 10).filter(_.isEven))).toBeFalsy();
                 });
             });
 
@@ -242,6 +246,20 @@ describe("funk", function () {
                     expect(list(list(1), nil(), list(2), nil(), nil(), list(3)).flatten().equals(range.to(1, 3))).toBeTruthy();
                 });
             });
+
+            describe("when foldLeft", function () {
+
+                it("should foldLeft with plus_", function () {
+                    var n = 100;
+                    expect(range.to(1, n).foldLeft(0, _.plus_)).toBeEqualTo(n * (n + 1) / 2);
+                });
+
+                it("should foldLeft with invoke plus_", function () {
+                    var n = 100;
+                    expect(range.to(1, n).foldLeft(0, _.invoke("plus_"))).toBeEqualTo(n * (n + 1) / 2);
+                });
+            });
+
         });
     });
 });

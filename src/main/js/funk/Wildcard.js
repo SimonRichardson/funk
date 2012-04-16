@@ -10,9 +10,16 @@ funk.Wildcard = (function(){
         var args = funk.toArray(arguments);
         args.shift();
 
-        if(funk.has(this, name)) {
+        var scope = this;
+        if(funk.has(scope, name)) {
             // Invoke wildcard methods over object methods
-            return this[name].apply(this, args);
+            if(args.length > 0) {
+                return scope[name].apply(scope, args);
+            } else {
+                return function(){
+                    return scope[name].apply(scope, funk.toArray(arguments));
+                };
+            }
         } else {
             return function(x) {
                 if(!funk.has(x, name)) {
@@ -76,17 +83,15 @@ funk.Wildcard = (function(){
             return v >= minValue && v <= maxValue;
         };
     };
-    WildcardImpl.prototype.isEven = function() {
-        return function(x){
-            var v = funk.option.toValue(x);
-            var asInt = Math.floor(v);
+    WildcardImpl.prototype.isEven = function(x) {
+        var v = funk.option.toValue(x);
+        var asInt = Math.floor(v);
 
-            if(0 != (v - asInt)) {
-                return false;
-            }
+        if(0 != (v - asInt)) {
+            return false;
+        }
 
-            return (asInt & 1) == 0;
-        };
+        return (asInt & 1) == 0;
     };
     WildcardImpl.prototype.isOdd = function(value) {
         return function(x){
@@ -147,31 +152,49 @@ funk.Wildcard = (function(){
         return funk.collection.toList(v);
     };
     WildcardImpl.prototype.plus_ = function(a, b){
-        return a + b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 + b0;
     };
     WildcardImpl.prototype.minus_ = function(a, b){
-        return a - b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 - b0;
     };
     WildcardImpl.prototype.multiply_ = function(a, b){
-        return a * b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 * b0;
     };
     WildcardImpl.prototype.divide_ = function(a, b){
-        return a / b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 / b0;
     };
     WildcardImpl.prototype.modulo_ = function(a, b){
-        return a % b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 % b0;
     };
     WildcardImpl.prototype.lessThan_ = function(a, b){
-        return a < b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 < b0;
     };
     WildcardImpl.prototype.lessThanEqual_ = function(a, b){
-        return a <= b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 <= b0;
     };
     WildcardImpl.prototype.greaterThan_ = function(a, b){
-        return a > b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 > b0;
     };
     WildcardImpl.prototype.greaterThanEqual_ = function(a, b){
-        return a >= b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 >= b0;
     };
     WildcardImpl.prototype.equal_ = function(a, b){
         return funk.util.eq(a, b);
@@ -180,19 +203,29 @@ funk.Wildcard = (function(){
         return funk.util.ne(a, b);
     };
     WildcardImpl.prototype.strictlyEqual_ = function(a, b){
-        return a === b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 === b0;
     };
     WildcardImpl.prototype.strictlyNotEqual_ = function(a, b){
-        return a !== b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 !== b0;
     };
     WildcardImpl.prototype.binaryAnd_ = function(a, b){
-        return a & b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 & b0;
     };
     WildcardImpl.prototype.binaryOr_ = function(a, b){
-        return a | b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 | b0;
     };
     WildcardImpl.prototype.binaryXor_ = function(a, b){
-        return a ^ b;
+        var a0 = funk.option.toValue(a);
+        var b0 = funk.option.toValue(b);
+        return a0 ^ b0;
     };
 
     return WildcardImpl;
