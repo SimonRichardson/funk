@@ -1,5 +1,7 @@
 funk.option = funk.option || {};
 funk.option.When = function(option, cases){
+    cases = "function" === typeof cases ? cases() : cases;
+
     if(option === funk.util.verifiedType(option, funk.option.Option)) {
         if(option instanceof funk.option.None) {
             if(funk.has(cases, 'none')) {
