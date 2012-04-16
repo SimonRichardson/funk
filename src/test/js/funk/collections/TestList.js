@@ -258,6 +258,24 @@ describe("funk", function () {
                     var n = 100;
                     expect(range.to(1, n).foldLeft(0, _.invoke("plus_"))).toBeEqualTo(n * (n + 1) / 2);
                 });
+
+                it("should foldLeft example 2 with plus_", function () {
+                    var n = 100;
+                    expect(range.to(1, n + 1).foldLeft(0, _.plus_)).toBeEqualTo((n + 1) * ((n + 1) + 1) / 2);
+                });
+
+                it("should foldLeft example 2 with invoke plus_", function () {
+                    var n = 100;
+                    expect(range.to(1, n + 1).foldLeft(0, _.invoke("plus_"))).toBeEqualTo((n + 1) * ((n + 1) + 1) / 2);
+                });
+
+                it("should foldLeft string with map", function () {
+                    expect(toList("TEST").map(_.toLowerCase).foldLeft("#", _.plus_)).toBeEqualTo("#" + "TEST".toLowerCase());
+                });
+
+                it("should foldLeft string with invoke map", function () {
+                    expect(toList("TEST").map(_.invoke("toLowerCase")).foldLeft("#", _.invoke("plus_"))).toBeEqualTo("#" + "TEST".toLowerCase());
+                });
             });
 
         });
