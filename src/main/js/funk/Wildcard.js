@@ -21,11 +21,6 @@ funk.Wildcard = (function(){
             return x[name].apply(x, args.concat(innerArgs));
         };
     };
-    WildcardImpl.prototype.get = function(name) {
-        return function(x) {
-            return x[name];
-        };
-    };
     WildcardImpl.prototype.binaryNot = function(value) {
         return ~value;
     };
@@ -34,54 +29,146 @@ funk.Wildcard = (function(){
             return x - value;
         };
     };
-    WildcardImpl.prototype.plus = function(a, b){
+    WildcardImpl.prototype.divideBy = function(value) {
+        return function(x){
+            return x / value;
+        };
+    };
+    WildcardImpl.prototype.equals = function(value) {
+        return function(x){
+            return funk.util.eq(x, value);
+        };
+    };
+    WildcardImpl.prototype.get = function(name) {
+        return function(x) {
+            return x[name];
+        };
+    };
+    WildcardImpl.prototype.greaterThan = function(value) {
+        return function(x){
+            return x > value;
+        };
+    };
+    WildcardImpl.prototype.greaterThanEqual = function(value) {
+        return function(x){
+            return x >= value;
+        };
+    };
+    WildcardImpl.prototype.incrementBy = function(value) {
+        return function(x){
+            return x + value;
+        };
+    };
+    WildcardImpl.prototype.inRange = function(minValue, maxValue) {
+        return function(x){
+            return x >= minValue && x <= maxValue;
+        };
+    };
+    WildcardImpl.prototype.isEven = function(value) {
+        var asInt = Math.floor(value);
+
+        if(0 != (value - asInt)) {
+            return false;
+        }
+
+        return (asInt & 1) == 0;
+    };
+    WildcardImpl.prototype.isOdd = function(value) {
+        var asInt = Math.floor(value);
+
+        if(0 != (value - asInt)) {
+            return false;
+        }
+
+        return (asInt & 1) != 0;
+    };
+    WildcardImpl.prototype.lessThan = function(value) {
+        return function(x){
+            return x < value;
+        };
+    };
+    WildcardImpl.prototype.lessThanEqual = function(value) {
+        return function(x){
+            return x <= value;
+        };
+    };
+    WildcardImpl.prototype.moduloBy = function(value) {
+        return function(x){
+            return x % value;
+        };
+    };
+    WildcardImpl.prototype.multiplyBy = function(value) {
+        return function(x){
+            return x * value;
+        };
+    };
+    WildcardImpl.prototype.not = function(value){
+        return !value;
+    };
+    WildcardImpl.prototype.toBoolean = function(value) {
+        return value ? true : false;
+    };
+    WildcardImpl.prototype.toLowerCase = function(value) {
+        return ("string" === typeof value) ? value.toLowerCase() : ("" + value).toLowerCase();
+    };
+    WildcardImpl.prototype.toString = function(value) {
+        return ("string" === typeof value) ? value : ("" + value);
+    };
+    WildcardImpl.prototype.toUpperCase = function(value) {
+        return ("string" === typeof value) ? value.toUpperCase() : ("" + value).toUpperCase();
+    };
+    WildcardImpl.prototype.toList = function(value) {
+        return funk.collection.toList(value);
+    };
+    WildcardImpl.prototype.plus_ = function(a, b){
         return a + b;
     };
-    WildcardImpl.prototype.minus = function(a, b){
+    WildcardImpl.prototype.minus_ = function(a, b){
         return a - b;
     };
-    WildcardImpl.prototype.multiply = function(a, b){
+    WildcardImpl.prototype.multiply_ = function(a, b){
         return a * b;
     };
-    WildcardImpl.prototype.divide = function(a, b){
+    WildcardImpl.prototype.divide_ = function(a, b){
         return a / b;
     };
-    WildcardImpl.prototype.modulo = function(a, b){
+    WildcardImpl.prototype.modulo_ = function(a, b){
         return a % b;
     };
-    WildcardImpl.prototype.lessThan = function(a, b){
+    WildcardImpl.prototype.lessThan_ = function(a, b){
         return a < b;
     };
-    WildcardImpl.prototype.lessThanEqual = function(a, b){
+    WildcardImpl.prototype.lessThanEqual_ = function(a, b){
         return a <= b;
     };
-    WildcardImpl.prototype.greaterThan = function(a, b){
+    WildcardImpl.prototype.greaterThan_ = function(a, b){
         return a > b;
     };
-    WildcardImpl.prototype.greaterThanEqual = function(a, b){
+    WildcardImpl.prototype.greaterThanEqual_ = function(a, b){
         return a >= b;
     };
-    WildcardImpl.prototype.equal = function(a, b){
+    WildcardImpl.prototype.equal_ = function(a, b){
         return funk.util.eq(a, b);
     };
-    WildcardImpl.prototype.notEqual = function(a, b){
+    WildcardImpl.prototype.notEqual_ = function(a, b){
         return funk.util.ne(a, b);
     };
-    WildcardImpl.prototype.strictlyEqual = function(a, b){
+    WildcardImpl.prototype.strictlyEqual_ = function(a, b){
         return a === b;
     };
-    WildcardImpl.prototype.strictlyNotEqual = function(a, b){
+    WildcardImpl.prototype.strictlyNotEqual_ = function(a, b){
         return a !== b;
     };
-    WildcardImpl.prototype.binaryAnd = function(a, b){
+    WildcardImpl.prototype.binaryAnd_ = function(a, b){
         return a & b;
     };
-    WildcardImpl.prototype.binaryOr = function(a, b){
+    WildcardImpl.prototype.binaryOr_ = function(a, b){
         return a | b;
     };
-    WildcardImpl.prototype.binaryXor = function(a, b){
+    WildcardImpl.prototype.binaryXor_ = function(a, b){
         return a ^ b;
     };
+
     return WildcardImpl;
 })();
 
