@@ -22,7 +22,7 @@ funk.collection.immutable.List = (function(){
     };
 
     var ListImpl = function(head, tail){
-        this._head = funk.option.some(head);
+        this._head = (head instanceof funk.option.Option) ? head : funk.option.some(head);
         this._tail = tail;
         this._length = 0;
         this._lengthKnown = false;
@@ -50,7 +50,7 @@ funk.collection.immutable.List = (function(){
     };
     ListImpl.prototype.product$equals = ListImpl.prototype.equals;
     ListImpl.prototype.equals = function(value){
-        if(value === funk.util.verifiedType(value)) {
+        if(value === funk.util.verifiedType(value, funk.collection.List)) {
             return this.product$equals(value);
         }
         return false;

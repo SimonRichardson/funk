@@ -12,12 +12,7 @@ funk.Wildcard = (function(){
 
         if(funk.has(this, name)) {
             // Invoke wildcard methods over object methods
-            return function(x){
-                var innerArgs = funk.toArray(arguments);
-                innerArgs.shift();
-
-                return this[name].apply(x, args.concat(innerArgs));
-            }
+            return this[name].apply(this, args);
         } else {
             return function(x) {
                 if(!funk.has(x, name)) {
@@ -32,21 +27,24 @@ funk.Wildcard = (function(){
         }
     };
     WildcardImpl.prototype.binaryNot = function(value) {
-        return ~value;
+        return ~funk.option.toValue(value);
     };
     WildcardImpl.prototype.decrementBy = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return x - value;
+            return funk.option.toValue(x) - value;
         };
     };
     WildcardImpl.prototype.divideBy = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return x / value;
+            return funk.option.toValue(x) / v;
         };
     };
     WildcardImpl.prototype.equals = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return funk.util.eq(x, value);
+            return funk.util.eq(funk.option.toValue(x), v);
         };
     };
     WildcardImpl.prototype.get = function(name) {
@@ -55,80 +53,98 @@ funk.Wildcard = (function(){
         };
     };
     WildcardImpl.prototype.greaterThan = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return x > value;
+            return funk.option.toValue(x) > v;
         };
     };
     WildcardImpl.prototype.greaterThanEqual = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return x >= value;
+            return funk.option.toValue(x) >= v;
         };
     };
     WildcardImpl.prototype.incrementBy = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return x + value;
+            return funk.option.toValue(x) + v;
         };
     };
     WildcardImpl.prototype.inRange = function(minValue, maxValue) {
         return function(x){
-            return x >= minValue && x <= maxValue;
+            var v = funk.option.toValue(x);
+            return v >= minValue && v <= maxValue;
         };
     };
-    WildcardImpl.prototype.isEven = function(value) {
-        var asInt = Math.floor(value);
+    WildcardImpl.prototype.isEven = function() {
+        return function(x){
+            var v = funk.option.toValue(x);
+            var asInt = Math.floor(v);
 
-        if(0 != (value - asInt)) {
-            return false;
-        }
+            if(0 != (v - asInt)) {
+                return false;
+            }
 
-        return (asInt & 1) == 0;
+            return (asInt & 1) == 0;
+        };
     };
     WildcardImpl.prototype.isOdd = function(value) {
-        var asInt = Math.floor(value);
+        return function(x){
+            var v = funk.option.toValue(x);
+            var asInt = Math.floor(v);
 
-        if(0 != (value - asInt)) {
-            return false;
-        }
+            if(0 != (v - asInt)) {
+                return false;
+            }
 
-        return (asInt & 1) != 0;
+            return (asInt & 1) != 0;
+        };
     };
     WildcardImpl.prototype.lessThan = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return x < value;
+            return funk.option.toValue(x) < v;
         };
     };
     WildcardImpl.prototype.lessThanEqual = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return x <= value;
+            return funk.option.toValue(x) <= v;
         };
     };
     WildcardImpl.prototype.moduloBy = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return x % value;
+            return funk.option.toValue(x) % v;
         };
     };
     WildcardImpl.prototype.multiplyBy = function(value) {
+        var v = funk.option.toValue(value);
         return function(x){
-            return x * value;
+            return funk.option.toValue(x) * v;
         };
     };
     WildcardImpl.prototype.not = function(value){
-        return !value;
+        return !funk.option.toValue(value);
     };
     WildcardImpl.prototype.toBoolean = function(value) {
-        return value ? true : false;
+        return funk.option.toValue(value) ? true : false;
     };
     WildcardImpl.prototype.toLowerCase = function(value) {
-        return ("string" === typeof value) ? value.toLowerCase() : ("" + value).toLowerCase();
+        var v = funk.option.toValue(value);
+        return ("string" === typeof v) ? v.toLowerCase() : ("" + v).toLowerCase();
     };
     WildcardImpl.prototype.toString = function(value) {
-        return ("string" === typeof value) ? value : ("" + value);
+        var v = funk.option.toValue(value);
+        return ("string" === typeof v) ? v : ("" + v);
     };
     WildcardImpl.prototype.toUpperCase = function(value) {
-        return ("string" === typeof value) ? value.toUpperCase() : ("" + value).toUpperCase();
+        var v = funk.option.toValue(value);
+        return ("string" === typeof v) ? v.toUpperCase() : ("" + v).toUpperCase();
     };
     WildcardImpl.prototype.toList = function(value) {
-        return funk.collection.toList(value);
+        var v = funk.option.toValue(value);
+        return funk.collection.toList(v);
     };
     WildcardImpl.prototype.plus_ = function(a, b){
         return a + b;

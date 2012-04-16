@@ -3,7 +3,7 @@ funk.collection.Range = (function(){
     "use strict";
     var RangeImpl = function(){};
     RangeImpl.to = function(start, end){
-        funk.require(start < end, "Start must be less than end.");
+        funk.util.require(start < end, "Start must be less than end.");
 
         var m = start - 1;
         var n = end + 1;
@@ -16,7 +16,7 @@ funk.collection.Range = (function(){
         return list;
     };
     RangeImpl.until = function(start, end){
-        funk.require(start < end, "Start must be less than end.");
+        funk.util.require(start < end, "Start must be less than end.");
 
         var m = start - 1;
         var n = end;
@@ -30,3 +30,6 @@ funk.collection.Range = (function(){
     }
     return RangeImpl;
 })();
+
+// Alias
+var range = funk.collection.Range;

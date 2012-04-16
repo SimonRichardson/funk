@@ -4,4 +4,4 @@ funk.curry = function(func, x, scope) {
         a.unshift(x);
         return func.apply(scope, a);
     }
-}
+};
