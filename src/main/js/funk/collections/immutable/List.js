@@ -280,7 +280,7 @@ funk.collection.immutable.List = (function(){
             p = this,
             i = 0;
         while(p.nonEmpty()){
-            buffer[i++] = verifiedType(func(p.head()), funk.collection.List);
+            buffer[i++] = funk.util.verifiedType(func(p.head()), funk.collection.List);
             p = p.tail();
         }
 
@@ -591,7 +591,15 @@ funk.collection.immutable.List = (function(){
     };
     ListImpl.prototype.flatten = function(){
         return this.flatMap(function(x) {
-            return x === funk.util.verifiedType(x, funk.collection.List) ? x : funk.collection.toList(x);
+            var item = funk.option.when(x, {
+                none: function(){
+                    return null;
+                },
+                some: function(value){
+                    return value;
+                }
+            });
+            return item === funk.util.verifiedType(item, funk.collection.List) ? item : funk.collection.toList(item);
         });
     };
     ListImpl.prototype.indexOf = function(value){

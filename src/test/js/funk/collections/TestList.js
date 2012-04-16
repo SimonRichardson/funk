@@ -129,8 +129,117 @@ describe("funk", function () {
 
             describe("when exists", function () {
 
-                it("should 1 exist", function () {
+                it("should be true when maps true", function () {
                     expect(list(1).exists(mapTrue)).toBeTruthy();
+                });
+
+                it("should be true when 5 is in range of 0...10", function () {
+                    expect(range.to(1, 10).exists(_.equals(5))).toBeTruthy();
+                });
+
+                it("should be false when 0 is in range of 0...10", function () {
+                    expect(range.to(1, 10).exists(_.equals(0))).not.toBeTruthy();
+                });
+            });
+
+            describe("when filter", function () {
+
+                it("should be true when maps true", function () {
+                    var l = list(1, 2, 3);
+                    expect(l.filter(mapTrue)).toBeStrictlyEqualTo(l);
+                });
+
+                it("should filter even items", function () {
+                    expect(list(2, 4, 6, 8, 10).equals(range.to(1, 10).filter(_.isEven()))).toBeTruthy();
+                });
+
+                it("should not equal filter even items", function () {
+                    expect(list(1, 4, 6, 8, 10).equals(range.to(1, 10).filter(_.isEven()))).toBeFalsy();
+                });
+            });
+
+            describe("when filterNot", function () {
+
+                it("should filter out to have the correct size", function () {
+                    var l = list(1, 2, 1, 2);
+                    expect(l.filterNot(_.equals(some(2))).size()).toBeStrictlyEqualTo(l.size() - 2);
+                });
+
+                it("should not filter out to have the correct size", function () {
+                    var l = list(1, 2, 1, 2);
+                    expect(l.filterNot(mapFalse).size()).toBeStrictlyEqualTo(l.size());
+                });
+
+                it("should filter all to have the correct size", function () {
+                    var l = list(1, 2, 1, 2);
+                    expect(l.filterNot(mapTrue).size()).toBeStrictlyEqualTo(0);
+                });
+
+                it("should filter all", function () {
+                    var l = list(1, 2, 1, 2);
+                    expect(l.filterNot(mapTrue)).toBeStrictlyEqualTo(nil());
+                });
+            });
+
+            describe("when find", function () {
+
+                it("should find some(2) in range 1...10", function () {
+                    expect(some(2).equals(range.to(1, 10).map(funk.closure(some)).find(_.equals(some(2))))).toBeTruthy();
+                });
+
+                it("should find some(some(2)) in range 1...10", function () {
+                    expect(some(some(2)).equals(range.to(1, 10).map(funk.closure(some)).find(_.equals(some(2))))).toBeTruthy();
+                });
+
+                it("should find not find 11 in range 1...10", function(){
+                    expect(range.to(1, 10).map(funk.closure(some)).find(_.equals(11))).toBeStrictlyEqualTo(none());
+                });
+
+                it("should find not find some(11) in range 1...10", function(){
+                    expect(range.to(1, 10).map(funk.closure(some)).find(_.equals(some(11)))).toBeStrictlyEqualTo(none());
+                });
+
+                it("should find not find none() in range 1...10", function(){
+                    expect(range.to(1, 10).map(funk.closure(some)).find(_.equals(none()))).toBeStrictlyEqualTo(none());
+                });
+            });
+
+            describe("when findIndexOf", function () {
+
+                it("should find index of 3", function () {
+                    expect(range.to(1, 4).findIndexOf(_.equals(3))).toBeStrictlyEqualTo(2);
+                });
+
+                it("should not find index of 5", function () {
+                    expect(range.to(1, 4).findIndexOf(_.equals(5))).toBeStrictlyEqualTo(-1);
+                });
+            });
+
+            describe("when flatMap", function () {
+
+                it("should match list after using to in flatMap", function () {
+                    expect(list("a", "b", "c", "d").equals(list("a", "b", "c", "d").flatMap(toList))).toBeTruthy();
+                });
+
+                it("should remove 2 from list(1,2,3) after flatMap", function () {
+                    expect(list(1, 3).equals(list(1, 2, 3).flatMap(function(x){
+                        return eq(x, 2) ? nil() : list(x);
+                    }))).toBeTruthy();
+                });
+
+                it("should throw an error when return invalid result", function(){
+                    expect(function(){
+                        list(1, 2, 3).flatMap(function(){
+                            return {};
+                        });
+                    }).toBeThrown(new funk.error.TypeError());
+                })
+            });
+
+            describe("when flatten", function () {
+
+                it("should match list after flattening", function () {
+                    expect(list(list(1), nil(), list(2), nil(), nil(), list(3)).flatten().equals(range.to(1, 3))).toBeTruthy();
                 });
             });
         });

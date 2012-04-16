@@ -7,7 +7,7 @@ funk.collection.Range = (function(){
 
         var m = start - 1;
         var n = end + 1;
-        var list = nil();
+        var list = funk.collection.immutable.nil();
 
         while(--n > m) {
             list = list.prepend(n);
@@ -20,7 +20,7 @@ funk.collection.Range = (function(){
 
         var m = start - 1;
         var n = end;
-        var list = nil();
+        var list = funk.collection.immutable.nil();
 
         while(--n > m) {
             list = list.prepend(n);

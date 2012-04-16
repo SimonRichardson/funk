@@ -89,6 +89,9 @@ funk.each = function(obj, iterator, context){
 funk.isDefined = function(value) {
     return "undefined" !== typeof value;
 };
+funk.isValid = function(value) {
+    return value !== null && "undefined" !== typeof value;
+};
 funk.indentity = function(value){
     return value;
 };

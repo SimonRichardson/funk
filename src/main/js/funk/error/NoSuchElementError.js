@@ -1,7 +1,11 @@
 funk.error = funk.error || {};
 funk.error.NoSuchElementError = (function(){
     "use strict";
-    var NoSuchElementErrorImpl = function(){
+    var NoSuchElementErrorImpl = function(msg){
+        if(funk.isDefined(msg)) {
+            this.message = msg;
+        }
+
         Error.apply(this, arguments);
     };
     NoSuchElementErrorImpl.prototype = new Error();

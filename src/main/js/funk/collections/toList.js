@@ -1,10 +1,10 @@
 funk.collection = funk.collection || {};
 funk.collection.toList = function(value){
     "use strict";
-    var result = nil();
+    var result = funk.collection.immutable.nil();
     var index = 0;
 
-    if(value === funk.verifiedType(value, funk.collection.List)) {
+    if(value instanceof funk.collection.List) {
         return value;
     } else if(funk.isArray(value)) {
         index = value.length;
