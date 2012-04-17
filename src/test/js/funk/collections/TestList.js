@@ -900,11 +900,11 @@ describe("funk", function () {
                 it("should merge iterables", function(){
                     var l0 = list(1, 2, 3);
                     var l1 = list(4, 5, 6);
-                    expect(l0.prependIterator(l1).equals(list(4, 5, 6, 1, 2, 3))).toBeTruthy();
+                    expect(l0.prependIterable(l1).equals(list(4, 5, 6, 1, 2, 3))).toBeTruthy();
                 });
 
                 it("should not merge iterables if one is nil", function(){
-                    expect(list(1, 2, 3).appendIterable(nil()).equals(list(1, 2, 3))).toBeTruthy();
+                    expect(list(1, 2, 3).prependIterable(nil()).equals(list(1, 2, 3))).toBeTruthy();
                 });
             });
         });
