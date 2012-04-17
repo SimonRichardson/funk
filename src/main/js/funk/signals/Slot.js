@@ -36,7 +36,7 @@ funk.signals.Slot = (function(){
             values = valueObjects.concat(this._params);
         }
 
-        this._listener.apply(this._scope, values);
+        this._listener.apply(this._scope, [funk.tuple.tuple(values)]);
     };
     SlotImpl.prototype.remove = function(){
         this._signal.remove(this._listener);

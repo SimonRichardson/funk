@@ -363,6 +363,34 @@ describe("funk", function () {
                     expect(range.until(0, 10).equals(range.until(0, 10))).toBeTruthy();
                 })
             });
+
+            describe("when head", function () {
+
+                it("should be some", function(){
+                    expect(list(1).head()).toBeType(funk.option.Some);
+                });
+
+                it("should not be none", function(){
+                    expect(list(1).head()).not.toBeType(funk.option.None);
+                });
+
+                it("should {} match head", function(){
+                    var value = {};
+                    expect(list(value, 2, 3).head().get()).toBeStrictlyEqualTo(value);
+                });
+
+                it("should 1 match head", function(){
+                    expect(list(1, 2, 3).head().get()).toBeStrictlyEqualTo(1);
+                });
+
+                it("should null match head", function(){
+                    expect(list(null, 2, 3).head().get()).toBeNull();
+                });
+
+                it("should undefined match head", function(){
+                    expect(list(undefined, 2, 3).head().get()).toBeUndefined();
+                });
+            });
         });
     });
 });
