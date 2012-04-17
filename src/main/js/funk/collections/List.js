@@ -177,11 +177,14 @@ funk.collection.List = (function(){
 funk.collection.list = function(){
     "use strict";
     var result = funk.collection.immutable.nil();
-    var items = funk.toArray(arguments);
-    var index = items.length;
 
-    while(--index > -1) {
-        result = result.prepend(items[index]);
+    if(arguments.length > 0) {
+        var items = funk.toArray(arguments);
+        var index = items.length;
+
+        while(--index > -1) {
+            result = result.prepend(items[index]);
+        }
     }
 
     return result;

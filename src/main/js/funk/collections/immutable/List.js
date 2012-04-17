@@ -52,7 +52,10 @@ funk.collection.immutable.List = (function(){
     ListImpl.prototype.equals = function(value){
         if(value instanceof funk.collection.List) {
             return this.product$equals(value);
+        } else if(value instanceof funk.option.Some) {
+            return this.product$equals(value.get());
         }
+
         return false;
     };
     ListImpl.prototype.productArity = function(){
@@ -500,7 +503,7 @@ funk.collection.immutable.List = (function(){
             n = 0;
         while(p.nonEmpty()){
             if(func(p)){
-                buffer[n++] = new this._newListCtor(p.head(), null);
+                buffer[n++] = new this._newListCtor(p.head(), funk.collection.immutable.nil());
                 p = p.tail().get();
             } else {
                 break;

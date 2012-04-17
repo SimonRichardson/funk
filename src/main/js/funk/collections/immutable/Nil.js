@@ -6,6 +6,13 @@ funk.collection.immutable.Nil = (function(){
     NilImpl.prototype = new funk.collection.List();
     NilImpl.prototype.constructor = NilImpl;
     NilImpl.prototype.name = "Nil";
+    NilImpl.prototype.product$equals = NilImpl.prototype.equals;
+    NilImpl.prototype.equals = function(value){
+        if(value instanceof funk.option.Some) {
+            return this.product$equals(value.get());
+        }
+        return this.product$equals(value);
+    }
     NilImpl.prototype.head = function(){
         return funk.option.none();
     };

@@ -626,6 +626,214 @@ describe("funk", function () {
                     expect(list(1).tail().equals(some(nil()))).toBeTruthy();
                 });
             });
+
+            describe("when take", function () {
+
+                it("should throw", function(){
+                    expect(function(){
+                        list(1).take(-1)
+                    }).toBeThrown(new funk.error.ArgumentError());
+                });
+
+                it("should take the first item and should be true", function(){
+                    expect(list(true).take(1).head().get()).toBeTruthy();
+                });
+
+                it("should take the first item and should equal some(true)", function(){
+                    expect(list(true).take(1).head().equals(some(true))).toBeTruthy();
+                });
+
+                it("should take 2 items should equal true, false", function(){
+                    expect(list(true, false, false, false).take(2).equals(list(true, false))).toBeTruthy();
+                });
+            });
+
+            describe("when takeRight", function () {
+
+                it("should throw", function(){
+                    expect(function(){
+                        list(1).takeRight(-1)
+                    }).toBeThrown(new funk.error.ArgumentError());
+                });
+
+                it("should take the first item and should be true", function(){
+                    expect(list(true).takeRight(1).head().get()).toBeTruthy();
+                });
+
+                it("should take the first item and should equal some(true)", function(){
+                    expect(list(true).takeRight(1).head().equals(some(true))).toBeTruthy();
+                });
+
+                it("should take 2 items should equal true, false", function(){
+                    expect(list(false, false, true, false).takeRight(2).equals(list(true, false))).toBeTruthy();
+                });
+            });
+
+            describe("when takeWhile", function () {
+
+                it("should take all the items", function(){
+                    expect(list(true, true, true).takeWhile(mapTrue).equals(list(true, true, true))).toBeTruthy();
+                });
+
+                it("should take none of the items", function(){
+                    expect(list(true, true, true).takeWhile(mapFalse).equals(nil())).toBeTruthy();
+                });
+            });
+
+            describe("when zip", function () {
+
+                it("should zip to lists together that are same size", function(){
+                    expect(range.to(1, 3).zip(range.to(1, 3)).equals(list(tuple2(1, 1), tuple2(2, 2), tuple2(3, 3)))).toBeTruthy();
+                });
+
+                it("should zip to lists together using the smallest size", function(){
+                    expect(range.to(1, 4).zip(range.to(1, 3)).equals(list(tuple2(1, 1), tuple2(2, 2), tuple2(3, 3)))).toBeTruthy();
+                });
+
+                it("should zip to lists together using the smallest size 2", function(){
+                    expect(range.to(1, 3).zip(range.to(1, 4)).equals(list(tuple2(1, 1), tuple2(2, 2), tuple2(3, 3)))).toBeTruthy();
+                });
+            });
+
+            describe("when zipWithIndex", function () {
+
+                it("should zip to lists together with the index", function(){
+                    expect(range.to(1, 3).zipWithIndex().equals(list(tuple2(1, 0), tuple2(2, 1), tuple2(3, 2)))).toBeTruthy();
+                });
+            });
+
+            describe("when product on list", function () {
+
+                it("should have product arity of 10", function () {
+                    expect(range.to(1, 10).productArity()).toStrictlyEqual(10);
+                });
+
+                it("should have product arity same as size", function () {
+                    expect(range.to(1, 10).productArity()).toStrictlyEqual(range.to(1, 10).size());
+                });
+
+                it("should have product prefix of List", function () {
+                    expect(list(null).productPrefix()).toStrictlyEqual("List");
+                });
+
+                it("should throw RangeError for product element at -1", function () {
+                    expect(
+                        function () {
+                            list(null).productElement(-1)
+                        }).toBeThrown(new funk.error.RangeError());
+                });
+
+                it("should throw RangeError for product element at 1", function () {
+                    expect(
+                        function () {
+                            list(null).productElement(1)
+                        }).toBeThrown(new funk.error.RangeError());
+                });
+
+                it("should get value at productElement 0", function () {
+                    var value = {};
+                    expect(list(value).productElement(0).get()).toBeStrictlyEqualTo(value);
+                });
+            });
+
+            describe("when equals", function () {
+
+                it("should list(undefined) equal list(undefined)", function(){
+                    expect(list(undefined).equals(list(undefined))).toBeTruthy();
+                });
+
+                it("should list(null) equal list(null)", function(){
+                    expect(list(null).equals(list(null))).toBeTruthy();
+                });
+
+                it("should list(null) equal list(null)", function(){
+                    expect(list({}).equals(list({}))).toBeFalsy();
+                });
+
+                it("should list(value) equal list(value)", function(){
+                    var value = {};
+                    expect(list(value).equals(list(value))).toBeTruthy();
+                });
+
+                it("should list() equal list()", function(){
+                    expect(list().equals(list())).toBeTruthy();
+                });
+
+                it("should list() equal list(1).tail()", function(){
+                    expect(list().equals(list(1).tail())).toBeTruthy();
+                });
+            });
+
+            describe("when size", function () {
+
+                it("should have 0 size on an empty list", function(){
+                    expect(list().size()).toStrictlyEqual(0);
+                });
+
+                it("should have size 10 on range 0...10", function(){
+                    var n = 10;
+                    expect(range.to(1, n).size()).toStrictlyEqual(n);
+                });
+            });
+
+            describe("when hasDefinedSize", function () {
+
+                it("should have defined size on an empty list", function(){
+                    expect(list().hasDefinedSize()).toBeTruthy();
+                });
+
+                it("should have defined size on a non empty list", function(){
+                    var n = 10;
+                    expect(range.to(1, n).hasDefinedSize()).toBeTruthy();
+                });
+            });
+
+            describe("when toArray", function () {
+
+                it("should should have length of 0", function(){
+                    expect(list().toArray().length).toBeStrictlyEqualTo(0);
+                });
+
+                it("should should have length of 10", function(){
+                    var n = 10;
+                    expect(range.to(1, n).toArray().length).toBeStrictlyEqualTo(n);
+                });
+
+                it("should should have item [0] to be 1", function(){
+                    expect(list(1, 2, 3).toArray()[0].get()).toBeStrictlyEqualTo(1);
+                });
+
+                it("should should have item [1] to be 2", function(){
+                    expect(list(1, 2, 3).toArray()[1].get()).toBeStrictlyEqualTo(2);
+                });
+
+                it("should should have item [3] to be 3", function(){
+                    expect(list(1, 2, 3).toArray()[2].get()).toBeStrictlyEqualTo(3);
+                });
+            });
+
+            describe("when append", function () {
+
+                it("should append 3 to list 1, 2", function(){
+                    expect(list(1, 2).append(3).equals(list(1, 2, 3))).toBeTruthy();
+                });
+
+                it("should append nil() to list 1, 2", function(){
+                    expect(list(1, 2).append(nil()).equals(list(1, 2, nil()))).toBeTruthy();
+                });
+            });
+
+            describe("when appendAll", function () {
+
+                it("should append 1, 2, 3 to list 4, 5, 6", function(){
+                    console.log(list(1, 2, 3).appendAll(list(4, 5, 6)).toString());
+                    //expect(list(1, 2, 3).appendAll(list(4, 5, 6)).equals(list(1, 2, 3, 4, 5, 6))).toBeTruthy();
+                });
+
+                it("should append nil() to list 1, 2, 3", function(){
+                    expect(list(1, 2, 3).appendAll(nil()).equals(list(1, 2, 3, nil()))).toBeTruthy();
+                });
+            });
         });
     });
 });
