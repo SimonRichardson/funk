@@ -538,6 +538,72 @@ describe("funk", function () {
                     expect(nil().prependAll(nil())).toBeStrictlyEqualTo(nil());
                 });
             });
+
+            describe("when reduceLeft", function () {
+
+                it("should reduceLeft with plus", function(){
+                    var n = 100;
+                    expect(range.to(1, n).reduceLeft(_.plus_)).toStrictlyEqual(n * (n + 1) / 2);
+                });
+
+                it("should reduceLeft with invoke plus", function(){
+                    var n = 100;
+                    expect(range.to(1, n).reduceLeft(_.invoke("plus_"))).toStrictlyEqual(n * (n + 1) / 2);
+                });
+
+                it("should reduceLeft example 2 with plus", function(){
+                    var n = 100;
+                    expect(range.to(1, n + 1).reduceLeft(_.plus_)).toStrictlyEqual((n + 1) * ((n + 1) + 1) / 2);
+                });
+
+                it("should reduceLeft example 2 with invoke plus", function(){
+                    var n = 100;
+                    expect(range.to(1, n + 1).reduceLeft(_.invoke("plus_"))).toStrictlyEqual((n + 1) * ((n + 1) + 1) / 2);
+                });
+
+                it("should reduceLeft with toLowerCase", function(){
+                    var n = 100;
+                    expect(toList("TEST").map(_.toLowerCase).reduceLeft(_.plus_)).toStrictlyEqual("TEST".toLowerCase());
+                });
+
+                it("should reduceLeft example 2 with invoke plus", function(){
+                    var n = 100;
+                    expect(toList("TEST").map(_.invoke("toLowerCase")).reduceLeft(_.invoke("plus_"))).toStrictlyEqual("TEST".toLowerCase());
+                });
+            });
+
+            describe("when reduceRight", function () {
+
+                it("should reduceRight with plus", function(){
+                    var n = 100;
+                    expect(range.to(1, n).reduceRight(_.plus_)).toStrictlyEqual(n * (n + 1) / 2);
+                });
+
+                it("should reduceRight with invoke plus", function(){
+                    var n = 100;
+                    expect(range.to(1, n).reduceRight(_.invoke("plus_"))).toStrictlyEqual(n * (n + 1) / 2);
+                });
+
+                it("should reduceRight example 2 with plus", function(){
+                    var n = 100;
+                    expect(range.to(1, n + 1).reduceRight(_.plus_)).toStrictlyEqual((n + 1) * ((n + 1) + 1) / 2);
+                });
+
+                it("should reduceRight example 2 with invoke plus", function(){
+                    var n = 100;
+                    expect(range.to(1, n + 1).reduceRight(_.invoke("plus_"))).toStrictlyEqual((n + 1) * ((n + 1) + 1) / 2);
+                });
+
+                it("should reduceRight with toLowerCase", function(){
+                    var n = 100;
+                    expect(toList("tset").map(_.toUpperCase).reduceRight(_.plus_)).toStrictlyEqual("test".toUpperCase());
+                });
+
+                it("should reduceRight example 2 with invoke plus", function(){
+                    var n = 100;
+                    expect(toList("tset").map(_.invoke("toUpperCase")).reduceRight(_.invoke("plus_"))).toStrictlyEqual("test".toUpperCase());
+                });
+            });
         });
     });
 });
