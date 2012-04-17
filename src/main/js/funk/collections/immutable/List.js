@@ -657,7 +657,7 @@ funk.collection.immutable.List = (function(){
 
         buffer[last]._tail = funk.option.some(value);
 
-        for(i=0, j=1; i<total; ++i, ++j){
+        for(i=0, j=1; i<last; ++i, ++j){
             buffer[i]._tail = funk.option.some(buffer[j]);
         }
 

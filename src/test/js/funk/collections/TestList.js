@@ -826,12 +826,11 @@ describe("funk", function () {
             describe("when appendAll", function () {
 
                 it("should append 1, 2, 3 to list 4, 5, 6", function(){
-                    console.log(list(1, 2, 3).appendAll(list(4, 5, 6)).toString());
-                    //expect(list(1, 2, 3).appendAll(list(4, 5, 6)).equals(list(1, 2, 3, 4, 5, 6))).toBeTruthy();
+                    expect(list(1, 2, 3).appendAll(list(4, 5, 6)).equals(list(1, 2, 3, 4, 5, 6))).toBeTruthy();
                 });
 
                 it("should append nil() to list 1, 2, 3", function(){
-                    expect(list(1, 2, 3).appendAll(nil()).equals(list(1, 2, 3, nil()))).toBeTruthy();
+                    expect(list(1, 2, 3).appendAll(nil()).equals(list(1, 2, 3))).toBeTruthy();
                 });
             });
         });
