@@ -391,6 +391,153 @@ describe("funk", function () {
                     expect(list(undefined, 2, 3).head().get()).toBeUndefined();
                 });
             });
+
+            describe("when indexOf", function () {
+
+                it("should 0 be 0 of 1..10", function(){
+                    expect(range.to(0, 10).indexOf(0)).toBeStrictlyEqualTo(0);
+                });
+
+                it("should 9 be 9 of 1..10", function(){
+                    expect(range.to(0, 10).indexOf(9)).toBeStrictlyEqualTo(9);
+                });
+
+                it("should 4 be 4 of 1..10", function(){
+                    expect(range.to(0, 10).indexOf(4)).toBeStrictlyEqualTo(4);
+                });
+
+                it("should 11 be -1 of 1..10", function(){
+                    expect(range.to(0, 10).indexOf(11)).toBeStrictlyEqualTo(-1);
+                });
+            });
+
+            describe("when indices", function () {
+
+                it("should equal 0..4", function(){
+                    var value = "Hello";
+                    expect(range.until(0, value.length).equals(toList(value).indices())).toBeTruthy();
+                });
+            });
+
+            describe("when init", function () {
+
+                it("should be size minus one", function(){
+                    var l = list(1, 2, 3);
+                    expect(l.init().size()).toBeStrictlyEqualTo(l.size() - 1);
+                });
+
+                it("should make test equal tes", function(){
+                    expect(toList("test").init().reduceLeft(_.plus_)).toBeStrictlyEqualTo("tes");
+                });
+
+                it("should make test equal tes using invoke", function(){
+                    expect(toList("test").init().reduceLeft(_.invoke("plus_"))).toBeStrictlyEqualTo("tes");
+                });
+            });
+
+            describe("when isEmpty", function () {
+
+                it("should empty list be empty", function(){
+                    expect(list().isEmpty()).toBeTruthy();
+                });
+
+                it("should non empty list be not empty", function(){
+                    expect(list(1, 2, 3).isEmpty()).toBeFalsy();
+                });
+
+                it("should non empty list (undefined) be not empty", function(){
+                    expect(list(undefined).isEmpty()).toBeFalsy();
+                });
+
+                it("should non empty list (null) be not empty", function(){
+                    expect(list(null).isEmpty()).toBeFalsy();
+                });
+            });
+
+            describe("when last", function () {
+
+                it("should be last item", function(){
+                    expect(toList("test$").last().get()).toBeStrictlyEqualTo("$");
+                });
+            });
+
+            describe("when partitioning", function () {
+
+                var l,
+                    p;
+
+                beforeEach(function(){
+                    l = range.to(1, 10);
+                    p = l.partition(_.isEven);
+                });
+
+                it("should tuple at index 1 should be a list", function(){
+                    expect(funk.util.verifiedType(p._1(), funk.collection.List)).toBeStrictlyEqualTo(p._1());
+                });
+
+                it("should tuple at index 2 should be a list", function(){
+                    expect(funk.util.verifiedType(p._2(), funk.collection.List)).toBeStrictlyEqualTo(p._2());
+                });
+
+                it("should tuple at index 1 be size of 5", function(){
+                    expect(p._1().size()).toBeStrictlyEqualTo(5);
+                });
+
+                it("should tuple at index 2 be size of 5", function(){
+                    expect(p._2().size()).toBeStrictlyEqualTo(5);
+                });
+
+                it("should tuple at index 1 when filter using isEven should equal itself", function(){
+                    expect(p._1().filter(_.isEven)).toBeStrictlyEqualTo(p._1());
+                });
+
+                it("should tuple at index 2 when filterNot using isEven should equal itself", function(){
+                    expect(p._2().filterNot(_.isEven)).toBeStrictlyEqualTo(p._2());
+                });
+            });
+
+            describe("when prepending", function () {
+
+                it("should start with nil, but equal one when adding {}", function(){
+                    expect(nil().prepend({}).size()).toBeStrictlyEqualTo(1);
+                });
+
+                it("should start with nil, but equal one when adding null", function(){
+                    expect(nil().prepend(null).size()).toBeStrictlyEqualTo(1);
+                });
+
+                it("should start with nil, but equal one when adding undefined", function(){
+                    expect(nil().prepend(undefined).size()).toBeStrictlyEqualTo(1);
+                });
+
+                it("should equal value when prepending", function(){
+                    var value = {};
+                    expect(nil().prepend(value).get(0).get()).toBeStrictlyEqualTo(value);
+                });
+            });
+
+            describe("when prepending all", function () {
+
+                it("should prepend all", function(){
+                    var l = list({}, {}, {});
+                    expect(nil().prependAll(l).size()).toBeStrictlyEqualTo(l.size());
+                });
+
+                it("should prepend all", function(){
+                    var l = list({}, {}, {});
+                    for(var i = 0, n = l.size; i < n; ++i) {
+                        expect(nil().prependAll(l).get(i).equals(l.get(i))).toBeTruthy();
+                    }
+                })
+
+                it("should not prepend all with nil", function(){
+                    expect(nil().prependAll(nil()).size()).toBeStrictlyEqualTo(0);
+                });
+
+                it("should equal nil when prepend all with nil", function(){
+                    expect(nil().prependAll(nil())).toBeStrictlyEqualTo(nil());
+                });
+            });
         });
     });
 });

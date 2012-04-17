@@ -14,7 +14,7 @@ funk.option.Some = (function(){
         return this;
     };
     SomeImpl.prototype.equals = function(that) {
-        if(funk.util.verifiedType(that, funk.option.Option)) {
+        if(that instanceof funk.option.Option) {
             if(that.isDefined) {
                 return funk.util.eq(this.get(), that.get());
             }
