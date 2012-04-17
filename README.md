@@ -14,12 +14,12 @@ The Funk library supports functional development in ActionScript3. Some of its k
 * Option type
 * Tuple type
 * IoC Container (no reflections, no Metadata and immutable!)
+* Signals
 
 Using Funk will result in a performance loss. But your code will be more conciese and contain less boilerplate. Use this library if you want elegant code in applications that are not performance critical. Funk enforces immutable state and the avoidance of null which will prevent you from common mistakes.
 
 ## Examples
 ### IoC with Funk
-
 ```javascript
 var NetworkModule = (function(){
 	var NetworkModuleImpl = function(){}
@@ -75,7 +75,6 @@ var thisWorksToo: Whatever = new Whatever()
 ```
 
 ## Continuations
-
 ```javascript
 var file = ...
 var deleteButton = new SimpleButton(...)
@@ -94,15 +93,23 @@ deleteButton.onClick(
 ```
 
 ## Currying
-
 ```javascript
 var modulo = function(n, x) { return x % n }
 var mod3 = curry(modulo, 3)
 console.log(7 % 3, modulo(3, 7), mod3(7))
 ```
 
-## Using the option type
+## Signals
+```javascript
+var signal = signal2(Number, Boolean)
+signal.add(function(num, bool){
+	...
+	signal.remove(this);
+})
+signal.dispatch(1, true)
+```
 
+## Using the option type
 ```javascript
 var User = (function(){
 	var UserImpl = function(){}
