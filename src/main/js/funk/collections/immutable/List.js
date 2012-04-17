@@ -422,7 +422,6 @@ funk.collection.immutable.List = (function(){
             value = func(value, p.head());
             p = p.tail().get();
         }
-        // TODO (Simon) make sure it's an option
         return value;
     };
     ListImpl.prototype.reduceRight = function(func){
@@ -432,7 +431,6 @@ funk.collection.immutable.List = (function(){
         while(--index > -1){
             value = func(value, buffer[index]);
         }
-        // TODO (Simon) make sure it's an option
         return value;
     };
     ListImpl.prototype.reverse = function(){

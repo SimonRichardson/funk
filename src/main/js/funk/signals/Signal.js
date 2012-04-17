@@ -42,7 +42,7 @@ funk.signals.Signal = (function(){
         this._slots = funk.collection.immutable.nil();
         this._valueClasses = funk.toArray(arguments);
     };
-    SignalImpl.prototype = {};
+    SignalImpl.prototype = new funk.Product();
     SignalImpl.prototype.constructor = SignalImpl;
     SignalImpl.prototype.name = "Signal";
     SignalImpl.prototype.add = function(listener){
@@ -98,6 +98,16 @@ funk.signals.Signal = (function(){
     };
     SignalImpl.prototype.size = function(){
         return this._slots.size();
+    };
+    SignalImpl.prototype.productArity = function(){
+        return this._valueClasses.length;
+    };
+    SignalImpl.prototype.productElement = function(index){
+        funk.util.requireRange(index, this.productArity());
+        return this._valueClasses[index];
+    };
+    SignalImpl.prototype.productPrefix = function(){
+        return "Signal";
     };
     return SignalImpl;
 })();

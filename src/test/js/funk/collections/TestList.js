@@ -1,7 +1,7 @@
 describe("funk", function () {
     describe("collections", function () {
         describe("List", function () {
-            
+
             // The obligatory "Hello World" test!
             it("should turn \"dlrow olleh\" to \"HELLO WORLD\"", function(){
                 expect(toList("dlrow olleh").map(_.toUpperCase).reduceRight(_.plus_)).toBeStrictlyEqualTo("HELLO WORLD");
