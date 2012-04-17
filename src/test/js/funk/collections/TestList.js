@@ -237,7 +237,7 @@ describe("funk", function () {
                             return {};
                         });
                     }).toBeThrown(new funk.error.TypeError());
-                })
+                });
             });
 
             describe("when flatten", function () {
@@ -602,6 +602,28 @@ describe("funk", function () {
                 it("should reduceRight example 2 with invoke plus", function(){
                     var n = 100;
                     expect(toList("tset").map(_.invoke("toUpperCase")).reduceRight(_.invoke("plus_"))).toStrictlyEqual("test".toUpperCase());
+                });
+            });
+
+            describe("when reverse", function () {
+
+                it("should reverse string \"hello world\"", function(){
+                    expect(toList("hello world").reverse().equals(toList("dlrow olleh"))).toBeTruthy();
+                });
+
+                it("should reverse string 1, 2, 3, 4, 5", function(){
+                    expect(list(1, 2, 3, 4, 5).reverse().equals(list(5, 4, 3, 2, 1))).toBeTruthy();
+                });
+            });
+
+            describe("when tail", function () {
+
+                it("should be nil for one item", function(){
+                    expect(list(1).tail().equals(nil())).toBeFalsy();
+                });
+
+                it("should be some(nil) for one item", function(){
+                    expect(list(1).tail().equals(some(nil()))).toBeTruthy();
                 });
             });
         });

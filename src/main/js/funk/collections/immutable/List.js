@@ -23,7 +23,7 @@ funk.collection.immutable.List = (function(){
 
     var ListImpl = function(head, tail){
         this._head = (head instanceof funk.option.Option) ? head : funk.option.some(head);
-        this._tail = tail;
+        this._tail = (tail instanceof funk.option.Option) ? tail : funk.option.some(tail);
         this._length = 0;
         this._lengthKnown = false;
         this._newListCtor = funk.collection.immutable.List;
@@ -38,7 +38,7 @@ funk.collection.immutable.List = (function(){
         var length = 0;
         while(p.nonEmpty()) {
             ++length;
-            p = p.tail();
+            p = p.tail().get();
         }
 
         this._length = length;
@@ -50,7 +50,7 @@ funk.collection.immutable.List = (function(){
     };
     ListImpl.prototype.product$equals = ListImpl.prototype.equals;
     ListImpl.prototype.equals = function(value){
-        if(value === funk.util.verifiedType(value, funk.collection.List)) {
+        if(value instanceof funk.collection.List) {
             return this.product$equals(value);
         }
         return false;
@@ -60,13 +60,12 @@ funk.collection.immutable.List = (function(){
     };
     ListImpl.prototype.productElement = function(index){
         funk.util.requireRange(index, this.productArity());
-
         var p = this;
         while(p.nonEmpty()) {
             if(index == 0) {
                 return p.head();
             }
-            p = p.tail();
+            p = p.tail().get();
             index -= 1;
         }
 
@@ -95,13 +94,13 @@ funk.collection.immutable.List = (function(){
             
             while(p.nonEmpty()) {
                 buffer[i++] = new this._newListCtor(p.head(), null);
-                p = p.tail();
+                p = p.tail().get();
             }
 
-            buffer[last]._tail = this;
+            buffer[last]._tail = funk.option.some(this);
 
             for(i=0, j=1; i<last; ++i, ++j) {
-                buffer[i]._tail = buffer[j];
+                buffer[i]._tail = funk.option.some(buffer[j]);
             }
 
             return buffer[0];
@@ -116,7 +115,7 @@ funk.collection.immutable.List = (function(){
             if(funk.util.eq(p.head(), value)){
                 return true;
             }
-            p = p.tail();
+            p = p.tail().get();
         }
         return false;
     };
@@ -127,7 +126,7 @@ funk.collection.immutable.List = (function(){
             if(func(p.head())){
                 ++n;
             }
-            p = p.tail();
+            p = p.tail().get();
         }
         return n;
     };
@@ -143,7 +142,7 @@ funk.collection.immutable.List = (function(){
                 return funk.collection.immutable.nil();
             }
 
-            p = p.tail();
+            p = p.tail().get();
         }
 
         return p;
@@ -167,13 +166,13 @@ funk.collection.immutable.List = (function(){
             j = 0;
         for(i = 0; i<index; ++i){
             buffer[i] = new this._newListCtor(p.head(), null);
-            p = p.tail();
+            p = p.tail().get();
         }
 
-        buffer[last]._tail = funk.collection.immutable.nil();
+        buffer[last]._tail = funk.option.some(funk.collection.immutable.nil());
 
         for(i=0, j=1; i<last; ++i, ++j){
-            buffer[i]._tail = buffer[j];
+            buffer[i]._tail = funk.option.some(buffer[j]);
         }
 
         return buffer[0];
@@ -184,7 +183,7 @@ funk.collection.immutable.List = (function(){
             if(!func(p.head())) {
                 return p;
             }
-            p = p.tail();
+            p = p.tail().get();
         }
         return funk.collection.immutable.nil();
     };
@@ -194,7 +193,7 @@ funk.collection.immutable.List = (function(){
             if(func(p.head())){
                 return true;
             }
-            p = p.tail();
+            p = p.tail().get();
         }
         return false;
     };
@@ -204,12 +203,13 @@ funk.collection.immutable.List = (function(){
             first = null,
             last = null,
             allFiltered = true;
+
         while(p.nonEmpty()){
             if(func(p.head())) {
                 q = new this._newListCtor(p.head(), funk.collection.immutable.nil());
 
                 if(null !== last){
-                    last._tail = q;
+                    last._tail = funk.option.some(q);
                 }
 
                 if(null === first){
@@ -221,7 +221,7 @@ funk.collection.immutable.List = (function(){
                 allFiltered = false;
             }
 
-            p = p.tail();
+            p = p.tail().get();
         }
 
         if(allFiltered) {
@@ -241,7 +241,7 @@ funk.collection.immutable.List = (function(){
                 q = new this._newListCtor(p.head(), funk.collection.immutable.nil());
 
                 if(null !== last){
-                    last._tail = q;
+                    last._tail = funk.option.some(q);
                 }
 
                 if(null === first){
@@ -253,7 +253,7 @@ funk.collection.immutable.List = (function(){
                 allFiltered = false;
             }
 
-            p = p.tail();
+            p = p.tail().get();
         }
 
         if(allFiltered) {
@@ -269,7 +269,7 @@ funk.collection.immutable.List = (function(){
                 return p.head();
             }
 
-            p = p.tail();
+            p = p.tail().get();
         }
 
         return funk.option.none();
@@ -281,7 +281,7 @@ funk.collection.immutable.List = (function(){
             i = 0;
         while(p.nonEmpty()){
             buffer[i++] = funk.util.verifiedType(func(p.head()), funk.collection.List);
-            p = p.tail();
+            p = p.tail().get();
         }
 
         var list = buffer[--index];
@@ -295,7 +295,7 @@ funk.collection.immutable.List = (function(){
             p = this;
         while(p.nonEmpty()){
             value = func(value, p.head());
-            p = p.tail();
+            p = p.tail().get();
         }
         return value;
     };
@@ -314,7 +314,7 @@ funk.collection.immutable.List = (function(){
             if(!func(p.head())){
                 return false;
             }
-            p = p.tail();
+            p = p.tail().get();
         }
         return true;
     };
@@ -322,7 +322,7 @@ funk.collection.immutable.List = (function(){
         var p = this;
         while(p.nonEmpty()){
             func(p.head());
-            p = p.tail();
+            p = p.tail().get();
         }
     };
     ListImpl.prototype.head = function(){
@@ -347,7 +347,7 @@ funk.collection.immutable.List = (function(){
             value = funk.option.none();
         while(p.nonEmpty()){
             value = p.head();
-            p = p.tail();
+            p = p.tail().get();
         }
         return value;
     };
@@ -362,13 +362,13 @@ funk.collection.immutable.List = (function(){
 
         for(i = 0; i < total; ++i) {
             buffer[i] = new this._newListCtor(func(p.head()), null);
-            p = p.tail();
+            p = p.tail().get();
         }
 
-        buffer[last]._tail = funk.collection.immutable.nil();
+        buffer[last]._tail = funk.option.some(funk.collection.immutable.nil());
 
         for(i=0, j=1; i<last; ++i, ++j){
-            buffer[i]._tail = buffer[j];
+            buffer[i]._tail = funk.option.some(buffer[j]);
         }
 
         return buffer[0];
@@ -391,7 +391,7 @@ funk.collection.immutable.List = (function(){
             } else {
                 right[j++] = l;
             }
-            p = p.tail();
+            p = p.tail().get();
         }
 
         m = i - 1;
@@ -399,13 +399,13 @@ funk.collection.immutable.List = (function(){
 
         if(m > 0) {
             for(i=0, j=1; i<m; ++i, ++j) {
-                left[i]._tail = left[j];
+                left[i]._tail = funk.option.some(left[j]);
             }
         }
 
         if(o > 0) {
             for(i=0, j=1; i<o; ++i, ++j) {
-                right[i]._tail = right[j];
+                right[i]._tail = funk.option.some(right[j]);
             }
         }
 
@@ -414,10 +414,10 @@ funk.collection.immutable.List = (function(){
     };
     ListImpl.prototype.reduceLeft = function(func){
         var value = this.head();
-        var p = this._tail;
+        var p = this._tail.get();
         while(p.nonEmpty()){
             value = func(value, p.head());
-            p = p.tail();
+            p = p.tail().get();
         }
         // TODO (Simon) make sure it's an option
         return value;
@@ -437,7 +437,7 @@ funk.collection.immutable.List = (function(){
             p = this;
         while(p.nonEmpty()){
             result = result.prepend(p.head());
-            p = p.tail();
+            p = p.tail().get();
         }
         return result;
     };
@@ -461,13 +461,13 @@ funk.collection.immutable.List = (function(){
 
         for(i=0; i<index; ++i){
             buffer[i] = new this._newListCtor(p.head(), null);
-            p = p.tail();
+            p = p.tail().get();
         }
 
-        buffer[last]._tail = funk.collection.immutable.nil();
+        buffer[last]._tail = funk.option.some(funk.collection.immutable.nil());
 
         for(i=0, j=1; i<last; ++i, ++j){
-            buffer[i]._tail = buffer[j];
+            buffer[i]._tail = funk.option.some(buffer[j]);
         }
 
         return buffer[0];
@@ -488,7 +488,7 @@ funk.collection.immutable.List = (function(){
 
         var p = this;
         for(var i=0; i<index; ++i){
-            p = p.tail();
+            p = p.tail().get();
         }
         return p;
     };
@@ -501,7 +501,7 @@ funk.collection.immutable.List = (function(){
         while(p.nonEmpty()){
             if(func(p)){
                 buffer[n++] = new this._newListCtor(p.head(), null);
-                p = p.tail();
+                p = p.tail().get();
             } else {
                 break;
             }
@@ -513,7 +513,7 @@ funk.collection.immutable.List = (function(){
         }
 
         for(i=0, j=1; i<m; ++i, ++j){
-            buffer[i]._tail = buffer[j];
+            buffer[i]._tail = funk.option.some(buffer[j]);
         }
 
         return buffer[0];
@@ -525,7 +525,7 @@ funk.collection.immutable.List = (function(){
             i = 0;
         for(i=0; i<total; i++){
             array[i] = p.head();
-            p = p.tail();
+            p = p.tail().get();
         }
         return array;
     };
@@ -541,14 +541,14 @@ funk.collection.immutable.List = (function(){
 
         for(i=0; i<total; ++i){
             buffer[i] = new this._newListCtor(funk.tuple.tuple2(p.head(), q.head()), null);
-            p = p.tail();
-            q = q.tail();
+            p = p.tail().get();
+            q = q.tail().get();
         }
 
-        buffer[last]._tail = funk.collection.immutable.nil();
+        buffer[last]._tail = funk.option.some(funk.collection.immutable.nil());
 
         for(i=0, j=1; i<last; ++i, ++j){
-            buffer[i]._tail = buffer[j];
+            buffer[i]._tail = funk.option.some(buffer[j]);
         }
 
         return buffer[0];
@@ -564,13 +564,13 @@ funk.collection.immutable.List = (function(){
 
         for(i=0; i<total; ++i){
             buffer[i] = new this._newListCtor(funk.tuple.tuple2(p.head(), i), null);
-            p = p.tail();
+            p = p.tail().get();
         }
 
-        buffer[last]._tail = funk.collection.immutable.nil();
+        buffer[last]._tail = funk.option.some(funk.collection.immutable.nil());
 
         for(i=0, j=1; i<last; ++i, ++j){
-            buffer[i]._tail = buffer[j];
+            buffer[i]._tail = funk.option.some(buffer[j]);
         }
 
         return buffer[0];
@@ -583,7 +583,7 @@ funk.collection.immutable.List = (function(){
                 return index;
             }
 
-            p = p.tail();
+            p = p.tail().get();
             index++;
         }
 
@@ -609,7 +609,7 @@ funk.collection.immutable.List = (function(){
             if(funk.util.eq(p.head(), value)){
                 return index;
             }
-            p = p.tail();
+            p = p.tail().get();
             index++;
         }
         return -1;
@@ -626,13 +626,13 @@ funk.collection.immutable.List = (function(){
 
         while(p.nonEmpty()){
             buffer[i++] = new this._newListCtor(p.head(), null);
-            p = p.tail();
+            p = p.tail().get();
         }
 
         buffer[total] = new this._newListCtor(value, funk.collection.immutable.nil());
 
         for(i=0, j=1; i<total; ++i, ++j){
-            buffer[i]._tail = buffer[j];
+            buffer[i]._tail = funk.option.some(buffer[j]);
         }
 
         return buffer[0];
@@ -649,13 +649,13 @@ funk.collection.immutable.List = (function(){
 
         while(p.nonEmpty()){
             buffer[i++] = new this._newListCtor(p.head(), null);
-            p = p.tail();
+            p = p.tail().get();
         }
 
-        buffer[last]._tail = value;
+        buffer[last]._tail = funk.option.some(value);
 
         for(i=0, j=1; i<total; ++i, ++j){
-            buffer[i]._tail = buffer[j];
+            buffer[i]._tail = funk.option.some(buffer[j]);
         }
 
         return buffer[0];
