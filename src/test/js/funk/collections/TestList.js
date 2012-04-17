@@ -833,6 +833,41 @@ describe("funk", function () {
                     expect(list(1, 2, 3).appendAll(nil()).equals(list(1, 2, 3))).toBeTruthy();
                 });
             });
+
+            describe("when iterator", function () {
+
+                it("should list(1) iterator not be null", function(){
+                    expect(list(1).iterator()).not.toBeNull();
+                });
+
+                it("should list(1) iterator hasNext", function(){
+                    expect(list(1).iterator().hasNext()).toBeTruthy();
+                });
+
+                it("should list(1) iterator next is type Some", function(){
+                    expect(list(1).iterator().next()).toBeType(funk.option.Some);
+                });
+
+                it("should list(1) iterator next is some(1)", function(){
+                    expect(list(1).iterator().next().equals(some(1))).toBeTruthy();
+                });
+
+                it("should list(1) iterator next get is 1", function(){
+                    expect(list(1).iterator().next().get()).toBeStrictlyEqualTo(1);
+                });
+
+                it("should list(1, 2) iterator hasNext", function(){
+                    var iterator = list(1, 2).iterator();
+                    iterator.next();
+                    expect(iterator.hasNext()).toBeTruthy();
+                });
+
+                it("should list(1, 2) iterator next", function(){
+                    var iterator = list(1, 2).iterator();
+                    iterator.next();
+                    expect(iterator.next().equals(some(2))).toBeTruthy();
+                });
+            });
         });
     });
 });

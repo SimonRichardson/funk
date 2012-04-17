@@ -15,8 +15,8 @@ funk.collection.immutable.ListIterator = (function(){
             return funk.option.none();
         } else {
             var head = this._list.head();
-            this._list = this._list.tail();
-            return funk.option.some(head);
+            this._list = this._list.tail().get();
+            return head;
         }
     };
     ListIteratorImpl.prototype.toString = function(){
