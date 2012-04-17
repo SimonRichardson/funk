@@ -1,6 +1,8 @@
 describe("funk", function () {
     describe("collections", function () {
         describe("Nil", function () {
+            "use strict";
+
             it("should not be not empty", function () {
                 expect(nil().nonEmpty()).toBeFalsy();
             });

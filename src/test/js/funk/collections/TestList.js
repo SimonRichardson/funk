@@ -1,6 +1,7 @@
 describe("funk", function () {
     describe("collections", function () {
         describe("List", function () {
+            "use strict";
 
             // The obligatory "Hello World" test!
             it("should turn \"dlrow olleh\" to \"HELLO WORLD\"", function(){
