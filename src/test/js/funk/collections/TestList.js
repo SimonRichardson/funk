@@ -907,6 +907,19 @@ describe("funk", function () {
                     expect(list(1, 2, 3).prependIterable(nil()).equals(list(1, 2, 3))).toBeTruthy();
                 });
             });
+
+            describe("when prependIterator", function () {
+
+                it("should merge iterators", function(){
+                    var l0 = list(1, 2, 3);
+                    var l1 = list(4, 5, 6).iterator();
+                    expect(l0.prependIterator(l1).equals(list(4, 5, 6, 1, 2, 3))).toBeTruthy();
+                });
+
+                it("should not merge iterables if one is nil", function(){
+                    expect(list(1, 2, 3).prependIterator(nil().iterator()).equals(list(1, 2, 3))).toBeTruthy();
+                });
+            });
         });
     });
 });
