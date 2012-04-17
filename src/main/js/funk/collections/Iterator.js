@@ -9,7 +9,7 @@ funk.collection.Iterator = (function(){
         return false;
     };
     IteratorImpl.prototype.next = function(){
-        return none();
+        return funk.option.none();
     };
     IteratorImpl.prototype.equals = function(value){
         return funk.collection.util.iterator.eq(this, value);

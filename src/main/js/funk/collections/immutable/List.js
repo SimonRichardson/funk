@@ -673,11 +673,11 @@ funk.collection.immutable.List = (function(){
     };
     ListImpl.prototype.prependIterable = function(iterable){
         funk.util.verifiedType(iterable, funk.collection.Iterable);
-        return this.prependAll(iterable.iterator.toList());
+        return this.prependAll(iterable.iterator().toList());
     };
     ListImpl.prototype.appendIterable = function(iterable){
         funk.util.verifiedType(iterable, funk.collection.Iterable);
-        return this.appendAll(iterable.iterator.toList());
+        return this.appendAll(iterable.iterator().toList());
     };
     ListImpl.prototype.name = "List";
     return ListImpl;

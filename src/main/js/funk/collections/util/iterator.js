@@ -11,7 +11,7 @@ funk.collection.util.iterator = {
                 iterBHasNext = that.hasNext();
 
                 if(iterAHasNext && iterBHasNext) {
-                    if(funk.ne(iterator.next(), that.next())) {
+                    if(funk.util.ne(iterator.next(), that.next())) {
                         return false;
                     }
                 } else if(!iterAHasNext && !iterBHasNext) {
@@ -33,10 +33,10 @@ funk.collection.util.iterator = {
         return result;
     },
     toList: function(iterator){
-        var list = funk.collection.nil();
+        var list = funk.collection.immutable.nil();
         while(iterator.hasNext()) {
             list = list.prepend(iterator.next());
         }
-        return list;
+        return list.reverse();
     }
 };

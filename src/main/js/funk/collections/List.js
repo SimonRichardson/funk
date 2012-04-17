@@ -2,7 +2,7 @@ funk.collection = funk.collection || {};
 funk.collection.List = (function(){
     "use strict";
     var ListImpl = function(){};
-    ListImpl.prototype = new funk.Product();
+    ListImpl.prototype = new funk.collection.Iterable();
     ListImpl.prototype.constructor = ListImpl;
     ListImpl.prototype.drop = function(index){
         funk.util.isAbstract();

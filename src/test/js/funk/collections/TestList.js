@@ -868,6 +868,45 @@ describe("funk", function () {
                     expect(iterator.next().equals(some(2))).toBeTruthy();
                 });
             });
+
+            describe("when appendIterable", function () {
+
+                it("should merge iterables", function(){
+                    var l0 = list(1, 2, 3);
+                    var l1 = list(4, 5, 6);
+                    expect(l0.appendIterable(l1).equals(list(1, 2, 3, 4, 5, 6))).toBeTruthy();
+                });
+
+                it("should not merge iterables if one is nil", function(){
+                    expect(list(1, 2, 3).appendIterable(nil()).equals(list(1, 2, 3))).toBeTruthy();
+                });
+            });
+
+            describe("when appendIterator", function () {
+
+                it("should merge iterators", function(){
+                    var l0 = list(1, 2, 3);
+                    var l1 = list(4, 5, 6).iterator();
+                    expect(l0.appendIterator(l1).equals(list(1, 2, 3, 4, 5, 6))).toBeTruthy();
+                });
+
+                it("should not merge iterables if one is nil", function(){
+                    expect(list(1, 2, 3).appendIterator(nil().iterator()).equals(list(1, 2, 3))).toBeTruthy();
+                });
+            });
+
+            describe("when prependIterable", function () {
+
+                it("should merge iterables", function(){
+                    var l0 = list(1, 2, 3);
+                    var l1 = list(4, 5, 6);
+                    expect(l0.prependIterator(l1).equals(list(4, 5, 6, 1, 2, 3))).toBeTruthy();
+                });
+
+                it("should not merge iterables if one is nil", function(){
+                    expect(list(1, 2, 3).appendIterable(nil()).equals(list(1, 2, 3))).toBeTruthy();
+                });
+            });
         });
     });
 });
