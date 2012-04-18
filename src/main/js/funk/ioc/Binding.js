@@ -16,7 +16,7 @@ funk.ioc.Binding = (function(){
             return binding._toInstance;
         } else if(2 == type) {
             var provider = binding._module.getInstance(binding._toProvider);
-            return funk.util.verifiedType(provider, funk.ioc.Provider).get();
+            return funk.util.verifiedType(provider.get(), funk.ioc.Provider);
         }
     };
     var BindingImpl = function(module, bind){

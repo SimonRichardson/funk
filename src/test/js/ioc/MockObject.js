@@ -1,9 +1,11 @@
 var MockObject = (function(){
     var MockObjectImpl = function() {
+        this._byInstance = funk.ioc.inject(String);
     };
-    MockObjectImpl.prototype = new funk.ioc.AbstractModule();
+    MockObjectImpl.prototype = {};
     MockObjectImpl.prototype.constructor = MockObjectImpl;
-    MockObjectImpl.prototype.configure = function(){
-
+    MockObjectImpl.prototype.byInstance = function(){
+        return this._byInstance;
     };
+    return MockObjectImpl;
 })();

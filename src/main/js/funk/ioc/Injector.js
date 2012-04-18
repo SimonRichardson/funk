@@ -29,25 +29,28 @@ funk.ioc.Injector = (function(){
             injector._scopes = injector._scopes.prepend(module);
         }
     };
-    InjectorImpl.pushScope = function(module){
-        if(module === funk.util.verifiedType(module, funk.ioc.Module)){
-            injector._scopes = injector._scopes.tail();
-            if(injector._scopes.nonEmpty()) {
-                // TODO (Simon) Make injector._currentScope none or some.
-                var head = injector._scopes.head();
-                injector._currentScope = funk.option.when(head, {
+    InjectorImpl.popScope = function(){
+        funk.option.when(injector._scopes.tail(), {
+            none: function(){
+                injector._currentScope = null;
+            },
+            some: function(value){
+                injector._scopes = value;
+                if(injector._scopes.nonEmpty()) {
+                    var head = injector._scopes.head();
+                    injector._currentScope = funk.option.when(head, {
                         none: function(){
                             return null;
                         },
                         some: function(){
                             return funk.util.verifiedType(head, funk.ioc.Module);
                         }
-                    }
-                );
-            } else {
-                injector._currentScope = null;
+                    });
+                } else {
+                    injector._currentScope = null;
+                }
             }
-        }
+        })
     };
     InjectorImpl.currentScope = function(){
         return injector._currentScope;

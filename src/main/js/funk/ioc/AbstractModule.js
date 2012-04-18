@@ -33,13 +33,13 @@ funk.ioc.AbstractModule = (function(){
         try
         {
             funk.ioc.Injector.pushScope(this);
-            return (null === binding) ? new value : binding.getInstance();
+            return funk.isValid(binding) ? binding.getInstance() : new value();
         } finally {
             funk.ioc.Injector.popScope();
         }
     };
     AbstractModuleImpl.prototype.binds = function(value){
-        return this._map[value] !== null;
+        return funk.isValid(this._map[value]);
     };
     return AbstractModuleImpl;
 })();
