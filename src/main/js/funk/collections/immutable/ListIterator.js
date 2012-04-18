@@ -2,6 +2,8 @@ funk.collection = funk.collection || {};
 funk.collection.immutable = funk.collection.immutable || {};
 funk.collection.immutable.ListIterator = (function(){
     var ListIteratorImpl = function(list){
+        funk.collection.Iterator.call(this);
+
         this._list = list;
     };
     ListIteratorImpl.prototype = new funk.collection.Iterator();

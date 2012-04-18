@@ -1,7 +1,9 @@
 funk.collection = funk.collection || {};
 funk.collection.List = (function(){
     "use strict";
-    var ListImpl = function(){};
+    var ListImpl = function(){
+        funk.collection.Iterable.call(this);
+    };
     ListImpl.prototype = new funk.collection.Iterable();
     ListImpl.prototype.constructor = ListImpl;
     ListImpl.prototype.drop = function(index){

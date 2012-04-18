@@ -20,6 +20,8 @@ funk.ioc.Binding = (function(){
         }
     };
     var BindingImpl = function(module, bind){
+        funk.ioc.Scope.call(this);
+
         this._module = funk.util.verifiedType(module, funk.ioc.AbstractModule);
         this._bind = bind;
 

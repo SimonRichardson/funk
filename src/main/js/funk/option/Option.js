@@ -1,6 +1,8 @@
 funk.option = funk.option || {};
 funk.option.Option = (function(){
-    var OptionImpl = function(){};
+    var OptionImpl = function(){
+        funk.Product.call(this);
+    };
     OptionImpl.prototype = new funk.Product();
     OptionImpl.prototype.constructor = OptionImpl;
     OptionImpl.prototype.name = "Option";

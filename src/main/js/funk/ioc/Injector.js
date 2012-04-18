@@ -42,8 +42,8 @@ funk.ioc.Injector = (function(){
                         none: function(){
                             return null;
                         },
-                        some: function(){
-                            return funk.util.verifiedType(head, funk.ioc.Module);
+                        some: function(value){
+                            return funk.util.verifiedType(value, funk.ioc.Module);
                         }
                     });
                 } else {
@@ -101,7 +101,16 @@ funk.ioc.Injector = (function(){
         }
 
         throw new funk.error.BindingError("No module for " + value + " could be found.")
-    }
+    };
+    InjectorImpl.forget = function(value){
+        if(funk.isDefined(value, injector._map)) {
+            injector._map[value] = null;
+            delete injector._map[value];
+        }
+    };
+    InjectorImpl.forgetAll = function(){
+        injector._map = {};
+    };
     // Create a new instance
     lock = false;
     injector = new InjectorImpl();

@@ -3,6 +3,7 @@ funk.option.Some = (function(){
     "use strict";
     var SomeImpl = function(value){
         funk.option.Option.call(this);
+
         this._value = value;
     };
     SomeImpl.prototype = new funk.option.Option();

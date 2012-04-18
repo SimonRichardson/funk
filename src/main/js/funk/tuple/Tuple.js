@@ -1,7 +1,9 @@
 funk.tuple = funk.tuple || {};
 funk.tuple.Tuple = (function(){
     "use strict";
-    var TupleImpl = function(){};
+    var TupleImpl = function(){
+        funk.Product.call(this);
+    };
     TupleImpl.prototype = new funk.Product();
     TupleImpl.prototype.constructor = TupleImpl;
     TupleImpl.prototype.name = "Tuple";

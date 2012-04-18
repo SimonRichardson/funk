@@ -39,6 +39,8 @@ funk.signals.Signal = (function(){
     };
 
     var SignalImpl = function(){
+        funk.Product.call(this);
+
         this._slots = funk.collection.immutable.nil();
         this._valueClasses = funk.toArray(arguments);
     };

@@ -22,6 +22,8 @@ funk.collection.immutable.List = (function(){
     };
 
     var ListImpl = function(head, tail){
+        funk.collection.List.call(this);
+
         this._head = (head instanceof funk.option.Option) ? head : funk.option.some(head);
         this._tail = (tail instanceof funk.option.Option) ? tail : funk.option.some(tail);
         this._length = 0;

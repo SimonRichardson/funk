@@ -2,7 +2,9 @@ funk.collection = funk.collection || {};
 funk.collection.immutable = funk.collection.immutable || {};
 funk.collection.immutable.Nil = (function(){
     "use strict";
-    var NilImpl = function(){};
+    var NilImpl = function(){
+        funk.collection.List.call(this);
+    };
     NilImpl.prototype = new funk.collection.List();
     NilImpl.prototype.constructor = NilImpl;
     NilImpl.prototype.name = "Nil";

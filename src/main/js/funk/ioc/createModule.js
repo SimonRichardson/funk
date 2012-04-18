@@ -1,6 +1,8 @@
 funk.ioc = funk.ioc || {};
 funk.ioc.NewModule = (function(){
     var NewModuleImpl = function(configure) {
+        funk.ioc.AbstractModule.call(this);
+
         if(!funk.isValid(configure)){
             throw new funk.error.ArgumentError("Configure must not be null");
         }
@@ -10,7 +12,7 @@ funk.ioc.NewModule = (function(){
     NewModuleImpl.prototype.constructor = NewModuleImpl;
     NewModuleImpl.prototype.name = "NewModule";
     NewModuleImpl.prototype.configure = function(){
-        this._configure.apply(this, []);
+        this._configure.apply(this, [this]);
     };
     return NewModuleImpl;
 })();
