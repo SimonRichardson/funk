@@ -21,7 +21,10 @@ describe("funk", function () {
                 });
 
                 it("should string be equal to \"Test\"", function(){
-
+                    var object = module.getInstance(funk.ioc.createObject(function(object){
+                        this.string = inject(String);
+                    }));
+                    expect(object.string).toBeStrictlyEqualTo(value);
                 });
             });
         });
