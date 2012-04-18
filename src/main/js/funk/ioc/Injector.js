@@ -61,20 +61,24 @@ funk.ioc.Injector = (function(){
         var modules = injector._modules;
 
         while(modules.nonEmpty()) {
-            module = modules.head();
+            module = funk.option.when(modules.head(), {
+                some: function(value){
+                    return value;
+                }
+            });
 
             if(module.binds(value)) {
                 if(null != result) {
-                    throw new funk.error.BindingError("More than one module binds " + value + ".")
+                    throw new funk.ioc.error.BindingError("More than one module binds " + value + ".")
                 }
                 result = module;
             }
 
-            modules = modules.tail();
+            modules = modules.tail().get();
         }
 
         if(null == result) {
-            throw new funk.error.BindingError("No binding for " + value + " could be fond.")
+            throw new funk.ioc.error.BindingError("No binding for " + value + " could be found.")
         }
 
         return result;
@@ -102,14 +106,11 @@ funk.ioc.Injector = (function(){
 
         throw new funk.error.BindingError("No module for " + value + " could be found.")
     };
-    InjectorImpl.forget = function(value){
-        if(funk.isDefined(value, injector._map)) {
-            injector._map[value] = null;
-            delete injector._map[value];
-        }
-    };
-    InjectorImpl.forgetAll = function(){
+    InjectorImpl.removeAll = function(){
         injector._map = {};
+        injector._scopes = funk.collection.immutable.nil();
+        injector._modules = funk.collection.immutable.nil();
+        injector._currentScope = null;
     };
     // Create a new instance
     lock = false;

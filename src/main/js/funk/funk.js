@@ -1,5 +1,11 @@
 "use strict";
+
 var funk = {};
+var isCommonJS = "undefined" === typeof window && "undefined" === typeof exports;
+if(isCommonJS) {
+    exports.funk = funk;
+}
+
 funk.natives = {
     object: {
         proto: Object.prototype,
