@@ -252,7 +252,7 @@ describe("funk", function () {
                     expect(
                         function () {
                             some(true).productElement(1)
-                        }).toThrow(new funk.error.RangeError());
+                        }).toBeThrown(new funk.error.RangeError());
                 });
             });
         });

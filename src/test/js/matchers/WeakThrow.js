@@ -19,6 +19,13 @@ beforeEach(function(){
             }
             if (exception) {
                 result = (expected === jasmine.undefined || this.env.equals_(exception, expected));
+                if(!result) {
+                    if( "undefined" !== typeof exception &&
+                        "undefined" !== typeof expected &&
+                        exception.constructor === expected.constructor) {
+                        result = true;
+                    }
+                }
             }
 
             var not = this.isNot ? "not " : "";

@@ -129,6 +129,8 @@ describe("funk", function () {
                     expect(object0.object).toBeStrictlyEqualTo(object1.object);
                 });
             });
+
+
         });
     });
 });

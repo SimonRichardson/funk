@@ -4,19 +4,40 @@ funk.ioc.Binding = (function(){
     var solve = function(binding){
         var type = binding._bindingClass;
         if(0 === type){
+
             return funk.option.when(binding._to, {
                 none: function(){
                     return new binding._bind();
                 },
                 some: function(value){
-                    return binding._module.getInstance(binding._to);
+                    return binding._module.getInstance(value);
                 }
             });
-        } else if(1 == type) {
-            return binding._toInstance;
-        } else if(2 == type) {
-            var provider = binding._module.getInstance(binding._toProvider);
-            return funk.util.verifiedType(provider.get(), funk.ioc.Provider);
+
+        } else if(1 === type) {
+
+            return funk.option.when(binding._toInstance, {
+                some: function(value){
+                    return value;
+                }
+            });
+
+        } else if(2 === type) {
+
+            var bindingProvider = funk.option.when(binding._toProvider, {
+                some: function(value){
+                    return value;
+                }
+            });
+            var provider = funk.option.when(binding._module.getInstance(bindingProvider), {
+                some: function(value){
+                    return value;
+                }
+            });
+            return funk.util.verifiedType(provider, funk.ioc.Provider);
+
+        } else {
+            throw new funk.ioc.error.BindingError("Unexpected binding type");
         }
     };
     var BindingImpl = function(module, bind){
@@ -59,10 +80,10 @@ funk.ioc.Binding = (function(){
                 return this._value;
             }
 
-            this._value = solve(this);
+            this._value = funk.option.some(solve(this));
             this._evaluated = true;
         } else {
-            return solve(this);
+            return funk.option.some(solve(this));
         }
     };
     BindingImpl.prototype.asSingleton = function(){

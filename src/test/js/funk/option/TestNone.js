@@ -22,7 +22,7 @@ describe("funk", function () {
                 expect(
                     function () {
                         none().get()
-                    }).toThrow(new funk.error.NoSuchElementError());
+                    }).toBeThrown(new funk.error.NoSuchElementError());
             });
 
             describe("when getOrElse on none", function () {
@@ -135,7 +135,7 @@ describe("funk", function () {
                     expect(
                         function () {
                             none().productElement(1)
-                        }).toThrow(new funk.error.RangeError());
+                        }).toBeThrown(new funk.error.RangeError());
                 });
             });
         });

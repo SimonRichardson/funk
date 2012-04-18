@@ -210,7 +210,7 @@ describe("funk", function () {
                     expect(
                         function () {
                             nil().productElement(1)
-                        }).toThrow(new funk.error.RangeError());
+                        }).toBeThrown(new funk.error.RangeError());
                 });
             });
         });
