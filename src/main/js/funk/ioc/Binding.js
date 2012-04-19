@@ -29,16 +29,14 @@ funk.ioc.Binding = (function(){
                     return value;
                 }
             });
-            var provider = funk.option.when(binding._module.getInstance(bindingProvider), {
-                some: function(value){
-                    return value;
-                }
-            });
-            return funk.util.verifiedType(provider, funk.ioc.Provider);
-
-        } else {
-            throw new funk.ioc.error.BindingError("Unexpected binding type");
+            var provider = binding._module.getInstance(bindingProvider);
+            if(funk.isValid(provider))
+            {
+                return funk.util.verifiedType(provider.get(), funk.ioc.Provider);
+            }
         }
+
+        throw new funk.ioc.error.BindingError("Unexpected binding type");
     };
     var BindingImpl = function(module, bind){
         funk.ioc.Scope.call(this);
@@ -57,6 +55,9 @@ funk.ioc.Binding = (function(){
     BindingImpl.prototype = new funk.ioc.Scope();
     BindingImpl.prototype.constructor = BindingImpl;
     BindingImpl.prototype.name = "Binding";
+    BindingImpl.prototype.bind = function(){
+        return this._bind;
+    };
     BindingImpl.prototype.to = function(value){
         this._to = funk.option.some(value);
         this._bindingClass = 0;
@@ -68,11 +69,15 @@ funk.ioc.Binding = (function(){
         return this;
     };
     BindingImpl.prototype.toProvider = function(provider){
-        if(provider === funk.util.verifiedType(provider, funk.ioc.Provider)){
-            this._toProvider = funk.option.some(provider);
-            this._bindingClass = 2;
-            return this;
+        if(funk.isFunction(provider)) {
+            var ctor = provider.constructor;
+            if(ctor === funk.util.verifiedType(ctor, funk.ioc.Provider.constructor)) {
+                this._toProvider = funk.option.some(provider);
+                this._bindingClass = 2;
+                return this;
+            }
         }
+        throw new funk.error.TypeError("Expected: funk.ioc.Provider, Actual: " + provider);
     };
     BindingImpl.prototype.getInstance = function(){
         if(this._singletonScope) {

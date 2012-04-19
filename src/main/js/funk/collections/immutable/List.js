@@ -80,7 +80,7 @@ funk.collection.immutable.List = (function(){
         return "List";
     };
     ListImpl.prototype.prepend = function(value){
-        return new this._newListCtor(value, this);
+        return new (this._newListCtor)(value, this);
     };
     ListImpl.prototype.prependAll = function(value){
         if(value === funk.util.verifiedType(value, funk.collection.List)) {

@@ -45,6 +45,9 @@ funk.isInteger = function(obj){
 funk.isString = function(obj){
     return "string" === typeof obj;
 };
+funk.isFunction = function(obj){
+    return "function" === typeof obj;
+};
 funk.toArray = function(obj){
     if(funk.isDefined(obj)) {
         if(funk.isArray(obj)) {
@@ -60,7 +63,7 @@ funk.toArray = function(obj){
     return [];
 };
 funk.has = function(obj, key) {
-    if(funk.isDefined(obj) && funk.isDefined(key)) {
+    if(funk.isValid(obj) && funk.isValid(key)) {
         // Try the undefined check first, as it seems to be more
         // reliable that hasOwnProperty
         var exists = 'undefined' !== typeof obj[key];

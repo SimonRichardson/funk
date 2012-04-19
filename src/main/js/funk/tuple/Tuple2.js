@@ -23,6 +23,9 @@ funk.tuple.Tuple2 = (function(){
             default: throw new funk.error.RangeError();
         }
     };
+    TupleImpl.prototype.productPrefix = function(){
+        return "Tuple2";
+    };
     TupleImpl.prototype.name = "Tuple2";
     return TupleImpl;
 })();

@@ -183,6 +183,28 @@ describe("funk", function () {
                     expect(SingletonInstance.numInstances).toBeStrictlyEqualTo(1);
                 });
             });
+
+            describe("when injecting a Provider", function(){
+                var module;
+
+                beforeEach(function(){
+                    module = funk.ioc.Injector.initialize(funk.ioc.createModule(function(module){
+                        this.bind(MockProviderObject).toProvider(MockProvider);
+                        this.bind(MockProvider).to(Provider);
+                    }));
+                });
+
+                afterEach(function(){
+                    funk.ioc.Injector.removeAll();
+                });
+
+                it("should object not be null", function(){
+                    var object = module.getInstance(funk.ioc.createObject(function(object){
+                        this.provider = inject(MockProviderObject);
+                    }));
+                    expect(object.provider).not.toBeNull();
+                });
+            });
         });
     });
 });

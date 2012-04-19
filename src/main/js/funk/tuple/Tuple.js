@@ -7,6 +7,9 @@ funk.tuple.Tuple = (function(){
     TupleImpl.prototype = new funk.Product();
     TupleImpl.prototype.constructor = TupleImpl;
     TupleImpl.prototype.name = "Tuple";
+    TupleImpl.prototype.productPrefix = function(){
+        return "Tuple";
+    };
     return TupleImpl;
 })();
 
