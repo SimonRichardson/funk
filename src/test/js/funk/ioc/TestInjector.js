@@ -140,6 +140,8 @@ describe("funk", function () {
                 });
 
                 afterEach(function(){
+                    SingletonInstance.numInstances = 0;
+
                     funk.ioc.Injector.removeAll();
                 });
 
@@ -148,6 +150,37 @@ describe("funk", function () {
                         this.singleton = inject(SingletonInstance);
                     }));
                     expect(object.singleton).not.toBeUndefined();
+                });
+
+                it("should instance be identical when injected", function(){
+                    var object0 = module.getInstance(funk.ioc.createObject(function(object){
+                        this.singleton = inject(SingletonInstance);
+                    }));
+
+                    var object1 = module.getInstance(funk.ioc.createObject(function(object){
+                        this.singleton = inject(SingletonInstance);
+                    }));
+                    expect(object0.singleton).toBeStrictlyEqualTo(object1.singleton);
+                });
+
+                it("should create 1 instance and value to be 1", function(){
+                    var object0 = module.getInstance(funk.ioc.createObject(function(object){
+                        this.singleton = inject(SingletonInstance);
+                    }));
+                    expect(SingletonInstance.numInstances).toBeStrictlyEqualTo(1);
+                });
+
+                it("should create 3 instances and value to be 1", function(){
+                    var object0 = module.getInstance(funk.ioc.createObject(function(object){
+                        this.singleton = inject(SingletonInstance);
+                    }));
+                    var object1 = module.getInstance(funk.ioc.createObject(function(object){
+                        this.singleton = inject(SingletonInstance);
+                    }));
+                    var object2 = module.getInstance(funk.ioc.createObject(function(object){
+                        this.singleton = inject(SingletonInstance);
+                    }));
+                    expect(SingletonInstance.numInstances).toBeStrictlyEqualTo(1);
                 });
             });
         });
