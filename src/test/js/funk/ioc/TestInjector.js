@@ -130,7 +130,26 @@ describe("funk", function () {
                 });
             });
 
+            describe("when injecting singleton", function(){
+                var module;
 
+                beforeEach(function(){
+                    module = funk.ioc.Injector.initialize(funk.ioc.createModule(function(module){
+                        this.bind(SingletonInstance).asSingleton();
+                    }));
+                });
+
+                afterEach(function(){
+                    funk.ioc.Injector.removeAll();
+                });
+
+                it("should instance not be null", function(){
+                    var object = module.getInstance(funk.ioc.createObject(function(object){
+                        this.singleton = inject(SingletonInstance);
+                    }));
+                    expect(object.singleton).not.toBeUndefined();
+                });
+            });
         });
     });
 });

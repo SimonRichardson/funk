@@ -35,14 +35,19 @@ funk.ioc.AbstractModule = (function(){
         try
         {
             funk.ioc.Injector.pushScope(this);
-            return funk.isValid(binding) ? funk.option.when(binding.getInstance(), {
-                none: function(){
-                    return new value();
-                },
-                some: function(v){
-                    return v;
-                }
-            }) : new value();
+            if(funk.isValid(binding)) {
+                var instance = binding.getInstance();
+                return funk.option.when(instance, {
+                    none: function(){
+                        return new (value)();
+                    },
+                    some: function(v){
+                        return v;
+                    }
+                });
+            } else {
+                return new (value)()
+            }
         } finally {
             funk.ioc.Injector.popScope();
         }

@@ -5,7 +5,7 @@ funk.ioc.inject = function(type){
     }
 
     var currentScope = funk.ioc.Injector.currentScope();
-    if(currentScope == null) {
+    if(!funk.isValid(currentScope)){
         return funk.ioc.Injector.scopeOf(type).getInstance(type);
     }
     return currentScope.getInstance(type);

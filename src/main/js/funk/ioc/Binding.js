@@ -7,7 +7,7 @@ funk.ioc.Binding = (function(){
 
             return funk.option.when(binding._to, {
                 none: function(){
-                    return new binding._bind();
+                    return new (binding._bind)();
                 },
                 some: function(value){
                     return binding._module.getInstance(value);
@@ -49,7 +49,7 @@ funk.ioc.Binding = (function(){
         this._to = funk.option.none();
         this._toInstance = funk.option.none();
         this._toProvider = funk.option.none();
-        this._bindingClass = -1;
+        this._bindingClass = 0;
         this._singletonScope = false;
         this._evaluated = false;
         this._value = funk.option.none();
@@ -77,11 +77,11 @@ funk.ioc.Binding = (function(){
     BindingImpl.prototype.getInstance = function(){
         if(this._singletonScope) {
             if(this._evaluated){
-                return this._value;
+                return funk.util.verifiedType(this._value, funk.option.Option);
             }
-
             this._value = funk.option.some(solve(this));
             this._evaluated = true;
+            return this._value;
         } else {
             return funk.option.some(solve(this));
         }
