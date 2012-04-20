@@ -107,5 +107,140 @@ describe("funk", function () {
                 expect(signal.size()).toBeStrictlyEqualTo(3);
             });
         });
+
+        describe("when dispatching", function(){
+            it("should have 1 listener and be called after dispatching", function(){
+                var called = false;
+                var signal = new funk.signals.Signal();
+                signal.add(function(){
+                    called = true;
+                });
+                signal.dispatch();
+                expect(called).toBeTruthy();
+            });
+
+            it("should have 2 listeners and be called after dispatching", function(){
+                var called0 = false;
+                var called1 = false;
+
+                var signal = new funk.signals.Signal();
+                signal.add(function(){
+                    called0 = true;
+                });
+                signal.add(function(){
+                    called1 = true;
+                });
+                signal.dispatch();
+                expect(called0 && called1).toBeTruthy();
+            });
+
+            it("should have 1 listener and not be called if disabled", function(){
+                var signal = new funk.signals.Signal();
+                signal.add(function(){
+                    fail();
+                }).setEnabled(false);
+                signal.dispatch();
+            });
+
+            it("should have 2 listeners and first 1 is disabled", function(){
+                var called = false;
+
+                var signal = new funk.signals.Signal();
+                signal.add(function(){
+                    fail();
+                }).setEnabled(false);
+                signal.add(function(){
+                    called = true;
+                });
+
+                signal.dispatch();
+
+                expect(called).toBeTruthy();
+            });
+
+            it("should have 2 listeners and second 1 is disabled", function(){
+                var called = false;
+
+                var signal = new funk.signals.Signal();
+                signal.add(function(){
+                    called = true;
+                });
+                signal.add(function(){
+                    fail();
+                }).setEnabled(false);
+
+                signal.dispatch();
+
+                expect(called).toBeTruthy();
+            });
+
+            it("should have 4 listeners and third 1 is disabled", function(){
+                var called0 = false;
+                var called1 = false;
+                var called2 = false;
+                var called3 = false;
+
+                var signal = new funk.signals.Signal();
+                signal.add(function(){
+                    called0 = true;
+                });
+                signal.add(function(){
+                    called1 = true;
+                });
+                signal.add(function(){
+                    fail();
+                }).setEnabled(false);
+                signal.add(function(){
+                    called2 = true;
+                });
+                signal.add(function(){
+                    called3 = true;
+                });
+
+                signal.dispatch();
+
+                expect(called0 && called1 && called2 && called3).toBeTruthy();
+            });
+
+            it("should pass \"Test\" through arguments", function(){
+                var value = "Test";
+
+                var signal = new funk.signals.Signal(String);
+                signal.add(function(arg){
+                    expect(arg).toBeStrictlyEqualTo(value);
+                });
+                signal.dispatch(value);
+            });
+
+            it("should pass {} through arguments and be same instance", function(){
+                var value = {};
+
+                var signal = new funk.signals.Signal(String);
+                signal.add(function(arg){
+                    expect(arg).toBeStrictlyEqualTo(value);
+                });
+                signal.dispatch(value);
+            });
+
+            it("should pass null through arguments", function(){
+                var value = null;
+
+                var signal = new funk.signals.Signal(null);
+                signal.add(function(arg){
+                    expect(arg).toBeStrictlyEqualTo(value);
+                });
+                signal.dispatch(value);
+            });
+
+            it("should pass null through arguments", function(){
+                var value = undefined;
+
+                var signal = new funk.signals.Signal(undefined);
+                signal.add(function(arg){
+                    expect(arg).toBeStrictlyEqualTo(value);
+                });
+                signal.dispatch(value);
+            });
+        });
     });
 });

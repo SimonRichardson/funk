@@ -31,11 +31,10 @@ funk.signals.Slot = (function(){
         }
 
         var values = valueObjects;
-        if(funk.isDefined(this._params) && this._params.length) {
+        if(funk.isValid(this._params) && this._params.length) {
             values = valueObjects.concat(this._params);
         }
-
-        this._listener.apply(this._scope, [funk.tuple.tuple(values)]);
+        this._listener.apply(this._scope, values);
     };
     SlotImpl.prototype.remove = function(){
         this._signal.remove(this._listener);
@@ -55,12 +54,12 @@ funk.signals.Slot = (function(){
     SlotImpl.prototype.once = function(){
         return this._once;
     };
-    SlotImpl.prototype.enabled = function(value){
-        if(funk.isDefined(value)) {
-            this._enabled = value;
-        }
+    SlotImpl.prototype.getEnabled = function(){
         return this._enabled;
     };
+    SlotImpl.prototype.setEnabled = function(value){
+        this._enabled = !!value;
+    }
     SlotImpl.prototype.params = function(value){
         if(funk.isDefined(value)) {
             this._params = value;

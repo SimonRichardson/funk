@@ -65,10 +65,10 @@ funk.signals.Signal = (function(){
     SignalImpl.prototype.constructor = SignalImpl;
     SignalImpl.prototype.name = "Signal";
     SignalImpl.prototype.add = function(listener){
-        registerListener(this, listener);
+        return registerListener(this, listener);
     };
     SignalImpl.prototype.addOnce = function(listener){
-        registerListener(this, listener, true);
+        return registerListener(this, listener, true);
     };
     SignalImpl.prototype.remove = function(listener){
         var slot = findSlot(this._slots, listener);
@@ -95,7 +95,9 @@ funk.signals.Signal = (function(){
         }
 
         for(var i=0; i<numValueClasses; ++i){
-            if(valueObjects === null || funk.util.verifiedType(valueObjects[i], this._valueClasses[i])) {
+            if(!funk.isValid(valueObjects) ||
+                !funk.isValid(valueObjects[i]) && !funk.isValid(this._valueClasses[i]) ||
+                valueObjects[i].constructor instanceof this._valueClasses[i].constructor) {
                 continue;
             }
 
@@ -111,7 +113,7 @@ funk.signals.Signal = (function(){
                         value.execute(valueObjects);
                     }
                 });
-                p = p.tail();
+                p = p.tail().get();
             }
         }
     };
