@@ -1,36 +1,53 @@
 funk.signals = funk.signals || {};
 funk.signals.Signal = (function(){
     var findSlot = function(slots, listener){
-        return slots.find(function(item){
+        var option = slots.find(function(item){
             return funk.option.when(item, {
                 none: function(){
                     return false;
                 },
                 some: function(slot){
-                    return  funk.util.eq(slot.listener(), listener);
+                    return funk.util.eq(slot.listener(), listener);
                 }
             });
         });
+        return funk.option.when(option, {
+            none: function(){
+                return null;
+            },
+            some: function(slot){
+                return slot;
+            }
+        });
     };
     var registerListener = function(signal, listener, scope, once){
-        once = funk.isDefined(once) ? once : false;
+        if(funk.isValid(listener)) {
+            if(!funk.isFunction(listener)) {
+                throw new funk.error.ArgumentError("Listener has to be null");
+            }
 
-        if(registrationPossible(signal, listener, scope, once)) {
-            var slot = funk.signals.Slot(signal, listener, scope, once);
-            signal._slots = signal._slots.prepend(slot);
-            return slot;
+            once = funk.isValid(once) ? once : false;
+
+            if(registrationPossible(signal, listener, scope, once)) {
+                var slot = new funk.signals.Slot(signal, listener, scope, once);
+                signal._slots = signal._slots.prepend(slot);
+                return slot;
+            }
+
+            return findSlot(signal._slots, listener);
+        } else {
+            throw new funk.error.ArgumentError("Listener can not be null");
         }
-
-        return findSlot(signal._slots, listener);
     };
     var registrationPossible = function(signal, listener, scope, once) {
         if(!signal._slots.nonEmpty()) {
             return true;
         } else {
-            var slot = findSlot(this._slots, listener);
-            if(!slot) {
+            var slot = findSlot(signal._slots, listener);
+            if(!funk.isValid(slot)) {
                 return true;
             }
+            console.log(slot);
             if(slot.once() != once){
                 throw new funk.error.IllegalByDefinitionError();
             }
@@ -100,6 +117,9 @@ funk.signals.Signal = (function(){
     };
     SignalImpl.prototype.size = function(){
         return this._slots.size();
+    };
+    SignalImpl.prototype.valueClasses = function(){
+        return this._valueClasses;
     };
     SignalImpl.prototype.productArity = function(){
         return this._valueClasses.length;

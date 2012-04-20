@@ -1,26 +1,25 @@
 funk.signals = funk.signals || {};
 funk.signals.Slot = (function(){
     var verifyListener = function(slot, listener){
-        if(!funk.isDefined(listener)) {
+        if(!funk.isValid(listener)) {
             throw new funk.error.ArgumentError('Given listener is null.');
         }
 
-        if(!funk.isDefined(slot._signal)) {
+        if(!funk.isValid(slot._signal)) {
             throw new funk.error.IllegalByDefinitionError('Internal signal reference has not been set yet.');
         }
+        return listener;
     };
 
     var SlotImpl = function(signal, listener, scope, once){
         this._signal = signal;
-        this._listener = listener;
+        this._listener = verifyListener(this, listener);
         this._scope = funk.isDefined(scope) ? scope : null;
         this._once = once;
         this._enabled = true;
         this._params = null;
-
-        verifyListener(this, listener);
     };
-    SlotImpl.prototype = {};
+    SlotImpl.prototype = new funk.Product();
     SlotImpl.prototype.constructor = SlotImpl;
     SlotImpl.prototype.name = "Slot";
     SlotImpl.prototype.execute = function(valueObjects){
@@ -44,12 +43,11 @@ funk.signals.Slot = (function(){
     SlotImpl.prototype.signal = function(){
         return this._signal;
     };
-    SlotImpl.prototype.listener = function(value){
-        if(funk.isDefined(value)){
-            verifyListener(this, value);
-            this._listener = value;
-        }
+    SlotImpl.prototype.listener = function(){
         return this._listener;
+    };
+    SlotImpl.prototype.setListener = function(value){
+        this._listener = verifyListener(this, value);
     };
     SlotImpl.prototype.scope = function(){
         return this._scope;
@@ -68,6 +66,16 @@ funk.signals.Slot = (function(){
             this._params = value;
         }
         return this._params;
+    };
+    SlotImpl.prototype.productArity = function(){
+        return 1;
+    };
+    SlotImpl.prototype.productElement = function(index){
+        funk.util.requireRange(index, this.productArity());
+        return this._listener;
+    };
+    SlotImpl.prototype.productPrefix = function(){
+        return "Slot";
     };
     return SlotImpl;
 })();
