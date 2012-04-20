@@ -3,6 +3,24 @@ describe("funk", function () {
         describe("Injector", function () {
             "use strict";
 
+            describe("when injecting null", function(){
+
+                it("throws funk.error.ArgumentError", function(){
+                    expect(function(){
+                        inject(null);
+                    }).toBeThrown(new funk.error.ArgumentError());
+                });
+            });
+
+            describe("when injecting un-prepaired item", function(){
+
+                it("throws funk.ioc.error.BindingError", function(){
+                    expect(function(){
+                        inject(Date);
+                    }).toBeThrown(new funk.ioc.error.BindingError());
+                });
+            });
+
             describe("when injecting object getInstance is not null", function(){
 
                 it("module is not null when inject into Injector", function(){
@@ -189,12 +207,15 @@ describe("funk", function () {
 
                 beforeEach(function(){
                     module = funk.ioc.Injector.initialize(funk.ioc.createModule(function(module){
+                        this.bind(SingletonInstance).asSingleton();
                         this.bind(MockProviderObject).toProvider(MockProvider);
                         this.bind(MockProvider).to(Provider);
                     }));
                 });
 
                 afterEach(function(){
+                    SingletonInstance.numInstances = 0;
+
                     funk.ioc.Injector.removeAll();
                 });
 
@@ -203,6 +224,80 @@ describe("funk", function () {
                         this.provider = inject(MockProviderObject);
                     }));
                     expect(object.provider).not.toBeNull();
+                });
+
+                it("should object not be undefined", function(){
+                    var object = module.getInstance(funk.ioc.createObject(function(object){
+                        this.provider = inject(MockProviderObject);
+                    }));
+                    expect(object.provider).not.toBeUndefined();
+                });
+
+                it("should object be instance of ProvidedObject", function(){
+                    var object = module.getInstance(funk.ioc.createObject(function(object){
+                        this.provider = inject(MockProviderObject);
+                    }));
+                    expect(object.provider).toBeType(ProvidedObject);
+                });
+
+                it("should object be instance of ProvidedObject", function(){
+                    var object0 = module.getInstance(funk.ioc.createObject(function(object){
+                        this.provider = inject(MockProviderObject);
+                    }));
+                    var object1 = module.getInstance(funk.ioc.createObject(function(object){
+                        this.provider = inject(MockProviderObject);
+                    }));
+                    expect(object0.provider).not.toBeEqualTo(object1.provider);
+                });
+            });
+
+            describe("when injecting a Provider", function(){
+                var module;
+
+                beforeEach(function(){
+                    module = funk.ioc.Injector.initialize(funk.ioc.createModule(function(module){
+                        this.bind(SingletonInstance).asSingleton();
+                        this.bind(MockProviderObject).toProvider(MockProvider);
+                        this.bind(MockProvider).to(Provider);
+                    }));
+                });
+
+                afterEach(function(){
+                    SingletonInstance.numInstances = 0;
+
+                    funk.ioc.Injector.removeAll();
+                });
+
+                it("should singleton instances be 1", function(){
+                    var object = module.getInstance(funk.ioc.createObject(function(object){
+                        this.provider = inject(MockProviderObject);
+                    }));
+
+                    expect(SingletonInstance.numInstances).toBeStrictlyEqualTo(1);
+                });
+
+                it("should singleton not be null", function(){
+                    var object = module.getInstance(funk.ioc.createObject(function(object){
+                        var previous = Provider.prototype.get;
+                        Provider.prototype.get = function(){
+                            expect(this.constructor.singleton).not.toBeNull();
+                            return previous();
+                        };
+                        this.provider = inject(MockProviderObject);
+                        Provider.prototype.get = previous;
+                    }));
+                });
+
+                it("should singleton not be undefined", function(){
+                    var object = module.getInstance(funk.ioc.createObject(function(object){
+                        var previous = Provider.prototype.get;
+                        Provider.prototype.get = function(){
+                            expect(this.constructor.singleton).not.toBeUndefined();
+                            return previous();
+                        };
+                        this.provider = inject(MockProviderObject);
+                        Provider.prototype.get = previous;
+                    }));
                 });
             });
         });

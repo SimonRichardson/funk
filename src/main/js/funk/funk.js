@@ -119,3 +119,14 @@ funk.map = function(obj, iterator, context){
     }
     return results;
 };
+funk.getName = function(obj){
+    if(funk.isValid(obj) && funk.has(obj, 'prototype')) {
+        var name = obj.prototype.name;
+        if(funk.isDefined(name)){
+            return name;
+        } else if(funk.has(obj.prototype, 'toString')) {
+            return obj.prototype.toString();
+        }
+    }
+    return "null";
+}

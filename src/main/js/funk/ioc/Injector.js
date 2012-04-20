@@ -69,7 +69,7 @@ funk.ioc.Injector = (function(){
 
             if(module.binds(value)) {
                 if(null != result) {
-                    throw new funk.ioc.error.BindingError("More than one module binds " + value + ".")
+                    throw new funk.ioc.error.BindingError("More than one module binds " + funk.getName(value) + ".")
                 }
                 result = module;
             }
@@ -78,7 +78,7 @@ funk.ioc.Injector = (function(){
         }
 
         if(null == result) {
-            throw new funk.ioc.error.BindingError("No binding for " + value + " could be found.")
+            throw new funk.ioc.error.BindingError("No binding for " + funk.getName(value) + " could be found.")
         }
 
         return result;
@@ -104,7 +104,7 @@ funk.ioc.Injector = (function(){
             modules = modules.tail();
         }
 
-        throw new funk.error.BindingError("No module for " + value + " could be found.")
+        throw new funk.error.BindingError("No module for " + funk.getName(value) + " could be found.")
     };
     InjectorImpl.removeAll = function(){
         injector._map = {};

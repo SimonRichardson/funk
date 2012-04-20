@@ -68,6 +68,10 @@ funk.ioc.AbstractModule = (function(){
         this._initialized = true;
     };
     AbstractModuleImpl.prototype.getInstance = function(value){
+        if(!funk.isValid(value)){
+            throw new funk.error.ArgumentError("Value can not be null");
+        }
+
         if(!this._initialized){
             throw new funk.ioc.error.BindingError("Modules have to be created using \"Injector.initialize(new Module())\".");
         }

@@ -6,15 +6,7 @@ funk.util.verifiedType = function(value, type){
         return value;
     }
 
-    var expectedName = type,
-        actualName = value;
-
-    if(funk.debug) {
-         expectedName = funk.isValid(type) && funk.has(type.prototype, 'name') ? type.prototype.name : type;
-         actualName = funk.isValid(value) && funk.has(value, 'name') ? value.name : value;
-    }
-
-    throw new funk.error.TypeError("Expected: " + expectedName + ", Actual: " + actualName);
+    throw new funk.error.TypeError("Expected: " + funk.getName(type) + ", Actual: " + funk.getName(value));
 };
 
 // Alias
