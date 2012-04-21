@@ -30,8 +30,9 @@ funk.aop.Aspect = (function(){
                         exceptionThrown = null,
                         finallyCalled = false;
 
+                    var a = funk.toArray(arguments);
                     try {
-                        returnValue = current.apply(this, arguments);
+                        returnValue = current.apply(this, a);
                     } catch(e) {
                         exceptionThrown = e;
                     } finally {
@@ -42,15 +43,15 @@ funk.aop.Aspect = (function(){
                         if(funk.isValid(exceptionThrown)) {
                             throw exceptionThrown;
                         } else {
-                            returnValue = func.apply(this, [method, arguments, returnValue]);
+                            returnValue = func.apply(this, [method, a, returnValue]);
                         }
                     } else if(type.equals(AspectType.AFTER_THROW)) {
                         if(funk.isValid(exceptionThrown)) {
-                            returnValue = func.apply(this, [method, arguments, exceptionThrown]);
+                            returnValue = func.apply(this, [method, a, exceptionThrown]);
                         }
                     } else if(type.equals(AspectType.AFTER_FINALLY)) {
                         if(finallyCalled) {
-                            returnValue = func.apply(this, [method, arguments, exceptionThrown, returnValue]);
+                            returnValue = func.apply(this, [method, a, exceptionThrown, returnValue]);
                         }
                     }
 
@@ -65,8 +66,9 @@ funk.aop.Aspect = (function(){
                 };
             } else if(type.equals(AspectType.BEFORE)) {
                 result = function(){
-                    func.apply(this, [method, arguments]);
-                    return current.apply(this, arguments);
+                    var a = funk.toArray(arguments);
+                    func.apply(this, [method, a]);
+                    return current.apply(this, a);
                 };
             }
 

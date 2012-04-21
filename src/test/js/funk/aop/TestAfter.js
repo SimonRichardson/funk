@@ -60,6 +60,11 @@ describe("funk", function(){
                     called = true;
                 });
             });
+
+            it(">>>", function(){
+                funk.aop.flows.profile(MockObject, "returnValue");
+                new MockObject().returnValue(1, 2, 3);
+            });
         });
     });
 });
