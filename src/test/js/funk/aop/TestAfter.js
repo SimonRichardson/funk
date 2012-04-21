@@ -1,6 +1,6 @@
 describe("funk", function(){
     describe("aop", function(){
-        describe("before", function(){
+        describe("after", function(){
 
             afterEach(function(){
                 Aspect.removeAll();
@@ -8,7 +8,7 @@ describe("funk", function(){
 
             it("should call aspect before returnValue", function(){
                 var called = false;
-                before(MockObject, 'returnValue', function(method, args){
+                after(MockObject, 'returnValue', function(method, args, returnValue){
                     called = true;
                 });
                 new MockObject().returnValue();
@@ -16,28 +16,28 @@ describe("funk", function(){
             });
 
             it("should call aspect with correct method name", function(){
-                before(MockObject, 'returnValue', function(method, args){
+                after(MockObject, 'returnValue', function(method, args, returnValue){
                     expect(method).toBeStrictlyEqualTo('returnValue');
                 });
                 new MockObject().returnValue();
             });
 
             it("should call aspect with correct number of arguments (0)", function(){
-                before(MockObject, 'returnValue', function(method, args){
+                after(MockObject, 'returnValue', function(method, args, returnValue){
                     expect(args.length).toBeStrictlyEqualTo(0);
                 });
                 new MockObject().returnValue();
             });
 
             it("should call aspect with correct number of arguments (1)", function(){
-                before(MockObject, 'returnValue', function(method, args){
+                after(MockObject, 'returnValue', function(method, args, returnValue){
                     expect(args.length).toBeStrictlyEqualTo(1);
                 });
                 new MockObject().returnValue("Hello");
             });
 
             it("should call aspect with correct number of arguments (2)", function(){
-                before(MockObject, 'returnValue', function(method, args){
+                after(MockObject, 'returnValue', function(method, args, returnValue){
                     expect(args.length).toBeStrictlyEqualTo(2);
                 });
                 new MockObject().returnValue("Hello", "World!");
@@ -45,16 +45,16 @@ describe("funk", function(){
 
             it("should call aspect with correct argument", function(){
                 var value = "Hello";
-                before(MockObject, 'returnValue', function(method, args){
+                after(MockObject, 'returnValue', function(method, args, returnValue){
                     expect(args[0]).toBeStrictlyEqualTo(value);
                 });
                 new MockObject().returnValue(value);
             });
 
-            it("should call method before mock object method", function(){
+            it("should call method after mock object method", function(){
                 var called = false;
-                before(MockObject, 'callMe', function(method, args){
-                    expect(called).toBeFalsy();
+                after(MockObject, 'callMe', function(method, args, returnValue){
+                    expect(called).toBeTruthy();
                 });
                 new MockObject().callMe(function(){
                     called = true;

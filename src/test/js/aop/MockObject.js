@@ -9,5 +9,8 @@ var MockObject = (function(){
     MockObjectImpl.prototype.returnValue = function(value){
         return value;
     };
+    MockObjectImpl.prototype.callMe = function(func){
+        func();
+    };
     return MockObjectImpl;
 })();

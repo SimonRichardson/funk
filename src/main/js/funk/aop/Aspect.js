@@ -42,15 +42,15 @@ funk.aop.Aspect = (function(){
                         if(funk.isValid(exceptionThrown)) {
                             throw exceptionThrown;
                         } else {
-                            returnValue = func.apply(this, [method, returnValue]);
+                            returnValue = func.apply(this, [method, arguments, returnValue]);
                         }
                     } else if(type.equals(AspectType.AFTER_THROW)) {
                         if(funk.isValid(exceptionThrown)) {
-                            returnValue = func.apply(this, [method, exceptionThrown]);
+                            returnValue = func.apply(this, [method, arguments, exceptionThrown]);
                         }
                     } else if(type.equals(AspectType.AFTER_FINALLY)) {
                         if(finallyCalled) {
-                            returnValue = func.apply(this, [method, exceptionThrown, returnValue]);
+                            returnValue = func.apply(this, [method, arguments, exceptionThrown, returnValue]);
                         }
                     }
 
