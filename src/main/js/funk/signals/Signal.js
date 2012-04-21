@@ -106,15 +106,13 @@ funk.signals.Signal = (function(){
         }
 
         var p = this._slots;
-        if(p.nonEmpty()) {
-            while(p.nonEmpty()) {
-                when(p.head(), {
-                    some: function(value){
-                        value.execute(valueObjects);
-                    }
-                });
-                p = p.tail().get();
-            }
+        while(p.nonEmpty()) {
+            when(p.head(), {
+                some: function(value){
+                    value.execute(valueObjects);
+                }
+            });
+            p = p.tail().get();
         }
     };
     SignalImpl.prototype.size = function(){

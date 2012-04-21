@@ -12,6 +12,8 @@ funk.signals.Slot = (function(){
     };
 
     var SlotImpl = function(signal, listener, scope, once){
+        funk.Product.call(this);
+
         this._signal = signal;
         this._listener = verifyListener(this, listener);
         this._scope = funk.isDefined(scope) ? scope : null;
