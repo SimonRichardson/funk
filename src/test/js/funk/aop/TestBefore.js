@@ -60,6 +60,13 @@ describe("funk", function(){
                     called = true;
                 });
             });
+
+//            it(">>>", function(){
+//                funk.aop.flows.bind(funk.tuple.tuple2(MockObject, "returnValue"),
+//                                    funk.tuple.tuple2(MockObject, "returnValue")).add(function(){
+//
+//                    });
+//            })
         });
     });
 });
