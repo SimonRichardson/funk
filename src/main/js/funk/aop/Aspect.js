@@ -88,8 +88,7 @@ funk.aop.Aspect = (function(){
             when(p.head(), {
                 some: function(value){
                     var slot = funk.util.verifiedType(value, funk.aop.Slot);
-                    var source = slot.source();
-                    source[slot.method()] = slot.current();
+                    slot.remove();
                 }
             });
             p = p.tail().get();

@@ -14,8 +14,8 @@ funk.aop.flows.listen = function(source, method){
             },
             some: function(value){
                 // locate the source
-                if(value._1 === source && value._2 === method) {
-                    return value._3;
+                if(value._1() === source && value._2() === method) {
+                    return value._3();
                 }
                 return null;
             }
@@ -27,9 +27,9 @@ funk.aop.flows.listen = function(source, method){
     }
 
     // Setup the binding after the method call
-    signal = new funk.signals.Signal();
-    funk.aop.after(source, method, function(method, args){
-        signal.dispatch.apply(signal, args);
+    signal = new funk.signals.Signal(String, Array, Object);
+    funk.aop.after(source, method, function(method, args, returnValue){
+        signal.dispatch(method, args, returnValue);
     });
     // Add the items to the tuple
     var tuple = funk.tuple.tuple3(source, method, signal);

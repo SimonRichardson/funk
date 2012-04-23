@@ -61,12 +61,16 @@ describe("funk", function(){
                 });
             });
 
-//            it(">>>", function(){
-//                funk.aop.flows.bind(funk.tuple.tuple2(MockObject, "returnValue"),
-//                                    funk.tuple.tuple2(MockObject, "returnValue")).add(function(){
-//
-//                    });
-//            })
+            it(">>>", function(){
+                var item0;
+                var item1;
+                funk.aop.flows.bind(funk.tuple.tuple2(item0 = new MockObject(), "property"),
+                                    funk.tuple.tuple2(item1 = new MockObject(), "property")).add(function(tuple, value){
+                        console.log("Changed", item1.property());
+                    });
+
+                item0.property(99);
+            });
         });
     });
 });

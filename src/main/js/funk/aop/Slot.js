@@ -23,6 +23,9 @@ funk.aop.Slot = (function(){
     SlotImpl.prototype.current = function(){
         return this._current;
     };
+    SlotImpl.prototype.remove = function(){
+        this._source[this._method] = this._current;
+    };
     SlotImpl.prototype.productArity = function(){
         return 1;
     };

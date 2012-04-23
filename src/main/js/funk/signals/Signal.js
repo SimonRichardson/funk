@@ -94,15 +94,25 @@ funk.signals.Signal = (function(){
                 numValueObjects + '.');
         }
 
+        if(!funk.isValid(valueObjects)){
+            throw new funk.error.ArgumentError('Incorrect values sent');
+        }
+
         for(var i=0; i<numValueClasses; ++i){
-            if(!funk.isValid(valueObjects) ||
-                !funk.isValid(valueObjects[i]) && !funk.isValid(this._valueClasses[i]) ||
-                valueObjects[i].constructor instanceof this._valueClasses[i].constructor) {
-                continue;
+            if(funk.isValid(valueObjects)){
+                var value = valueObjects[i];
+                var classItem = this._valueClasses[i];
+
+                if(funk.isDefined(value) ||
+                    value instanceof classItem ||
+                    (funk.has(value, 'constructor') && funk.has(classItem, 'constructor') &&
+                    value.constructor instanceof classItem.constructor)) {
+                    continue;
+                }
             }
 
-            throw new funk.error.ArgumentError('Value object <' + valueObjects[i]
-                + '> is not an instance of <' + this._valueClasses[i] + '>.');
+            throw new Error('Value object <' + funk.getName(value)
+                + '> is not an instance of <' + funk.getName(classItem) + '>.');
         }
 
         var p = this._slots;

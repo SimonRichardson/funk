@@ -14,8 +14,8 @@ funk.aop.flows.bind = function(source0, source1){
             },
             some: function(value){
                 // locate the source
-                if(funk.util.eq(value._1, source0) && funk.util.eq(value._2, source1)) {
-                    return value._3;
+                if(funk.util.eq(value._1(), source0) && funk.util.eq(value._2(), source1)) {
+                    return value._3();
                 }
                 return null;
             }
@@ -27,22 +27,28 @@ funk.aop.flows.bind = function(source0, source1){
     }
 
     // Two way bind.
-    signal = new funk.signals.Signal(Object, Object);
-    var signal0 = funk.aop.flows.listen(source0._1, source0._2);
-    signal0.add(function(method, args, returnValue){
-        signal1.setEnabled(false);
-        source1._1[source1._2](returnValue);
-        signal1.setEnabled(true);
+    signal = new funk.signals.Signal(funk.tuple.Tuple, Object);
+
+    var signal0 = funk.aop.flows.listen(source0._1(), source0._2());
+    var slot0 = signal0.add(function(method, args, returnValue){
+        slot1.setEnabled(false);
+
+        var source = source1._1();
+        source[source1._2()].apply(source, [returnValue]);
 
         signal.dispatch(source0, returnValue);
+        slot1.setEnabled(true);
     });
-    var signal1 = funk.aop.flows.listen(source1._1, source1._2);
-    signal1.add(function(method, args, returnValue){
-        signal0.setEnabled(false);
-        source0._1[source0._2](returnValue);
-        signal0.setEnabled(true);
+
+    var signal1 = funk.aop.flows.listen(source1._1(), source1._2());
+    var slot1 = signal1.add(function(method, args, returnValue){
+        slot0.setEnabled(false);
+
+        var source = source0._1();
+        source._1()[source._2()].apply(source, [returnValue]);
 
         signal.dispatch(source1, returnValue);
+        slot0.setEnabled(true);
     });
 
     // Add the items to the tuple
