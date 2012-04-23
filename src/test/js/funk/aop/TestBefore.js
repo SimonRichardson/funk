@@ -62,14 +62,18 @@ describe("funk", function(){
             });
 
             it(">>>", function(){
-                var item0;
-                var item1;
-                funk.aop.flows.bind(funk.tuple.tuple2(item0 = new MockObject(), "property"),
-                                    funk.tuple.tuple2(item1 = new MockObject(), "property")).add(function(tuple, value){
-                        console.log("Changed", item1.property());
+                var item0 = new MockObject();
+                var item1 = new MockObject();
+                funk.aop.flows.bind(funk.tuple.tuple2(item0, "property"),
+                                    funk.tuple.tuple2(item1, "property")).add(function(tuple, value){
+                        console.log("Item0: " + item0.toString(),
+                                    "Item1: " + item1.toString(),
+                                    item1.property(),
+                                    value);
                     });
 
                 item0.property(99);
+                item1.property(23);
             });
         });
     });

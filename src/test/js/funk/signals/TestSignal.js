@@ -222,24 +222,16 @@ describe("funk", function () {
                 signal.dispatch(value);
             });
 
-            it("should pass null through arguments", function(){
-                var value = null;
-
-                var signal = new funk.signals.Signal(null);
-                signal.add(function(arg){
-                    expect(arg).toBeStrictlyEqualTo(value);
-                });
-                signal.dispatch(value);
+            it("should not pass null through arguments", function(){
+                expect(function(){
+                    new funk.signals.Signal(null);
+                }).toBeThrown(new funk.error.ArgumentError());
             });
 
-            it("should pass null through arguments", function(){
-                var value = undefined;
-
-                var signal = new funk.signals.Signal(undefined);
-                signal.add(function(arg){
-                    expect(arg).toBeStrictlyEqualTo(value);
-                });
-                signal.dispatch(value);
+            it("should not pass undefined through arguments", function(){
+                expect(function(){
+                    new funk.signals.Signal(undefined);
+                }).toBeThrown(new funk.error.ArgumentError());
             });
         });
     });

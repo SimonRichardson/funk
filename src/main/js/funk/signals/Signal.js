@@ -47,19 +47,31 @@ funk.signals.Signal = (function(){
             if(!funk.isValid(slot)) {
                 return true;
             }
-            console.log(slot);
             if(slot.once() != once){
                 throw new funk.error.IllegalByDefinitionError();
             }
             return false;
         }
     };
+    var validateValueClasses = function(items){
+        if(funk.isValid(items)) {
+            var total = items.length;
+            for(var i=0; i<total; ++i) {
+                if(!funk.isValid(items[i])) {
+                    throw new funk.error.ArgumentError("Invalid value class sent : " + funk.getName(items[i]));
+                }
+            }
+            return items;
+        }
+
+        throw new funk.error.ArgumentError("Invalid value classes sent");
+    }
 
     var SignalImpl = function(){
         funk.Product.call(this);
 
         this._slots = funk.collection.immutable.nil();
-        this._valueClasses = funk.toArray(arguments);
+        this._valueClasses = validateValueClasses(funk.toArray(arguments));
     };
     SignalImpl.prototype = new funk.Product();
     SignalImpl.prototype.constructor = SignalImpl;

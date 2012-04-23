@@ -9,18 +9,19 @@ var MockObject = (function(){
     MockObjectImpl.prototype.constructor = MockObjectImpl;
     MockObjectImpl.prototype.name = "MockObject";
     MockObjectImpl.prototype.property = function(value){
-        console.log(value);
-        if(funk.isDefined(value)){
+        if(funk.isDefined(value)) {
             this._property = value;
         }
-        console.log(">>", this._property);
         return this._property;
-    };
+    }
     MockObjectImpl.prototype.returnValue = function(value){
         return value;
     };
     MockObjectImpl.prototype.callMe = function(func){
         func();
+    };
+    MockObjectImpl.prototype.toString = function(){
+        return "Mock(" + this._property + ")";
     };
     return MockObjectImpl;
 })();

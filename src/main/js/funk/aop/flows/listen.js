@@ -30,6 +30,7 @@ funk.aop.flows.listen = function(source, method){
     signal = new funk.signals.Signal(String, Array, Object);
     funk.aop.after(source, method, function(method, args, returnValue){
         signal.dispatch(method, args, returnValue);
+        return returnValue;
     });
     // Add the items to the tuple
     var tuple = funk.tuple.tuple3(source, method, signal);

@@ -29,26 +29,47 @@ funk.aop.flows.bind = function(source0, source1){
     // Two way bind.
     signal = new funk.signals.Signal(funk.tuple.Tuple, Object);
 
-    var signal0 = funk.aop.flows.listen(source0._1(), source0._2());
+    var target0 = source0._1();
+    var method0 = source0._2();
+
+    var target1 = source1._1();
+    var method1 = source1._2();
+
+
+    var signal0 = funk.aop.flows.listen(target0, method0);
     var slot0 = signal0.add(function(method, args, returnValue){
+        slot0.setEnabled(false);
         slot1.setEnabled(false);
 
-        var source = source1._1();
-        source[source1._2()].apply(source, [returnValue]);
+        var pointer = target1[method1];
+        if(funk.isFunction(pointer)) {
+            pointer.apply(target1, [returnValue]);
+        }
 
         signal.dispatch(source0, returnValue);
+
+        slot0.setEnabled(true);
         slot1.setEnabled(true);
+
+        return returnValue;
     });
 
-    var signal1 = funk.aop.flows.listen(source1._1(), source1._2());
+    var signal1 = funk.aop.flows.listen(target1, method1);
     var slot1 = signal1.add(function(method, args, returnValue){
         slot0.setEnabled(false);
+        slot1.setEnabled(false);
 
-        var source = source0._1();
-        source._1()[source._2()].apply(source, [returnValue]);
+        var pointer = target0[method0];
+        if(funk.isFunction(pointer)) {
+            pointer.apply(target0, [returnValue]);
+        }
 
         signal.dispatch(source1, returnValue);
+
         slot0.setEnabled(true);
+        slot1.setEnabled(true);
+
+        return returnValue;
     });
 
     // Add the items to the tuple
