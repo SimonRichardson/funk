@@ -15,13 +15,6 @@ describe("funk", function(){
                 expect(called).toBeTruthy();
             });
 
-            it("should call aspect with correct method name", function(){
-                after(MockObject, 'returnValue', function(method, args, returnValue){
-                    expect(method).toBeStrictlyEqualTo('returnValue');
-                });
-                new MockObject().returnValue();
-            });
-
             it("should call aspect with correct number of arguments (0)", function(){
                 after(MockObject, 'returnValue', function(method, args, returnValue){
                     expect(args.length).toBeStrictlyEqualTo(0);

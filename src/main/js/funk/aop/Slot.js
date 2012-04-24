@@ -1,12 +1,12 @@
 funk.aop = funk.aop || {};
 funk.aop.Slot = (function(){
-    var SlotImpl = function(result, source, method, current){
+    var SlotImpl = function(result, source, method, origin){
         funk.Product.call(this);
 
         this._result = result;
         this._source = source;
         this._method = method;
-        this._current = current;
+        this._origin = origin;
     };
     SlotImpl.prototype = new funk.Product();
     SlotImpl.prototype.constructor = SlotImpl;
@@ -20,8 +20,8 @@ funk.aop.Slot = (function(){
     SlotImpl.prototype.method = function(){
         return this._method;
     };
-    SlotImpl.prototype.current = function(){
-        return this._current;
+    SlotImpl.prototype.origin = function(){
+        return this._origin;
     };
     SlotImpl.prototype.remove = function(){
         this._source[this._method] = this._current;

@@ -35,39 +35,36 @@ funk.aop.flows.bind = function(source0, source1){
     var target1 = source1._1();
     var method1 = source1._2();
 
-
-    var signal0 = funk.aop.flows.listen(target0, method0);
+    var bind0 = funk.aop.flows.listen(target0, method0);
+    var signal0 = bind0._2();
     var slot0 = signal0.add(function(method, args, returnValue){
         slot0.setEnabled(false);
         slot1.setEnabled(false);
 
-        var pointer = target1[method1];
-        if(funk.isFunction(pointer)) {
-            pointer.apply(target1, [returnValue]);
-        }
-
-        signal.dispatch(source0, returnValue);
+        bind0._1().origin().apply(target0, [returnValue]);
+        bind1._1().origin().apply(target1, [returnValue]);
 
         slot0.setEnabled(true);
         slot1.setEnabled(true);
+
+        signal.dispatch(source0, returnValue);
 
         return returnValue;
     });
 
-    var signal1 = funk.aop.flows.listen(target1, method1);
+    var bind1 = funk.aop.flows.listen(target1, method1);
+    var signal1 = bind1._2();
     var slot1 = signal1.add(function(method, args, returnValue){
         slot0.setEnabled(false);
         slot1.setEnabled(false);
 
-        var pointer = target0[method0];
-        if(funk.isFunction(pointer)) {
-            pointer.apply(target0, [returnValue]);
-        }
-
-        signal.dispatch(source1, returnValue);
+        bind0._1().origin().apply(target0, [returnValue]);
+        bind0._1().origin().apply(target0, [returnValue]);
 
         slot0.setEnabled(true);
         slot1.setEnabled(true);
+
+        signal.dispatch(source1, returnValue);
 
         return returnValue;
     });

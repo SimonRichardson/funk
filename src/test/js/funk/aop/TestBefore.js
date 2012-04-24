@@ -15,13 +15,6 @@ describe("funk", function(){
                 expect(called).toBeTruthy();
             });
 
-            it("should call aspect with correct method name", function(){
-                before(MockObject, 'returnValue', function(method, args){
-                    expect(method).toBeStrictlyEqualTo('returnValue');
-                });
-                new MockObject().returnValue();
-            });
-
             it("should call aspect with correct number of arguments (0)", function(){
                 before(MockObject, 'returnValue', function(method, args){
                     expect(args.length).toBeStrictlyEqualTo(0);
@@ -67,13 +60,21 @@ describe("funk", function(){
                 funk.aop.flows.bind(funk.tuple.tuple2(item0, "property"),
                                     funk.tuple.tuple2(item1, "property")).add(function(tuple, value){
                         console.log("Item0: " + item0.toString(),
-                                    "Item1: " + item1.toString(),
-                                    item1.property(),
-                                    value);
+                                    "Item1: " + item1.toString());
                     });
 
-                item0.property(99);
-                item1.property(23);
+                var count = 0;
+                var id = setInterval(function(item0, item1){
+                    if((++count % 2) == 0) {
+                        item0.property(count);
+                    } else {
+                        item1.property(count);
+                    }
+                }, 100, {property: item0.property}, {property: item1.property});
+
+                setTimeout(function(){
+                    clearInterval(id);
+                }, 200);
             });
         });
     });

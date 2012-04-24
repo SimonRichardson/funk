@@ -28,12 +28,12 @@ funk.aop.flows.listen = function(source, method){
 
     // Setup the binding after the method call
     signal = new funk.signals.Signal(String, Array, Object);
-    funk.aop.after(source, method, function(method, args, returnValue){
+    var slot = funk.aop.after(source, method, function(method, args, returnValue){
         signal.dispatch(method, args, returnValue);
         return returnValue;
     });
     // Add the items to the tuple
     var tuple = funk.tuple.tuple3(source, method, signal);
     funk.aop.flows.__listens__ = funk.aop.flows.__listens__.prepend(tuple);
-    return signal;
+    return funk.tuple.tuple2(slot, signal);
 };

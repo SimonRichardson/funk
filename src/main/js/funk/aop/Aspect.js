@@ -15,9 +15,9 @@ funk.aop.Aspect = (function(){
     AspectImpl.add = function(type, pointer, method, func){
         var source = funk.has(pointer, 'prototype') ? pointer.prototype : pointer;
         if(funk.has(source, method)) {
-            var current = source[method];
+            var origin = source[method];
 
-            if(!funk.isFunction(current)) {
+            if(!funk.isFunction(origin)) {
                 throw new funk.aop.error.AspectError("Unable to bind to " + method);
             }
 
@@ -32,7 +32,7 @@ funk.aop.Aspect = (function(){
 
                     var a = funk.toArray(arguments);
                     try {
-                        returnValue = current.apply(this, a);
+                        returnValue = origin.apply(this, a);
                     } catch(e) {
                         exceptionThrown = e;
                     } finally {
@@ -43,15 +43,15 @@ funk.aop.Aspect = (function(){
                         if(funk.isValid(exceptionThrown)) {
                             throw exceptionThrown;
                         } else {
-                            returnValue = func.apply(this, [method, a, returnValue]);
+                            returnValue = func.apply(this, [result, a, returnValue]);
                         }
                     } else if(type.equals(AspectType.AFTER_THROW)) {
                         if(funk.isValid(exceptionThrown)) {
-                            returnValue = func.apply(this, [method, a, exceptionThrown]);
+                            returnValue = func.apply(this, [result, a, exceptionThrown]);
                         }
                     } else if(type.equals(AspectType.AFTER_FINALLY)) {
                         if(finallyCalled) {
-                            returnValue = func.apply(this, [method, a, exceptionThrown, returnValue]);
+                            returnValue = func.apply(this, [result, a, exceptionThrown, returnValue]);
                         }
                     }
 
@@ -60,22 +60,22 @@ funk.aop.Aspect = (function(){
             } else if(type.equals(AspectType.AROUND)) {
                 result = function(){
                     var invocation = {source: source, args: funk.toArray(arguments)};
-                    return func.apply(this, [method, invocation, function(){
-                        return current.apply(this, invocation.args);
+                    return func.apply(this, [result, invocation, function(){
+                        return origin.apply(this, invocation.args);
                     }]);
                 };
             } else if(type.equals(AspectType.BEFORE)) {
                 result = function(){
                     var a = funk.toArray(arguments);
-                    func.apply(this, [method, a]);
-                    return current.apply(this, a);
+                    func.apply(this, [result, a]);
+                    return origin.apply(this, a);
                 };
             }
 
             // Patch the method
             source[method] = result;
 
-            var slot = new funk.aop.Slot(result, source, method, current);
+            var slot = new funk.aop.Slot(result, source, method, origin);
             aspect._slots = aspect._slots.prepend(slot);
             return slot;
         }
