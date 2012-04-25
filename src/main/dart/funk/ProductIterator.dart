@@ -1,4 +1,4 @@
-class ProductIterator<T> {
+class ProductIterator<T> implements Iterator<T> {
   
   Product<T> _product;
   
@@ -11,10 +11,10 @@ class ProductIterator<T> {
     _index = 0;
   }
   
-  bool get hasNext() => _index < _arity;
+  bool hasNext() => _index < _arity;
   
-  T get next() {
-    if(hasNext) {
+  T next() {
+    if(hasNext()) {
       return _product.productElement(_index++);
     }
     return null;

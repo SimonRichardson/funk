@@ -1,0 +1,3 @@
+none(){
+  return new NoneImpl();
+}
