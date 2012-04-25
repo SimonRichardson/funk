@@ -9,9 +9,9 @@
 #source("errors/RangeError.dart");
 #source("exceptions/NoSuchElementException.dart");
 #source("option/IOption.dart");
-#source("option/NoneImpl.dart");
+#source("option/impl/NoneImpl.dart");
+#source("option/impl/SomeImpl.dart");
 #source("option/none.dart");
-#source("option/SomeImpl.dart");
 #source("option/some.dart");
 
 main(){
