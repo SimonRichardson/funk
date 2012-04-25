@@ -4,10 +4,12 @@ class NoneImpl<T> extends Product<T> implements IOption<T> {
   
   factory NoneImpl(){
     if(_none == null) {
-      _none = new NoneImpl();
+      _none = new NoneImpl._internal();
     }
     return _none;
   }
+  
+  NoneImpl._internal();
   
   T getOrElse(Function f) => f();
 

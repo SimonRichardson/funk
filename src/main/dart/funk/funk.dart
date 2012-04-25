@@ -13,3 +13,8 @@
 #source("option/none.dart");
 #source("option/SomeImpl.dart");
 #source("option/some.dart");
+
+main(){
+  var option = none();
+  print(option);
+}
