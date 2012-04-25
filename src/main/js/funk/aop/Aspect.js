@@ -85,7 +85,7 @@ funk.aop.Aspect = (function(){
     AspectImpl.removeAll = function(){
         var p = aspect._slots;
         while(p.nonEmpty()) {
-            when(p.head(), {
+            funk.option.when(p.head(), {
                 some: function(value){
                     var slot = funk.util.verifiedType(value, funk.aop.Slot);
                     slot.remove();

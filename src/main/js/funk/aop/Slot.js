@@ -1,5 +1,6 @@
 funk.aop = funk.aop || {};
 funk.aop.Slot = (function(){
+    "use strict";
     var SlotImpl = function(result, source, method, origin){
         funk.Product.call(this);
 
@@ -24,7 +25,7 @@ funk.aop.Slot = (function(){
         return this._origin;
     };
     SlotImpl.prototype.remove = function(){
-        this._source[this._method] = this._current;
+        this._source[this._method] = this._origin;
     };
     SlotImpl.prototype.productArity = function(){
         return 1;

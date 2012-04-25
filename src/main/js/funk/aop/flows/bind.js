@@ -41,15 +41,10 @@ funk.aop.flows.bind = function(source0, source1){
         slot0.setEnabled(false);
         slot1.setEnabled(false);
 
-        bind0._1().origin().apply(target0, [returnValue]);
         bind1._1().origin().apply(target1, [returnValue]);
 
         slot0.setEnabled(true);
         slot1.setEnabled(true);
-
-        signal.dispatch(source0, returnValue);
-
-        return returnValue;
     });
 
     var bind1 = funk.aop.flows.listen(target1, method1);
@@ -59,14 +54,17 @@ funk.aop.flows.bind = function(source0, source1){
         slot1.setEnabled(false);
 
         bind0._1().origin().apply(target0, [returnValue]);
-        bind0._1().origin().apply(target0, [returnValue]);
 
         slot0.setEnabled(true);
         slot1.setEnabled(true);
+    });
 
+    signal0.add(function(method, args, returnValue){
+        signal.dispatch(source0, returnValue);
+    });
+
+    signal1.add(function(method, args, returnValue){
         signal.dispatch(source1, returnValue);
-
-        return returnValue;
     });
 
     // Add the items to the tuple

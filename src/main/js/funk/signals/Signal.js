@@ -30,7 +30,7 @@ funk.signals.Signal = (function(){
 
             if(registrationPossible(signal, listener, scope, once)) {
                 var slot = new funk.signals.Slot(signal, listener, scope, once);
-                signal._slots = signal._slots.prepend(slot);
+                signal._slots = signal._slots.append(slot);
                 return slot;
             }
 
