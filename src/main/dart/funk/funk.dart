@@ -15,6 +15,8 @@
 #source("option/some.dart");
 
 main(){
-  var option = none();
+  IOption option = some(1);
+  
   print(option);
+  print(option.getOrElse((o) => none()));
 }

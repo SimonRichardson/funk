@@ -1,4 +1,4 @@
-interface IOption<T> extends IProduct<T> {
+interface IOption<T> extends IProduct<T> default NoneImpl<T> {
   
   T getOrElse(Function func);
 

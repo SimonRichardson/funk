@@ -45,6 +45,6 @@ class SomeImpl<T> extends Product<T> implements IOption<T> {
     if(index == 0) {
       return get;
     }
-    throw new RangeError();
+    throw new RangeError.empty();
   }
 }

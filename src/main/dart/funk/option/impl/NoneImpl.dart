@@ -34,7 +34,7 @@ class NoneImpl<T> extends Product<T> implements IOption<T> {
   IOption<T> orElse(Function func) => func();
   
   T get get() {
-    throw new NoSuchElementException();
+    throw new NoSuchElementException.empty();
   }
   
   bool get isDefined() => false;
@@ -48,6 +48,6 @@ class NoneImpl<T> extends Product<T> implements IOption<T> {
   }
   
   T productElement(int index){
-    throw new RangeError();
+    throw new RangeError.empty();
   }
 }
