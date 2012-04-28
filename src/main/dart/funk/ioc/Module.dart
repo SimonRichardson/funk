@@ -1,3 +1,12 @@
+interface IModule default Module {
+
+  void initialize();
+  
+  Option getInstance(Type type);
+  
+  bool binds(Type type);
+}
+
 abstract class Module implements IModule {
 	
 	bool _initialized;
@@ -5,7 +14,7 @@ abstract class Module implements IModule {
 	Map<Type, Binding> _map;
 	
 	Module(){
-		_map = new HashMap();
+		_map = new Map<Type, Binding>();
 		_initialized = false;
 	}
 	
@@ -37,7 +46,7 @@ abstract class Module implements IModule {
 		
 		try {
 		  injector.pushScope(this);
-			return (binding == null) ? type.create() : binding.getInstance();
+			return (binding == null) ? type.create([]) : binding.getInstance();
 		} finally {
 		  injector.popScope();	
 		}

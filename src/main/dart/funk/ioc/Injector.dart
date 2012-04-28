@@ -18,8 +18,8 @@ class Injector {
   
   Injector._internal() {
     _map = new Map<Type, IModule>();
-    _modules = nil();
-    _scopes = nil();
+    _modules = nil;
+    _scopes = nil;
   }
   
   IModule initialize(IModule module) {
@@ -38,7 +38,7 @@ class Injector {
     _currentScope = _scopes.nonEmpty ? _scopes.head : null;
   }
   
-  IOption<IModule> get currentScope() {
+  Option<IModule> get currentScope() {
     return some(_currentScope);
   }
   

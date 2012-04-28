@@ -1,3 +1,13 @@
+interface IProduct<T> extends Iterable<T> default Product {
+  
+  T productElement(int index);
+
+  int get productArity();
+
+  String get productPrefix();
+}
+
+
 class Product<T> implements IProduct<T> {
   
   Product(){
@@ -25,7 +35,7 @@ class Product<T> implements IProduct<T> {
   
   abstract String get productPrefix();
   
-  ProductIterator<T> iterator() => new ProductIterator<T>(this);
+  Iterator<T> iterator() => new ProductIterator<T>(this);
   
   String toString(){
     if(0 == productArity) {

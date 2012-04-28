@@ -56,7 +56,7 @@ class Binding<T> implements IScope {
  	
  	T _solve() {
  		if(0 == _bindingType) {
- 			return _to == null ? _type.create() : _module.getInstance(_to);
+ 			return _to == null ? _type.create([]) : _module.getInstance(_to);
  		} else if(1 == _bindingType) {
  			return _toInstance;
  		} else if(2 == _bindingType) {

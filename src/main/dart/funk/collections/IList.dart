@@ -17,7 +17,7 @@ interface IList<T> extends IProduct<T>, ICollection<T> {
 	
 	IList<T> filterNot(Function func);
 	
-	IOption<T> find(Function func);
+	Option<T> find(Function func);
 	
 	int findIndexOf(Function func);
 	
@@ -25,17 +25,17 @@ interface IList<T> extends IProduct<T>, ICollection<T> {
 	
 	IList<T> get flatten();
 	
-	IOption<T> foldLeft(T x, Function func);
+	Option<T> foldLeft(T x, Function func);
 	
-	IOption<T> foldRight(T x, Function func);
+	Option<T> foldRight(T x, Function func);
 	
 	bool forall(Function func);
 	
 	void foreach(Function func);
 	
-	IOption<T> get(int index);
+	Option<T> get(int index);
 	
-	IOption<T> get head();
+	Option<T> get head();
 	
 	int indexOf(T value);
 	
@@ -45,7 +45,7 @@ interface IList<T> extends IProduct<T>, ICollection<T> {
 	
 	bool get isEmpty();
 	
-	IOption<T> get last();
+	Option<T> get last();
 	
 	IList<T> map(Function f);
 	
@@ -67,13 +67,13 @@ interface IList<T> extends IProduct<T>, ICollection<T> {
 	
 	IList<T> appendIterable(Iterable<T> iterable);
 	
-	IOption<T> reduceLeft(Function func);
+	Option<T> reduceLeft(Function func);
 	
-	IOption<T> reduceRight(Function func);
+	Option<T> reduceRight(Function func);
 	
 	IList<T> get reverse();
 	
-	IOption<IList<T>> get tail();
+	Option<IList<T>> get tail();
 	
 	IList<T> take(int index);
 	
@@ -83,6 +83,6 @@ interface IList<T> extends IProduct<T>, ICollection<T> {
 	
 	IList<Tuple2<T, T>> zip(IList<T> that);
 	
-	IList<Tuple2<int, T>> get zipWithIndex();
+	IList<Tuple2<T, int>> get zipWithIndex();
 	
 }
