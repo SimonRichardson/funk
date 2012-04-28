@@ -1,3 +1,3 @@
 none(){
-  return new NoneImpl();
+  return new None();
 }

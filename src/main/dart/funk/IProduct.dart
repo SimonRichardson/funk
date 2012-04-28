@@ -1,4 +1,4 @@
-interface IProduct<T> extends IImmutable, Iterable {
+interface IProduct<T> extends Iterable<T> {
   
   T productElement(int index);
 

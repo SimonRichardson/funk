@@ -1,3 +1,3 @@
 some(value){
-  return new SomeImpl(value);
+  return new Some(value);
 }

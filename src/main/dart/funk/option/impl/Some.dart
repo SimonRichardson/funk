@@ -1,8 +1,8 @@
-class SomeImpl<T> extends Product<T> implements IOption<T> {
+class Some<T> extends Product<T> implements IOption<T> {
   
   T _value;
   
-  SomeImpl(value){
+  Some(value){
     _value = value;
   }
     
