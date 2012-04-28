@@ -1,6 +1,6 @@
-abstract class Type<T> implements Hashable {
+class Type<T> implements Hashable {
   
-  abstract T create(args);
+  abstract T create([List args]);
   
   abstract int hashCode();
   

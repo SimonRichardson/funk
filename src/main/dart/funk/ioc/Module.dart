@@ -7,7 +7,7 @@ interface IModule default Module {
   bool binds(Type type);
 }
 
-abstract class Module implements IModule {
+class Module implements IModule {
 	
 	bool _initialized;
 	

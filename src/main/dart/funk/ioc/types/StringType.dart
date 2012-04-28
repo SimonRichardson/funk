@@ -5,8 +5,10 @@ class StringType extends Type<String> {
   StringType(){
   }
   
-  String create(List args) {
-    _value = args[0];
+  String create([List args]) {
+    if(args != null) {
+      _value = args[0];
+    }
   }
   
   int hashCode() {
