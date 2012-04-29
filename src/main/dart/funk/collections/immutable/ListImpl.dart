@@ -423,55 +423,256 @@ class ListImpl<T> extends Product<T> implements IList<T>  {
 
   Option<IList<T>> get tail() => _tail;
 
-  IList<T> take(int total) {
-    require(total >= 0, "total must be positive.");
-    return this;
+  IList<T> take(int n) {
+    require(n >= 0, "total must be positive.");
+    
+    if(n > size) {
+      return this;
+    } else if(0 == n) {
+      return nil;
+    }
+
+    final List<ListImpl<T>> buffer = new List<ListImpl<T>>(n);
+    final int m = n - 1;
+    IList<T> p = this;
+    int i = 0;
+    int j = 0;
+
+    for(i = 0; i < n; ++i) {
+      buffer[i] = new ListImpl(p.head, null);
+      p = p.tail.get;
+    }
+
+    buffer[m]._tail = nil;
+
+    j = 1;
+    for(i = 0; i < m; ++i) {
+      buffer[i]._tail = some(buffer[j]);
+      ++j;
+    }
+
+    return buffer[0];
   }
 
-  IList<T> takeRight(int total) {
-    require(total >= 0, "total must be positive.");
-    return this;
+  IList<T> takeRight(int n) {
+    require(n >= 0, "total must be positive.");
+    
+    if(n > size) {
+      return this;
+    } else if(0 == n) {
+      return nil;
+    }
+
+    n = size - n;
+
+    if(n <= 0) {
+      return this;
+    }
+
+    IList<T> p = this;
+    for(int i = 0; i < n; ++i) {
+      p = p.tail.get;
+    }
+
+    return p;
   }
 
-  IList<T> takeWhile(Function func) => this;
+  IList<T> takeWhile(Function func) {
+    final List<ListImpl<T>> buffer = new List<ListImpl<T>>();
+    IList<T> p = this;
+    int i = 0;
+    int j = 0;
+    int n = 0;
+
+    while(p.nonEmpty) {
+      if(func(p)) {
+        buffer[n++] = new ListImpl(p.head, null);
+        p = p.tail.get;
+      } else {
+        break;
+      }
+    }
+
+    final int m = n - 1;
+
+    if(m <= 0) {
+      return nil;
+    }
+    
+    buffer[m]._tail = some(nil);
+
+    j = 1;
+    for(i = 0; i < m; ++i) {
+      buffer[i]._tail = some(buffer[j]);
+      ++j;
+    }
+
+    return buffer[0];
+  }
   
-  IList<Tuple2<T, T>> zip(IList<T> that) => none;
+  IList<Tuple2<T, T>> zip(IList<T> that) {
+    final int n = Math.min(size, that.size);
+    final int m = n - 1;
+    final List<ListImpl<Tuple2<T, T>>> buffer = new List<ListImpl<Tuple2<T, T>>>(n);
 
-  IList<Tuple2<T, int>> get zipWithIndex() => none;
+    int i = 0;
+    int j = 0;
+    
+    IList<T> p = this;
+    IList<T> q = that;
 
-  int get size() => 0;
+    for(i = 0; i < n; ++i) {
+      T ph = when(p.head, {
+        "none": () => null,
+        "some": (value) => value
+      });
+      
+      T qh = when(q.head, {
+        "none": () => null,
+        "some": (value) => value
+      });
+      
+      buffer[i] = new ListImpl(tuple2(ph, qh), null);
+      p = p.tail.get;
+      q = q.tail.get;
+    }
+
+    buffer[m]._tail = some(nil);
+    
+    j = 1;
+    for(i = 0; i < m; ++i) {
+      buffer[i]._tail = some(buffer[j]);
+      ++j;
+    }
+
+    return buffer[0]; 
+  }
+
+  IList<Tuple2<T, int>> get zipWithIndex() {
+    final int n = size;
+    final int m = n - 1;
+    final List<ListImpl<Tuple2<T, int>>> buffer = new List<ListImpl<Tuple2<T, int>>>(n);
+    
+    int i = 0;
+    int j = 0;
+
+    IList<T> p = this;
+
+    for(i = 0; i < n; ++i) {
+      T ph = when(p.head, {
+        "none": () => null,
+        "some": (value) => value
+      });
+      buffer[i] = new ListImpl(tuple2(ph, i), null);
+      p = p.tail.get;
+    }
+
+    buffer[m]._tail = some(nil);
+
+    j = 1;
+    for(i = 0; i < m; ++i) {
+      buffer[i]._tail = some(buffer[j]);
+      ++j;
+    }
+
+    return buffer[0];
+    
+  }
+
+  int get size() {
+    if(_lengthKnown) {
+      return _length;
+    }
+
+    IList<T> p = this;
+    int length = 0;
+
+    while(p.nonEmpty) {
+      ++length;
+      p = p.tail.get;
+    }
+
+    _length = length;
+    _lengthKnown = true;
+
+    return length;
+  }
 
   bool get hasDefinedSize() => true;
 
-  int findIndexOf(Function func) => -1;
+  int findIndexOf(Function func) {
+    int index = 0;
+    IList<T> p = this;
 
-  IList<T> get flatten() => none;
+    while(p.nonEmpty) {
+      if(func(p.head)) {
+        return index;
+      }
 
-  int indexOf(T value) => -1;
+      p = p.tail.get;
+      index += 1;
+    }
 
-  int get productArity() => 0;
+    return -1;
+  }
+
+  IList<T> get flatten() => flatMap((x) => toList(x));
+
+  int indexOf(T value) {
+    int index = 0;
+    IList<T> p = this;
+
+    while(p.nonEmpty) {
+      if(eq(p.head, value)) {
+        return index;
+      }
+
+      p = p.tail.get;
+      index += 1;
+    }
+
+    return -1;
+  }
+
+  int get productArity() => size;
 
   T productElement(int index) {
-    throw new RangeError([]);
+    requireRange(index, productArity);
+
+    IList<T> p = this;
+
+    while(p.nonEmpty) {
+      if(index == 0) {
+        return when(p.head, {
+          "none": () => null,
+          "some": (value) => value
+        });
+      }
+
+      p = p.tail.get;
+      index -= 1;
+    }
+
+    throw new NoSuchElementException([]);
   }
 
   String get productPrefix() => "List";
 
-  IList<T> prependIterator(Iterator<T> itr) => itr.toList;
+  IList<T> prependIterator(Iterator<T> itr) => prependAll(IteratorUtil.toList(itr));
 
-  IList<T> prependIterable(Iterable<T> iterable) => iterable.iterator.toList;
+  IList<T> prependIterable(Iterable<T> iterable) => prependAll(IteratorUtil.toList(iterable.iterator()));
 
   IList<T> append(T value) => new ListImpl(value, this);
 
-  IList<T> appendAll(IList<T> value) => value;
+  IList<T> appendAll(IList<T> value) => null;
 
-  IList<T> appendIterator(Iterator<T> itr) => itr.toList;
+  IList<T> appendIterator(Iterator<T> itr) => appendAll(IteratorUtil.toList(itr));
 
-  IList<T> appendIterable(Iterable<T> iterable) => iterable.iterator.toList;
+  IList<T> appendIterable(Iterable<T> iterable) => appendAll(IteratorUtil.toList(iterable.iterator()));
 
   List<T> get toList() => new List();
   
-  Iterator<T> iterator() => new NilIterator<T>();
+  Iterator<T> iterator() => new ListIterator<T>(this);
 }
 
 class ListIterator<T> implements Iterator<T> {

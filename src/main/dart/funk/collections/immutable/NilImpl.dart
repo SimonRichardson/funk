@@ -126,7 +126,7 @@ class NilImpl<T> extends Product<T> implements IList<T> {
 
   IList<T> prependIterator(final Iterator<T> itr) => IteratorUtil.toList(itr);
 
-  IList<T> prependIterable(final Iterable<T> iterable) => IteratorUtil.toList(iterable.iterator);
+  IList<T> prependIterable(final Iterable<T> iterable) => IteratorUtil.toList(iterable.iterator());
 
   IList<T> append(final T value) => new ListImpl(value, this);
 
@@ -134,7 +134,7 @@ class NilImpl<T> extends Product<T> implements IList<T> {
 
   IList<T> appendIterator(final Iterator<T> itr) => IteratorUtil.toList(itr);
 
-  IList<T> appendIterable(final Iterable<T> iterable) => IteratorUtil.toList(iterable.iterator);
+  IList<T> appendIterable(final Iterable<T> iterable) => IteratorUtil.toList(iterable.iterator());
 
   List<T> get toList() => new List<T>();
   

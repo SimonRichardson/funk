@@ -8,6 +8,7 @@
 #source("ProductIterator.dart");
 #source("util/eq.dart");
 #source("util/require.dart");
+#source("util/requireRange.dart");
 #source("util/verifiedType.dart");
 #source("errors/ArgumentError.dart");
 #source("errors/RangeError.dart");
