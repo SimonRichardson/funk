@@ -12,13 +12,14 @@ class None<T> extends Product<T> implements Option<T> {
   None._internal();
   
   T getOrElse(final Function f) => f();
-
-  bool equals(final IProduct<T> that) {
+  
+  int hashCode() => 0;
+  
+  bool equals(final IFunkObject that) {
     if (that is Option) {
       Option<T> option = that;
       return !option.isDefined;
     }
-
     return false;
   }
 

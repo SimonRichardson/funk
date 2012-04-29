@@ -14,4 +14,6 @@ class StringType extends Type<String> {
   int hashCode() {
     return _value.hashCode();
   }
+  
+  bool equals(IFunkObject value) => hashCode() == value.hashCode();
 }

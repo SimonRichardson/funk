@@ -1,4 +1,4 @@
-class Type<T> implements Hashable {
+class Type<T> implements IFunkObject {
   
   abstract T create([List args]);
   

@@ -1,4 +1,4 @@
-interface IProduct<T> extends Iterable<T> default Product {
+interface IProduct<T> extends Iterable<T>, IFunkObject default Product {
   
   T productElement(int index);
 

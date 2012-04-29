@@ -8,10 +8,21 @@ class Some<T> extends Product<T> implements Option<T> {
     
   T getOrElse(final Function f) => _value;
 
-  bool equals(final IProduct<T> that) {
+  int hashCode() {
+    T h = get;
+    if(h is Hashable) {
+      Hashable hash = h;
+      return hash.hashCode();
+    } 
+    return 0;
+  }
+  
+  bool equals(final IFunkObject that) {
     if (that is Option) {
       Option<T> option = that;
-      return !option.isDefined;
+      if(option.isDefined) {
+        return eq(get, option.get);
+      }
     }
 
     return false;
