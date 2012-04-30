@@ -380,7 +380,35 @@ class ListImpl<T> extends Product<T> implements IList<T>  {
 
   IList<T> prepend(T value) => new ListImpl(value, this);
 
-  IList<T> prependAll(IList<T> value) => value;
+  IList<T> prependAll(IList<T> value) {
+    final int n = value.size;
+
+    if(0 == n) {
+      return this;
+    }
+    
+    List<ListImpl<T>> buffer = new List<ListImpl<T>>(n);
+
+    int m = n - 1;
+    IList<T> p = value;
+    int i = 0;
+    int j = 0;
+
+    while(p.nonEmpty) {
+      buffer[i++] = new ListImpl<T>(p.head.get, null);
+      p = p.tail.get;
+    }
+
+    buffer[m]._tail = some(this);
+
+    j = 1;
+    for(i = 0; i < m; ++i) {
+      buffer[i]._tail = some(buffer[j]);
+      ++j;
+    }
+
+    return buffer[0];
+  }
 
   Option<T> reduceLeft(Function func) {
     IList<T> p = this._tail.get;
@@ -662,15 +690,71 @@ class ListImpl<T> extends Product<T> implements IList<T>  {
 
   IList<T> prependIterable(Iterable<T> iterable) => prependAll(IteratorUtil.toList(iterable.iterator()));
 
-  IList<T> append(T value) => new ListImpl(value, this);
+  IList<T> append(T value) {
+    final int n = size;
+    final List<ListImpl<T>> buffer = new List<ListImpl<T>>(n + 1);
+    IList<T> p = this;
+    int i = 0;
+    int j = 0;
 
-  IList<T> appendAll(IList<T> value) => null;
+    while(p.nonEmpty) {
+      buffer[i++] = new ListImpl<T>(p.head.get, null);
+      p = p.tail.get;
+    }
+
+    buffer[n] = new ListImpl<T>(value, nil);
+    
+    j = 1;
+    for(i = 0; i < n; ++i) {
+      buffer[i]._tail = some(buffer[j]);
+      ++j;
+    }
+
+    return buffer[0];
+  }
+
+  IList<T> appendAll(IList<T> value) {
+    final int n = size;
+    final List<ListImpl<T>> buffer = new List<ListImpl<T>>(n + 1);
+    IList<T> p = this;
+    int i = 0;
+    int j = 0;
+
+    while(p.nonEmpty) {
+      buffer[i++] = new ListImpl<T>(p.head.get, null);
+      p = p.tail.get;
+    }
+
+    buffer[n] = value;
+    
+    j = 1;
+    for(i = 0; i < n; ++i) {
+      buffer[i]._tail = some(buffer[j]);
+      ++j;
+    }
+
+    return buffer[0];
+  }
 
   IList<T> appendIterator(Iterator<T> itr) => appendAll(IteratorUtil.toList(itr));
 
   IList<T> appendIterable(Iterable<T> iterable) => appendAll(IteratorUtil.toList(iterable.iterator()));
 
-  List<T> get toList() => new List();
+  List<T> get toList() {
+    int n = size;
+    List<T> l = new List<T>(n);
+    IList<T> p = this;
+
+    for(int i = 0; i < n; ++i) {
+      l.add(when(p.head, {
+        "none": () => null,
+        "some": (value) => value
+      }));
+      p = p.tail.get;
+    }
+
+    return l;
+  }
   
   Iterator<T> iterator() => new ListIterator<T>(this);
 }

@@ -31,6 +31,26 @@ class Product<T> implements IProduct<T> {
     return buffer.toString();
   }
   
+  int hashCode() {
+    int result = 17;
+    int n = productArity;
+    for(int i = 0; i < n; i++) {
+      var item = productElement(i);
+      if(item is Hashable) {
+        result += item.hashCode();
+      }
+    }
+    return result;
+  }
+  
+  bool equals(IFunkObject that) {
+    if(this == that) {
+     return true; 
+    }
+    
+    return hashCode() == that.hashCode();
+  }
+  
   abstract int get productArity();
   
   abstract String get productPrefix();

@@ -11,15 +11,6 @@ class NilImpl<T> extends Product<T> implements IList<T> {
   
   NilImpl._internal();
   
-  int hashCode() => 0;
-  
-  bool equals(IFunkObject obj) {
-    if(obj is NilImpl) {
-      return hashCode() == obj.hashCode();
-    }
-    return false;
-  }
-  
   bool contains(final T value) => false;
 
   int count(final Function func) => 0;
