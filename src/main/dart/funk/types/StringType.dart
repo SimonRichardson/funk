@@ -2,18 +2,23 @@ class StringType extends Type<String> {
   
   String _value;
   
-  StringType(){
+  static StringType _instance;
+  
+  factory StringType(){
+    if(_instance == null) {
+      _instance = new StringType._internal();
+    }
+    return _instance;
   }
+  
+  StringType._internal();
   
   String create([List args]) {
-    if(args != null) {
-      _value = args[0];
-    }
+    _value = "";
+    return _value;
   }
   
-  int hashCode() {
-    return _value.hashCode();
-  }
+  int hashCode() => 0;
   
-  bool equals(IFunkObject value) => hashCode() == value.hashCode();
+  bool equals(IFunkObject value) => value == this;
 }

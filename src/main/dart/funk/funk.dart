@@ -34,11 +34,50 @@
 #source("ioc/Binding.dart");
 #source("ioc/Module.dart");
 #source("ioc/Injector.dart");
+#source("ioc/inject.dart");
+#source("ioc/injectIn.dart");
 #source("types/ListType.dart");
 #source("types/OptionType.dart");
 #source("types/StringType.dart");
 
 main(){
-  // IModule mod = module();
-  // mod.getInstance(String);
+  final Injector injector = new Injector();
+  final IModule module = injector.initialize(new CustomModule());
+  final Mock mock = module.getInstance(new MockType());
+  
+  print(mock.text);
+}
+
+class CustomModule extends Module {
+  
+  CustomModule(){
+  }
+  
+  void configure() {
+    bind(new StringType()).toInstance("Test");
+  }
+}
+
+class MockType extends Type<Mock> {
+  MockType() {
+  }
+  
+  Mock create([List args]) {
+    return new Mock();
+  }
+  
+  int hashCode() => 1323;
+  
+  bool equals(IFunkObject that) => this == that || hashCode() == that.hashCode();
+}
+
+class Mock {
+  
+  String _text;
+  
+  Mock(){
+    _text = inject(new StringType());
+  }
+  
+  String get text() => _text;
 }

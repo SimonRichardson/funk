@@ -7,7 +7,7 @@ class Injector {
   IList<IModule> _modules;
   IList<IModule> _scopes;
   
-  IModule _currentScope;
+  Option<IModule> _currentScope;
   
   factory Injector(){
     if(_instance == null) {
@@ -29,7 +29,7 @@ class Injector {
   }
   
   void pushScope(IModule module) {
-    _currentScope = module;
+    _currentScope = some(module);
     _scopes = _scopes.prepend(module);
   }
   
@@ -39,7 +39,7 @@ class Injector {
   }
   
   Option<IModule> get currentScope() {
-    return some(_currentScope);
+    return _currentScope;
   }
   
   IModule scopeOf(Type type) {

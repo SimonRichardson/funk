@@ -1,5 +1,5 @@
 when(Option option, cases){
-  if(verifiedType(option, new OptionType())) {
+  if(option == verifiedType(option, new OptionType())) {
     if(option is None) {
       if(cases["none"] != null) {
         return cases["none"]();

@@ -2,7 +2,7 @@ interface IModule default Module {
 
   void initialize();
   
-  Option getInstance(Type type);
+  getInstance(Type type);
   
   bool binds(Type type);
 }
@@ -20,7 +20,7 @@ class Module implements IModule {
 	
 	abstract void configure();
 	
-	void intialize() {
+	void initialize() {
 		configure();
 		_initialized = true;
 	}
