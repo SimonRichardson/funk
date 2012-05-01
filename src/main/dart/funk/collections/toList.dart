@@ -14,11 +14,11 @@ toList(value) {
     
     return l;
   } else if(value is String) {
-    String string = value;
-    n = string.length;
+    String str = value;
+    n = str.length;
     
     while(--n > -1) {
-      l = l.prepend(string.substring(n, 1));
+      l = l.prepend(str.substring(n, 1));
     }
     
     return l;

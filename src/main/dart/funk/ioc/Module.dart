@@ -27,7 +27,7 @@ class Module implements IModule {
 	
 	Binding bind(Type type) {
 		if(_map[type] != null) {
-			throw new BindingException("{type} is already bound.");
+			throw new BindingException("${type} is already bound.");
 		}
 		
 		final Binding binding = new Binding(this, type);
