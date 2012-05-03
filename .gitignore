@@ -2,3 +2,6 @@
 .idea
 .project
 .settings
+.hxtypes
+src/main/haxe/bin
+src/main/haxe/libs
