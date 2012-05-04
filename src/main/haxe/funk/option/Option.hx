@@ -2,6 +2,7 @@ package funk.option;
 
 import funk.errors.NoSuchElementError;
 import funk.Product;
+import funk.ProductIterator;
 
 enum Option<T> {
 	None;
@@ -10,75 +11,83 @@ enum Option<T> {
 
 class OptionType {
 	
-	public static function get<T>(option : Option<T>) : T {
+	inline public static function get<T>(option : Option<T>) : T {
 		return switch(option) {
 			case Some(value): value;
 			case None: throw new NoSuchElementError();
 		}
 	}
 	
-	public static function getOrElse<T>(option : Option<T>, func : Void -> T) : T {
+	inline public static function getOrElse<T>(option : Option<T>, func : Void -> T) : T {
 		return switch(option) {
 			case Some(value): value;
 			case None: func();
 		}
 	}
 	
-	public static function isDefined<T>(option : Option<T>) : Bool {
+	inline public static function isDefined<T>(option : Option<T>) : Bool {
 		return switch(option) {
 			case Some(value): true;
 			case None: false;
 		}
 	}
 	
-	public static function isEmpty<T>(option : Option<T>) : Bool {
+	inline public static function isEmpty<T>(option : Option<T>) : Bool {
 		return switch(option) {
 			case Some(value): false;
 			case None: true;
 		}
 	}
 	
-	public static function filter<T>(option : Option<T>, func : T -> Bool) : Option<T> {
+	inline public static function filter<T>(option : Option<T>, func : T -> Bool) : Option<T> {
 		return switch(option) {
 			case Some(value): func(get(option)) ? option : None;
 			case None: option;
 		}
 	}
 	
-	public static function foreach<T>(option : Option<T>, func : T -> Void) : Void {
+	inline public static function foreach<T>(option : Option<T>, func : T -> Void) : Void {
 		switch(option) {
 			case Some(value): func(get(option));
 			case None:
 		}
 	}
 	
-	public static function flatMap<T, E>(option : Option<T>, func : T -> Option<E>) : Option<E> {
+	inline public static function flatMap<T, E>(option : Option<T>, func : T -> Option<E>) : Option<E> {
 		return switch(option) {
 			case Some(value): func(get(option));
 			case None: None;
 		}
 	}
 	
-	public static function map<T, E>(option : Option<T>, func : T -> E) : Option<E> {
+	inline public static function map<T, E>(option : Option<T>, func : T -> E) : Option<E> {
 		return switch(option) {
 			case Some(value): Some(func(get(option)));
 			case None: None;
 		}
 	}
 	
-	public static function orElse<T>(option : Option<T>, func : Void -> Option<T>) : Option<T> {
+	inline public static function orElse<T>(option : Option<T>, func : Void -> Option<T>) : Option<T> {
 		return switch(option) {
 			case Some(value): option;
 			case None: func();
 		}
 	}
 	
-	public static function toString<T>(option : Option<T>) : String {
-		return new OptionToString<T>(option).toString();
+	inline public static function iterator<T>(option : Option<T>) : IProductIterator<T> {
+		return new ProductOption<T>(option).iterator();
+	}
+	
+	inline public static function asOption<T>(value : T) : Option<T> {
+		return Some(value);
+	}
+	
+	inline public static function toString<T>(option : Option<T>) : String {
+		return new ProductOption<T>(option).toString();
 	}
 }
 
-class OptionToString<T> extends Product<T> {
+class ProductOption<T> extends Product<T> {
 	
 	private var _option : Option<T>;
 	

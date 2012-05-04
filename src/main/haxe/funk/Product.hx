@@ -1,5 +1,7 @@
 package funk;
 
+import funk.ProductIterator;
+
 interface IProduct<T> {
 	
 	var productArity(dynamic, never) : Int;
@@ -7,9 +9,10 @@ interface IProduct<T> {
 	var productPrefix(dynamic, never) : String;
 	
 	function productElement(index : Int) : T;
+	
+	function iterator() : IProductIterator<T>;
 }
 
-@:allow(funk)
 class Product<T> implements IProduct<T> {
 	
 	public var productArity(get_productArity, null) : Int;
@@ -19,6 +22,10 @@ class Product<T> implements IProduct<T> {
 	@abstract
 	public function productElement(index : Int) : T {
 		return null;
+	}
+	
+	public function iterator() : IProductIterator<T> {
+		return new ProductIterator<T>(this);
 	}
 	
 	@:final
