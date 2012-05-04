@@ -1,6 +1,7 @@
 package funk.option;
 
 import funk.errors.NoSuchElementError;
+import funk.Product;
 
 enum Option<T> {
 	None;
@@ -70,5 +71,37 @@ class OptionType {
 			case Some(value): option;
 			case None: func();
 		}
+	}
+	
+	public static function toString<T>(option : Option<T>) : String {
+		return new OptionToString<T>(option).toString();
+	}
+}
+
+class OptionToString<T> extends Product<T> {
+	
+	private var _option : Option<T>;
+	
+	public function new(option : Option<T>) {
+		_option = option;
+	}
+	
+	override private function get_productArity() : Int {
+		return switch(_option) {
+			case Some(value): 1;
+			case None: 0;
+		}
+	}
+	
+	override private function get_productPrefix() : String {
+		// TODO (Simon) : We can be more clever about this : Type.getEnumName
+		return switch(_option) {
+			case Some(value): "Some";
+			case None: "None";
+		}
+	}
+	
+	override public function productElement(index : Int) : T {
+		return OptionType.get(_option);
 	}
 }
