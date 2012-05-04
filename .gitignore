@@ -3,5 +3,5 @@
 .project
 .settings
 .hxtypes
-src/main/haxe/bin
-src/main/haxe/libs
+compile.hxml
+haxe-tmp/

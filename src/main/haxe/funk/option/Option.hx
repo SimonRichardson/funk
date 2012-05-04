@@ -1,6 +1,6 @@
 package funk.option;
 
-using funk.utils.VerifiedType;
+import funk.errors.NoSuchElementError;
 
 enum Option<T> {
 	None;
@@ -12,7 +12,7 @@ class OptionType {
 	public static function get<T>(option : Option<T>) : T {
 		return switch(option) {
 			case Some(value): value;
-			case None: throw new funk.errors.NoSuchElementError();
+			case None: throw new NoSuchElementError();
 		}
 	}
 	
@@ -51,10 +51,24 @@ class OptionType {
 		}
 	}
 	
-	public static function flatMap<T>(option : Option<T>, func : T -> Option<T>) : Option<T> {
+	public static function flatMap<T, E>(option : Option<T>, func : T -> Option<E>) : Option<E> {
 		return switch(option) {
-			case Some(value): func(get(option));//.verifyEnum(Option);
-			case None: option;
+			case Some(value): func(get(option));
+			case None: None;
+		}
+	}
+	
+	public static function map<T, E>(option : Option<T>, func : T -> E) : Option<E> {
+		return switch(option) {
+			case Some(value): Some(func(get(option)));
+			case None: None;
+		}
+	}
+	
+	public static function orElse<T>(option : Option<T>, func : Void -> Option<T>) : Option<T> {
+		return switch(option) {
+			case Some(value): option;
+			case None: func();
 		}
 	}
 }
