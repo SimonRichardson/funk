@@ -16,15 +16,16 @@ class WildcardType {
 		}
 	}
 	
-	public static function divideBy<T, E>(wildcard : Wildcard, value : T) : E -> T {
-		return function(x : E) : T {
+	public static function divideBy(wildcard : Wildcard, value : Float) : Float -> Float {
+		return function(x : Float) : Float {
 			return x / value;
 		}
 	}
 	
 	public static function equals<T, E>(wildcard : Wildcard, value : T) : E -> Bool {
 		return function(x : E) : Bool {
-			return true;
+			// TODO (Simon) Fix this
+			return x == value;
 		}
 	}
 	
@@ -46,8 +47,8 @@ class WildcardType {
 		}
 	}
 	
-	public static function incrementBy<T, E>(wildcard : Wildcard, value : T) : E -> Bool {
-		return function(x : E) : Bool {
+	public static function incrementBy(wildcard : Wildcard, value : Float) : Float -> Float {
+		return function(x : Float) : Float {
 			return x + value;
 		}
 	}
@@ -80,14 +81,14 @@ class WildcardType {
 		}
 	}
 	
-	public static function moduloBy<T, E>(wildcard : Wildcard, value : T) : E -> T {
-		return function(x : E) : Bool {
+	public static function moduloBy(wildcard : Wildcard, value : Float) : Float -> Float {
+		return function(x : Float) : Float {
 			return x % value;
 		}
 	}
 	
-	public static function multiplyBy<T, E>(wildcard : Wildcard, value : T) : E -> T {
-		return function(x : E) : Bool {
+	public static function multiplyBy(wildcard : Wildcard, value : Float) : Float -> Float {
+		return function(x : Float) : Float {
 			return x * value;
 		}
 	}
@@ -107,6 +108,68 @@ class WildcardType {
 	}
 	
 	inline public static function toLowerCase<T>(wildcard : Wildcard, x : T) : String {
-		return Std.is(x, String) ? cast(x).toLowerCase() : (x + "").toLowerCase();
+		return toString(wildcard, x).toLowerCase();
+	}
+	
+	inline public static function toString<T>(wildcard : Wildcard, x : T) : String {
+		return (Std.is(x, String) ? cast(x) : x + "");
+	}
+	
+	inline public static function toUpperCase<T>(wildcard : Wildcard, x : T) : String {
+		return toString(wildcard, x).toUpperCase();
+	}
+	
+	inline public static function plus_(wildcard : Wildcard, a : Float, b : Float) : Float {
+		return a + b;
+	}
+	
+	inline public static function minus_(wildcard : Wildcard, a : Float, b : Float) : Float {
+		return a - b;
+	}
+	
+	inline public static function multiply_(wildcard : Wildcard, a : Float, b : Float) : Float {
+		return a * b;
+	}
+	
+	inline public static function divide_(wildcard : Wildcard, a : Float, b : Float) : Float {
+		return a / b;
+	}
+	
+	inline public static function modulo_(wildcard : Wildcard, a : Float, b : Float) : Float {
+		return a % b;
+	}
+	
+	inline public static function lessThan_<T>(wildcard : Wildcard, a : T, b : T) : T {
+		return a < b;
+	}
+	
+	inline public static function lessEqual_<T>(wildcard : Wildcard, a : T, b : T) : T {
+		return a <= b;
+	}
+	
+	inline public static function greaterThan_<T>(wildcard : Wildcard, a : T, b : T) : T {
+		return a > b;
+	}
+	
+	inline public static function greaterEqual_<T>(wildcard : Wildcard, a : T, b : T) : T {
+		return a >= b;
+	}
+	
+	inline public static function equal_<T>(wildcard : Wildcard, a : T, b : T) : T {
+		// TODO (Simon) : Fix this
+		return a == b;
+	}
+	
+	inline public static function notEqual_<T>(wildcard : Wildcard, a : T, b : T) : T {
+		// TODO (Simon) : Fix this
+		return a != b;
+	}
+	
+	inline public static function binaryAnd_(wildcard : Wildcard, a : Int, b : Int) : Int {
+		return a & b;
+	}
+	
+	inline public static function binaryXor(wildcard : Wildcard, a : Int, b : Int) : Int {
+		return a ^ b;
 	}
 }

@@ -49,7 +49,6 @@ class Product<T> implements IProduct<T> {
 	private function get_productArity() : Int {
 		return -1;
 	}
-	
 
 	private function get_productPrefix() : String {
 		return "";
