@@ -20,7 +20,8 @@ enum Lazy<T, A, B> {
 
 class LazyType {
 	
-	private static var _instances:Array<Dynamic> = new Array<Dynamic>();
+	// TODO (Simon) There has to be a better way to do this?
+	private static var _instances = new Array<Dynamic>();
 	
 	public static function get<T, A, B>(lax : Lazy<T, A, B>) : T {
 		for(i in 0..._instances.length) {

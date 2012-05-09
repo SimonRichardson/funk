@@ -1,18 +1,22 @@
 package funk;
 
 interface IFork<T> {
-	function andThen(branch : Fork<T>) : Void -> Void;
-	function andContinue(branch : Fork<T>) : T -> Void;
+	function andThen(branch : Void -> Void) : Void -> Void;
+	function andContinue(branch : Void -> Void) : T -> Void;
 }
 
 enum Fork<T> {
-	fork(func : Void -> T);
+	fork(func : (Void -> Void) -> Void);
 }
 
 class ForkType {
 	
 	public static function andThen<T>(branch : Fork<T>, func : Void -> Void) : Void -> Void {
-		return null;
+		return new ForkImpl<T>(branch).andThen(func);
+	}
+	
+	public static function andContinue<T>(branch : Fork<T>, func : Void -> Void) : Void -> Void {
+		return new ForkImpl<T>(branch).andContinue(func);
 	}
 }
 
@@ -24,11 +28,9 @@ class ForkImpl<T> implements IFork<T> {
 		_fork = branch;
 	}
 	
-	public function andThen(branch : Fork<T>) : Void -> Void {
+	public function andThen(f : Void -> Void) : Void -> Void {
 		var inner = function() : Void {
-			switch(branch) {
-				case fork(func): Reflect.callMethod(null, func, []);
-			}
+			Reflect.callMethod(null, f, []);
 		};
 		
 		return function() : Void {
@@ -38,11 +40,9 @@ class ForkImpl<T> implements IFork<T> {
 		};
 	}
 	
-	public function andContinue(branch : Fork<T>) : T -> Void {
+	public function andContinue(f : Void -> Void) : T -> Void {
 		var inner = function(args : Array<Dynamic>) : Void {
-			switch(branch) {
-				case fork(func): Reflect.callMethod(null, func, args);
-			}
+			Reflect.callMethod(null, f, args);
 		};
 		
 		return function(args : T) : Void {
