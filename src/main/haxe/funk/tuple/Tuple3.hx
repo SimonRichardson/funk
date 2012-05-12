@@ -34,6 +34,12 @@ class Tuple3Type {
 			case tuple3(a, b, c): c;
 		}
 	}
+	
+	inline public static function instance<A, B, C>(tuple : Tuple3<A, B, C>) : ITuple3<A, B, C> {
+		return switch(tuple) {
+			case tuple3(a, b, c): new Tuple3Impl<A,B,C>(a, b, c);
+		}
+	}
 }
 
 class Tuple3Impl<A, B, C> extends Product3<A, B, C>, implements ITuple3<A, B, C> {

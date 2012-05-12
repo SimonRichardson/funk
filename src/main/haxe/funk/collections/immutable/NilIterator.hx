@@ -4,7 +4,9 @@ import funk.option.Option;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
 
-class NilIterator<T> implements Iterator<T> {
+using funk.collections.immutable.Nil;
+
+class NilIterator<T> {
 	
 	public function new() {
 	}
@@ -13,8 +15,12 @@ class NilIterator<T> implements Iterator<T> {
 		return false;
 	}
 	
-	public function next() : IOption<T> {
-		return None();
+	public function next() : T {
+		return null;
+	}
+	
+	public function nextOption() : Option<T> {
+		return None;
 	}
 }
 
@@ -25,6 +31,6 @@ class NilIteratorType {
 	}
 	
 	inline public static function toList<T>(iter : NilIterator<T>) : IList<T> {
-		return nil();
+		return nil.instance();
 	}
 }

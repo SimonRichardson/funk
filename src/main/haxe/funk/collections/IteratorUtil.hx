@@ -1,18 +1,53 @@
 package funk.collections;
 
+import funk.collections.immutable.Nil;
+
+using funk.collections.immutable.Nil;
+
 class IteratorUtil {
 	
-	inline public static function toArray<T>(iter : IIterator<T>) : Array<T> {
+	inline public static function isIterator<T>(a : T) : Bool {
+		return Reflect.field(a, "hasNext") && Reflect.field(a, "next"); 
+	}
+	
+	inline public static function eq<A, B>(a : Iterator<A>, b : B) : Bool {
+		if(a != null && b != null) {
+			if(isIterator(b)) {
+				var iter : Iterator<B> = cast b;
+				while(true) {
+					var aHasNext = a.hasNext();
+					var bHasNext = iter.hasNext();
+					if(aHasNext && bHasNext) {
+						// FIXME (Simon) Use util.ne
+						var aNext = a.next();
+						var bNext = cast iter.next();
+						if(aNext != bNext) {
+							return false;
+						}
+					} else if(!aHasNext && !bHasNext) {
+						break;
+					} else {
+						return false;
+					}
+				}
+				
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	inline public static function toArray<T>(iter : Iterator<T>) : Array<T> {
 		var array : Array<T> = [];
-		while(iter.hasNext) {
+		while(iter.hasNext()) {
 			array.push(iter.next());
 		}
 		return array;
 	}
 
-	inline public static function toList<T>(iter : IIterator<T>) : IList<T> {
-		var l : IList<T> = nil();
-		while(iter.hasNext) {
+	inline public static function toList<T>(iter : Iterator<T>) : IList<T> {
+		var l : IList<T> = nil.instance();
+		while(iter.hasNext()) {
 			l = l.prepend(iter.next());
 		}
 		return l.reverse;

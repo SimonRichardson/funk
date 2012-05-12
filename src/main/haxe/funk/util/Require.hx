@@ -1,5 +1,7 @@
 package funk.util;
 
+import funk.errors.ArgumentError;
+
 enum Require {
 	require(message : String);
 }
@@ -7,11 +9,10 @@ enum Require {
 class RequireType {
 	
 	inline public static function toBe(req : Require, condition : Bool) : Void {
-		switch(req) {
-			case require(message): 
-				if(!condition) {
-					throw new ArgumentError(message);
-				}
+		if(!condition) {
+			switch(req) {
+				case require(message): throw new ArgumentError(message);
+			}
 		}
 	}
 }

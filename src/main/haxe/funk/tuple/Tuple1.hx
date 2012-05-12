@@ -20,6 +20,12 @@ class Tuple1Type {
 			case tuple1(a): a;
 		}
 	}
+	
+	inline public static function instance<A>(tuple : Tuple1<A>) : ITuple1<A> {
+		return switch(tuple) {
+			case tuple1(a): new Tuple1Impl<A>(a);
+		}
+	}
 }
 
 class Tuple1Impl<A> extends Product1<A>, implements ITuple1<A> {

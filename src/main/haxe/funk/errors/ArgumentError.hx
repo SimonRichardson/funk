@@ -1,6 +1,6 @@
 package funk.errors;
 
 class ArgumentError {
-	public function new(){
+	public function new(?message : String){
 	}
 }

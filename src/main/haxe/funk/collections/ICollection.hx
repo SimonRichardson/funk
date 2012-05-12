@@ -1,6 +1,6 @@
 package funk.collections;
 
-class ICollection<T> implements Iterable<T> {
+interface ICollection<T> {
 	
 	/**
      * The total number of elements in the collection.
@@ -16,5 +16,4 @@ class ICollection<T> implements Iterable<T> {
      * The elements of the collection stored in an array.
      */
     var toArray(dynamic, never): Array<T>;
-
 }

@@ -1,6 +1,7 @@
 package funk.errors;
 
 class NoSuchElementError {
-	public function new(){
+	
+	public function new(?message : String){
 	}
 }

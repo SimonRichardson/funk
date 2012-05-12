@@ -27,6 +27,12 @@ class Tuple2Type {
 			case tuple2(a, b): b;
 		}
 	}
+	
+	inline public static function instance<A, B>(tuple : Tuple2<A, B>) : ITuple2<A, B> {
+		return switch(tuple) {
+			case tuple2(a, b): new Tuple2Impl<A,B>(a, b);
+		}
+	}
 }
 
 class Tuple2Impl<A, B> extends Product2<A, B>, implements ITuple2<A, B> {

@@ -1,6 +1,7 @@
 package funk.option;
 
 import funk.option.Option;
+import funk.collections.ListUtil;
 
 class AnyType {
 	
@@ -25,6 +26,10 @@ class AnyType {
 	}
 	
 	inline public static function asOption<T>(value : T) : Option<T> {
+		return Some(value);
+	}
+	
+	inline public static function toList<T>(value : T) : IList<T> {
 		return Some(value);
 	}
 }

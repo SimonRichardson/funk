@@ -41,6 +41,12 @@ class Tuple4Type {
 			case tuple4(a, b, c, d): d;
 		}
 	}
+	
+	inline public static function instance<A, B, C, D>(tuple : Tuple4<A, B, C, D>) : ITuple4<A, B, C, D> {
+		return switch(tuple) {
+			case tuple4(a, b, c, d): new Tuple4Impl<A,B,C,D>(a, b, c, d);
+		}
+	}
 }
 
 class Tuple4Impl<A, B, C, D> extends Product4<A, B, C, D>, implements ITuple4<A, B, C, D> {
