@@ -38,7 +38,7 @@ class Product implements IProduct {
 		
 		var buffer : StringBuf = new StringBuf();
 		for(i in 0...total) {
-			buffer.add(productElement(0));
+			buffer.add(productElement(i));
 			
 			if(i < last) {
 				buffer.add(separator);
