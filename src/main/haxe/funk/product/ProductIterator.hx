@@ -1,7 +1,7 @@
-package funk;
+package funk.product;
 
 import funk.option.Option;
-import funk.Product;
+import funk.product.Product;
 
 interface IProductIterator<T> {
 	
@@ -16,9 +16,9 @@ class ProductIterator<T> implements IProductIterator<T> {
 	
 	private var _arity : Int;
 	
-	private var _product : IProduct<T>;
+	private var _product : IProduct;
 	
-	public function new(product : IProduct<T>){
+	public function new(product : IProduct){
 		_index = 0;
 		_product = product;
 		_arity = product.productArity;
@@ -30,6 +30,5 @@ class ProductIterator<T> implements IProductIterator<T> {
 	
 	public function next() : T {
 		return _product.productElement(_index++);
-		//return _index < _arity ? Some(_product.productElement(_index++)) : None;
 	}
 }

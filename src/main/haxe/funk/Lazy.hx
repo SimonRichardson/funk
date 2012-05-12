@@ -87,10 +87,10 @@ class LazyImpl<T, A, B> extends Product<T>, implements ILazy<T> {
 	private function get_get() : T {
 		if(!_evaluated) {
 			_value = switch(_lazy) {
-				case lazy(func): Reflect.callMethod(null, func, []);
-				case lazy1(func, arg0): Reflect.callMethod(null, func, [arg0]);
-				case lazy2(func, arg0, arg1): Reflect.callMethod(null, func, [arg0, arg1]);
-				case lazyN(func, args): Reflect.callMethod(null, func, [args]);
+				case lazy(func): func();
+				case lazy1(func, arg0): func(arg0);
+				case lazy2(func, arg0, arg1): func(arg0, arg1);
+				case lazyN(func, args): func(args);
 			}
 			_evaluated = true;
 		}

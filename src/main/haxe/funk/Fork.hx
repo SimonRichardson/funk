@@ -19,6 +19,13 @@ class ForkType {
 	public static function andContinue<T>(branch : Fork<T>, func : Void -> Void) : T -> Void {
 		return new ForkImpl<T>(branch).andContinue(func);
 	}
+	
+	public static function call<T, E>(branch : Fork<T>) : E {
+		return switch(branch) {
+			case fork(func): Reflect.callMethod(null, func, [null]);
+			case forkN(func, args): Reflect.callMethod(null, func, [null, args]);
+		}
+	}
 }
 
 class ForkImpl<T> implements IFork<T> {

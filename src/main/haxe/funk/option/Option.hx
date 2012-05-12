@@ -1,8 +1,8 @@
 package funk.option;
 
 import funk.errors.NoSuchElementError;
-import funk.Product;
-import funk.ProductIterator;
+import funk.product.Product1;
+import funk.product.ProductIterator;
 
 enum Option<T> {
 	None;
@@ -74,12 +74,8 @@ class OptionType {
 		}
 	}
 	
-	inline public static function iterator<T>(option : Option<T>) : IProductIterator<T> {
-		return new ProductOption<T>(option).iterator();
-	}
-	
-	inline public static function asOption<T>(value : T) : Option<T> {
-		return Some(value);
+	inline public static function iterator<T>(option : Option<Dynamic>) : IProductIterator<Dynamic> {
+		return new ProductOption<Dynamic>(option).iterator();
 	}
 	
 	inline public static function toString<T>(option : Option<T>) : String {
@@ -87,11 +83,13 @@ class OptionType {
 	}
 }
 
-class ProductOption<T> extends Product<T> {
+class ProductOption<T> extends Product1<T> {
 	
 	private var _option : Option<T>;
 	
 	public function new(option : Option<T>) {
+		super();
+		
 		_option = option;
 	}
 	
@@ -110,7 +108,7 @@ class ProductOption<T> extends Product<T> {
 		}
 	}
 	
-	override public function productElement(index : Int) : T {
+	override public function productElement(index : Int) : Dynamic {
 		return OptionType.get(_option);
 	}
 }

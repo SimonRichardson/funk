@@ -1,31 +1,34 @@
-package funk;
+package funk.product;
 
-import funk.ProductIterator;
+import funk.product.ProductIterator;
 
-interface IProduct<T> {
-	
+interface IProduct {
+
 	var productArity(dynamic, never) : Int;
 	
 	var productPrefix(dynamic, never) : String;
 	
-	function productElement(index : Int) : T;
+	function productElement(index : Int) : Dynamic;
 	
-	function iterator() : IProductIterator<T>;
+	function iterator() : IProductIterator<Dynamic>;
 }
 
-class Product<T> implements IProduct<T> {
+class Product implements IProduct {
 	
 	public var productArity(get_productArity, null) : Int;
 	
 	public var productPrefix(get_productPrefix, null) : String;
 	
-	@abstract
-	public function productElement(index : Int) : T {
+	public function new() {
+		
+	}
+	
+	public function productElement(index : Int) : Dynamic {
 		return null;
 	}
 	
-	public function iterator() : IProductIterator<T> {
-		return new ProductIterator<T>(this);
+	public function iterator() : IProductIterator<Dynamic> {
+		return new ProductIterator<Dynamic>(this);
 	}
 	
 	@:final
@@ -45,7 +48,6 @@ class Product<T> implements IProduct<T> {
 		return buffer.toString();
 	}
 	
-	@abstract
 	private function get_productArity() : Int {
 		return -1;
 	}
@@ -60,6 +62,6 @@ class Product<T> implements IProduct<T> {
 			return productPrefix;
 		}
 		
-		return productPrefix + "(" + makeString(",") + ")";
+		return Std.format("$productPrefix(${makeString(\",\")})");
 	}
 }
