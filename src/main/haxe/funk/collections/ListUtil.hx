@@ -1,33 +1,36 @@
 package funk.collections;
 
+import funk.collections.immutable.Nil;
+
+using funk.collections.immutable.Nil;
+
 class ListUtil {
 	
-	public static function toList<A, B>(any : A) : IList<B> {
-		var l : IList<B> = nil.instance();
+	public static function toList<A>(any : A) : IList<A> {
+		var l = nil.instance();
 		var n : Int;
 		
 		if(Std.is(any, IList)) {
-			
-			return any;
+			return cast any;
 				
 		} else if(Std.is(any, Array)) {
 			
-			var array: Array = any;
+			var array: Array<A> = cast any;
 		    n = array.length;
 		    while(--n > -1) {
 		    	l = l.prepend(array[n]);
 		    }
-		    return l;
 			
-		} else if(Std.is(value, String)) {
+		} else if(Std.is(any, String)) {
 			
-	    	var string: String = any;
+	    	var string: String = cast any;
 	    	n = string.length;
 	    	while(--n > -1) {
-	    		l = l.prepend(string.substr(n, 1));
+	    		l = l.prepend(cast string.substr(n, 1));
 	    	}
-	    	return l;
 	    }
+		
+		return l;
 	}
 	
 }

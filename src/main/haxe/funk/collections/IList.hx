@@ -48,9 +48,9 @@ interface IList<T> implements IProduct1<T>, implements ICollection<T> {
 
     function flatMap(f: (T -> IList<T>)): IList<T>;
 
-    function foldLeft(x: T, f: (T -> T)): T;
+    function foldLeft(x: T, f: (T -> T -> T)): T;
 
-    function foldRight(x: T, f: (T -> T)): T;
+    function foldRight(x: T, f: (T -> T -> T)): T;
 
     function forall(f: (T -> Bool)): Bool;
 
@@ -80,15 +80,15 @@ interface IList<T> implements IProduct1<T>, implements ICollection<T> {
 
     function appendIterable(iterable: Iterable<T>): IList<T>;
 
-    function reduceLeft(f: (T -> T)): Option<T>;
+    function reduceLeft(f: (T -> T -> T)): Option<T>;
 
-    function reduceRight(f: (T -> T)): Option<T>;
+    function reduceRight(f: (T -> T -> T)): Option<T>;
 	
     function take(n: Int): IList<T>;
 
     function takeRight(n: Int): IList<T>;
 
-    function takeWhile(f: (T -> Bool)): IList<T>;
+    function takeWhile(f : (IList<T> -> Bool)) : IList<T>;
 
-    function zip(that: IList<T>): IList<T>;
+    function zip(that: IList<T>): IList<ITuple2<T, T>>;
 }

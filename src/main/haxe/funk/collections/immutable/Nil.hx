@@ -107,11 +107,11 @@ class Nil<T> extends Product1<T>, implements IList<T> {
 		return NilType.instance(nil);
 	}
 	
-	public function foldLeft(x : T, f : (T -> T)) : T {
+	public function foldLeft(x : T, f : (T -> T -> T)) : T {
 		return x;
 	}
 	
-	public function foldRight(x : T, f : (T -> T)) : T {
+	public function foldRight(x : T, f : (T -> T -> T)) : T {
 		return x;
 	}
 	
@@ -142,11 +142,11 @@ class Nil<T> extends Product1<T>, implements IList<T> {
 		return value;
 	}
 	
-	public function reduceLeft(f : (T -> T)) : Option<T> {
+	public function reduceLeft(f : (T -> T -> T)) : Option<T> {
 		return None;
 	}
 	
-	public function reduceRight(f : (T -> T)) : Option<T> {
+	public function reduceRight(f : (T -> T -> T)) : Option<T> {
 		return None;
 	}
 	
@@ -162,11 +162,11 @@ class Nil<T> extends Product1<T>, implements IList<T> {
 		return NilType.instance(nil);
 	}
 	
-	public function takeWhile(f : (T -> Bool)) : IList<T> {
+	public function takeWhile(f : (IList<T> -> Bool)) : IList<T> {
 		return NilType.instance(nil);
 	}
 	
-	public function zip(that : IList<T>) : IList<T> {
+	public function zip(that : IList<T>) : IList<ITuple2<T, T>> {
 		return NilType.instance(nil);
 	}
 	

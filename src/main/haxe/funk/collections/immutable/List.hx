@@ -9,13 +9,14 @@ import funk.tuple.Tuple2;
 import funk.util.Require;
 import funk.collections.IteratorUtil;
 import funk.collections.ListUtil;
+import funk.collections.immutable.Nil;
 
 using funk.tuple.Tuple2;
 using funk.util.Require;
 using funk.option.Option;
 using funk.collections.IteratorUtil;
 using funk.collections.ListUtil;
-
+using funk.collections.immutable.Nil;
 
 class List<T> extends Product1<T>, implements IList<T> {
 	
@@ -23,7 +24,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 
 	public var head(get_head, never) : Option<T>;
 
-	public var indices(get_indices, never) : IList<T>;
+	public var indices(get_indices, never) : IList<Int>;
 
 	public var init(get_init, never) : IList<T>;
 
@@ -67,7 +68,9 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(eq(p.head, value)) {
+			// FIXME (Simon) This should use a check
+        	//if(eq(p.head, value)) {
+        	if(p.head.get() == value) {
           		return true;
         	}
         	p = p.tail.get();
@@ -78,10 +81,10 @@ class List<T> extends Product1<T>, implements IList<T> {
 	
 	public function count(f : (T -> Bool)) : Int {
 		var n: Int = 0;
-      	var p: IList = this;
+      	var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head)) {
+        	if(f(p.head.get())) {
           		++n;
         	}
 
@@ -110,14 +113,41 @@ class List<T> extends Product1<T>, implements IList<T> {
 	public function dropRight(n : Int) : IList<T> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return NilType.instance(nil);
+		if(0 == n) {
+			return this;
+      	}
+      
+      	n = size - n;
+
+      	if(n <= 0) {
+        	return nil.instance();
+      	}
+
+      	var buffer = new Array<List<T>>();
+      	var m: Int = n - 1;
+      	var p: IList<T> = this;
+
+      	for(i in 0...n) {
+        	buffer[i] = new List<T>(p.head.get(), null);
+        	p = p.tail.get();
+      	}
+
+      	buffer[m]._tail = nil.instance();
+		
+		var j : Int = 1;
+		for(i in 0...m) {
+        	buffer[i]._tail = buffer[j];
+			j++;
+      	}
+
+      	return buffer[0];
 	}
 	
 	public function dropWhile(f : (T -> Bool)) : IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(!f(p.head)) {
+        	if(!f(p.head.get())) {
           		return p;
         	}
 
@@ -131,7 +161,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head)) {
+        	if(f(p.head.get())) {
           		return true;
         	}
 
@@ -142,19 +172,79 @@ class List<T> extends Product1<T>, implements IList<T> {
 	}
 	
 	public function filter(f : (T -> Bool)) : IList<T> {
-		return NilType.instance(nil);
+		var p: IList<T> = this;
+      	var q: List<T> = null;
+      	var first: List<T> = null;
+      	var last: List<T> = null;
+      	var allFiltered: Bool = true;
+
+      	while(p.nonEmpty) {
+        	if(f(p.head.get())) {
+          		q = new List<T>(p.head.get(), nil.instance());
+
+          		if(null != last) {
+            		last._tail = q;
+          		}
+
+          		if(null == first) {
+            		first = q;
+          		}
+
+          		last = q;
+        	} else {
+          		allFiltered = false;
+        	}
+
+        	p = p.tail.get();
+      	}
+
+      	if(allFiltered) {
+        	return this;
+      	}
+
+      	return (first == null) ? nil.instance() : first;
 	}
 	
 	public function filterNot(f : (T -> Bool)) : IList<T> {
-		return NilType.instance(nil);
+		var p: IList<T> = this;
+      	var q: List<T> = null;
+      	var first: List<T> = null;
+      	var last: List<T> = null;
+      	var allFiltered: Bool = true;
+
+      	while(p.nonEmpty) {
+        	if(!f(p.head.get())) {
+          		q = new List<T>(p.head.get(), nil.instance());
+
+          		if(null != last) {
+            		last._tail = q;
+          		}
+
+          		if(null == first) {
+            		first = q;
+          		}
+
+          		last = q;
+        	} else {
+          		allFiltered = false;
+        	}
+
+        	p = p.tail.get();
+      	}
+
+      	if(allFiltered) {
+        	return this;
+      	}
+
+      	return (first == null) ? nil.instance() : first;
 	}
 	
 	public function find(f : (T -> Bool)) : Option<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head)) {
-          		return Some(p.head);
+        	if(f(p.head.get())) {
+          		return p.head;
         	}
 
         	p = p.tail.get();
@@ -164,59 +254,41 @@ class List<T> extends Product1<T>, implements IList<T> {
 	}
 	
 	public function flatMap(f : (T -> IList<T>)) : IList<T> {
-		return NilType.instance(nil);
-	}
-	
-	public function foldLeft(x : T, f : (T -> T)) : T {
-		return x;
-	}
-	
-	public function foldRight(x : T, f : (T -> T)) : T {
-		return x;
-	}
-	
-	public function forall(f : (T -> Bool)) : Bool {
-		return false;
-	}
-	
-	public function foreach(f : (T -> Void)) : Void {
-	}
-	
-	public function get(index : Int) : Option<T> {
-		return productElement(index);
-	}
-	
-	public function map(f : (T -> T)) : IList<T> {
-		return NilType.instance(nil);
-	}
-	
-	public function partition(f : (T -> Bool)) : ITuple2<IList<T>, IList<T>> {
-		return tuple2(NilType.instance(nil), NilType.instance(nil)).instance();
-	}
-	
-	public function prepend(value : T) : IList<T> {
-		return new List(value, this);
-	}
-	
-	public function prependAll(value : IList<T>) : IList<T> {
-		return value;
-	}
-	
-	public function reduceLeft(f : (T -> T)) : Option<T> {
-		var value: T = head;
-      	var p: IList<T> = _tail;
+		var n: Int = size;
+      	var buffer: Array<IList<T>> = new Array<IList<T>>();
+      	var p: IList<T> = this;
+      	var i: Int = 0;
 
       	while(p.nonEmpty) {
-        	value = f(value, p.head);
+			// TODO (Simon) We should verify the type.
+        	buffer[i++] = f(p.head.get()); 
+        	p = p.tail.get();
+      	}
+
+      	var list: IList<T> = buffer[--n];
+
+      	while(--n > -1) {
+        	list = list.prependAll(buffer[n]);
+      	}
+
+      	return list;
+	}
+	
+	public function foldLeft(x : T, f : (T -> T -> T)) : T {
+		var value: T = x;
+      	var p: IList<T> = this;
+
+      	while(p.nonEmpty) {
+        	value = f(value, p.head.get());
         	p = p.tail.get();
       	}
 
       	return value;
 	}
 	
-	public function reduceRight(f : (T -> T)) : Option<T> {
-		var buffer: Array = toArray;
-      	var value: T = buffer.pop();
+	public function foldRight(x : T, f : (T -> T -> T)) : T {
+		var value: T = x;
+      	var buffer: Array<T> = toArray;
       	var n: Int = buffer.length;
 
       	while(--n > -1) {
@@ -226,24 +298,262 @@ class List<T> extends Product1<T>, implements IList<T> {
       	return value;
 	}
 	
+	public function forall(f : (T -> Bool)) : Bool {
+		var p: IList<T> = this;
+
+      	while(p.nonEmpty) {
+        	if(!f(p.head.get())) {
+          		return false;
+        	}
+
+        	p = p.tail.get();
+      	}
+
+      	return true;
+	}
+	
+	public function foreach(f : (T -> Void)) : Void {
+		var p: IList<T> = this;
+
+      	while(p.nonEmpty) {
+        	f(p.head.get());
+        	p = p.tail.get();
+      	}
+	}
+	
+	public function get(index : Int) : Option<T> {
+		return productElement(index);
+	}
+	
+	public function map(f : (T -> T)) : IList<T> {
+		var n: Int = size;
+      	var buffer: Array<List<T>> = new Array<List<T>>();
+      	var m: Int = n - 1;
+
+      	var p: IList<T> = this;
+
+      	for(i in 0...n) {
+        	buffer[i] = new List<T>(f(p.head.get()), null);
+        	p = p.tail.get();
+      	}
+
+      	buffer[m]._tail = nil.instance();
+		
+		var j : Int = 1;
+		for(i in 0...m) {
+        	buffer[i]._tail = buffer[j];
+			j++;
+      	}
+
+      	return buffer[0];
+	}
+	
+	public function partition(f : (T -> Bool)) : ITuple2<IList<T>, IList<T>> {
+		var left: Array<List<T>> = new Array<List<T>>();
+      	var right: Array<List<T>> = new Array<List<T>>();
+
+      	var i: Int = 0;
+      	var j: Int = 0;
+      	var m: Int = 0;
+      	var o: Int = 0;
+
+      	var p: IList<T> = this;
+
+      	while(p.nonEmpty) {
+        	if(f(p.head.get())) {
+          		left[i++] = new List(p.head.get(), nil.instance());
+        	} else {
+          		right[j++] = new List(p.head.get(), nil.instance());
+        	}
+
+        	p = p.tail.get();
+      	}
+
+      	m = i - 1;
+      	o = j - 1;
+
+      	if(m > 0) {
+			j = 1;
+			for(i in 0...m) {
+          		left[i]._tail = left[j];
+				j++;
+        	}
+      	}
+
+      	if(o > 0) {
+			j = 1;
+			for(i in 0...o) {
+          		right[i]._tail = right[j];
+				j++;
+        	}
+      	}
+
+      	return tuple2(m > 0 ? left[0] : nil.instance(), o > 0 ? right[0] : nil.instance()).instance();
+	}
+	
+	public function prepend(value : T) : IList<T> {
+		return new List<T>(value, this);
+	}
+	
+	public function prependAll(value : IList<T>) : IList<T> {
+		var n: Int = value.size;
+
+      	if(0 == n) {
+        	return this;
+      	}
+
+      	var buffer: Array<List<T>> = new Array<List<T>>();
+      	var m: Int = n - 1;
+      	var p: IList<T> = value;
+      	var i: Int = 0;
+
+      	while(p.nonEmpty) {
+        	buffer[i++] = new List<T>(p.head.get(), null);
+        	p = p.tail.get();
+      	}
+
+      	buffer[m]._tail = this;
+
+		var j : Int = 1;
+		for(i in 0...m) {
+        	buffer[i]._tail = buffer[j];
+			j++;
+      	}
+
+      	return buffer[0];
+	}
+	
+	public function reduceLeft(f : (T -> T -> T)) : Option<T> {
+		var value: T = head.get();
+      	var p: IList<T> = _tail;
+
+      	while(p.nonEmpty) {
+        	value = f(value, p.head.get());
+        	p = p.tail.get();
+      	}
+
+      	return Some(value);
+	}
+	
+	public function reduceRight(f : (T -> T -> T)) : Option<T> {
+		var buffer: Array<T> = toArray;
+      	var value: T = buffer.pop();
+      	var n: Int = buffer.length;
+
+      	while(--n > -1) {
+        	value = f(value, buffer[n]);
+      	}
+
+      	return Some(value);
+	}
+	
 	public function take(n : Int) : IList<T> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return NilType.instance(nil);
+		if(n > size) {
+        	return this;
+      	} else if(0 == n) {
+        	return nil.instance();
+      	}
+
+      	var buffer: Array<List<T>> = new Array<List<T>>();
+      	var m: Int = n - 1;
+      	var p: IList<T> = this;
+
+      	for(i in 0...n) {
+        	buffer[i] = new List<T>(p.head.get(), null);
+        	p = p.tail.get();
+      	}
+
+      	buffer[m]._tail = nil.instance();
+
+		var j : Int = 1;
+		for(i in 0...m) {
+        	buffer[i]._tail = buffer[j];
+			j++;
+      	}
+
+      	return buffer[0];
 	}
 	
 	public function takeRight(n : Int) : IList<T> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return NilType.instance(nil);
+		if(n > size) {
+        	return this;
+      	} else if(0 == n) {
+        	return nil.instance();
+      	}
+
+      	n = size - n;
+
+      	if(n <= 0) {
+        	return this;
+      	}
+
+      	var p: IList<T> = this;
+		
+		for(i in 0...n) {
+        	p = p.tail.get();
+      	}
+
+      	return p;
 	}
 	
-	public function takeWhile(f : (T -> Bool)) : IList<T> {
-		return NilType.instance(nil);
+	public function takeWhile(f : (IList<T> -> Bool)) : IList<T> {
+		var buffer: Array<List<T>> = new Array<List<T>>();
+      	var p: IList<T> = this;
+      	var n: Int = 0;
+
+      	while(p.nonEmpty) {
+        	if(f(p)) {
+          		buffer[n++] = new List<T>(p.head.get(), null);
+          		p = p.tail.get();
+        	} else {
+          		break;
+        	}
+      	}
+
+      	var m: Int = n - 1;
+
+      	if(m <= 0) {
+        	return nil.instance();
+      	}
+      
+      	buffer[m]._tail = nil.instance();
+
+		var j : Int = 1;
+		for(i in 0...m) {
+        	buffer[i]._tail = buffer[j];
+			j++;
+      	}
+
+      return buffer[0];
 	}
 	
-	public function zip(that : IList<T>) : IList<T> {
-		return NilType.instance(nil);
+	public function zip(that : IList<T>) : IList<ITuple2<T, T>> {
+		var n: Int = Std.int(Math.min(size, that.size));
+      	var m: Int = n - 1;
+      	var buffer: Array<List<ITuple2<T, T>>> = new Array<List<ITuple2<T, T>>>();
+
+      	var p: IList<T> = this;
+		var q: IList<T> = that;
+
+		for(i in 0...n) {
+        	buffer[i] = new List(tuple2(p.head.get(), q.head.get()).instance(), null);
+        	p = p.tail.get();
+        	q = q.tail.get();
+      	}
+
+      	buffer[m]._tail = nil.instance();
+
+		var j : Int = 1;
+		for(i in 0...m) {
+        	buffer[i]._tail = buffer[j];
+			j++;
+      	}
+
+      	return buffer[0];
 	}
 	
 	public function findIndexOf(f: (T -> Bool)): Int {
@@ -251,7 +561,7 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head)) {
+        	if(f(p.head.get())) {
           		return index;
         	}
 
@@ -267,7 +577,9 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(eq(p.head, value)) {
+			// FIXME (Simon) This should call eq.
+        	// if(eq(p.head, value)) {
+        	if(p.head.get() == value) {
           		return index;
         	}
 
@@ -287,7 +599,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 	}
 	
 	public function append(value : T) : IList<T> {
-		return new List(value, this);
+		return new List<T>(value, this);
 	}
 
 	public function appendAll(value : IList<T>) : IList<T> {
@@ -345,7 +657,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 	}
 	
 	private function get_last() : Option<T> {
-		var p: IList = this;
+		var p: IList<T> = this;
       	var value: Option<T> = None;
       	while(p.nonEmpty) {
         	value = p.head;
@@ -376,7 +688,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 
       	while(p.nonEmpty) {
         	++length;
-        	p = p.tail;
+        	p = p.tail.get();
       	}
 
       	_length = length;
@@ -391,7 +703,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 
 	private function get_toArray() : Array<T> {
 		var n: Int = size;
-      	var array: Array = [];
+      	var array: Array<T> = new Array<T>();
       	var p: IList<T> = this;
 
      	for(i in 0...n) {
@@ -407,7 +719,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 	
 	private function get_flatten() : IList<T> {
 		return flatMap(function(x: T): IList<T> { 
-			return Std.is(x, IList) ? x : x.toList(); 
+			return Std.is(x, IList) ? cast x : x.toList(); 
 		});
 	}
 	

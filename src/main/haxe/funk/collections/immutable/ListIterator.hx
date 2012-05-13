@@ -1,11 +1,15 @@
 package funk.collections.immutable;
 
+import funk.errors.NoSuchElementError;
 import funk.option.Option;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
 import funk.collections.IteratorUtil;
 
-class ListIterator<T> implements Iterator<T> {
+using funk.option.Option;
+using funk.collections.immutable.Nil;
+
+class ListIterator<T> {
 	
 	private var _list : IList<T>;
 	
@@ -17,13 +21,23 @@ class ListIterator<T> implements Iterator<T> {
 		return _list.nonEmpty;
 	}
 	
-	public function next() : IOption<T> {
-		return if(_list == nil()) {
-			None();
+	public function next() : T {
+		return if(_list == nil.instance()) {
+			throw new NoSuchElementError();
 		} else {
-			var head : T = _list.head;
-			_list = _list.tail;
-			Some(head);
+			var head : Option<T> = _list.head;
+			_list = _list.tail.get();
+			head.get();
+		}
+	}
+	
+	public function nextOption() : Option<T> {
+		return if(_list == nil.instance()) {
+			None;
+		} else {
+			var head : Option<T> = _list.head;
+			_list = _list.tail.get();
+			head;
 		}
 	}
 }
