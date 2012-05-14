@@ -25,9 +25,9 @@ class ListIterator<T> {
 		return if(_list == nil.instance()) {
 			throw new NoSuchElementError();
 		} else {
-			var head : Option<T> = _list.head;
-			_list = _list.tail.get();
-			head.get();
+			var head : T = _list.head;
+			_list = _list.tail;
+			head;
 		}
 	}
 	
@@ -35,8 +35,8 @@ class ListIterator<T> {
 		return if(_list == nil.instance()) {
 			None;
 		} else {
-			var head : Option<T> = _list.head;
-			_list = _list.tail.get();
+			var head : Option<T> = _list.headOption;
+			_list = _list.tail;
 			head;
 		}
 	}

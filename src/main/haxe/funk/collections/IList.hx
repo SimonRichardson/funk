@@ -10,7 +10,9 @@ interface IList<T> implements IProduct1<T>, implements ICollection<T> {
 	
     var flatten(dynamic, never): IList<T>;
 	
-    var head(dynamic, never): Option<T>;
+    var head(dynamic, never): T;
+	
+	var headOption(dynamic, never): Option<T>;
 
     var indices(dynamic, never): IList<Int>;
 
@@ -22,7 +24,9 @@ interface IList<T> implements IProduct1<T>, implements ICollection<T> {
 	
 	var reverse(dynamic, never): IList<T>;
 
-    var tail(dynamic, never): Option<IList<T>>;
+    var tail(dynamic, never): IList<T>;
+	
+	var tailOption(dynamic, never): Option<IList<T>>;
 	
 	var zipWithIndex(dynamic, never): IList<T>;
 	

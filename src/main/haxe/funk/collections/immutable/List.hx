@@ -22,7 +22,9 @@ class List<T> extends Product1<T>, implements IList<T> {
 	
 	public var nonEmpty(get_nonEmpty, never) : Bool;
 
-	public var head(get_head, never) : Option<T>;
+	public var head(get_head, never) : T;
+	
+	public var headOption(get_headOption, never) : Option<T>;
 
 	public var indices(get_indices, never) : IList<Int>;
 
@@ -34,7 +36,9 @@ class List<T> extends Product1<T>, implements IList<T> {
 
 	public var reverse(get_reverse, never) : IList<T>;
 
-	public var tail(get_tail, never) : Option<IList<T>>;
+	public var tail(get_tail, never) : IList<T>;
+	
+	public var tailOption(get_tailOption, never) : Option<IList<T>>;
 
 	public var zipWithIndex(get_zipWithIndex, never) : IList<T>;
 	
@@ -70,10 +74,10 @@ class List<T> extends Product1<T>, implements IList<T> {
       	while(p.nonEmpty) {
 			// FIXME (Simon) This should use a check
         	//if(eq(p.head, value)) {
-        	if(p.head.get() == value) {
+        	if(p.head == value) {
           		return true;
         	}
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	return false;
@@ -84,11 +88,11 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head.get())) {
+        	if(f(p.head)) {
           		++n;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	return n;
@@ -104,7 +108,7 @@ class List<T> extends Product1<T>, implements IList<T> {
           		return nil.instance();
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	return p;
@@ -128,8 +132,8 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	for(i in 0...n) {
-        	buffer[i] = new List<T>(p.head.get(), null);
-        	p = p.tail.get();
+        	buffer[i] = new List<T>(p.head, null);
+        	p = p.tail;
       	}
 
       	buffer[m]._tail = nil.instance();
@@ -147,11 +151,11 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(!f(p.head.get())) {
+        	if(!f(p.head)) {
           		return p;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
       }
 
       return nil.instance();
@@ -161,11 +165,11 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head.get())) {
+        	if(f(p.head)) {
           		return true;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	return false;
@@ -179,8 +183,8 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var allFiltered: Bool = true;
 
       	while(p.nonEmpty) {
-        	if(f(p.head.get())) {
-          		q = new List<T>(p.head.get(), nil.instance());
+        	if(f(p.head)) {
+          		q = new List<T>(p.head, nil.instance());
 
           		if(null != last) {
             		last._tail = q;
@@ -195,7 +199,7 @@ class List<T> extends Product1<T>, implements IList<T> {
           		allFiltered = false;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	if(allFiltered) {
@@ -213,8 +217,8 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var allFiltered: Bool = true;
 
       	while(p.nonEmpty) {
-        	if(!f(p.head.get())) {
-          		q = new List<T>(p.head.get(), nil.instance());
+        	if(!f(p.head)) {
+          		q = new List<T>(p.head, nil.instance());
 
           		if(null != last) {
             		last._tail = q;
@@ -229,7 +233,7 @@ class List<T> extends Product1<T>, implements IList<T> {
           		allFiltered = false;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	if(allFiltered) {
@@ -243,11 +247,11 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head.get())) {
-          		return p.head;
+        	if(f(p.head)) {
+          		return p.headOption;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	return None;
@@ -261,8 +265,8 @@ class List<T> extends Product1<T>, implements IList<T> {
 
       	while(p.nonEmpty) {
 			// TODO (Simon) We should verify the type.
-        	buffer[i++] = f(p.head.get()); 
-        	p = p.tail.get();
+        	buffer[i++] = f(p.head); 
+        	p = p.tail;
       	}
 
       	var list: IList<T> = buffer[--n];
@@ -279,8 +283,8 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	value = f(value, p.head.get());
-        	p = p.tail.get();
+        	value = f(value, p.head);
+        	p = p.tail;
       	}
 
       	return value;
@@ -302,11 +306,11 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(!f(p.head.get())) {
+        	if(!f(p.head)) {
           		return false;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	return true;
@@ -316,8 +320,8 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	f(p.head.get());
-        	p = p.tail.get();
+        	f(p.head);
+        	p = p.tail;
       	}
 	}
 	
@@ -333,8 +337,8 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	for(i in 0...n) {
-        	buffer[i] = new List<T>(f(p.head.get()), null);
-        	p = p.tail.get();
+        	buffer[i] = new List<T>(f(p.head), null);
+        	p = p.tail;
       	}
 
       	buffer[m]._tail = nil.instance();
@@ -360,13 +364,13 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head.get())) {
-          		left[i++] = new List(p.head.get(), nil.instance());
+        	if(f(p.head)) {
+          		left[i++] = new List(p.head, nil.instance());
         	} else {
-          		right[j++] = new List(p.head.get(), nil.instance());
+          		right[j++] = new List(p.head, nil.instance());
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	m = i - 1;
@@ -408,8 +412,8 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var i: Int = 0;
 
       	while(p.nonEmpty) {
-        	buffer[i++] = new List<T>(p.head.get(), null);
-        	p = p.tail.get();
+        	buffer[i++] = new List<T>(p.head, null);
+        	p = p.tail;
       	}
 
       	buffer[m]._tail = this;
@@ -424,12 +428,12 @@ class List<T> extends Product1<T>, implements IList<T> {
 	}
 	
 	public function reduceLeft(f : (T -> T -> T)) : Option<T> {
-		var value: T = head.get();
+		var value: T = head;
       	var p: IList<T> = _tail;
 
       	while(p.nonEmpty) {
-        	value = f(value, p.head.get());
-        	p = p.tail.get();
+        	value = f(value, p.head);
+        	p = p.tail;
       	}
 
       	return Some(value);
@@ -461,8 +465,8 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	for(i in 0...n) {
-        	buffer[i] = new List<T>(p.head.get(), null);
-        	p = p.tail.get();
+        	buffer[i] = new List<T>(p.head, null);
+        	p = p.tail;
       	}
 
       	buffer[m]._tail = nil.instance();
@@ -494,7 +498,7 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 		
 		for(i in 0...n) {
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	return p;
@@ -507,8 +511,8 @@ class List<T> extends Product1<T>, implements IList<T> {
 
       	while(p.nonEmpty) {
         	if(f(p)) {
-          		buffer[n++] = new List<T>(p.head.get(), null);
-          		p = p.tail.get();
+          		buffer[n++] = new List<T>(p.head, null);
+          		p = p.tail;
         	} else {
           		break;
         	}
@@ -540,9 +544,9 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var q: IList<T> = that;
 
 		for(i in 0...n) {
-        	buffer[i] = new List(tuple2(p.head.get(), q.head.get()).instance(), null);
-        	p = p.tail.get();
-        	q = q.tail.get();
+        	buffer[i] = new List(tuple2(p.head, q.head).instance(), null);
+        	p = p.tail;
+        	q = q.tail;
       	}
 
       	buffer[m]._tail = nil.instance();
@@ -561,11 +565,11 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head.get())) {
+        	if(f(p.head)) {
           		return index;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
         	index += 1;
       	}
 
@@ -579,11 +583,11 @@ class List<T> extends Product1<T>, implements IList<T> {
       	while(p.nonEmpty) {
 			// FIXME (Simon) This should call eq.
         	// if(eq(p.head, value)) {
-        	if(p.head.get() == value) {
+        	if(p.head == value) {
           		return index;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
         	index += 1;
       	}
 
@@ -622,7 +626,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	  return p.head;
         	}
 
-        	p = p.tail.get();
+        	p = p.tail;
         	i -= 1;
       	}
 
@@ -637,7 +641,11 @@ class List<T> extends Product1<T>, implements IList<T> {
 		return false;
 	}
 	
-	private function get_head() : Option<T> {
+	private function get_head() : T {
+		return _head;
+	}
+	
+	private function get_headOption() : Option<T> {
 		return Some(_head);
 	}
 	
@@ -660,8 +668,8 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
       	var value: Option<T> = None;
       	while(p.nonEmpty) {
-        	value = p.head;
-        	p = p.tail.get();
+        	value = p.headOption;
+        	p = p.tail;
       	}
       	return value;
 	}
@@ -670,7 +678,11 @@ class List<T> extends Product1<T>, implements IList<T> {
 		return NilType.instance(nil);
 	}
 	
-	private function get_tail() : Option<IList<T>> {
+	private function get_tail() : IList<T> {
+		return _tail;
+	}
+	
+	private function get_tailOption() : Option<IList<T>> {
 		return Some(_tail);
 	}
 	
@@ -688,7 +700,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 
       	while(p.nonEmpty) {
         	++length;
-        	p = p.tail.get();
+        	p = p.tail;
       	}
 
       	_length = length;
@@ -707,11 +719,8 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
      	for(i in 0...n) {
-        	array[i] = switch(p.head) {
-				case None: null;
-				case Some(value): value;
-			};
-        	p = p.tail.get();
+        	array[i] = p.head;
+        	p = p.tail;
       	}
 
 	    return array;

@@ -35,7 +35,9 @@ class Nil<T> extends Product1<T>, implements IList<T> {
 	
 	public var nonEmpty(get_nonEmpty, never) : Bool;
 
-	public var head(get_head, never) : Option<T>;
+	public var head(get_head, never) : T;
+	
+	public var headOption(get_headOption, never) : Option<T>;
 
 	public var indices(get_indices, never) : IList<Int>;
 
@@ -47,7 +49,9 @@ class Nil<T> extends Product1<T>, implements IList<T> {
 
 	public var reverse(get_reverse, never) : IList<T>;
 
-	public var tail(get_tail, never) : Option<IList<T>>;
+	public var tail(get_tail, never) : IList<T>;
+	
+	public var tailOption(get_tailOption, never) : Option<IList<T>>;
 
 	public var zipWithIndex(get_zipWithIndex, never) : IList<T>;
 	
@@ -214,7 +218,11 @@ class Nil<T> extends Product1<T>, implements IList<T> {
 		return true;
 	}
 	
-	private function get_head() : Option<T> {
+	private function get_head() : T {
+		return null;
+	}
+	
+	private function get_headOption() : Option<T> {
 		return None;
 	}
 	
@@ -234,7 +242,11 @@ class Nil<T> extends Product1<T>, implements IList<T> {
 		return NilType.instance(nil);
 	}
 	
-	private function get_tail() : Option<IList<T>> {
+	private function get_tail() : IList<T> {
+		return null;
+	}
+	
+	private function get_tailOption() : Option<IList<T>> {
 		return None;
 	}
 	
