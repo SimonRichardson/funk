@@ -30,10 +30,10 @@ class Module implements IModule {
       	var binding: Binding = _map[klass];
       
       	try {
-        	Injector.module_internal::pushScope(this);
+        	Injector.pushScope(this);
         	return (null == binding) ? new klass : binding.getInstance();
       	} finally {
-        	Injector.module_internal::popScope();
+        	Injector.popScope();
       	}
     }
 
