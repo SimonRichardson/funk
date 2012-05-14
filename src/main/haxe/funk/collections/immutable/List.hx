@@ -40,7 +40,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 	
 	public var tailOption(get_tailOption, never) : Option<IList<T>>;
 
-	public var zipWithIndex(get_zipWithIndex, never) : IList<T>;
+	public var zipWithIndex(get_zipWithIndex, never) : IList<ITuple2<T, Int>>;
 	
 	public var size(get_size, never) : Int;
 	
@@ -532,7 +532,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 			j++;
       	}
 
-      return buffer[0];
+      	return buffer[0];
 	}
 	
 	public function zip(that : IList<T>) : IList<ITuple2<T, T>> {
@@ -686,8 +686,27 @@ class List<T> extends Product1<T>, implements IList<T> {
 		return Some(_tail);
 	}
 	
-	private function get_zipWithIndex() : IList<T> {
-		return NilType.instance(nil);
+	private function get_zipWithIndex() : IList<ITuple<T, Int>> {
+		var n: Int = Std.int(Math.min(size, that.size));
+      	var m: Int = n - 1;
+      	var buffer: Array<List<ITuple2<T, Int>>> = new Array<List<ITuple2<T, Int>>>();
+
+      	var p: IList<T> = this;
+
+		for(i in 0...n) {
+        	buffer[i] = new List(tuple2(p.head, i).instance(), null);
+        	p = p.tail;
+      	}
+
+      	buffer[m]._tail = nil.instance();
+
+		var j : Int = 1;
+		for(i in 0...m) {
+        	buffer[i]._tail = buffer[j];
+			j++;
+      	}
+
+      	return buffer[0];
 	}
 	
 	private function get_size() : Int {

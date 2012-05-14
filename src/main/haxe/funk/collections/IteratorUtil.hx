@@ -53,4 +53,13 @@ class IteratorUtil {
 		return l.reverse;
 	}
 	
+	inline public static function toSet<K, V>(iter : Iterator<V>) : IList<K, V> {
+		var s : ISet<Int, T> = nil.instance();
+		var i : Int = 0;
+		while(iter.hasNext()) {
+			s = s.add(tuple2(i, iter.next()).instance());
+			i++;
+		}
+		return s;
+	}
 }

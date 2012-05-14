@@ -53,7 +53,7 @@ class Nil<T> extends Product1<T>, implements IList<T> {
 	
 	public var tailOption(get_tailOption, never) : Option<IList<T>>;
 
-	public var zipWithIndex(get_zipWithIndex, never) : IList<T>;
+	public var zipWithIndex(get_zipWithIndex, never) : IList<ITuple2<T, Int>>;
 	
 	public var size(get_size, never) : Int;
 	
@@ -250,7 +250,7 @@ class Nil<T> extends Product1<T>, implements IList<T> {
 		return None;
 	}
 	
-	private function get_zipWithIndex() : IList<T> {
+	private function get_zipWithIndex() : IList<ITuple2<T, Int>> {
 		return NilType.instance(nil);
 	}
 	

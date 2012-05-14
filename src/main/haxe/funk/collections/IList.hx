@@ -28,7 +28,7 @@ interface IList<T> implements IProduct1<T>, implements ICollection<T> {
 	
 	var tailOption(dynamic, never): Option<IList<T>>;
 	
-	var zipWithIndex(dynamic, never): IList<T>;
+	var zipWithIndex(dynamic, never): IList<ITuple2<T, Int>>;
 	
     function contains(value: T): Bool;
 

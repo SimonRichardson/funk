@@ -24,7 +24,7 @@ class ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
 	
 	var tailOption(dynamic, never): Option<ISet<K, V>>;
 	
-	var zipWithIndex(dynamic, never): IList<ITuple2<ISet<K, V>, Int>>;
+	var zipWithIndex(dynamic, never): ISet<ITuple2<K, V>, Int>;
 	
     function contains(value: K): Bool;
 
@@ -44,8 +44,6 @@ class ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
 
     function find(f: (ITuple2<K, V> -> Bool)): Option<ITuple2<K, V>>;
 
-    function findIndexOf(f: (ITuple2<K, V> -> Bool)): Int;
-
     function flatMap(f: (ITuple2<K, V> -> ISet<K, V>)): ISet<K, V>;
 
     function foldLeft(x: ITuple2<K, V>, f: (ITuple2<K, V> -> ITuple2<K, V> -> ITuple2<K, V>)): ITuple2<K, V>;
@@ -58,7 +56,7 @@ class ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
 
     function get(index: Int): Option<V>;
 
-    function map(f: (ITuple2<K, V> -> V)): ISet<K, V>;
+    function map(f: (ITuple2<K, V> -> ITuple2<K, V>)): ISet<K, V>;
 
     function partition(f: (ITuple2<K, V> -> Bool)): ITuple2<ISet<K, V>, ISet<K, V>>;
 
@@ -70,9 +68,9 @@ class ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
 
     function addIterable(iterable: Iterable<ITuple2<K, V>>): ISet<K, V>;
 
-    function reduceLeft(f: (ITuple2<K, V> -> B -> B)): Option<B>;
+    function reduceLeft(f: (ITuple2<K, V> -> ITuple2<K, V> -> ITuple2<K, V>)): Option<ITuple2<K, V>>;
 
-    function reduceRight(f: (ITuple2<K, V> -> B -> B)): Option<B>;
+    function reduceRight(f: (ITuple2<K, V> -> ITuple2<K, V> -> ITuple2<K, V>)): Option<ITuple2<K, V>>;
 	
     function take(n: Int): ISet<K, V>;
 
@@ -80,5 +78,5 @@ class ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
 
     function takeWhile(f : (ISet<K, V> -> Bool)) : ISet<K, V>;
 
-    function zip(that: ISet<K, V>): IList<ITuple2<ITuple2<K, V>, V>>;
+    function zip(that: ISet<Dynamic, Dynamic>): ISet<ITuple2<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>>>;
 }
