@@ -42,10 +42,10 @@ class Module implements IModule {
       	var binding = _map.find(function(item : Class<Dynamic>, bind : Binding<Dynamic>) : Bool {
 			return item == type;
 		});
-      
+		
       	try {
         	Injector.pushScope(this);
-        	
+
 			var instance = switch(binding) {
 				case None: Type.createInstance(type, []);
 				case Some(tuple): tuple._2.getInstance();
