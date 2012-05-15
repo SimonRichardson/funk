@@ -7,6 +7,7 @@ import funk.errors.RangeError;
 import funk.product.Product2;
 import funk.option.Option;
 import funk.tuple.Tuple2;
+import funk.unit.It;
 import funk.util.Require;
 
 using funk.collections.IteratorUtil;
@@ -14,6 +15,7 @@ using funk.collections.ListUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Option;
 using funk.tuple.Tuple2;
+using funk.unit.It;
 using funk.util.Require;
 
 class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
@@ -66,9 +68,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 		var p: ISet<K, V> = this;
 
       	while(p.nonEmpty) {
-			// FIXME (Simon) This should use a check
-        	//if(eq(p.head._1, value)) {
-        	if(p.head._1 == value) {
+			if(it(p.head._1).toEqual(value)) {
           		return true;
         	}
         	p = p.tail;
@@ -184,7 +184,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
             		last._tail = q;
           		}
 
-          		if(null == first) {
+          		if(first == null) {
             		first = q;
           		}
 

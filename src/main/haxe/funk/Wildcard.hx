@@ -1,5 +1,10 @@
 package funk;
 
+import funk.collections.ListUtil;
+import funk.unit.It;
+
+using funk.unit.It;
+
 enum Wildcard {
 	_;
 }
@@ -24,8 +29,7 @@ class WildcardType {
 	
 	public static function equals<T, E>(wildcard : Wildcard, value : T) : E -> Bool {
 		return function(x : E) : Bool {
-			// TODO (Simon) Fix this
-			return x == value;
+			return it(x).toEqual(value);
 		}
 	}
 	
@@ -99,8 +103,12 @@ class WildcardType {
 	
 	public static function notEquals<T, E>(wildcard : Wildcard, value : T) : E -> Bool {
 		return function(x : E) : Bool {
-			return true;
+			return it(x).toNotEqual(value);
 		}
+	}
+	
+	inline public static function toList<T>(wildcard : Wildcard, x : T) : Bool {
+		return ListUtil.toList(x);
 	}
 	
 	inline public static function toBoolean<T>(wildcard : Wildcard, x : T) : Bool {
@@ -119,7 +127,7 @@ class WildcardType {
 		return toString(wildcard, x).toUpperCase();
 	}
 	
-	inline public static function plus_(wildcard : Wildcard, a : Float, b : Float) : Float {
+	inline public static function plus_(wildcard : Wildcard, a : Dynamic, b : Dynamic) : Dynamic {
 		return a + b;
 	}
 	
@@ -156,13 +164,11 @@ class WildcardType {
 	}
 	
 	inline public static function equal_<T>(wildcard : Wildcard, a : T, b : T) : T {
-		// TODO (Simon) : Fix this
-		return a == b;
+		return it(a).toEquals(b);
 	}
 	
 	inline public static function notEqual_<T>(wildcard : Wildcard, a : T, b : T) : T {
-		// TODO (Simon) : Fix this
-		return a != b;
+		return it(a).toNotEquals(b);
 	}
 	
 	inline public static function binaryAnd_(wildcard : Wildcard, a : Int, b : Int) : Int {

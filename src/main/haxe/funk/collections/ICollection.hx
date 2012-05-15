@@ -1,6 +1,8 @@
 package funk.collections;
 
-interface ICollection<T> {
+import funk.FunkObject;
+
+interface ICollection<T> implements IFunkObject {
 	
 	/**
      * The total number of elements in the collection.

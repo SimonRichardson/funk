@@ -9,6 +9,7 @@ import funk.errors.RangeError;
 import funk.product.Product1;
 import funk.option.Option;
 import funk.tuple.Tuple2;
+import funk.unit.It;
 import funk.util.Require;
 
 using funk.collections.IteratorUtil;
@@ -16,6 +17,7 @@ using funk.collections.ListUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Option;
 using funk.tuple.Tuple2;
+using funk.unit.It;
 using funk.util.Require;
 
 class List<T> extends Product1<T>, implements IList<T> {
@@ -72,9 +74,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-			// FIXME (Simon) This should use a check
-        	//if(eq(p.head, value)) {
-        	if(p.head == value) {
+        	if(it(p.head).toEqual(value)) {
           		return true;
         	}
         	p = p.tail;
@@ -581,9 +581,7 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-			// FIXME (Simon) This should call eq.
-        	// if(eq(p.head, value)) {
-        	if(p.head == value) {
+        	if(it(p.head).toEqual(value)) {
           		return index;
         	}
 

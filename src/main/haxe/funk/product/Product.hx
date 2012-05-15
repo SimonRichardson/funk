@@ -1,8 +1,12 @@
 package funk.product;
 
+import funk.FunkObject;
 import funk.product.ProductIterator;
+import funk.unit.It;
 
-interface IProduct {
+using funk.unit.It;
+
+interface IProduct implements IFunkObject {
 
 	var productArity(dynamic, never) : Int;
 	
@@ -22,6 +26,26 @@ class Product implements IProduct {
 	public function new() {
 		
 	}
+	
+	public function equals(that: IFunkObject): Bool {
+      	if (Std.is(that, IProduct)) {
+        	var thatProduct: IProduct = cast that;
+
+        	if(productArity == thatProduct.productArity) {
+          		var n: Int = productArity;
+          
+          		while(--n > -1) {
+            		if(it(this.productElement(n)).toNotEqual(thatProduct.productElement(n))) {
+              			return false;
+            		}
+          		}
+
+          		return true;
+        	}
+      	}
+
+      	return false;
+    }
 	
 	public function productElement(index : Int) : Dynamic {
 		return null;

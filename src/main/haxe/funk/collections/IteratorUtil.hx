@@ -2,9 +2,11 @@ package funk.collections;
 
 import funk.collections.immutable.Nil;
 import funk.tuple.Tuple2;
+import funk.unit.It;
 
 using funk.collections.immutable.Nil;
 using funk.tuple.Tuple2;
+using funk.unit.It;
 
 class IteratorUtil {
 	
@@ -20,10 +22,9 @@ class IteratorUtil {
 					var aHasNext = a.hasNext();
 					var bHasNext = iter.hasNext();
 					if(aHasNext && bHasNext) {
-						// FIXME (Simon) Use util.ne
 						var aNext = a.next();
 						var bNext = cast iter.next();
-						if(aNext != bNext) {
+						if(it(aNext).toNotEqual(bNext)) {
 							return false;
 						}
 					} else if(!aHasNext && !bHasNext) {

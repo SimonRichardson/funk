@@ -19,15 +19,19 @@ enum NilEnum {
 
 class NilType {
 	
+	private static var _nilList : IList<Dynamic> = new ListNil<Dynamic>();
+	
+	private static var _nilSet : ISet<Dynamic, Dynamic> = new HashMapNil<Dynamic, Dynamic>();
+	
 	inline public static function list<T>(n : NilEnum) : IList<T> {
 		return switch(n) {
-			case nil: new ListNil<T>(); 
+			case nil: cast _nilList; 
 		}
 	}
 	
 	inline public static function set<K, V>(n : NilEnum) : ISet<K, V> {
 		return switch(n) {
-			case nil: new HashMapNil<K, V>(); 
+			case nil: cast _nilSet; 
 		}
 	}
 	
