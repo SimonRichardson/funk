@@ -1,5 +1,10 @@
+###### Javascript
 ```javascript
 "HELLO WORLD" == toList("dlrow olleh").map(_.toUpperCase).reduceRight(_.plus_)
+```
+###### Haxe
+```haxe
+"HELLO WORLD" == "dlrow olleh".toList().map(_.toUpperCase).reduceRight(_.plus_).get()
 ```
 
 # Introduction
