@@ -2,9 +2,9 @@ package funk.product;
 
 import funk.FunkObject;
 import funk.product.ProductIterator;
-import funk.unit.It;
+import funk.unit.Expect;
 
-using funk.unit.It;
+using funk.unit.Expect;
 
 interface IProduct implements IFunkObject {
 
@@ -35,7 +35,7 @@ class Product implements IProduct {
           		var n: Int = productArity;
           
           		while(--n > -1) {
-            		if(it(this.productElement(n)).toNotEqual(thatProduct.productElement(n))) {
+            		if(expect(this.productElement(n)).toNotEqual(thatProduct.productElement(n))) {
               			return false;
             		}
           		}

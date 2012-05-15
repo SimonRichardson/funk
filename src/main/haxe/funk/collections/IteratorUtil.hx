@@ -2,11 +2,11 @@ package funk.collections;
 
 import funk.collections.immutable.Nil;
 import funk.tuple.Tuple2;
-import funk.unit.It;
+import funk.unit.Expect;
 
 using funk.collections.immutable.Nil;
 using funk.tuple.Tuple2;
-using funk.unit.It;
+using funk.unit.Expect;
 
 class IteratorUtil {
 	
@@ -14,7 +14,7 @@ class IteratorUtil {
 		return Reflect.field(a, "hasNext") && Reflect.field(a, "next"); 
 	}
 	
-	inline public static function eq<A, B>(a : Iterator<A>, b : B) : Bool {
+	public static function eq<A, B>(a : Iterator<A>, b : B) : Bool {
 		if(a != null && b != null) {
 			if(isIterator(b)) {
 				var iter : Iterator<B> = cast b;
@@ -24,7 +24,7 @@ class IteratorUtil {
 					if(aHasNext && bHasNext) {
 						var aNext = a.next();
 						var bNext = cast iter.next();
-						if(it(aNext).toNotEqual(bNext)) {
+						if(expect(aNext).toNotEqual(bNext)) {
 							return false;
 						}
 					} else if(!aHasNext && !bHasNext) {

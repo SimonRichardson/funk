@@ -5,11 +5,12 @@ import funk.option.Option;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
 import funk.collections.IteratorUtil;
+import funk.FunkObject;
 
 using funk.option.Option;
 using funk.collections.immutable.Nil;
 
-class ListIterator<T> {
+class ListIterator<T> implements IFunkObject {
 	
 	private var _list : IList<T>;
 	
@@ -40,6 +41,10 @@ class ListIterator<T> {
 			head;
 		}
 	}
+	
+	public function equals(that: IFunkObject): Bool {
+      	return IteratorUtil.eq(this, that);
+    }
 }
 
 class ListIteratorType {

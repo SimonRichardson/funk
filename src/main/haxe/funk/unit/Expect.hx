@@ -2,15 +2,15 @@ package funk.unit;
 
 import funk.FunkObject;
 
-enum It {
-	it(x : Dynamic);
+enum Expect {
+	expect(x : Dynamic);
 }
 
-class ItType {
+class ExpectType {
 	
-	public static function toEqual(x : It, b : Dynamic) : Bool {
+	public static function toEqual(x : Expect, b : Dynamic) : Bool {
 		return switch(x) {
-			case it(a):
+			case expect(a):
 				var aIsFunk : Bool = Std.is(a, IFunkObject);
 				var bIsFunk : Bool = Std.is(b, IFunkObject);
 				
@@ -26,7 +26,7 @@ class ItType {
 		}
 	}
 	
-	public static function toNotEqual(it : It, b : Dynamic) : Bool {
-		return !ItType.toEqual(it, b);
+	public static function toNotEqual(x : Expect, b : Dynamic) : Bool {
+		return !ExpectType.toEqual(x, b);
 	}
 }

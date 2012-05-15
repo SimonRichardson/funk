@@ -1,9 +1,9 @@
 package funk;
 
 import funk.collections.ListUtil;
-import funk.unit.It;
+import funk.unit.Expect;
 
-using funk.unit.It;
+using funk.unit.Expect;
 
 enum Wildcard {
 	_;
@@ -29,7 +29,7 @@ class WildcardType {
 	
 	public static function equals<T, E>(wildcard : Wildcard, value : T) : E -> Bool {
 		return function(x : E) : Bool {
-			return it(x).toEqual(value);
+			return expect(x).toEqual(value);
 		}
 	}
 	
@@ -103,7 +103,7 @@ class WildcardType {
 	
 	public static function notEquals<T, E>(wildcard : Wildcard, value : T) : E -> Bool {
 		return function(x : E) : Bool {
-			return it(x).toNotEqual(value);
+			return expect(x).toNotEqual(value);
 		}
 	}
 	
@@ -164,11 +164,11 @@ class WildcardType {
 	}
 	
 	inline public static function equal_<T>(wildcard : Wildcard, a : T, b : T) : T {
-		return it(a).toEquals(b);
+		return expect(a).toEquals(b);
 	}
 	
 	inline public static function notEqual_<T>(wildcard : Wildcard, a : T, b : T) : T {
-		return it(a).toNotEquals(b);
+		return expect(a).toNotEquals(b);
 	}
 	
 	inline public static function binaryAnd_(wildcard : Wildcard, a : Int, b : Int) : Int {

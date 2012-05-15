@@ -6,10 +6,11 @@ import funk.collections.ListUtil;
 import funk.collections.immutable.Nil;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
+import funk.FunkObject;
 import funk.product.Product1;
 import funk.option.Option;
 import funk.tuple.Tuple2;
-import funk.unit.It;
+import funk.unit.Expect;
 import funk.util.Require;
 
 using funk.collections.IteratorUtil;
@@ -17,7 +18,7 @@ using funk.collections.ListUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Option;
 using funk.tuple.Tuple2;
-using funk.unit.It;
+using funk.unit.Expect;
 using funk.util.Require;
 
 class List<T> extends Product1<T>, implements IList<T> {
@@ -74,7 +75,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(it(p.head).toEqual(value)) {
+        	if(expect(p.head).toEqual(value)) {
           		return true;
         	}
         	p = p.tail;
@@ -395,6 +396,14 @@ class List<T> extends Product1<T>, implements IList<T> {
       	return tuple2(m > 0 ? left[0] : nil.list(), o > 0 ? right[0] : nil.list()).instance();
 	}
 	
+	override public function equals(that: IFunkObject): Bool {
+      	return if (Std.is(that, IList)) {
+       		super.equals(that);
+      	} else {
+			false;
+		}
+    }
+	
 	public function prepend(value : T) : IList<T> {
 		return new List<T>(value, this);
 	}
@@ -581,7 +590,7 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
       	while(p.nonEmpty) {
-        	if(it(p.head).toEqual(value)) {
+        	if(expect(p.head).toEqual(value)) {
           		return index;
         	}
 

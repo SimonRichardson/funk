@@ -41,6 +41,10 @@ class HashMapIterator<K, V> {
 			head;
 		}
 	}
+	
+	public function equals(that: IFunkObject): Bool {
+      	return IteratorUtil.eq(this, that);
+    }
 }
 
 class HashMapIteratorType {

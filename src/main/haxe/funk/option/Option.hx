@@ -1,8 +1,12 @@
 package funk.option;
 
 import funk.errors.NoSuchElementError;
+import funk.FunkObject;
 import funk.product.Product1;
 import funk.product.ProductIterator;
+import funk.unit.Expect;
+
+using funk.unit.Expect;
 
 enum Option<T> {
 	None;
@@ -74,6 +78,10 @@ class OptionType {
 		}
 	}
 	
+	inline public static function instance<T>(option : Option<Dynamic>) : ProductOption<Dynamic> {
+		return new ProductOption<Dynamic>(option);
+	}
+	
 	inline public static function iterator<T>(option : Option<Dynamic>) : IProductIterator<Dynamic> {
 		return new ProductOption<Dynamic>(option).iterator();
 	}
@@ -111,4 +119,18 @@ class ProductOption<T> extends Product1<T> {
 	override public function productElement(index : Int) : Dynamic {
 		return OptionType.get(_option);
 	}
+	
+	override public function equals(that: IFunkObject): Bool {
+      	if(Std.is(that, Option)) {
+        	var thatOption: Option<T> = cast that;
+
+        	if(OptionType.isDefined(thatOption)) {
+				var aFunk : Dynamic = OptionType.get(_option);
+				var bFunk : Dynamic = OptionType.instance(thatOption).productElement(0);
+          		return expect(aFunk).toEqual(bFunk);
+        	}
+      	}
+
+      	return false;
+    }
 }

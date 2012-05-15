@@ -1,9 +1,11 @@
 package funk.product;
 
+import funk.collections.IteratorUtil;
 import funk.option.Option;
 import funk.product.Product;
+import funk.FunkObject;
 
-interface IProductIterator<T> {
+interface IProductIterator<T> implements IFunkObject {
 	
 	function hasNext() : Bool;
 	
@@ -31,4 +33,8 @@ class ProductIterator<T> implements IProductIterator<T> {
 	public function next() : T {
 		return _product.productElement(_index++);
 	}
+	
+	public function equals(that: IFunkObject): Bool {
+      	return IteratorUtil.eq(this, that);
+    }
 }
