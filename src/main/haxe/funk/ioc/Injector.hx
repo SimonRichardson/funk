@@ -63,8 +63,8 @@ class Injector {
     }
 
     public static function moduleOf<T>(type: Class<T>): IModule {
-		var binding = _map.find(function(item : ITuple2<Class<Dynamic>, IModule>) : Bool {
-			return item._1 == type;
+		var binding = _map.find(function(item : Class<Dynamic>, module : IModule) : Bool {
+			return item == type;
 		});
 		
     	var possibleResult: IModule = switch(binding) {
@@ -83,7 +83,7 @@ class Injector {
         	module = modules.head;
 
         	if(Std.is(module, type)) {
-				_map = _map.add(tuple2(type, module).instance());
+				_map = _map.add(type, module);
           		return module;
         	}
 

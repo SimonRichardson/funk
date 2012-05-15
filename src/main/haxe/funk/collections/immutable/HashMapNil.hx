@@ -51,7 +51,7 @@ class HashMapNil<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return false;
 	}
 	
-	public function count(f : (ITuple2<K, V> -> Bool)) : Int {
+	public function count(f : (K -> V -> Bool)) : Int {
       	return 0;
 	}
 	
@@ -67,23 +67,23 @@ class HashMapNil<K, V> extends Product2<K, V>, implements ISet<K, V> {
 		return nil.set();
 	}
 	
-	public function dropWhile(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
+	public function dropWhile(f : (K -> V -> Bool)) : ISet<K, V> {
 		return nil.set();
 	}
 	
-	public function exists(f : (ITuple2<K, V> -> Bool)) : Bool {
+	public function exists(f : (K -> V -> Bool)) : Bool {
       	return false;
 	}
 	
-	public function filter(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
+	public function filter(f : (K -> V -> Bool)) : ISet<K, V> {
 		return nil.set();
 	}
 	
-	public function filterNot(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
+	public function filterNot(f : (K -> V -> Bool)) : ISet<K, V> {
 		return nil.set();
 	}
 	
-	public function find(f : (ITuple2<K, V> -> Bool)) : Option<ITuple2<K, V>> {
+	public function find(f : (K -> V -> Bool)) : Option<ITuple2<K, V>> {
       	return None;
 	}
 	
@@ -99,11 +99,11 @@ class HashMapNil<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return x;
 	}
 	
-	public function forall(f : (ITuple2<K, V> -> Bool)) : Bool {
+	public function forall(f : (K -> V -> Bool)) : Bool {
       	return false;
 	}
 	
-	public function foreach(f : (ITuple2<K, V> -> Void)) : Void {
+	public function foreach(f : (K -> V -> Void)) : Void {
 	}
 	
 	public function get(index : Int) : Option<V> {
@@ -114,12 +114,12 @@ class HashMapNil<K, V> extends Product2<K, V>, implements ISet<K, V> {
 		return nil.set();
 	}
 	
-	public function partition(f : (ITuple2<K, V> -> Bool)) : ITuple2<ISet<K, V>, ISet<K, V>> {
+	public function partition(f : (K -> V -> Bool)) : ITuple2<ISet<K, V>, ISet<K, V>> {
 		return tuple2(nil.set(), nil.set()).instance();
 	}
 	
-	public function add(value : ITuple2<K, V>) : ISet<K, V> {
-		return new HashMap<K, V>(value, this);
+	public function add(key : K, value : V) : ISet<K, V> {
+		return new HashMap<K, V>(tuple2(key, value).instance(), this);
 	}
 	
 	public function addAll(value : ISet<K, V>) : ISet<K, V> {

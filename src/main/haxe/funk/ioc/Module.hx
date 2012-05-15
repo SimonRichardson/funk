@@ -39,8 +39,8 @@ class Module implements IModule {
 			throw new BindingError("Modules have to be created using \"Injector.initialize(new Module())\".");
 		}
 
-      	var binding = _map.find(function(item : ITuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
-			return item._1 == type;
+      	var binding = _map.find(function(item : Class<Dynamic>, bind : Binding<Dynamic>) : Bool {
+			return item == type;
 		});
       
       	try {
@@ -62,8 +62,8 @@ class Module implements IModule {
     }
 
     public function binds(type: Class<Dynamic>): Bool {
-		var binding = _map.find(function(item : ITuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
-			return item._1 == type;
+		var binding = _map.find(function(item : Class<Dynamic>, bind : Binding<Dynamic>) : Bool {
+			return item == type;
 		});
 		return switch(binding) {
 			case None: false;
@@ -81,7 +81,7 @@ class Module implements IModule {
       
       	var binding = new Binding(this, type);
 
-      	_map = _map.add(tuple2(type, binding).instance());
+      	_map = _map.add(type, binding);
 
       	return binding;
     }

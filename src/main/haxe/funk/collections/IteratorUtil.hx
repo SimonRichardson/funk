@@ -59,7 +59,8 @@ class IteratorUtil {
 		var s : ISet<K, V> = nil.set();
 		var i : Int = 0;
 		while(iter.hasNext()) {
-			s = s.add(iter.next());
+			var t = iter.next();
+			s = s.add(t._1, t._2);
 			i++;
 		}
 		return s;
@@ -69,7 +70,7 @@ class IteratorUtil {
 		var s : ISet<Int, V> = nil.set();
 		var i : Int = 0;
 		while(iter.hasNext()) {
-			s = s.add(tuple2(i, iter.next()).instance());
+			s = s.add(i, iter.next());
 			i++;
 		}
 		return s;

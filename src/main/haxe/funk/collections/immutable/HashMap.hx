@@ -77,12 +77,12 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return false;
 	}
 	
-	public function count(f : (ITuple2<K, V> -> Bool)) : Int {
+	public function count(f : (K -> V -> Bool)) : Int {
 		var n: Int = 0;
       	var p: ISet<K, V> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head)) {
+        	if(f(p.head._1, p.head._2)) {
           		++n;
         	}
 
@@ -141,11 +141,11 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return buffer[0];
 	}
 	
-	public function dropWhile(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
+	public function dropWhile(f : (K -> V -> Bool)) : ISet<K, V> {
 		var p: ISet<K, V> = this;
 
       	while(p.nonEmpty) {
-        	if(!f(p.head)) {
+        	if(!f(p.head._1, p.head._2)) {
           		return p;
         	}
 
@@ -155,11 +155,11 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       return nil.set();
 	}
 	
-	public function exists(f : (ITuple2<K, V> -> Bool)) : Bool {
+	public function exists(f : (K -> V -> Bool)) : Bool {
 		var p: ISet<K, V> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head)) {
+        	if(f(p.head._1, p.head._2)) {
           		return true;
         	}
 
@@ -169,7 +169,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return false;
 	}
 	
-	public function filter(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
+	public function filter(f : (K -> V -> Bool)) : ISet<K, V> {
 		var p: ISet<K, V> = this;
       	var q: HashMap<K, V> = null;
       	var first: HashMap<K, V> = null;
@@ -177,7 +177,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	var allFiltered: Bool = true;
 
       	while(p.nonEmpty) {
-        	if(f(p.head)) {
+        	if(f(p.head._1, p.head._2)) {
           		q = new HashMap<K, V>(p.head, nil.set());
 
           		if(null != last) {
@@ -203,7 +203,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return (first == null) ? nil.set() : first;
 	}
 	
-	public function filterNot(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
+	public function filterNot(f : (K -> V -> Bool)) : ISet<K, V> {
 		var p: ISet<K, V> = this;
       	var q: HashMap<K, V> = null;
       	var first: HashMap<K, V> = null;
@@ -211,7 +211,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	var allFiltered: Bool = true;
 
       	while(p.nonEmpty) {
-        	if(!f(p.head)) {
+        	if(!f(p.head._1, p.head._2)) {
           		q = new HashMap<K, V>(p.head, nil.set());
 
           		if(null != last) {
@@ -237,11 +237,11 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return (first == null) ? nil.set() : first;
 	}
 	
-	public function find(f : (ITuple2<K, V> -> Bool)) : Option<ITuple2<K, V>> {
+	public function find(f : (K -> V -> Bool)) : Option<ITuple2<K, V>> {
 		var p: ISet<K, V> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head)) {
+        	if(f(p.head._1, p.head._2)) {
           		return p.headOption;
         	}
 
@@ -302,11 +302,11 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return value;
 	}
 	
-	public function forall(f : (ITuple2<K, V> -> Bool)) : Bool {
+	public function forall(f : (K -> V -> Bool)) : Bool {
 		var p: ISet<K, V> = this;
 
       	while(p.nonEmpty) {
-        	if(!f(p.head)) {
+        	if(!f(p.head._1, p.head._2)) {
           		return false;
         	}
 
@@ -316,11 +316,11 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return true;
 	}
 	
-	public function foreach(f : (ITuple2<K, V> -> Void)) : Void {
+	public function foreach(f : (K -> V -> Void)) : Void {
 		var p: ISet<K, V> = this;
 
       	while(p.nonEmpty) {
-        	f(p.head);
+        	f(p.head._1, p.head._2);
         	p = p.tail;
       	}
 	}
@@ -352,7 +352,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return buffer[0];
 	}
 	
-	public function partition(f : (ITuple2<K, V> -> Bool)) : ITuple2<ISet<K, V>, ISet<K, V>> {
+	public function partition(f : (K -> V -> Bool)) : ITuple2<ISet<K, V>, ISet<K, V>> {
 		var left: Array<HashMap<K, V>> = new Array<HashMap<K, V>>();
       	var right: Array<HashMap<K, V>> = new Array<HashMap<K, V>>();
 
@@ -364,7 +364,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	var p: ISet<K, V> = this;
 
       	while(p.nonEmpty) {
-        	if(f(p.head)) {
+        	if(f(p.head._1, p.head._2)) {
           		left[i++] = new HashMap(p.head, nil.set());
         	} else {
           		right[j++] = new HashMap(p.head, nil.set());
@@ -395,8 +395,8 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return tuple2(m > 0 ? left[0] : nil.set(), o > 0 ? right[0] : nil.set()).instance();
 	}
 	
-	public function add(value : ITuple2<K, V>) : ISet<K, V> {
-		return new HashMap<K, V>(value, this);
+	public function add(key : K, value : V) : ISet<K, V> {
+		return new HashMap<K, V>(tuple2(key, value).instance(), this);
 	}
 	
 	public function addAll(value : ISet<K, V>) : ISet<K, V> {
