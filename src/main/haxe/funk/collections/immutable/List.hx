@@ -365,9 +365,9 @@ class List<T> extends Product1<T>, implements IList<T> {
 
       	while(p.nonEmpty) {
         	if(f(p.head)) {
-          		left[i++] = new List(p.head, nil.list());
+          		left[i++] = new List<T>(p.head, nil.list());
         	} else {
-          		right[j++] = new List(p.head, nil.list());
+          		right[j++] = new List<T>(p.head, nil.list());
         	}
 
         	p = p.tail;
@@ -544,7 +544,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 		var q: IList<T> = that;
 
 		for(i in 0...n) {
-        	buffer[i] = new List(tuple2(p.head, q.head).instance(), null);
+        	buffer[i] = new List<ITuple2<T, T>>(tuple2(p.head, q.head).instance(), null);
         	p = p.tail;
         	q = q.tail;
       	}
@@ -704,7 +704,7 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var p: IList<T> = this;
 
 		for(i in 0...n) {
-        	buffer[i] = new List(tuple2(p.head, i).instance(), null);
+        	buffer[i] = new List<ITuple2<T, Int>>(tuple2(p.head, i).instance(), null);
         	p = p.tail;
       	}
 

@@ -365,9 +365,9 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 
       	while(p.nonEmpty) {
         	if(f(p.head._1, p.head._2)) {
-          		left[i++] = new HashMap(p.head, nil.set());
+          		left[i++] = new HashMap<K, V>(p.head, nil.set());
         	} else {
-          		right[j++] = new HashMap(p.head, nil.set());
+          		right[j++] = new HashMap<K, V>(p.head, nil.set());
         	}
 
         	p = p.tail;
@@ -551,7 +551,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 		var q: ISet<Dynamic, Dynamic> = that;
 
 		for(i in 0...n) {
-        	buffer[i] = new HashMap(tuple2(p.head, q.head).instance(), null);
+        	buffer[i] = new HashMap<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>>(tuple2(p.head, q.head).instance(), null);
         	p = p.tail;
         	q = q.tail;
       	}
@@ -636,7 +636,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	var p: ISet<K, V> = this;
 
 		for(i in 0...n) {
-        	buffer[i] = new HashMap(tuple2(p.head, i).instance(), null);
+        	buffer[i] = new HashMap<ITuple2<K, V>, Int>(tuple2(p.head, i).instance(), null);
         	p = p.tail;
       	}
 

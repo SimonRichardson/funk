@@ -14,9 +14,9 @@ interface IModule {
 	
 	function initialize(): Void;
     
-	function getInstance(klass: Class<Dynamic>): Dynamic;
+	function getInstance(type: Class<Dynamic>): Dynamic;
 	
-    function binds(klass: Class<Dynamic>): Bool;
+    function binds(type: Class<Dynamic>): Bool;
 }
 
 class Module implements IModule {

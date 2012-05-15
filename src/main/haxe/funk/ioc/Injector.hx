@@ -23,6 +23,12 @@ class Injector {
 	
 	private static var _currentScope : Option<IModule>;
 	
+	public static function initialize(module: IModule): IModule {
+      	module.initialize();
+      	_modules = _modules.prepend(module);
+      	return module;
+    }
+	
 	public static function pushScope(module : IModule) : Void {
 		_currentScope = Some(module);
 		_scopes = _scopes.prepend(module);
