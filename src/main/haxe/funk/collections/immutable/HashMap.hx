@@ -1,28 +1,48 @@
 package funk.collections.immutable;
 
+import funk.collections.IteratorUtil;
+import funk.collections.immutable.Nil;
+import funk.errors.NoSuchElementError;
+import funk.errors.RangeError;
 import funk.product.Product2;
+import funk.option.Option;
+import funk.tuple.Tuple2;
+import funk.util.Require;
+
+using funk.collections.IteratorUtil;
+using funk.collections.ListUtil;
+using funk.collections.immutable.Nil;
+using funk.option.Option;
+using funk.tuple.Tuple2;
+using funk.util.Require;
 
 class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 	
-	public var nonEmpty(dynamic, never): Bool;
+	public var nonEmpty(get_nonEmpty, never): Bool;
 	
-    public var flatten(dynamic, never): ISet<K, V>;
+    public var flatten(get_flatten, never): ISet<K, V>;
 	
-    public var head(dynamic, never): ITuple2<K, V>;
+	public var hasDefinedSize(get_hasDefinedSize, never) : Bool;
+	
+    public var head(get_head, never): ITuple2<K, V>;
 
-	public var headOption(dynamic, never): Option<ITuple2<K, V>>;
+	public var headOption(get_headOption, never): Option<ITuple2<K, V>>;
 
-    public var init(dynamic, never): ISet<K, V>;
+    public var init(get_init, never): ISet<K, V>;
 
-    public var isEmpty(dynamic, never): Bool;
+    public var isEmpty(get_isEmpty, never): Bool;
 
-    public var last(dynamic, never): Option<ITuple<K, V>>;
+    public var last(get_last, never): Option<ITuple2<K, V>>;
 	
-    public var tail(dynamic, never): ISet<K, V>;
+	public var size(get_size, never) : Int;
 	
-	public var tailOption(dynamic, never): Option<ISet<K, V>>;
+    public var tail(get_tail, never): ISet<K, V>;
 	
-	public var zipWithIndex(dynamic, never): ISet<ITuple2<K, V>, Int>;
+	public var tailOption(get_tailOption, never): Option<ISet<K, V>>;
+	
+	public var toArray(get_toArray, never) : Array<V>;
+	
+	public var zipWithIndex(get_zipWithIndex, never): ISet<ITuple2<K, V>, Int>;
 	
 	private var _head : ITuple2<K, V>;
 	
@@ -79,7 +99,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 
       	for(i in 0...n) {
         	if(p.isEmpty) {
-          		return nil.instance();
+          		return nil.set();
         	}
 
         	p = p.tail;
@@ -98,7 +118,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	n = size - n;
 
       	if(n <= 0) {
-        	return nil.instance();
+        	return nil.set();
       	}
 
       	var buffer = new Array<HashMap<K, V>>();
@@ -110,7 +130,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
         	p = p.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.set();
 		
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -132,7 +152,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
         	p = p.tail;
       }
 
-      return nil.instance();
+      return nil.set();
 	}
 	
 	public function exists(f : (ITuple2<K, V> -> Bool)) : Bool {
@@ -158,7 +178,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 
       	while(p.nonEmpty) {
         	if(f(p.head)) {
-          		q = new HashMap<K, V>(p.head, nil.instance());
+          		q = new HashMap<K, V>(p.head, nil.set());
 
           		if(null != last) {
             		last._tail = q;
@@ -180,7 +200,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
         	return this;
       	}
 
-      	return (first == null) ? nil.instance() : first;
+      	return (first == null) ? nil.set() : first;
 	}
 	
 	public function filterNot(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
@@ -192,7 +212,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 
       	while(p.nonEmpty) {
         	if(!f(p.head)) {
-          		q = new HashMap<K, V>(p.head, nil.instance());
+          		q = new HashMap<K, V>(p.head, nil.set());
 
           		if(null != last) {
             		last._tail = q;
@@ -214,7 +234,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
         	return this;
       	}
 
-      	return (first == null) ? nil.instance() : first;
+      	return (first == null) ? nil.set() : first;
 	}
 	
 	public function find(f : (ITuple2<K, V> -> Bool)) : Option<ITuple2<K, V>> {
@@ -296,7 +316,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return true;
 	}
 	
-	public function foreach(f : (T -> Void)) : Void {
+	public function foreach(f : (ITuple2<K, V> -> Void)) : Void {
 		var p: ISet<K, V> = this;
 
       	while(p.nonEmpty) {
@@ -321,7 +341,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
         	p = p.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.set();
 		
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -345,9 +365,9 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 
       	while(p.nonEmpty) {
         	if(f(p.head)) {
-          		left[i++] = new HashMap(p.head, nil.instance());
+          		left[i++] = new HashMap(p.head, nil.set());
         	} else {
-          		right[j++] = new HashMap(p.head, nil.instance());
+          		right[j++] = new HashMap(p.head, nil.set());
         	}
 
         	p = p.tail;
@@ -372,7 +392,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
         	}
       	}
 
-      	return tuple2(m > 0 ? left[0] : nil.instance(), o > 0 ? right[0] : nil.instance()).instance();
+      	return tuple2(m > 0 ? left[0] : nil.set(), o > 0 ? right[0] : nil.set()).instance();
 	}
 	
 	public function add(value : ITuple2<K, V>) : ISet<K, V> {
@@ -444,7 +464,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 		if(n > size) {
         	return this;
       	} else if(0 == n) {
-        	return nil.instance();
+        	return nil.set();
       	}
 
       	var buffer: Array<HashMap<K, V>> = new Array<HashMap<K, V>>();
@@ -456,7 +476,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
         	p = p.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.set();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -473,7 +493,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 		if(n > size) {
         	return this;
       	} else if(0 == n) {
-        	return nil.instance();
+        	return nil.set();
       	}
 
       	n = size - n;
@@ -508,10 +528,10 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	var m: Int = n - 1;
 
       	if(m <= 0) {
-        	return nil.instance();
+        	return nil.set();
       	}
       
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.set();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -522,13 +542,13 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return buffer[0];
 	}
 	
-	public function zip(that : ISet<Dynamic, Dynamic>) : ISet<ITuple2<ITuple2<K, V>, ITuple2<ITuple<Dynamic, Dynamic>>> {
+	public function zip(that : ISet<Dynamic, Dynamic>) : ISet<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>> {
 		var n: Int = Std.int(Math.min(size, that.size));
       	var m: Int = n - 1;
-      	var buffer = new Array<HashMap<ITuple2<ITuple2<K, V>, ITuple2<ITuple<Dynamic, Dynamic>>>>();
+      	var buffer = new Array<HashMap<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>>>();
 
       	var p: ISet<K, V> = this;
-		var q: ISet<K, V> = that;
+		var q: ISet<Dynamic, Dynamic> = that;
 
 		for(i in 0...n) {
         	buffer[i] = new HashMap(tuple2(p.head, q.head).instance(), null);
@@ -536,7 +556,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
         	q = q.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.set();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -547,11 +567,11 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return buffer[0];
 	}
 	
-	public function addIterator(iterator : Iterator<T>) : ISet<K, V> {
+	public function addIterator(iterator : Iterator<ITuple2<K, V>>) : ISet<K, V> {
 		return addAll(iterator.toSet());
 	}
 	
-	public function addIterable(iterable : Iterable<T>) : ISet<K, V> {
+	public function addIterable(iterable : Iterable<ITuple2<K, V>>) : ISet<K, V> {
 		return addAll(iterable.iterator().toSet());
 	}
 	
@@ -608,10 +628,10 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 		return Some(_tail);
 	}
 	
-	private function get_zipWithIndex() : ISet<ITuple2<K, V>, Int>; {
-		var n: Int = Std.int(Math.min(size, that.size));
+	private function get_zipWithIndex() : ISet<ITuple2<K, V>, Int> {
+		var n: Int = size;
       	var m: Int = n - 1;
-      	var buffer = new Array<HashMap<ITuple2<ITuple2<K, V>, Int>>();
+      	var buffer = new Array<HashMap<ITuple2<K, V>, Int>>();
 
       	var p: ISet<K, V> = this;
 
@@ -620,7 +640,7 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
         	p = p.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.set();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -668,13 +688,13 @@ class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
 	}
 	
 	private function get_flatten() : ISet<K, V> {
-		return flatMap(function(x: T): ISet<K, V> { 
+		return flatMap(function(x: Dynamic): ISet<K, V> { 
 			return Std.is(x, ISet) ? cast x : x.toSet(); 
 		});
 	}
 	
 	private function get_iterator() : Iterator<Dynamic> {
-		return new HashMapIterator<Dynamic>(this);
+		return new HashMapIterator<Dynamic, Dynamic>(this);
 	}
 	
 	override private function get_productArity() : Int {

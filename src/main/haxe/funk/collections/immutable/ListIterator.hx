@@ -22,7 +22,7 @@ class ListIterator<T> {
 	}
 	
 	public function next() : T {
-		return if(_list == nil.instance()) {
+		return if(_list == nil.list()) {
 			throw new NoSuchElementError();
 		} else {
 			var head : T = _list.head;
@@ -32,7 +32,7 @@ class ListIterator<T> {
 	}
 	
 	public function nextOption() : Option<T> {
-		return if(_list == nil.instance()) {
+		return if(_list == nil.list()) {
 			None;
 		} else {
 			var head : Option<T> = _list.headOption;

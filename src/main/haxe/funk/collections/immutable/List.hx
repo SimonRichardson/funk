@@ -1,22 +1,22 @@
 package funk.collections.immutable;
 
-import funk.errors.NoSuchElementError;
-import funk.errors.RangeError;
-import funk.product.Product1;
 import funk.collections.IList;
-import funk.option.Option;
-import funk.tuple.Tuple2;
-import funk.util.Require;
 import funk.collections.IteratorUtil;
 import funk.collections.ListUtil;
 import funk.collections.immutable.Nil;
+import funk.errors.NoSuchElementError;
+import funk.errors.RangeError;
+import funk.product.Product1;
+import funk.option.Option;
+import funk.tuple.Tuple2;
+import funk.util.Require;
 
-using funk.tuple.Tuple2;
-using funk.util.Require;
-using funk.option.Option;
 using funk.collections.IteratorUtil;
 using funk.collections.ListUtil;
 using funk.collections.immutable.Nil;
+using funk.option.Option;
+using funk.tuple.Tuple2;
+using funk.util.Require;
 
 class List<T> extends Product1<T>, implements IList<T> {
 	
@@ -105,7 +105,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 
       	for(i in 0...n) {
         	if(p.isEmpty) {
-          		return nil.instance();
+          		return nil.list();
         	}
 
         	p = p.tail;
@@ -124,7 +124,7 @@ class List<T> extends Product1<T>, implements IList<T> {
       	n = size - n;
 
       	if(n <= 0) {
-        	return nil.instance();
+        	return nil.list();
       	}
 
       	var buffer = new Array<List<T>>();
@@ -136,7 +136,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	p = p.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.list();
 		
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -158,7 +158,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	p = p.tail;
       }
 
-      return nil.instance();
+      return nil.list();
 	}
 	
 	public function exists(f : (T -> Bool)) : Bool {
@@ -184,7 +184,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 
       	while(p.nonEmpty) {
         	if(f(p.head)) {
-          		q = new List<T>(p.head, nil.instance());
+          		q = new List<T>(p.head, nil.list());
 
           		if(null != last) {
             		last._tail = q;
@@ -206,7 +206,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	return this;
       	}
 
-      	return (first == null) ? nil.instance() : first;
+      	return (first == null) ? nil.list() : first;
 	}
 	
 	public function filterNot(f : (T -> Bool)) : IList<T> {
@@ -218,7 +218,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 
       	while(p.nonEmpty) {
         	if(!f(p.head)) {
-          		q = new List<T>(p.head, nil.instance());
+          		q = new List<T>(p.head, nil.list());
 
           		if(null != last) {
             		last._tail = q;
@@ -240,7 +240,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	return this;
       	}
 
-      	return (first == null) ? nil.instance() : first;
+      	return (first == null) ? nil.list() : first;
 	}
 	
 	public function find(f : (T -> Bool)) : Option<T> {
@@ -341,7 +341,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	p = p.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.list();
 		
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -365,9 +365,9 @@ class List<T> extends Product1<T>, implements IList<T> {
 
       	while(p.nonEmpty) {
         	if(f(p.head)) {
-          		left[i++] = new List(p.head, nil.instance());
+          		left[i++] = new List(p.head, nil.list());
         	} else {
-          		right[j++] = new List(p.head, nil.instance());
+          		right[j++] = new List(p.head, nil.list());
         	}
 
         	p = p.tail;
@@ -392,7 +392,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	}
       	}
 
-      	return tuple2(m > 0 ? left[0] : nil.instance(), o > 0 ? right[0] : nil.instance()).instance();
+      	return tuple2(m > 0 ? left[0] : nil.list(), o > 0 ? right[0] : nil.list()).instance();
 	}
 	
 	public function prepend(value : T) : IList<T> {
@@ -457,7 +457,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 		if(n > size) {
         	return this;
       	} else if(0 == n) {
-        	return nil.instance();
+        	return nil.list();
       	}
 
       	var buffer: Array<List<T>> = new Array<List<T>>();
@@ -469,7 +469,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	p = p.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.list();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -486,7 +486,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 		if(n > size) {
         	return this;
       	} else if(0 == n) {
-        	return nil.instance();
+        	return nil.list();
       	}
 
       	n = size - n;
@@ -521,10 +521,10 @@ class List<T> extends Product1<T>, implements IList<T> {
       	var m: Int = n - 1;
 
       	if(m <= 0) {
-        	return nil.instance();
+        	return nil.list();
       	}
       
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.list();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -549,7 +549,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	q = q.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.list();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -651,7 +651,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 	
 	private function get_indices() : IList<Int> {
 		var n: Int = size;
-      	var p: IList<Int> = nil.instance();
+      	var p: IList<Int> = nil.list();
 
       	while(--n > -1) {
         	p = p.prepend(n);
@@ -667,15 +667,25 @@ class List<T> extends Product1<T>, implements IList<T> {
 	private function get_last() : Option<T> {
 		var p: IList<T> = this;
       	var value: Option<T> = None;
+		
       	while(p.nonEmpty) {
         	value = p.headOption;
         	p = p.tail;
       	}
+		
       	return value;
 	}
 	
 	private function get_reverse() : IList<T> {
-		return NilType.instance(nil);
+		var result: IList<T> = nil.list();
+	    var p: IList<T> = this;
+	
+	    while(p.nonEmpty) {
+	    	result = result.prepend(p.head);
+	    	p = p.tail;
+	    }
+	
+	    return result;
 	}
 	
 	private function get_tail() : IList<T> {
@@ -686,8 +696,8 @@ class List<T> extends Product1<T>, implements IList<T> {
 		return Some(_tail);
 	}
 	
-	private function get_zipWithIndex() : IList<ITuple<T, Int>> {
-		var n: Int = Std.int(Math.min(size, that.size));
+	private function get_zipWithIndex() : IList<ITuple2<T, Int>> {
+		var n: Int = size;
       	var m: Int = n - 1;
       	var buffer: Array<List<ITuple2<T, Int>>> = new Array<List<ITuple2<T, Int>>>();
 
@@ -698,7 +708,7 @@ class List<T> extends Product1<T>, implements IList<T> {
         	p = p.tail;
       	}
 
-      	buffer[m]._tail = nil.instance();
+      	buffer[m]._tail = nil.list();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -746,7 +756,7 @@ class List<T> extends Product1<T>, implements IList<T> {
 	}
 	
 	private function get_flatten() : IList<T> {
-		return flatMap(function(x: T): IList<T> { 
+		return flatMap(function(x: Dynamic): IList<T> { 
 			return Std.is(x, IList) ? cast x : x.toList(); 
 		});
 	}

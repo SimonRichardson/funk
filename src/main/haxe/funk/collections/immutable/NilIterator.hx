@@ -31,6 +31,6 @@ class NilIteratorType {
 	}
 	
 	inline public static function toList<T>(iter : NilIterator<T>) : IList<T> {
-		return nil.instance();
+		return nil.list();
 	}
 }

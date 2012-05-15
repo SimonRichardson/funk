@@ -4,7 +4,7 @@ import funk.product.Product2;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 
-class ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
+interface ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
 
     var nonEmpty(dynamic, never): Bool;
 	
@@ -18,7 +18,7 @@ class ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
 
     var isEmpty(dynamic, never): Bool;
 
-    var last(dynamic, never): Option<ITuple<K, V>>;
+    var last(dynamic, never): Option<ITuple2<K, V>>;
 	
     var tail(dynamic, never): ISet<K, V>;
 	
@@ -78,5 +78,5 @@ class ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
 
     function takeWhile(f : (ISet<K, V> -> Bool)) : ISet<K, V>;
 
-    function zip(that: ISet<Dynamic, Dynamic>): ISet<ITuple2<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>>>;
+    function zip(that: ISet<Dynamic, Dynamic>): ISet<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>>;
 }

@@ -1,26 +1,47 @@
 package funk.collections.immutable;
 
+import funk.collections.IteratorUtil;
+import funk.collections.immutable.Nil;
+import funk.errors.NoSuchElementError;
+import funk.errors.RangeError;
+import funk.product.Product2;
+import funk.option.Option;
+import funk.tuple.Tuple2;
+import funk.util.Require;
+
+using funk.collections.IteratorUtil;
+using funk.collections.immutable.Nil;
+using funk.option.Option;
+using funk.tuple.Tuple2;
+using funk.util.Require;
+
 class HashMapNil<K, V> extends Product2<K, V>, implements ISet<K, V> {
 	
-	public var nonEmpty(dynamic, never): Bool;
+	public var nonEmpty(get_nonEmpty, never): Bool;
 	
-    public var flatten(dynamic, never): ISet<K, V>;
+    public var flatten(get_flatten, never): ISet<K, V>;
 	
-    public var head(dynamic, never): ITuple2<K, V>;
+	public var hasDefinedSize(get_hasDefinedSize, never) : Bool;
+	
+    public var head(get_head, never): ITuple2<K, V>;
 
-	public var headOption(dynamic, never): Option<ITuple2<K, V>>;
+	public var headOption(get_headOption, never): Option<ITuple2<K, V>>;
 
-    public var init(dynamic, never): ISet<K, V>;
+    public var init(get_init, never): ISet<K, V>;
 
-    public var isEmpty(dynamic, never): Bool;
+    public var isEmpty(get_isEmpty, never): Bool;
 
-    public var last(dynamic, never): Option<ITuple<K, V>>;
+    public var last(get_last, never): Option<ITuple2<K, V>>;
 	
-    public var tail(dynamic, never): ISet<K, V>;
+	public var size(get_size, never) : Int;
 	
-	public var tailOption(dynamic, never): Option<ISet<K, V>>;
+    public var tail(get_tail, never): ISet<K, V>;
 	
-	public var zipWithIndex(dynamic, never): ISet<ITuple2<K, V>, Int>;
+	public var tailOption(get_tailOption, never): Option<ISet<K, V>>;
+	
+	public var toArray(get_toArray, never) : Array<V>;
+	
+	public var zipWithIndex(get_zipWithIndex, never): ISet<ITuple2<K, V>, Int>;
 	
 	public function new() {
 		super();
@@ -82,7 +103,7 @@ class HashMapNil<K, V> extends Product2<K, V>, implements ISet<K, V> {
       	return false;
 	}
 	
-	public function foreach(f : (T -> Void)) : Void {
+	public function foreach(f : (ITuple2<K, V> -> Void)) : Void {
 	}
 	
 	public function get(index : Int) : Option<V> {
@@ -129,15 +150,15 @@ class HashMapNil<K, V> extends Product2<K, V>, implements ISet<K, V> {
 		return nil.set();
 	}
 	
-	public function zip(that : ISet<Dynamic, Dynamic>) : ISet<ITuple2<ITuple2<K, V>, ITuple2<ITuple<Dynamic, Dynamic>>> {
+	public function zip(that : ISet<Dynamic, Dynamic>) : ISet<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>> {
 		return nil.set();
 	}
 	
-	public function addIterator(iterator : Iterator<T>) : ISet<K, V> {
+	public function addIterator(iterator : Iterator<ITuple2<K, V>>) : ISet<K, V> {
 		return addAll(iterator.toSet());
 	}
 	
-	public function addIterable(iterable : Iterable<T>) : ISet<K, V> {
+	public function addIterable(iterable : Iterable<ITuple2<K, V>>) : ISet<K, V> {
 		return addAll(iterable.iterator().toSet());
 	}
 	
@@ -177,7 +198,7 @@ class HashMapNil<K, V> extends Product2<K, V>, implements ISet<K, V> {
 		return None;
 	}
 	
-	private function get_zipWithIndex() : ISet<ITuple2<K, V>, Int>; {
+	private function get_zipWithIndex() : ISet<ITuple2<K, V>, Int> {
 		return nil.set();
 	}
 	
@@ -195,6 +216,7 @@ class HashMapNil<K, V> extends Product2<K, V>, implements ISet<K, V> {
 	
 	private function get_flatten() : ISet<K, V> {
 		return nil.set();
+	}
 	
 	private function get_iterator() : Iterator<Dynamic> {
 		return new NilIterator<Dynamic>();

@@ -7,7 +7,7 @@ using funk.collections.immutable.Nil;
 class ListUtil {
 	
 	public static function toList<A>(any : A) : IList<A> {
-		var l = nil.instance();
+		var l = nil.list();
 		var n : Int;
 		
 		if(Std.is(any, IList)) {

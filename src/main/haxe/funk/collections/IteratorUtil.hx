@@ -1,8 +1,10 @@
 package funk.collections;
 
 import funk.collections.immutable.Nil;
+import funk.tuple.Tuple2;
 
 using funk.collections.immutable.Nil;
+using funk.tuple.Tuple2;
 
 class IteratorUtil {
 	
@@ -46,15 +48,25 @@ class IteratorUtil {
 	}
 
 	inline public static function toList<T>(iter : Iterator<T>) : IList<T> {
-		var l : IList<T> = nil.instance();
+		var l : IList<T> = nil.list();
 		while(iter.hasNext()) {
 			l = l.prepend(iter.next());
 		}
 		return l.reverse;
 	}
+
+	inline public static function toSet<K, V>(iter : Iterator<ITuple2<K, V>>) : ISet<K, V> {
+		var s : ISet<K, V> = nil.set();
+		var i : Int = 0;
+		while(iter.hasNext()) {
+			s = s.add(iter.next());
+			i++;
+		}
+		return s;
+	}
 	
-	inline public static function toSet<K, V>(iter : Iterator<V>) : IList<K, V> {
-		var s : ISet<Int, T> = nil.instance();
+	inline public static function toIntSet<V>(iter : Iterator<V>) : ISet<Int, V> {
+		var s : ISet<Int, V> = nil.set();
 		var i : Int = 0;
 		while(iter.hasNext()) {
 			s = s.add(tuple2(i, iter.next()).instance());

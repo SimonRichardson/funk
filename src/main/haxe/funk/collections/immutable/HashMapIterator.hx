@@ -1,5 +1,15 @@
 package funk.collections.immutable;
 
+import funk.collections.immutable.Nil;
+import funk.errors.NoSuchElementError;
+import funk.option.Option;
+import funk.tuple.Tuple2;
+
+using funk.collections.IteratorUtil;
+using funk.collections.immutable.Nil;
+using funk.option.Option;
+using funk.tuple.Tuple2;
+
 class HashMapIterator<K, V> {
 	
 	private var _set : ISet<K, V>;
@@ -13,7 +23,7 @@ class HashMapIterator<K, V> {
 	}
 	
 	public function next() : ITuple2<K, V> {
-		return if(_set == nil.instance()) {
+		return if(_set == nil.set()) {
 			throw new NoSuchElementError();
 		} else {
 			var head : ITuple2<K, V> = _set.head;
@@ -23,11 +33,11 @@ class HashMapIterator<K, V> {
 	}
 	
 	public function nextOption() : Option<ITuple2<K, V>> {
-		return if(_list == nil.instance()) {
+		return if(_set == nil.set()) {
 			None;
 		} else {
-			var head : Option<ITuple2<K, V>> = _list.headOption;
-			_list = _list.tail;
+			var head : Option<ITuple2<K, V>> = _set.headOption;
+			_set = _set.tail;
 			head;
 		}
 	}
@@ -35,11 +45,11 @@ class HashMapIterator<K, V> {
 
 class HashMapIteratorType {
 	
-	inline public static function toArray<ITuple2<K, V>>(iter : ListIterator<K, V>) : Array<ITuple2<K, V>> {
+	inline public static function toArray<K, V>(iter : HashMapIterator<K, V>) : Array<ITuple2<K, V>> {
 		return IteratorUtil.toArray(iter);
 	}
 	
-	inline public static function toList<T>(iter : ListIterator<K, V>) : IList<ITuple2<K, V>> {
+	inline public static function toList<K, V>(iter : HashMapIterator<K, V>) : IList<ITuple2<K, V>> {
 		return IteratorUtil.toList(iter);
 	}
 }
