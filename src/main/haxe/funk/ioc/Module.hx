@@ -1,57 +1,87 @@
 package funk.ioc;
 
+import funk.collections.ISet;
+import funk.collections.immutable.Nil;
+import funk.collections.immutable.HashMap;
+import funk.ioc.errors.BindingError;
+import funk.option.Option;
+import funk.tuple.Tuple2;
+
+using funk.collections.immutable.Nil;
+using funk.tuple.Tuple2;
+
 interface IModule {
 	
 	function initialize(): Void;
     
 	function getInstance(klass: Class<Dynamic>): Dynamic;
 	
-    function binds(klass: Class<Dynamic>): Boolean;
+    function binds(klass: Class<Dynamic>): Bool;
 }
 
 class Module implements IModule {
 	
-	private var _map: ISet<Class<Dynamic>, Binding> = new HashMap<Class<Dynamic>, Binding>();
-    private var _initialized: Boolean = false;
+	private var _map: ISet<Class<Dynamic>, Binding<Dynamic>>;
+    private var _initialized: Bool;
 
     public function new() {
+		_map = nil.set();
+		_initialized = false;
     }
 	
-	public function initialize(): void {
+	public function initialize(): Void {
 		configure();
 		_initialized = true;
     }
 	
-	public function getInstance(klass: Class<Dynamic>): Dynamic {
+	public function getInstance(type: Class<Dynamic>): Dynamic {
 		if(!_initialized) {
 			throw new BindingError("Modules have to be created using \"Injector.initialize(new Module())\".");
 		}
 
-      	var binding: Binding = _map[klass];
+      	var binding = _map.find(function(item : ITuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
+			return item._1 == type;
+		});
       
       	try {
         	Injector.pushScope(this);
-        	return (null == binding) ? new klass : binding.getInstance();
-      	} finally {
-        	Injector.popScope();
-      	}
+        	
+			var instance = switch(binding) {
+				case None: Type.createInstance(type, []);
+				case Some(tuple): tuple._2.getInstance();
+			}
+			
+			Injector.popScope();
+			
+			return instance;
+      	} catch(error : Dynamic) {
+			Injector.popScope();
+		}
+		
+		return null;
     }
 
-    public function binds(klass: Class<Dynamic>): Boolean {
-      	return _map[klass] != null;
+    public function binds(type: Class<Dynamic>): Bool {
+		var binding = _map.find(function(item : ITuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
+			return item._1 == type;
+		});
+		return switch(binding) {
+			case None: false;
+			case Some(tuple): true;
+		}
     }
     
-    private function configure(): Void {
+    public function configure(): Void {
     }
 
-    private function bind(klass: Class<Dynamic>): Binding {
-      	if(null != _map[klass]) {
-        	throw new BindingError(klass+" is already bound.");
+    private function bind(type: Class<Dynamic>): Binding<Dynamic> {
+      	if(binds(type)) {
+        	throw new BindingError(Std.format("$type is already bound."));
       	}
       
-      	var binding: Binding = new Binding(this, klass);
+      	var binding = new Binding(this, type);
 
-      	_map[klass] = binding;
+      	_map = _map.add(tuple2(type, binding).instance());
 
       	return binding;
     }
