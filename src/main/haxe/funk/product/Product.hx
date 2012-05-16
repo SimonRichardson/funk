@@ -17,6 +17,7 @@ interface IProduct implements IFunkObject {
 	function iterator() : IProductIterator<Dynamic>;
 }
 
+@:keep
 class Product implements IProduct {
 	
 	public var productArity(get_productArity, null) : Int;

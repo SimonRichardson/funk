@@ -4,21 +4,32 @@
 -neko bin/collector/ClassCollector.n
 -cmd neko bin/collector/ClassCollector.n src/main/haxe src/test/haxe/All.hx -class
 
-# Debug
+# JS-Debug
 --next
 -js bin/js/static/js-debug/App.js
 -main TestRunner
 -cp src/main/haxe
 -cp src/test/haxe
---js-modern
 -debug
+--js-modern
 
-# Minified
+# JS-Minified
 --next
 -js bin/js/static/js/App.js
 -main TestRunner
 -cp src/main/haxe
 -cp src/test/haxe
---js-modern
 -debug
+--js-modern
+--dead-code-elimination
+
+# SWF-Debug
+--next
+-swf bin/swf/App.swf
+-swf-header 400:400:60
+-main TestRunner
+-cp src/main/haxe
+-cp src/test/haxe
+-debug
+--flash-strict
 --dead-code-elimination
