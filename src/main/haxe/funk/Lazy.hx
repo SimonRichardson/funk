@@ -1,13 +1,13 @@
 package funk;
 
-import funk.product.Product1;
+import funk.product.Product;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.option.Option;
 
 using funk.option.Option;
 
-interface ILazy<T> implements IProduct1<T> {
+interface ILazy<T> implements IProduct {
 	var get(dynamic, never) : T;
 }
 
@@ -63,7 +63,7 @@ private typedef LazyTypeDef<T, A, B> = {
 	var _lazy : Lazy<T, A, B>;
 };
 
-class LazyImpl<T, A, B> extends Product1<T>, implements ILazy<T> {
+class LazyImpl<T, A, B> extends Product, implements ILazy<T> {
 	
 	private var _lazy : Lazy<T, A, B>;
 	private var _value : T;

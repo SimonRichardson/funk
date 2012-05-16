@@ -2,7 +2,7 @@ package funk.option;
 
 import funk.errors.NoSuchElementError;
 import funk.FunkObject;
-import funk.product.Product1;
+import funk.product.Product;
 import funk.product.ProductIterator;
 import funk.unit.Expect;
 
@@ -91,7 +91,7 @@ class OptionType {
 	}
 }
 
-class ProductOption<T> extends Product1<T> {
+class ProductOption<T> extends Product {
 	
 	private var _option : Option<T>;
 	

@@ -1,10 +1,10 @@
 package funk.collections;
 
-import funk.product.Product1;
+import funk.product.Product;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 
-interface IList<T> implements IProduct1<T>, implements ICollection<T> {
+interface IList<T> implements IProduct, implements ICollection<T> {
 
     var nonEmpty(dynamic, never): Bool;
 	

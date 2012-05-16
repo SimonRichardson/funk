@@ -6,7 +6,7 @@ import funk.collections.immutable.List;
 import funk.collections.immutable.Nil;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
-import funk.product.Product1;
+import funk.product.Product;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 import funk.util.Require;
@@ -17,7 +17,7 @@ using funk.option.Option;
 using funk.tuple.Tuple2;
 using funk.util.Require;
 
-class ListNil<T> extends Product1<T>, implements IList<T> {
+class ListNil<T> extends Product, implements IList<T> {
 	
 	public var nonEmpty(get_nonEmpty, never) : Bool;
 

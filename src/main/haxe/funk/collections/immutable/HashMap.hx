@@ -5,7 +5,7 @@ import funk.collections.immutable.Nil;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.FunkObject;
-import funk.product.Product2;
+import funk.product.Product;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 import funk.unit.Expect;
@@ -19,7 +19,7 @@ using funk.tuple.Tuple2;
 using funk.unit.Expect;
 using funk.util.Require;
 
-class HashMap<K, V> extends Product2<K, V>, implements ISet<K, V> {
+class HashMap<K, V> extends Product, implements ISet<K, V> {
 	
 	public var nonEmpty(get_nonEmpty, never): Bool;
 	

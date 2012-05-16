@@ -5,13 +5,14 @@ import funk.collections.immutable.HashMapNil;
 import funk.collections.immutable.ListNil;
 import funk.errors.RangeError;
 import funk.option.Option;
-import funk.product.Product1;
 import funk.tuple.Tuple2;
 import funk.util.Require;
+import funk.unit.Expect;
 
 using funk.collections.IteratorUtil;
 using funk.tuple.Tuple2;
 using funk.util.Require;
+using funk.unit.Expect;
 
 enum NilEnum {
 	nil;
@@ -38,11 +39,9 @@ class NilType {
 	inline public static function eq<A, B>(n : NilEnum, value : B) : Bool {
 		return switch(n) {
 			case nil: if(Std.is(value, IList)) {
-				// instance(n).equals(value);
-				false;
+				expect(n).toEqual(value);
 			} else if(Std.is(value, ISet)) {
-				// instance(n).equals(value);
-				false;
+				expect(n).toEqual(value);
 			} else {
 				false;
 			}

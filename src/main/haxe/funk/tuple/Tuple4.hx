@@ -1,6 +1,6 @@
 package funk.tuple;
 
-import funk.product.Product4;
+import funk.product.Product;
 import funk.tuple.Tuple;
 import funk.errors.NoSuchElementError;
 
@@ -49,7 +49,7 @@ class Tuple4Type {
 	}
 }
 
-class Tuple4Impl<A, B, C, D> extends Product4<A, B, C, D>, implements ITuple4<A, B, C, D> {
+class Tuple4Impl<A, B, C, D> extends Product, implements ITuple4<A, B, C, D> {
 	
 	public var _1(get__1, never) : A;
 	public var _2(get__2, never) : B;

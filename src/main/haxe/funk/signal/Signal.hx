@@ -1,5 +1,10 @@
 package funk.signal;
+import funk.product.Product;
 
-class Signal {
+interface ISignal {	
+	
+}
+
+class Signal extends Product, implements ISignal {
 	
 }

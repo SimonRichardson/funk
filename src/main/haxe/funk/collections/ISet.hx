@@ -1,10 +1,10 @@
 package funk.collections;
 
-import funk.product.Product2;
+import funk.product.Product;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 
-interface ISet<K, V> implements IProduct2<K, V>, implements ICollection<V> {
+interface ISet<K, V> implements IProduct, implements ICollection<V> {
 
     var nonEmpty(dynamic, never): Bool;
 	
