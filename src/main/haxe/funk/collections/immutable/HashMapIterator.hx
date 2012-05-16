@@ -4,6 +4,7 @@ import funk.collections.immutable.Nil;
 import funk.errors.NoSuchElementError;
 import funk.option.Option;
 import funk.tuple.Tuple2;
+import funk.FunkObject;
 
 using funk.collections.IteratorUtil;
 using funk.collections.immutable.Nil;

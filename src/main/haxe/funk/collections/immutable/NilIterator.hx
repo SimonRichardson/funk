@@ -8,7 +8,7 @@ import funk.FunkObject;
 
 using funk.collections.immutable.Nil;
 
-class NilIterator<T> implements FunkObject {
+class NilIterator<T> implements IFunkObject {
 	
 	public function new() {
 	}
