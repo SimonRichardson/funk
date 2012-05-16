@@ -9,4 +9,4 @@
 *.swf
 *.log
 bin/munit
-*-test.*
+*_test.*

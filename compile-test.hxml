@@ -1,0 +1,26 @@
+# js
+
+-js bin/js/static/js-debug/App_test.js
+-main TestMain
+-cp src/main/haxe
+-cp src/test/haxe
+-debug
+-lib munit
+-lib hamcrest
+--js-modern
+
+# neko
+
+--next
+-neko bin/neko/App_test.n
+-main TestMain
+-cp src/main/haxe
+-cp src/test/haxe
+-debug
+-lib munit
+-lib hamcrest
+
+--next
+-cmd haxelib run munit test
+-cmd haxelib run munit run bin/js/static/js-debug -js 
+-cmd haxelib run munit run bin/neko -neko

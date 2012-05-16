@@ -25,18 +25,6 @@
 --js-modern
 --dead-code-elimination
 
-# swf
-
---next
--swf bin/swf/App.swf
--swf-header 400:400:60
--main Main
--cp src/main/haxe
--cp examples/main/haxe
--debug
---flash-strict
---dead-code-elimination
-
 # neko
 
 --next
