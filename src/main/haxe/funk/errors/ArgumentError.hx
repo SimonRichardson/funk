@@ -1,6 +1,10 @@
 package funk.errors;
 
-class ArgumentError {
-	public function new(?message : String){
+import haxe.PosInfos;
+
+class ArgumentError extends FunkError {
+	
+	public function new(?message : String, ?info:PosInfos){
+		super(message, info);
 	}
 }

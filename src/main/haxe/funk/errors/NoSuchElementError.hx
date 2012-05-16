@@ -1,7 +1,10 @@
 package funk.errors;
 
-class NoSuchElementError {
+import haxe.PosInfos;
+
+class NoSuchElementError extends FunkError {
 	
-	public function new(?message : String){
+	public function new(?message : String, ?info:PosInfos){
+		super(message, info);
 	}
 }

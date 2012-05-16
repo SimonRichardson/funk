@@ -1,6 +1,11 @@
 package funk.ioc.errors;
 
-class IOCError {
-	public function new(message : String) {
+import funk.errors.FunkError;
+import haxe.PosInfos;
+
+class IOCError extends FunkError {
+	
+	public function new(?message : String, ?info:PosInfos){
+		super(message, info);
 	}
 }
