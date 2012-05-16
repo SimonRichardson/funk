@@ -72,16 +72,18 @@ class LazyImpl<T, A, B> extends Product1<T>, implements ILazy<T> {
 	public var get(get_get, never) : T;
 	
 	public function new(lax : Lazy<T, A, B>) {
+		super();
+		
 		_lazy = lax;
 		_evaluated = false;
 	}
 	
-	override public function productElement(index : Int) : T {
+	override public function productElement(index : Int) : Dynamic {
 		if(index == 0) {
 			return get;
 		}
 		
-		throw new RangeError("Index " + index + " is out of bounds.");
+		throw new RangeError(Std.format("Index $index is out of bounds."));
 	}
 	
 	private function get_get() : T {

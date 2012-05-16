@@ -1,4 +1,0 @@
-interface IScope {
-
-	void asSingleton();
-}

@@ -3,5 +3,3 @@
 .project
 .settings
 .hxtypes
-compile.hxml
-haxe-tmp/

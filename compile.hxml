@@ -1,0 +1,24 @@
+# Output ALL the classes
+-main ClassCollector
+-cp lib/collector
+-neko bin/collector/ClassCollector.n
+-cmd neko bin/collector/ClassCollector.n src/main/haxe src/test/haxe/All.hx -class
+
+# Debug
+--next
+-js bin/js/static/js-debug/App.js
+-main TestRunner
+-cp src/main/haxe
+-cp src/test/haxe
+--js-modern
+-debug
+
+# Minified
+--next
+-js bin/js/static/js/App.js
+-main TestRunner
+-cp src/main/haxe
+-cp src/test/haxe
+--js-modern
+-debug
+--dead-code-elimination

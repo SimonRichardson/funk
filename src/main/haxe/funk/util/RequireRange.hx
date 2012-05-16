@@ -1,10 +1,12 @@
 package funk.util;
 
+import funk.errors.RangeError;
+
 enum RequireRange {
 	requireRange(index : Int);
 }
 
-class RequireType {
+class RequireRangeType {
 	
 	inline public static function toBeLessThan(req : RequireRange, end : Int) : Void {
 		switch(req) {

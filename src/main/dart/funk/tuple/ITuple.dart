@@ -1,3 +1,0 @@
-interface ITuple extends IProduct {
-  
-}

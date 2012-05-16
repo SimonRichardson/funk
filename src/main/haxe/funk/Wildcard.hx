@@ -1,5 +1,6 @@
 package funk;
 
+import funk.collections.IList;
 import funk.collections.ListUtil;
 import funk.unit.Expect;
 
@@ -11,7 +12,7 @@ enum Wildcard {
 
 class WildcardType {
 	
-	inline public static function binaryNot<T>(value : T) : T {
+	inline public static function binaryNot(value : Int) : Int {
 		return ~value;
 	}
 	
@@ -39,14 +40,14 @@ class WildcardType {
 		}
 	}
 	
-	public static function greaterEqual<T, E>(wildcard : Wildcard, value : T) : E -> Bool {
-		return function(x : E) : Bool {
+	public static function greaterEqual(wildcard : Wildcard, value : Float) : Float -> Bool {
+		return function(x : Float) : Bool {
 			return x >= value;
 		}
 	}
 	
-	public static function greaterThan<T, E>(wildcard : Wildcard, value : T) : E -> Bool {
-		return function(x : E) : Bool {
+	public static function greaterThan(wildcard : Wildcard, value : Float) : Float -> Bool {
+		return function(x : Float) : Bool {
 			return x > value;
 		}
 	}
@@ -57,8 +58,8 @@ class WildcardType {
 		}
 	}
 	
-	public static function inRange<T, E>(wildcard : Wildcard, min : T, max : T) : E -> Bool {
-		return function(x : E) : Bool {
+	public static function inRange(wildcard : Wildcard, min : Float, max : Float) : Float -> Bool {
+		return function(x : Float) : Bool {
 			return min <= x && x <= max;
 		}
 	}
@@ -73,14 +74,14 @@ class WildcardType {
 		return if(0 != (x - asInt)) { false; } else { (asInt & 1) != 0; }
 	}
 	
-	public static function lessEqual<T, E>(wildcard : Wildcard, value : T) : E -> T {
-		return function(x : E) : Bool {
+	public static function lessEqual(wildcard : Wildcard, value : Float) : Float -> Bool {
+		return function(x : Float) : Bool {
 			return x <= value;
 		}
 	}
 	
-	public static function lessThan<T, E>(wildcard : Wildcard, value : T) : E -> T {
-		return function(x : E) : Bool {
+	public static function lessThan(wildcard : Wildcard, value : Float) : Float -> Bool {
+		return function(x : Float) : Bool {
 			return x < value;
 		}
 	}
@@ -98,7 +99,7 @@ class WildcardType {
 	}
 	
 	inline public static function not<T>(wildcard : Wildcard, x : T) : Bool {
-		return !x;
+		return !toBoolean(wildcard, x);
 	}
 	
 	public static function notEquals<T, E>(wildcard : Wildcard, value : T) : E -> Bool {
@@ -107,12 +108,19 @@ class WildcardType {
 		}
 	}
 	
-	inline public static function toList<T>(wildcard : Wildcard, x : T) : Bool {
+	inline public static function toList<T>(wildcard : Wildcard, x : T) : IList<T> {
 		return ListUtil.toList(x);
 	}
 	
 	inline public static function toBoolean<T>(wildcard : Wildcard, x : T) : Bool {
-		return x ? true : false;
+		if(x == null) {
+			return false;
+		} else if(Std.is(x, Bool)) {
+			var b : Bool = cast x;
+			return b;
+		} else {
+			return true;
+		}
 	}
 	
 	inline public static function toLowerCase<T>(wildcard : Wildcard, x : T) : String {
@@ -147,28 +155,28 @@ class WildcardType {
 		return a % b;
 	}
 	
-	inline public static function lessThan_<T>(wildcard : Wildcard, a : T, b : T) : T {
+	inline public static function lessThan_(wildcard : Wildcard, a : Float, b : Float) : Bool {
 		return a < b;
 	}
 	
-	inline public static function lessEqual_<T>(wildcard : Wildcard, a : T, b : T) : T {
+	inline public static function lessEqual_(wildcard : Wildcard, a : Float, b : Float) : Bool {
 		return a <= b;
 	}
 	
-	inline public static function greaterThan_<T>(wildcard : Wildcard, a : T, b : T) : T {
+	inline public static function greaterThan_(wildcard : Wildcard, a : Float, b : Float) : Bool {
 		return a > b;
 	}
 	
-	inline public static function greaterEqual_<T>(wildcard : Wildcard, a : T, b : T) : T {
+	inline public static function greaterEqual_(wildcard : Wildcard, a : Float, b : Float) : Bool {
 		return a >= b;
 	}
 	
-	inline public static function equal_<T>(wildcard : Wildcard, a : T, b : T) : T {
-		return expect(a).toEquals(b);
+	inline public static function equal_<T>(wildcard : Wildcard, a : T, b : T) : Bool {
+		return expect(a).toEqual(b);
 	}
 	
-	inline public static function notEqual_<T>(wildcard : Wildcard, a : T, b : T) : T {
-		return expect(a).toNotEquals(b);
+	inline public static function notEqual_<T>(wildcard : Wildcard, a : T, b : T) : Bool {
+		return expect(a).toNotEqual(b);
 	}
 	
 	inline public static function binaryAnd_(wildcard : Wildcard, a : Int, b : Int) : Int {
