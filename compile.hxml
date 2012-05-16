@@ -2,40 +2,44 @@
 -main ClassCollector
 -cp lib/collector
 -neko bin/collector/ClassCollector.n
--cmd neko bin/collector/ClassCollector.n src/main/haxe src/test/haxe/All.hx -class
+-cmd neko bin/collector/ClassCollector.n src/main/haxe examples/main/haxe/All.hx -class
 
 # JS-Debug
 --next
 -js bin/js/static/js-debug/App.js
--main TestRunner
+-main Main
 -cp src/main/haxe
--cp src/test/haxe
+-cp examples/main/haxe
 -debug
--lib munit
--lib hamcrest
 --js-modern
 
 # JS-Minified
 --next
 -js bin/js/static/js/App.js
--main TestRunner
+-main Main
 -cp src/main/haxe
--cp src/test/haxe
+-cp examples/main/haxe
 -debug
--lib munit
--lib hamcrest
 --js-modern
 --dead-code-elimination
 
-# SWF-Debug
+# SWF
 --next
 -swf bin/swf/App.swf
 -swf-header 400:400:60
--main TestRunner
+-main Main
 -cp src/main/haxe
--cp src/test/haxe
+-cp examples/main/haxe
 -debug
--lib munit
--lib hamcrest
+--flash-strict
+--dead-code-elimination
+
+# Neko
+--next
+-neko bin/neko/App.n
+-main Main
+-cp src/main/haxe
+-cp examples/main/haxe
+-debug
 --flash-strict
 --dead-code-elimination

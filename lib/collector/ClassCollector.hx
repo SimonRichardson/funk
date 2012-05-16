@@ -212,10 +212,12 @@ class ClassCollector
 				s = s.substr(dir.length + 1);
 				
 				//replace "/" in path with "." and remove extension ".hx"
-				s = ~/\//g.replace(s, ".");
-				s = ~/\.hx/g.replace(s, "");
-				Lib.println(s);
-				output.push(s);
+				if(isHx(s)) {
+					s = ~/\//g.replace(s, ".");
+					s = ~/\.hx/g.replace(s, "");
+					Lib.println(s);
+					output.push(s);
+				}
 			}
 			
 			var s = "";
@@ -256,10 +258,10 @@ class ClassCollector
 			var path = dir + "/" + name;
 			
 			if(FileSystem.isDirectory(path)) {
-				if (!isSvn(path))
+				if (!isBannedFile(path))
 					dump(path, files);
 			} else {
-				if (isHx(path) && !isSvn(path))
+				if (isHx(path) && !isBannedFile(path))
 				{
 					files.push(path);
 				}
@@ -276,13 +278,13 @@ class ClassCollector
 			var path = dir + "/" + name;
 			
 			if(FileSystem.isDirectory(path)) {
-				if (!isSvn(path))
+				if (!isBannedFile(path))
 				{
 					if (name != pkg[level] && level < pkg.length) continue;
 					dumpInclude(path, files, pkg, level + 1);
 				}
 			} else {
-				if (isHx(path) && !isSvn(path))
+				if (isHx(path) && !isBannedFile(path))
 				{
 					if (level >= pkg.length) files.push(path);
 				}
@@ -295,8 +297,8 @@ class ClassCollector
 		return ~/\.hx/g.match(x);
 	}
 	
-	inline static function isSvn(x:String):Bool
+	inline static function isBannedFile(x:String):Bool
 	{
-		return ~/\.svn/g.match(x);
+		return ~/\.svn/g.match(x) || ~/\.ds_store/ig.match(x);
 	}
 }
