@@ -3,3 +3,8 @@
 .project
 .settings
 .hxtypes
+App.js
+App.js.map
+*.n
+*.swf
+*.log
