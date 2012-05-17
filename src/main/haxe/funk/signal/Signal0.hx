@@ -33,7 +33,7 @@ class Signal0<T> extends Signal, implements ISignal0 {
 	}
 	
 	public function add(func : (Void -> Void)) : ISlot0 {
-		return switch(registerListener(func)) {
+		return switch(registerListener(func, false)) {
 			case None: null;
 			case Some(x): x;
 		}
@@ -73,7 +73,7 @@ class Signal0<T> extends Signal, implements ISignal0 {
       	}
 	}
 	
-	private function registerListener(func : (Void -> Void), ?once : Bool) : Option<ISlot0> {
+	private function registerListener(func : (Void -> Void), once : Bool) : Option<ISlot0> {
 		if(registrationPossible(func, once)) {
 			var slot : ISlot0 = new Slot0(this, func, once);
 			_list = _list.prepend(slot);
@@ -96,7 +96,8 @@ class Signal0<T> extends Signal, implements ISignal0 {
 			case None: true;
 			case Some(x): 
 				if(x.once != once) {
-					throw new IllegalOperationError('You cannot addOnce() then add() the same listener without removing the relationship first.');
+					throw new IllegalOperationError('You cannot addOnce() then add() the same " +
+					 "listener without removing the relationship first.');
 				}
 				false;
 		}

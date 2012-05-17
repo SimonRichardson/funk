@@ -26,6 +26,13 @@ class Slot0 extends Slot, implements ISlot0 {
 	}
 	
 	public function execute() : Void {
+		if(!enabled) return;
+		if(once) remove();
+		
 		listener();
+	}
+	
+	override public function remove() : Void {
+		_signal.remove(listener);
 	}
 }

@@ -1,14 +1,9 @@
-###### Javascript
-```javascript
-"HELLO WORLD" == toList("dlrow olleh").map(_.toUpperCase).reduceRight(_.plus_)
-```
-###### Haxe
 ```haxe
 "HELLO WORLD" == "dlrow olleh".toList().map(_.toUpperCase).reduceRight(_.plus_).get()
 ```
 
 # Introduction
-The Funk library supports functional development in ActionScript3. Some of its key features are:
+The Funk library supports functional development in Haxe. Some of its key features are:
 
 * Utilities to avoid boilerplate code
   * Currying

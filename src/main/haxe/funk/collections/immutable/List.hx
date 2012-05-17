@@ -610,11 +610,48 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	public function append(value : T) : IList<T> {
-		return new List<T>(value, this);
+		var n: Int = size;
+      	var buffer: Array<List<T>> = new Array<List<T>>();
+      	var p: IList<T> = this;
+      	var i: Int = 0;
+
+      	while(p.nonEmpty) {
+        	buffer[i++] = new List<T>(p.head, null);
+        	p = p.tail;
+      	}
+
+      	buffer[n] = new List<T>(value, nil.list());
+		
+		var j : Int = 1;
+		for(i in 0...n) {
+        	buffer[i]._tail = buffer[j];
+			j++;
+      	}
+
+      	return buffer[0];
 	}
 
 	public function appendAll(value : IList<T>) : IList<T> {
-		return value;
+		var n: Int = size;
+      	var m: Int = n - 1;
+      	var buffer: Array<List<T>> = new Array<List<T>>();
+      	var p: IList<T> = this;
+      	var i: Int = 0;
+
+      	while(p.nonEmpty) {
+        	buffer[i++] = new List(p.head, null);
+        	p = p.tail;
+      	}
+
+      	buffer[m]._tail = value;
+		
+		var j : Int = 1;
+		for(i in 0...m) {
+        	buffer[i]._tail = buffer[j];
+			j++;
+      	}
+
+      	return buffer[0];
 	}
 
 	public function appendIterator(iterator : Iterator<T>) : IList<T> {
