@@ -19,6 +19,12 @@ class ExpectUtil {
 		}
 	}
 	
+	public static function toBeEqualTo(e : Expect, a : Dynamic) : Void {
+		switch(e) {
+			case expect(x): Assert.areEqual(x, a); 
+		}
+	}
+	
 	public static function toStrictlyEqual(e : Expect, a : Dynamic) : Void {
 		switch(e) {
 			case expect(x): Assert.areEqual(x, a); 
