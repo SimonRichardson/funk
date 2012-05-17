@@ -15,11 +15,11 @@ class Main {
 		 signal.add(function(v : Int, s : String) : Void {
 		 	trace("2 - " + v + " : " + s);
 		 });
-		 signal.dispatch(4, "eh");
+		 signal.dispatch(4, "eh"); 
 	}
 	
 	public static function main() : Void {
-		trace("Start"); 
+		trace("Start");
 		new Main();
 	}
 }

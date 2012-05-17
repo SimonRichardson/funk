@@ -1,8 +1,13 @@
 # Output ALL the classes
+
 -main ClassCollector
 -cp lib/collector
 -neko bin/collector/ClassCollector.n
 -cmd neko bin/collector/ClassCollector.n src/main/haxe examples/main/haxe/All.hx -class
+
+# Compile hss
+
+-cmd hss -output bin/js/static/css/ src/main/hss/Style.hss
 
 # js debug
 
@@ -15,7 +20,7 @@
 --js-modern
 
 # js minified
-
+ 
 --next
 -js bin/js/static/js/App.js
 -main Main

@@ -1,0 +1,11 @@
+var background = #1d1d1d;
+var textColor = #efefef;
+
+var default = {
+	background-color: $background;
+	color: $textColor;
+}
+
+body {
+	$default;
+}
