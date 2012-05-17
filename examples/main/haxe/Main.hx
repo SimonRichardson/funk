@@ -1,21 +1,21 @@
 package;
 
 import All;
-import funk.signal.Signal0;
+import funk.signal.Signal2;
 
 class Main {
 	
 	public function new(){
 		 trace("hello");
 		 
-		 var signal = new Signal0();
-		 signal.add(function() : Void {
-		 	trace("1");
+		 var signal = new Signal2<Int, String>();
+		 signal.add(function(v : Int, s : String) : Void {
+		 	trace("1 - " + v + " : " + s);
 		 });
-		 signal.add(function() : Void {
-		 	trace("2");
+		 signal.add(function(v : Int, s : String) : Void {
+		 	trace("2 - " + v + " : " + s);
 		 });
-		 signal.dispatch();
+		 signal.dispatch(4, "eh");
 	}
 	
 	public static function main() : Void {

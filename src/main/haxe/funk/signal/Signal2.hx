@@ -5,26 +5,26 @@ import funk.collections.IList;
 import funk.collections.immutable.Nil;
 import funk.option.Option;
 import funk.signal.Signal;
-import funk.signal.Slot0;
+import funk.signal.Slot2;
 import funk.unit.Expect;
 
 using funk.collections.immutable.Nil;
 using funk.unit.Expect;
 
-interface ISignal0 implements ISignal {
+interface ISignal2<A, B> implements ISignal {
 	
-	function add(func : (Void -> Void)) : ISlot0;
+	function add(func : (A -> B -> Void)) : ISlot2<A, B>;
 	
-	function addOnce(func : (Void -> Void)) : ISlot0;
+	function addOnce(func : (A -> B -> Void)) : ISlot2<A, B>;
 	
-	function remove(func : (Void -> Void)) : ISlot0;
+	function remove(func : (A -> B -> Void)) : ISlot2<A, B>;
 	
-	function dispatch() : Void;
+	function dispatch(a : A, b : B) : Void;
 }
 
-class Signal0 extends Signal, implements ISignal0 {
+class Signal2<A, B> extends Signal, implements ISignal2<A, B> {
 	
-	private var _list : IList<ISlot0>;
+	private var _list : IList<ISlot2<A, B>>;
 	
 	public function new() {
 		super();
@@ -32,29 +32,29 @@ class Signal0 extends Signal, implements ISignal0 {
 		_list = nil.list();
 	}
 	
-	public function add(func : (Void -> Void)) : ISlot0 {
+	public function add(func : (A -> B -> Void)) : ISlot2<A, B> {
 		return switch(registerListener(func, false)) {
 			case None: null;
 			case Some(x): x;
 		}
 	}
 	
-	public function addOnce(func : (Void -> Void)) : ISlot0 {
+	public function addOnce(func : (A -> B -> Void)) : ISlot2<A, B> {
 		return switch(registerListener(func, true)) {
 			case None: null;
 			case Some(x): x;
 		}
 	}
 	
-	public function remove(func : (Void -> Void)) : ISlot0 {
-		var o = _list.find(function(s : ISlot0) : Bool {
+	public function remove(func : (A -> B -> Void)) : ISlot2<A, B> {
+		var o = _list.find(function(s : ISlot2<A, B>) : Bool {
 			return expect(s.listener).toEqual(func);
 		});
 		
 		return switch(o) {
 			case None: null;
 			case Some(x): 
-				_list = _list.filterNot(function(s : ISlot0) : Bool {
+				_list = _list.filterNot(function(s : ISlot2<A, B>) : Bool {
 					return expect(s.listener).toEqual(func);
 				});
 				x;
@@ -65,30 +65,30 @@ class Signal0 extends Signal, implements ISignal0 {
 		_list = nil.list();
 	}
 	
-	public function dispatch() : Void {
+	public function dispatch(a : A, b : B) : Void {
 		var slots = _list;
 		while(slots.nonEmpty) {
-        	slots.head.execute();
+        	slots.head.execute(a, b);
         	slots = slots.tail;
       	}
 	}
 	
-	private function registerListener(func : (Void -> Void), once : Bool) : Option<ISlot0> {
+	private function registerListener(func : (A -> B -> Void), once : Bool) : Option<ISlot2<A, B>> {
 		if(registrationPossible(func, once)) {
-			var slot : ISlot0 = new Slot0(this, func, once);
+			var slot : ISlot2<A, B> = new Slot2<A, B>(this, func, once);
 			_list = _list.prepend(slot);
 			return Some(slot);
 		}
 		
-		return _list.find(function(s : ISlot0) : Bool {
+		return _list.find(function(s : ISlot2<A, B>) : Bool {
 			return expect(s.listener).toEqual(func);
 		});
 	}
 	
-	private function registrationPossible(func : (Void -> Void), once : Bool) : Bool {
+	private function registrationPossible(func : (A -> B -> Void), once : Bool) : Bool {
 		if(!_list.nonEmpty) return true;
 		
-		var slot = _list.find(function(s : ISlot0) : Bool {
+		var slot = _list.find(function(s : ISlot2<A, B>) : Bool {
 			return expect(s.listener).toEqual(func);
 		});
 		
