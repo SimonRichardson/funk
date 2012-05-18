@@ -7,10 +7,13 @@ import funk.collections.mutable.Nil;
 import funk.collections.IList;
 import funk.collections.ListUtil;
 import funk.unit.Expect;
+import funk.Wildcard;
+import funk.collections.Range;
 
 using funk.collections.mutable.Nil;
 using funk.collections.ListUtil;
 using funk.unit.Expect;
+using funk.Wildcard;
 
 class Main {
 	
@@ -26,19 +29,10 @@ class Main {
 		 });
 		 signal.dispatch(4, "eh");
 		 
-		 var list = nil.list();
-		 list = list.prepend(1);
-		 list = list.prepend(2);
-		 list = list.prepend(3);
-		 list = list.prepend(4);
+		 var n = 100;
+		 var list = Range.to(1, n).foldRight(0, _.plus_);
 		 
-		 list = list.flatMap(function(a : Int) : IList<Int> {
-		 	return a == 2 ? nil.list() : a.toList();
-		 });
-		 
-		 trace(nil.list() == nil.list());
-		 
-		 trace(list.toString());
+		 trace((n * (n + 1) / 2) + " : " + list);
 	}
 	
 	public static function main() : Void {

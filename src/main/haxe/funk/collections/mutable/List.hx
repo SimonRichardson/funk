@@ -190,12 +190,15 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	public function foldLeft(x : T, f : (T -> T -> T)) : T {
-		// FIXME
-		return x;
+		var value : T = x;
+		var total : Int = _data.length;
+		for(i in 0...total) {
+			value = f(value, _data[i]);
+		}
+		return value;
 	}
 	
 	public function foldRight(x : T, f : (T -> T -> T)) : T {
-		// FIXME
 		return x;
 	}
 	
