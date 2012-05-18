@@ -28,7 +28,9 @@ class ListUtil {
 	    	while(--n > -1) {
 	    		l = l.prepend(cast string.substr(n, 1));
 	    	}
-	    }
+	    } else {
+			l = l.prepend(any);
+		}
 		
 		return l;
 	}

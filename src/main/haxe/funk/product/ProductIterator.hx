@@ -4,6 +4,7 @@ import funk.collections.IteratorUtil;
 import funk.option.Option;
 import funk.product.Product;
 import funk.FunkObject;
+import funk.errors.NoSuchElementError;
 
 interface IProductIterator<T> implements IFunkObject {
 	
@@ -12,7 +13,7 @@ interface IProductIterator<T> implements IFunkObject {
 	function next() : T;
 }
 
-class ProductIterator<T> implements IProductIterator<T> {
+class ProductIterator<T> extends Product, implements IProductIterator<T> {
 	
 	private var _index : Int;
 	
@@ -21,6 +22,8 @@ class ProductIterator<T> implements IProductIterator<T> {
 	private var _product : IProduct;
 	
 	public function new(product : IProduct){
+		super();
+		
 		_index = 0;
 		_product = product;
 		_arity = product.productArity;
@@ -34,7 +37,19 @@ class ProductIterator<T> implements IProductIterator<T> {
 		return _product.productElement(_index++);
 	}
 	
-	public function equals(that: IFunkObject): Bool {
+	override public function equals(that: IFunkObject): Bool {
       	return IteratorUtil.eq(this, that);
     }
+	
+	override public function productElement(index : Int) : Dynamic {
+		return _product.productElement(_index);
+	}
+	
+	override private function get_productArity() : Int {
+		return _arity;
+	}
+
+	override private function get_productPrefix() : String {
+		return "ProductIterator";
+	}
 }

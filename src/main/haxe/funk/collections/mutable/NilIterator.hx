@@ -1,14 +1,14 @@
-package funk.collections.immutable;
+package funk.collections.mutable;
 
 import funk.collections.IList;
-import funk.collections.immutable.Nil;
+import funk.collections.mutable.Nil;
 import funk.collections.IteratorUtil;
 import funk.errors.NoSuchElementError;
 import funk.FunkObject;
 import funk.option.Option;
 import funk.product.Product;
 
-using funk.collections.immutable.Nil;
+using funk.collections.mutable.Nil;
 
 class NilIterator<T> extends Product, implements IFunkObject {
 	

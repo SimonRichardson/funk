@@ -1,47 +1,43 @@
-package funk.collections.immutable;
+package funk.collections.mutable;
 
 import funk.errors.NoSuchElementError;
 import funk.option.Option;
 import funk.collections.IList;
-import funk.collections.immutable.Nil;
+import funk.collections.mutable.Nil;
 import funk.collections.IteratorUtil;
 import funk.FunkObject;
 import funk.product.Product;
 
 using funk.option.Option;
-using funk.collections.immutable.Nil;
+using funk.collections.mutable.Nil;
 
 class ListIterator<T> extends Product, implements IFunkObject {
 	
-	private var _list : IList<T>;
+	private var _array : Array<T>;
 	
 	public function new(l : IList<T>) {
 		super();
 		
-		_list = l;
+		_array = l.toArray;
 	}
 	
 	public function hasNext() : Bool {
-		return _list.nonEmpty;
+		return _array.length > 0;
 	}
 	
 	public function next() : T {
-		return if(_list == nil.list()) {
+		return if(_array.length == 0) {
 			throw new NoSuchElementError();
 		} else {
-			var head : T = _list.head;
-			_list = _list.tail;
-			head;
+			_array.shift();
 		}
 	}
 	
 	public function nextOption() : Option<T> {
-		return if(_list == nil.list()) {
+		return if(_array.length == 0) {
 			None;
 		} else {
-			var head : Option<T> = _list.headOption;
-			_list = _list.tail;
-			head;
+			Some(_array.shift());
 		}
 	}
 	
@@ -50,11 +46,15 @@ class ListIterator<T> extends Product, implements IFunkObject {
     }
 	
 	override public function productElement(index : Int) : Dynamic {
-		return _list.productElement(index);
+		if(index >= 0 && index < _array.length) {
+			return _array[index];
+		}
+		
+		throw new NoSuchElementError();
 	}
 	
 	override private function get_productArity() : Int {
-		return _list.size;
+		return _array.length;
 	}
 
 	override private function get_productPrefix() : String {

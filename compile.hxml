@@ -6,7 +6,6 @@
 -cmd neko bin/collector/ClassCollector.n src/main/haxe examples/main/haxe/All.hx -class
 
 # Compile hss
-
 -cmd hss -output bin/js/static/css/ src/main/hss/Style.hss
 
 # js debug
