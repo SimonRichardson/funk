@@ -275,32 +275,18 @@ class List<T> extends Product, implements IList<T> {
 	public function take(n : Int) : IList<T> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		if(n > size) {
-        	return this;
-      	} else if(0 == n) {
-        	return nil.list();
-      	}
-
-		// FIXME
+		var m = Std.int(Math.min(n, size));
+		_data = _data.splice(0, m);
+		
       	return this;
 	}
 	
 	public function takeRight(n : Int) : IList<T> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		if(n > size) {
-        	return this;
-      	} else if(0 == n) {
-        	return nil.list();
-      	}
+		var m = Std.int(Math.min(n, size));
+		_data = _data.splice(_data.length - m, m);
 
-      	n = size - n;
-
-      	if(n <= 0) {
-        	return this;
-      	}
-
-		// FIXME
       	return this;
 	}
 	
