@@ -310,8 +310,13 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	public function zip(that : IList<T>) : IList<ITuple2<T, T>> {
-		// FIXME
-		return nil.list();
+		var l: IList<ITuple2<T, T>> = nil.list();
+		var n: Int = Std.int(Math.min(size, that.size));
+		for(i in 0...n) {
+			l.append(tuple2(_data[i], that.get(i).get()).instance());
+		}
+		
+		return l;
 	}
 	
 	public function findIndexOf(f: (T -> Bool)): Int {
@@ -444,8 +449,13 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	private function get_zipWithIndex() : IList<ITuple2<T, Int>> {
-		// FIXME
-		return nil.list();
+		var l: IList<ITuple2<T, Int>> = nil.list();
+		var n: Int = size;
+		for(i in 0...n) {
+			l.append(tuple2(_data[i], i).instance());
+		}
+		
+		return l;
 	}
 	
 	private function get_size() : Int {
