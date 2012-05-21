@@ -1,7 +1,6 @@
-package funk.collections.mutable;
+package funk.collections;
 
 import funk.collections.IList;
-import funk.collections.mutable.Nil;
 import funk.collections.IteratorUtil;
 import funk.errors.NoSuchElementError;
 import funk.FunkObject;
@@ -12,8 +11,12 @@ using funk.collections.mutable.Nil;
 
 class NilIterator<T> extends Product, implements IFunkObject {
 	
-	public function new() {
+	private var _factory : IListFactory<T>;
+	
+	public function new(factory : IListFactory<T>) {
 		super();
+		
+		_factory = factory;
 	}
 	
 	public function hasNext() : Bool {
@@ -45,6 +48,10 @@ class NilIterator<T> extends Product, implements IFunkObject {
 	}
 }
 
+private typedef NilIteratorAccess<T> = {
+	var _factory : IListFactory<T>;
+}
+
 class NilIteratorType {
 	
 	inline public static function toArray<T>(iter : NilIterator<T>) : Array<T> {
@@ -52,6 +59,7 @@ class NilIteratorType {
 	}
 	
 	inline public static function toList<T>(iter : NilIterator<T>) : IList<T> {
-		return nil.list();
+		var access : NilIteratorAccess<T> = cast iter;
+		return access._factory.createNilList();
 	}
 }

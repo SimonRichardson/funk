@@ -219,7 +219,8 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	private function get_iterator() : Iterator<Dynamic> {
-		return new NilIterator<Dynamic>();
+		// FIXME
+		return null;//new NilIterator<Dynamic>();
 	}
 	
 	override private function get_productArity() : Int {

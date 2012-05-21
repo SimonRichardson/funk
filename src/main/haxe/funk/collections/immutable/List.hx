@@ -373,7 +373,7 @@ class List<T> extends Product, implements IList<T> {
 
         	p = p.tail;
       	}
-
+		
       	m = i - 1;
       	o = j - 1;
 
@@ -393,7 +393,7 @@ class List<T> extends Product, implements IList<T> {
         	}
       	}
 
-      	return tuple2(m > 0 ? left[0] : nil.list(), o > 0 ? right[0] : nil.list()).instance();
+      	return tuple2(m >= 0 ? left[0] : nil.list(), o >= 0 ? right[0] : nil.list()).instance();
 	}
 	
 	override public function equals(that: IFunkObject): Bool {

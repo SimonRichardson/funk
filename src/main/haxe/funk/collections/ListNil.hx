@@ -1,9 +1,9 @@
-package funk.collections.immutable;
+package funk.collections;
 
 import funk.collections.IList;
 import funk.collections.IteratorUtil;
-import funk.collections.immutable.List;
-import funk.collections.immutable.Nil;
+import funk.collections.mutable.List;
+import funk.collections.mutable.Nil;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.product.Product;
@@ -12,7 +12,7 @@ import funk.tuple.Tuple2;
 import funk.util.Require;
 
 using funk.collections.IteratorUtil;
-using funk.collections.immutable.Nil;
+using funk.collections.mutable.Nil;
 using funk.option.Option;
 using funk.tuple.Tuple2;
 using funk.util.Require;
@@ -49,8 +49,12 @@ class ListNil<T> extends Product, implements IList<T> {
 	
 	public var flatten(get_flatten, never) : IList<T>;
 	
-	public function new() {
+	private var _factory : IListFactory<T>;
+	
+	public function new(factory : IListFactory<T>) {
 		super();
+		
+		_factory = factory;
 	}
 	
 	public function contains(value : T) : Bool {
@@ -64,17 +68,17 @@ class ListNil<T> extends Product, implements IList<T> {
 	public function drop(n : Int) : IList<T> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function dropRight(n : Int) : IList<T> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function dropWhile(f : (T -> Bool)) : IList<T> {
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function exists(f : (T -> Bool)) : Bool {
@@ -82,11 +86,11 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 	
 	public function filter(f : (T -> Bool)) : IList<T> {
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function filterNot(f : (T -> Bool)) : IList<T> {
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function find(f : (T -> Bool)) : Option<T> {
@@ -94,7 +98,7 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 	
 	public function flatMap(f : (T -> IList<T>)) : IList<T> {
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function foldLeft(x : T, f : (T -> T -> T)) : T {
@@ -117,15 +121,15 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 	
 	public function map(f : (T -> T)) : IList<T> {
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function partition(f : (T -> Bool)) : ITuple2<IList<T>, IList<T>> {
-		return tuple2(nil.list(), nil.list()).instance();
+		return tuple2(_factory.createNilList(), _factory.createNilList()).instance();
 	}
 	
 	public function prepend(value : T) : IList<T> {
-		return new List<T>(value, this);
+		return _factory.createList(value, this);
 	}
 	
 	public function prependAll(value : IList<T>) : IList<T> {
@@ -143,21 +147,21 @@ class ListNil<T> extends Product, implements IList<T> {
 	public function take(n : Int) : IList<T> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function takeRight(n : Int) : IList<T> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function takeWhile(f : (T -> Bool)) : IList<T> {
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	public function zip(that : IList<T>) : IList<ITuple2<T, T>> {
-		return nil.list();
+		return cast _factory.createNilList();
 	}
 	
 	public function findIndexOf(f: (T -> Bool)): Int {
@@ -177,7 +181,7 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 	
 	public function append(value : T) : IList<T> {
-		return new List<T>(value, this);
+		return _factory.createList(value, this);
 	}
 
 	public function appendAll(value : IList<T>) : IList<T> {
@@ -213,11 +217,11 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 	
 	private function get_indices() : IList<Int> {
-		return nil.list();
+		return cast _factory.createNilList();
 	}
 	
 	private function get_init() : IList<T> {
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	private function get_last() : Option<T> {
@@ -225,7 +229,7 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 	
 	private function get_reverse() : IList<T> {
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	private function get_tail() : IList<T> {
@@ -237,7 +241,7 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 	
 	private function get_zipWithIndex() : IList<ITuple2<T, Int>> {
-		return nil.list();
+		return cast _factory.createNilList();
 	}
 	
 	private function get_size() : Int {
@@ -253,11 +257,11 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 	
 	private function get_flatten() : IList<T> {
-		return nil.list();
+		return _factory.createNilList();
 	}
 	
 	private function get_iterator() : Iterator<Dynamic> {
-		return new NilIterator<Dynamic>();
+		return new NilIterator<Dynamic>(_factory);
 	}
 	
 	override private function get_productArity() : Int {
@@ -265,6 +269,6 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 
 	override private function get_productPrefix() : String {
-		return "List";
+		return "Nil";
 	}
 }

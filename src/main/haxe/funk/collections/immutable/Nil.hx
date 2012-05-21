@@ -1,8 +1,9 @@
 package funk.collections.immutable;
 
 import funk.collections.IList;
+import funk.collections.IListFactory;
 import funk.collections.immutable.HashMapNil;
-import funk.collections.immutable.ListNil;
+import funk.collections.ListNil;
 import funk.errors.RangeError;
 import funk.option.Option;
 import funk.tuple.Tuple2;
@@ -20,7 +21,9 @@ enum NilEnum {
 
 class NilType {
 	
-	private static var _nilList : IList<Dynamic> = new ListNil<Dynamic>();
+	private static var _listFactory : IListFactory<Dynamic> = new ListFactory<Dynamic>();
+	
+	private static var _nilList : IList<Dynamic> = new ListNil<Dynamic>(_listFactory);
 	
 	private static var _nilSet : ISet<Dynamic, Dynamic> = new HashMapNil<Dynamic, Dynamic>();
 	
@@ -48,3 +51,18 @@ class NilType {
 		}
 	}
 }
+
+class ListFactory<T> implements IListFactory<T> {
+	
+	public function new() {
+	}
+	
+	inline public function createList(value : T, tail : IList<T>) : IList<T> {
+		return new List<T>(value, tail);
+	}
+	
+	inline public function createNilList() : IList<T> {
+		return NilType.list(nil);
+	}
+}
+
