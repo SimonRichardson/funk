@@ -225,13 +225,30 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	public function map(f : (T -> T)) : IList<T> {
-		// FIXME
+		var total : Int = _data.length;
+		for(i in 0...total) {
+			_data[i] = f(_data[i]);
+		}
 		return this;
 	}
 	
 	public function partition(f : (T -> Bool)) : ITuple2<IList<T>, IList<T>> {
-		// FIXME
-		return tuple2(cast this, cast this).instance();
+		var left: List<T> = new List<T>();
+      	var right: List<T> = new List<T>();
+		
+		var total : Int = _data.length;
+		for(i in 0...total) {
+			var item = _data[i];
+			if(f(item)) {
+				left._data[left._data.length] = item;
+			} else {
+				right._data[right._data.length] = item;
+			}
+		}
+		
+		var m = left.size;
+		var o = right.size;
+		return tuple2(m > 0 ? left : nil.list(), o > 0 ? right : nil.list()).instance();
 	}
 	
 	override public function equals(that: IFunkObject): Bool {
@@ -263,13 +280,21 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	public function reduceLeft(f : (T -> T -> T)) : Option<T> {
-		// FIXME
-		return None;
+		var value : T = head;
+		var total : Int = _data.length;
+		for(i in 0...total) {
+			value = f(value, _data[i]);
+		}
+		return Some(value);
 	}
 	
 	public function reduceRight(f : (T -> T -> T)) : Option<T> {
-		// FIXME
-		return None;
+		var value : T = _data[_data.length - 1];
+		var index : Int = _data.length - 1;
+		while(--index > -1) {
+			value = f(value, _data[index]);
+		}
+		return Some(value);
 	}
 	
 	public function take(n : Int) : IList<T> {
@@ -290,8 +315,20 @@ class List<T> extends Product, implements IList<T> {
       	return this;
 	}
 	
-	public function takeWhile(f : (IList<T> -> Bool)) : IList<T> {
-		// FIXME
+	public function takeWhile(f : (T -> Bool)) : IList<T> {
+		var buffer:Array<T> = new Array<T>();
+		var n = size;
+		for(i in 0...n) {
+			var item : T = _data[i];
+			if(f(item)) {
+				buffer.push(item);		
+			} else {
+				break;
+			}
+		}
+		
+		_data = buffer;
+		
 		return this;
 	}
 	

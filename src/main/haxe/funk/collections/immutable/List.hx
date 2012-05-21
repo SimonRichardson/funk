@@ -513,13 +513,13 @@ class List<T> extends Product, implements IList<T> {
       	return p;
 	}
 	
-	public function takeWhile(f : (IList<T> -> Bool)) : IList<T> {
+	public function takeWhile(f : (T -> Bool)) : IList<T> {
 		var buffer: Array<List<T>> = new Array<List<T>>();
       	var p: IList<T> = this;
       	var n: Int = 0;
 
       	while(p.nonEmpty) {
-        	if(f(p)) {
+        	if(f(p.head)) {
           		buffer[n++] = new List<T>(p.head, null);
           		p = p.tail;
         	} else {

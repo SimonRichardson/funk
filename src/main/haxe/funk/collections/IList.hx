@@ -92,7 +92,7 @@ interface IList<T> implements IProduct, implements ICollection<T> {
 
     function takeRight(n: Int): IList<T>;
 
-    function takeWhile(f : (IList<T> -> Bool)) : IList<T>;
+    function takeWhile(f : (T -> Bool)) : IList<T>;
 
     function zip(that: IList<T>): IList<ITuple2<T, T>>;
 }

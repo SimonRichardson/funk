@@ -152,7 +152,7 @@ class ListNil<T> extends Product, implements IList<T> {
 		return nil.list();
 	}
 	
-	public function takeWhile(f : (IList<T> -> Bool)) : IList<T> {
+	public function takeWhile(f : (T -> Bool)) : IList<T> {
 		return nil.list();
 	}
 	
