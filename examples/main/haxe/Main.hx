@@ -1,17 +1,12 @@
 package;
 
 import All;
-import funk.signal.Signal2;
-import funk.signal.Signal;
-import funk.collections.mutable.Nil;
-import funk.collections.IList;
-import funk.collections.ListUtil;
+import funk.collections.immutable.Nil;
+import funk.collections.ISet;
 import funk.unit.Expect;
 import funk.Wildcard;
-import funk.collections.Range;
 
-using funk.collections.mutable.Nil;
-using funk.collections.ListUtil;
+using funk.collections.immutable.Nil;
 using funk.unit.Expect;
 using funk.Wildcard;
 
@@ -20,19 +15,12 @@ class Main {
 	public function new(){
 		 trace("hello");
 		 
-		 var signal = new Signal2<Int, String>();
-		 signal.add(function(v : Int, s : String) : Void {
-		 	trace("1 - " + v + " : " + s);
-		 });
-		 signal.add(function(v : Int, s : String) : Void {
-		 	trace("2 - " + v + " : " + s);
-		 });
-		 signal.dispatch(4, "eh");
+		 var s : ISet<String, Int> = nil.set();
+		 s.add("A", 1);
+		 s.add("B", 2);
+		 s.add("C", 3);
 		 
-		 var n = 12;
-		 var list = Range.to(1, n).takeRight(4);
-		 
-		 trace(list);
+		 trace(s);
 	}
 	
 	public static function main() : Void {

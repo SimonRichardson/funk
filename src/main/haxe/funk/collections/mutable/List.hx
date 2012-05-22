@@ -221,7 +221,7 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	public function get(index : Int) : Option<T> {
-		return productElement(index);
+		return Some(productElement(index));
 	}
 	
 	public function map(f : (T -> T)) : IList<T> {
@@ -440,7 +440,7 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	private function get_last() : Option<T> {
-		var l = _data.length;
+		var l: Int = _data.length;
       	return if(l == 0) {
 			None;
 		} else {
@@ -454,7 +454,7 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	private function get_tail() : IList<T> {
-		var l = new List<T>();
+		var l : List<T> = new List<T>();
         if(_data.length > 1) {
 			l._data = _data.slice(1);
 		}

@@ -326,8 +326,8 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
       	}
 	}
 	
-	public function get(index : Int) : Option<V> {
-		return productElement(index);
+	public function get(index : Int) : Option<ITuple2<K, V>> {
+		return Some(productElement(index));
 	}
 	
 	public function map(f : (ITuple2<K, V> -> ITuple2<K, V>)) : ISet<K, V> {
@@ -596,7 +596,7 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
         	i -= 1;
       	}
 
-      throw new NoSuchElementError();
+      	throw new NoSuchElementError();
 	}
 	
 	private function get_nonEmpty() : Bool {

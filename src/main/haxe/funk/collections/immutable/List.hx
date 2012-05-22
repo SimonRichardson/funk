@@ -327,7 +327,7 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	public function get(index : Int) : Option<T> {
-		return productElement(index);
+		return Some(productElement(index));
 	}
 	
 	public function map(f : (T -> T)) : IList<T> {

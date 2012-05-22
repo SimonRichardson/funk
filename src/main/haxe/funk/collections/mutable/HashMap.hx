@@ -12,7 +12,6 @@ import funk.unit.Expect;
 import funk.util.Require;
 
 using funk.collections.IteratorUtil;
-using funk.collections.ListUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Option;
 using funk.tuple.Tuple2;
@@ -47,39 +46,38 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	
 	public var zipWithIndex(get_zipWithIndex, never): ISet<ITuple2<K, V>, Int>;
 	
-	private var _data : Hash<V>;
+	private var _keys : IntHash<K>;
 	
+	private var _values : IntHash<V>;
+	
+	private var _length : Int;
+		
 	public function new() {
 		super();
 		
-		_data = new Hash<V>();
+		_keys = new IntHash<K>();
+		_values = new IntHash<V>();
+		
+		_length = 0;
 	}
 	
 	public function contains(value : K) : Bool {
-		var p: ISet<K, V> = this;
-
-      	while(p.nonEmpty) {
-			if(expect(p.head._1).toEqual(value)) {
-          		return true;
-        	}
-        	p = p.tail;
-      	}
-
-      	return false;
+		for(i in _keys) {
+			if(i == value) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public function count(f : (K -> V -> Bool)) : Int {
 		var n: Int = 0;
-      	var p: ISet<K, V> = this;
-
-      	while(p.nonEmpty) {
-        	if(f(p.head._1, p.head._2)) {
-          		++n;
-        	}
-
-        	p = p.tail;
-      	}
-
+		var keys = _keys.keys();
+		for(i in keys) {
+			if(f(_keys.get(i), _values.get(i))) {
+				n++;
+			}
+		}
       	return n;
 	}
 	
@@ -239,8 +237,8 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
       	}
 	}
 	
-	public function get(index : Int) : Option<V> {
-		return productElement(index);
+	public function get(index : Int) : Option<ITuple2<K, V>> {
+		return Some(productElement(index));
 	}
 	
 	public function map(f : (ITuple2<K, V> -> ITuple2<K, V>)) : ISet<K, V> {
@@ -260,11 +258,32 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
     }
 	
 	public function add(key : K, value : V) : ISet<K, V> {
-		_data.set(getKey(key), value);
+		_keys.set(_length, key);
+		_values.set(_length, value);
+		
+		_length++;
+		
 		return this;
 	}
 	
 	public function addAll(value : ISet<K, V>) : ISet<K, V> {
+		var n: Int = value.size;
+
+      	if(0 == n) {
+        	return this;
+      	}
+		
+		var n : Int = value.size;
+		for(i in 0...n) {
+			switch(value.get(i)) {
+				case None:
+				case Some(x):
+					_keys.set(_length, x._1);
+					_values.set(_length, x._2);
+					_length++;		 
+			}
+		}
+		
 		return this;
 	}
 	
@@ -344,18 +363,15 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	override public function productElement(i : Int) : Dynamic {
-		var p: ISet<K, V> = this;
+		var keys:Iterator<Int> = _keys.keys();
+		for(key in keys) {
+			if(i == 0) {
+				return tuple2(_keys.get(key), _values.get(key)).instance();
+			}
+			i -= 1;
+		}
 
-      	while(p.nonEmpty) {
-        	if(i == 0) {
-        	  return p.head;
-        	}
-
-        	p = p.tail;
-        	i -= 1;
-      	}
-
-      throw new NoSuchElementError();
+      	throw new NoSuchElementError();
 	}
 	
 	private function get_nonEmpty() : Bool {
@@ -367,11 +383,23 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	private function get_head() : ITuple2<K, V> {
-		return null;
+		var keys:Iterator<Int> = _keys.keys();
+		var key : Int = if(keys.hasNext()) {
+			keys.next(); 
+		}
+		return tuple2(_keys.get(key), _values.get(key)).instance();
 	}
 	
 	private function get_headOption() : Option<ITuple2<K, V>> {
-		return Some(null);
+		return if(size == 0) {
+			None;
+		} else {
+			var keys:Iterator<Int> = _keys.keys();
+			var key : Int = if(keys.hasNext()) {
+				keys.next(); 
+			}
+			Some(tuple2(_keys.get(key), _values.get(key)).instance());
+		}
 	}
 	
 	private function get_init() : ISet<K, V> {
@@ -379,29 +407,62 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	private function get_last() : Option<ITuple2<K, V>> {
-		var p: ISet<K, V> = this;
-      	var value: Option<ITuple2<K, V>> = None;
-      	while(p.nonEmpty) {
-        	value = p.headOption;
-        	p = p.tail;
-      	}
-      	return value;
+      	return if(size == 0) {
+			None;
+		} else {
+			var value: Option<ITuple2<K, V>> = None;
+			var keys:Iterator<Int> = _keys.keys();
+			var key:Int = 0;
+			while(keys.hasNext()) {
+				key = keys.next();		      	
+			}
+			Some(tuple2(_keys.get(key), _values.get(key)).instance());
+		}
 	}
 		
 	private function get_tail() : ISet<K, V> {
-		return null;
+		var keys:Iterator<Int> = _keys.keys();
+		// remove the first one.
+		if(keys.hasNext()) {
+			keys.next(); 
+		}
+		var s : HashMap<K, V> = new HashMap<K,V>();
+		for(i in keys) {
+			s.add(_keys.get(i), _values.get(i));
+		}
+		return s;
 	}
 	
 	private function get_tailOption() : Option<ISet<K, V>> {
-		return Some(null);
+		return if(size == 0) {
+			None;
+		} else {
+			var keys:Iterator<Int> = _keys.keys();
+			// remove the first one.
+			if(keys.hasNext()) {
+				keys.next(); 
+			}
+			var s : HashMap<K, V> = new HashMap<K,V>();
+			for(i in keys) {
+				s.add(_keys.get(i), _values.get(i));
+			}
+			Some(cast s);
+		}
 	}
 	
 	private function get_zipWithIndex() : ISet<ITuple2<K, V>, Int> {
-		return null;
+		var buffer = new HashMap<ITuple2<K, V>, Int>();
+		var c:Int = 0;
+		var keys:Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			buffer.add(tuple2(_keys.get(i), _values.get(i)).instance(), c);
+			c++;
+		}
+		return buffer;
 	}
 	
 	private function get_size() : Int {
-		return 0;
+		return _length;
 	}
 	
 	private function get_hasDefinedSize() : Bool {
@@ -409,15 +470,10 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 
 	private function get_toArray() : Array<V> {
-		var n: Int = size;
       	var array: Array<V> = new Array<V>();
-      	var p: ISet<K, V> = this;
-
-     	for(i in 0...n) {
-        	array[i] = p.head._2;
-        	p = p.tail;
+      	for(i in _values) {
+        	array.push(i);
       	}
-
 	    return array;
 	}
 	
@@ -437,15 +493,5 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 
 	override private function get_productPrefix() : String {
 		return "HashMap";
-	}
-	
-	inline private function getKey(key : K) : String {
-		return if(Reflect.hasField(key, "hashCode")) {
-			Std.string(Reflect.callMethod(key, Reflect.field(key, "hashCode"), []));
-		} else if(Reflect.hasField(key, "toString")) {
-			Reflect.callMethod(key, Reflect.field(key, "toString"), []);
-		} else {
-			Std.string(key);
-		}
 	}
 }

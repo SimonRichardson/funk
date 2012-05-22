@@ -1,4 +1,4 @@
-package funk.collections.immutable;
+package funk.collections;
 
 import funk.collections.IteratorUtil;
 import funk.collections.immutable.Nil;
@@ -111,7 +111,7 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	public function foreach(f : (K -> V -> Void)) : Void {
 	}
 	
-	public function get(index : Int) : Option<V> {
+	public function get(index : Int) : Option<ITuple2<K, V>> {
 		return None;
 	}
 	
@@ -232,6 +232,6 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	}
 
 	override private function get_productPrefix() : String {
-		return "HashMap";
+		return "Nil";
 	}
 }

@@ -54,7 +54,7 @@ interface ISet<K, V> implements IProduct, implements ICollection<V> {
 
     function foreach(f: (K -> V -> Void)): Void;
 
-    function get(index: Int): Option<V>;
+    function get(index: Int): Option<ITuple2<K, V>>;
 
     function map(f: (ITuple2<K, V> -> ITuple2<K, V>)): ISet<K, V>;
 
