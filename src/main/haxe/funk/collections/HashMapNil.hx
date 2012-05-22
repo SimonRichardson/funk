@@ -8,6 +8,7 @@ import funk.product.Product;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 import funk.util.Require;
+import funk.collections.ISetFactory;
 
 using funk.collections.IteratorUtil;
 using funk.collections.immutable.Nil;
@@ -43,8 +44,12 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	
 	public var zipWithIndex(get_zipWithIndex, never): ISet<ITuple2<K, V>, Int>;
 	
-	public function new() {
+	private var _factory : ISetFactory<K,V>;
+	
+	public function new(factory : ISetFactory<K,V>) {
 		super();
+		
+		_factory = factory;
 	}
 	
 	public function contains(value : K) : Bool {
@@ -58,17 +63,17 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	public function drop(n : Int) : ISet<K, V> {
 		require("n must be positive.").toBe(n >= 0);
 		
-      	return nil.set();
+      	return _factory.createNilSet();
 	}
 	
 	public function dropRight(n : Int) : ISet<K, V> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	public function dropWhile(f : (K -> V -> Bool)) : ISet<K, V> {
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	public function exists(f : (K -> V -> Bool)) : Bool {
@@ -76,11 +81,11 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function filter(f : (K -> V -> Bool)) : ISet<K, V> {
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	public function filterNot(f : (K -> V -> Bool)) : ISet<K, V> {
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	public function find(f : (K -> V -> Bool)) : Option<ITuple2<K, V>> {
@@ -88,7 +93,7 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function flatMap(f : (ITuple2<K, V> -> ISet<K, V>)) : ISet<K, V> {
-      	return nil.set();
+      	return _factory.createNilSet();
 	}
 	
 	public function foldLeft(x : ITuple2<K, V>, f : (ITuple2<K, V> -> ITuple2<K, V> -> ITuple2<K, V>)) : ITuple2<K, V> {
@@ -111,15 +116,15 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function map(f : (ITuple2<K, V> -> ITuple2<K, V>)) : ISet<K, V> {
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	public function partition(f : (K -> V -> Bool)) : ITuple2<ISet<K, V>, ISet<K, V>> {
-		return tuple2(nil.set(), nil.set()).instance();
+		return tuple2(_factory.createNilSet(), _factory.createNilSet()).instance();
 	}
 	
 	public function add(key : K, value : V) : ISet<K, V> {
-		return new HashMap<K, V>(tuple2(key, value).instance(), this);
+		return _factory.createSet(tuple2(key, value).instance(), this);
 	}
 	
 	public function addAll(value : ISet<K, V>) : ISet<K, V> {
@@ -137,21 +142,21 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	public function take(n : Int) : ISet<K, V> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	public function takeRight(n : Int) : ISet<K, V> {
 		require("n must be positive.").toBe(n >= 0);
 		
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	public function takeWhile(f : (ISet<K, V> -> Bool)) : ISet<K, V> {
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	public function zip(that : ISet<Dynamic, Dynamic>) : ISet<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>> {
-		return nil.set();
+		return cast _factory.createNilSet();
 	}
 	
 	public function addIterator(iterator : Iterator<ITuple2<K, V>>) : ISet<K, V> {
@@ -183,7 +188,7 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	private function get_init() : ISet<K, V> {
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	private function get_last() : Option<ITuple2<K, V>> {
@@ -199,7 +204,7 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	private function get_zipWithIndex() : ISet<ITuple2<K, V>, Int> {
-		return nil.set();
+		return cast _factory.createNilSet();
 	}
 	
 	private function get_size() : Int {
@@ -215,12 +220,11 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	private function get_flatten() : ISet<K, V> {
-		return nil.set();
+		return _factory.createNilSet();
 	}
 	
 	private function get_iterator() : Iterator<Dynamic> {
-		// FIXME
-		return null;//new NilIterator<Dynamic>();
+		return new NilIterator<Dynamic>(_factory);
 	}
 	
 	override private function get_productArity() : Int {

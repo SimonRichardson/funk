@@ -29,10 +29,10 @@ class Main {
 		 });
 		 signal.dispatch(4, "eh");
 		 
-		 var n = 100;
-		 var list = Range.to(1, n).foldRight(0, _.plus_);
+		 var n = 12;
+		 var list = Range.to(1, n).takeRight(4);
 		 
-		 trace((n * (n + 1) / 2) + " : " + list);
+		 trace(list);
 	}
 	
 	public static function main() : Void {

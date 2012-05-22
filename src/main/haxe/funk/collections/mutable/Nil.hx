@@ -63,4 +63,26 @@ class ListFactory<T> implements IListFactory<T> {
 	inline public function createNilList() : IList<T> {
 		return NilType.list(nil);
 	}
+	
+	inline public function createNil() : ICollection<T> {
+		return NilType.list(nil);
+	}
+}
+
+class SetFactory<K, V> implements ISetFactory<K, V> {
+	
+	public function new() {
+	}
+	
+	inline public function createSet(value : ITuple2<K, V>, tail : ISet<K, V>) : ISet<K, V> {
+		return new HashMap<K, V>().add(value._1, value._2);
+	}
+	
+	inline public function createNilSet() : ISet<K, V> {
+		return NilType.set(nil);
+	}
+	
+	inline public function createNil() : ICollection<V> {
+		return NilType.set(nil);
+	}
 }

@@ -11,9 +11,9 @@ using funk.collections.mutable.Nil;
 
 class NilIterator<T> extends Product, implements IFunkObject {
 	
-	private var _factory : IListFactory<T>;
+	private var _factory : ICollectionFactory<T>;
 	
-	public function new(factory : IListFactory<T>) {
+	public function new(factory : ICollectionFactory<T>) {
 		super();
 		
 		_factory = factory;
@@ -60,6 +60,6 @@ class NilIteratorType {
 	
 	inline public static function toList<T>(iter : NilIterator<T>) : IList<T> {
 		var access : NilIteratorAccess<T> = cast iter;
-		return access._factory.createNilList();
+		return cast access._factory.createNil();
 	}
 }
