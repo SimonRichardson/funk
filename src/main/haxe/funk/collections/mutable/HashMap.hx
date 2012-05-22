@@ -441,7 +441,7 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	
 	inline private function getKey(key : K) : String {
 		return if(Reflect.hasField(key, "hashCode")) {
-			Reflect.callMethod(key, Reflect.field(key, "hashCode"), []);
+			Std.string(Reflect.callMethod(key, Reflect.field(key, "hashCode"), []));
 		} else if(Reflect.hasField(key, "toString")) {
 			Reflect.callMethod(key, Reflect.field(key, "toString"), []);
 		} else {
