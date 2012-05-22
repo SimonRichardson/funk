@@ -1,5 +1,6 @@
 package funk.collections.mutable;
 
+import funk.collections.HashMapNil;
 import funk.collections.IList;
 import funk.collections.IListFactory;
 import funk.collections.mutable.List;
@@ -24,7 +25,9 @@ class NilType {
 	
 	private static var _nilList : IList<Dynamic> = new ListNil<Dynamic>(_listFactory);
 	
-	//private static var _nilSet : ISet<Dynamic, Dynamic> = new HashMap<Dynamic, Dynamic>();
+	private static var _setFactory : ISetFactory<Dynamic, Dynamic> = new SetFactory<Dynamic, Dynamic>();
+	
+	private static var _nilSet : ISet<Dynamic, Dynamic> = new HashMapNil<Dynamic, Dynamic>(_setFactory);
 	
 	inline public static function list<T>(n : NilEnum) : IList<T> {
 		return switch(n) {
@@ -34,7 +37,7 @@ class NilType {
 	
 	inline public static function set<K, V>(n : NilEnum) : ISet<K, V> {
 		return switch(n) {
-			case nil: null;//cast _nilSet; 
+			case nil: cast _nilSet; 
 		}
 	}
 	

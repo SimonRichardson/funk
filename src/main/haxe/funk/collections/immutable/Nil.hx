@@ -1,8 +1,8 @@
 package funk.collections.immutable;
 
+import funk.collections.HashMapNil;
 import funk.collections.IList;
 import funk.collections.IListFactory;
-import funk.collections.HashMapNil;
 import funk.collections.ListNil;
 import funk.errors.RangeError;
 import funk.option.Option;
@@ -37,7 +37,7 @@ class NilType {
 	
 	inline public static function set<K, V>(n : NilEnum) : ISet<K, V> {
 		return switch(n) {
-			case nil: cast _nilSet; 
+			case nil: cast _nilSet;
 		}
 	}
 	
