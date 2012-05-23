@@ -20,7 +20,11 @@ class Main {
 		s = s.add("B", 2);
 		s = s.add("C", 3);
 		 
-		trace(s);
+		var b = s.exists(function(key, value) {
+			return value == 2;
+		});
+		
+		trace(b);
 	}
 	
 	public static function main() : Void {

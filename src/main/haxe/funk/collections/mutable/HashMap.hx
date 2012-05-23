@@ -72,7 +72,7 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	
 	public function count(f : (K -> V -> Bool)) : Int {
 		var n: Int = 0;
-		var keys = _keys.keys();
+		var keys : Iterator<Int> = _keys.keys();
 		for(i in keys) {
 			if(f(_keys.get(i), _values.get(i))) {
 				n++;
@@ -84,17 +84,19 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	public function drop(n : Int) : ISet<K, V> {
 		require("n must be positive.").toBe(n >= 0);
 
-      	var p: ISet<K, V> = this;
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			if(n == 0) {
+				break;
+			}
+			_keys.remove(i);
+			_values.remove(i);
+			
+			n -= 1;
+			_length -= 1;
+		}
 
-      	for(i in 0...n) {
-        	if(p.isEmpty) {
-          		return nil.set();
-        	}
-
-        	p = p.tail;
-      	}
-
-      	return p;
+      	return this;
 	}
 	
 	public function dropRight(n : Int) : ISet<K, V> {
@@ -103,63 +105,68 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 		if(0 == n) {
 			return this;
       	}
-      
-      	n = size - n;
-
-      	if(n <= 0) {
-        	return nil.set();
-      	}
+     	
+		var keys : Array<Int> = _keys.keys().toArray();
+		keys.reverse();
+		
+		for(i in keys) {
+			if(n == 0) {
+				break;
+			}
+			_keys.remove(i);
+			_values.remove(i);
+			
+			n -= 1;
+			_length -= 1;
+		}
 
 		return this;
 	}
 	
 	public function dropWhile(f : (K -> V -> Bool)) : ISet<K, V> {
-		var p: ISet<K, V> = this;
-
-      	while(p.nonEmpty) {
-        	if(!f(p.head._1, p.head._2)) {
-          		return p;
-        	}
-
-        	p = p.tail;
-      }
-
-      return nil.set();
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			if(f(_keys.get(i), _values.get(i))) {
+				_keys.remove(i);
+				_values.remove(i);
+				
+				_length -= 1;
+			} else {
+				break;
+			}
+		}
+	    return this;
 	}
 	
 	public function exists(f : (K -> V -> Bool)) : Bool {
-		var p: ISet<K, V> = this;
-
-      	while(p.nonEmpty) {
-        	if(f(p.head._1, p.head._2)) {
-          		return true;
-        	}
-
-        	p = p.tail;
-      	}
-
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			if(f(_keys.get(i), _values.get(i))) {
+				return true;
+			}
+		}
       	return false;
 	}
 	
 	public function filter(f : (K -> V -> Bool)) : ISet<K, V> {
+		// FIXME
 		return this;
 	}
 	
 	public function filterNot(f : (K -> V -> Bool)) : ISet<K, V> {
+		// FIXME
 		return this;
 	}
 	
 	public function find(f : (K -> V -> Bool)) : Option<ITuple2<K, V>> {
-		var p: ISet<K, V> = this;
-
-      	while(p.nonEmpty) {
-        	if(f(p.head._1, p.head._2)) {
-          		return p.headOption;
-        	}
-
-        	p = p.tail;
-      	}
-
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			var k : K = _keys.get(i);
+			var v : V = _values.get(i);
+			if(f(k, v)) {
+				return Some(tuple2(k, v).instance());
+			}
+		}
       	return None;
 	}
 	
@@ -180,6 +187,8 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
       	while(--n > -1) {
         	s = s.addAll(buffer[n]);
       	}
+		
+		// FIXME
 
       	return s;
 	}
@@ -192,6 +201,8 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
         	value = f(value, p.head);
         	p = p.tail;
       	}
+		
+		// FIXME
 
       	return value;
 	}
@@ -210,31 +221,27 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
       	while(--n > -1) {
         	value = f(value, buffer[n]);
       	}
+		
+		// FIXME
 
       	return value;
 	}
 	
 	public function forall(f : (K -> V -> Bool)) : Bool {
-		var p: ISet<K, V> = this;
-
-      	while(p.nonEmpty) {
-        	if(!f(p.head._1, p.head._2)) {
-          		return false;
-        	}
-
-        	p = p.tail;
-      	}
-
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			if(!f(_keys.get(i), _values.get(i))) {
+				return false;
+			}
+		}
       	return true;
 	}
 	
 	public function foreach(f : (K -> V -> Void)) : Void {
-		var p: ISet<K, V> = this;
-
-      	while(p.nonEmpty) {
-        	f(p.head._1, p.head._2);
-        	p = p.tail;
-      	}
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			f(_keys.get(i), _values.get(i));
+		}
 	}
 	
 	public function get(index : Int) : Option<ITuple2<K, V>> {
@@ -242,10 +249,12 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function map(f : (ITuple2<K, V> -> ITuple2<K, V>)) : ISet<K, V> {
+		// FIXME
 		return this;
 	}
 	
 	public function partition(f : (K -> V -> Bool)) : ITuple2<ISet<K, V>, ISet<K, V>> {
+		// FIXME
       	return tuple2(nil.set(), nil.set()).instance();
 	}
 	
@@ -288,6 +297,7 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function reduceLeft(f : (ITuple2<K, V> -> ITuple2<K, V> -> ITuple2<K, V>)) : Option<ITuple2<K, V>> {
+		// FIXME
       	return Some(null);
 	}
 	
@@ -306,7 +316,9 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
       	while(--n > -1) {
         	value = f(value, buffer[n]);
       	}
-
+		
+		// FIXME
+		
       	return Some(value);
 	}
 	
@@ -318,7 +330,9 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
       	} else if(0 == n) {
         	return nil.set();
       	}
-
+		
+		// FIXME
+		
       	return this;
 	}
 	
@@ -342,15 +356,21 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 		for(i in 0...n) {
         	p = p.tail;
       	}
+		
+		// FIXME
 
       	return p;
 	}
 	
 	public function takeWhile(f : (ISet<K, V> -> Bool)) : ISet<K, V> {
+		// FIXME
+		
 		return this;
 	}
 	
 	public function zip(that : ISet<Dynamic, Dynamic>) : ISet<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>> {
+		// FIXME
+		
       	return null;
 	}
 	

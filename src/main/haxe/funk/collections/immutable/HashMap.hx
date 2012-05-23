@@ -151,9 +151,9 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
         	}
 
         	p = p.tail;
-      }
+      	}
 
-      return nil.set();
+      	return nil.set();
 	}
 	
 	public function exists(f : (K -> V -> Bool)) : Bool {
