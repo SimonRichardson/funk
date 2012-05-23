@@ -520,13 +520,13 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
       	return p;
 	}
 	
-	public function takeWhile(f : (ISet<K, V> -> Bool)) : ISet<K, V> {
+	public function takeWhile(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
 		var buffer: Array<HashMap<K, V>> = new Array<HashMap<K, V>>();
       	var p: ISet<K, V> = this;
       	var n: Int = 0;
 
       	while(p.nonEmpty) {
-        	if(f(p)) {
+        	if(f(p.head)) {
           		buffer[n++] = new HashMap<K, V>(p.head, null);
           		p = p.tail;
         	} else {
@@ -535,8 +535,8 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
       	}
 
       	var m: Int = n - 1;
-
-      	if(m <= 0) {
+			
+      	if(m < 0) {
         	return nil.set();
       	}
       

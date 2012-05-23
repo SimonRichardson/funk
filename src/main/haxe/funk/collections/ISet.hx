@@ -76,7 +76,7 @@ interface ISet<K, V> implements IProduct, implements ICollection<V> {
 
     function takeRight(n: Int): ISet<K, V>;
 
-    function takeWhile(f : (ISet<K, V> -> Bool)) : ISet<K, V>;
+    function takeWhile(f : (ITuple2<K, V> -> Bool)) : ISet<K, V>;
 
     function zip(that: ISet<Dynamic, Dynamic>): ISet<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>>;
 }

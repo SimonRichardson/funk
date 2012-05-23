@@ -271,8 +271,25 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function partition(f : (K -> V -> Bool)) : ITuple2<ISet<K, V>, ISet<K, V>> {
-		// FIXME
-      	return tuple2(nil.set(), nil.set()).instance();
+		var left : HashMap<K, V> = new HashMap<K, V>();
+		var right : HashMap<K, V> = new HashMap<K, V>();
+		
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			var k : K = _keys.get(i);
+			var v : V = _values.get(i);
+			if(f(k, v)) {
+				left._keys.set(left._length, k);
+				left._values.set(left._length, v);
+				left._length++;
+			} else {
+				right._keys.set(right._length, k);
+				right._values.set(right._length, v);
+				right._length++;
+			}
+		}
+		
+      	return tuple2(left.size == 0 ? nil.set() : left, right.size == 0 ? nil.set() : right).instance();
 	}
 	
 	override public function equals(that: IFunkObject): Bool {
@@ -314,28 +331,28 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function reduceLeft(f : (ITuple2<K, V> -> ITuple2<K, V> -> ITuple2<K, V>)) : Option<ITuple2<K, V>> {
-		// FIXME
-      	return Some(null);
+		var keys : Array<Int> = _keys.keys().toArray();
+		var key : Int = keys.shift();
+		
+		var value: ITuple2<K, V> = tuple2(_keys.get(key), _values.get(key)).instance();
+		for(i in keys) {
+			value = f(value, tuple2(_keys.get(i), _values.get(i)).instance());
+		}
+
+      	return Some(value);
 	}
 	
 	public function reduceRight(f : (ITuple2<K, V> -> ITuple2<K, V> -> ITuple2<K, V>)) : Option<ITuple2<K, V>> {
-		var buffer: Array<ITuple2<K, V>> = new Array<ITuple2<K, V>>();
+		var keys : Array<Int> = _keys.keys().toArray();
+		keys.reverse();
 		
-		var p: ISet<K, V> = this;
-		while(p.nonEmpty) {
-        	buffer.push(p.head); 
-        	p = p.tail;
-      	}
+		var key : Int = keys.shift();
 		
-      	var value: ITuple2<K, V> = buffer.pop();
-      	var n: Int = buffer.length;
+		var value: ITuple2<K, V> = tuple2(_keys.get(key), _values.get(key)).instance();
+		for(i in keys) {
+			value = f(value, tuple2(_keys.get(i), _values.get(i)).instance());
+		}
 
-      	while(--n > -1) {
-        	value = f(value, buffer[n]);
-      	}
-		
-		// FIXME
-		
       	return Some(value);
 	}
 	
@@ -345,11 +362,19 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 		if(n > size) {
         	return this;
       	} else if(0 == n) {
-        	return nil.set();
+        	return this;
       	}
 		
-		// FIXME
+		var keys : Array<Int> = _keys.keys().toArray();
+		keys.reverse();
 		
+		var index : Int = size - n;
+		while(--index > -1) {
+			_keys.remove(keys[index]);
+			_values.remove(keys[index]);
+			_length--;
+		}
+			
       	return this;
 	}
 	
@@ -359,36 +384,57 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 		if(n > size) {
         	return this;
       	} else if(0 == n) {
-        	return nil.set();
-      	}
-
-      	n = size - n;
-
-      	if(n <= 0) {
         	return this;
       	}
-
-      	var p: ISet<K, V> = this;
 		
-		for(i in 0...n) {
-        	p = p.tail;
-      	}
-		
-		// FIXME
-
-      	return p;
+		var keys : Array<Int> = _keys.keys().toArray();
+		var index : Int = size - n;
+		while(--index > -1) {
+			_keys.remove(keys[index]);
+			_values.remove(keys[index]);
+			_length--;
+		}
+			
+      	return this;
 	}
 	
-	public function takeWhile(f : (ISet<K, V> -> Bool)) : ISet<K, V> {
-		// FIXME
+	public function takeWhile(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
+		var buffer : Array<ITuple2<K, V>> = new Array<ITuple2<K, V>>();
+		var keys : Array<Int> = _keys.keys().toArray();
+		var c : Int = 0;
+		for(i in keys) {
+			var k : K = _keys.get(i);
+			var v : V = _values.get(i);
+			var t : ITuple2<K, V> = tuple2(k, v).instance();
+			if(f(t)) {
+				buffer[c++] = t;
+			} else {
+				break;
+			}
+		}
+		
+		_keys = new IntHash<K>();
+		_values = new IntHash<V>();
+		_length = 0;
+		
+		for(tuple in buffer) {
+			_keys.set(_length, tuple._1);
+			_values.set(_length, tuple._2);
+			_length++;
+		}
 		
 		return this;
 	}
 	
 	public function zip(that : ISet<Dynamic, Dynamic>) : ISet<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>> {
-		// FIXME
+		var n : Int = Std.int(Math.min(size, that.size));
+		var buffer = new HashMap<ITuple2<K, V>, ITuple2<Dynamic, Dynamic>>();
 		
-      	return null;
+		for(i in 0...n) {
+			buffer.add(get(i).get(), that.get(i).get());
+		}
+		
+      	return buffer;
 	}
 	
 	public function addIterator(iterator : Iterator<ITuple2<K, V>>) : ISet<K, V> {

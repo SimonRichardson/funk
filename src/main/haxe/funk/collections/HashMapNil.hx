@@ -151,7 +151,7 @@ class HashMapNil<K, V> extends Product, implements ISet<K, V> {
 		return _factory.createNilSet();
 	}
 	
-	public function takeWhile(f : (ISet<K, V> -> Bool)) : ISet<K, V> {
+	public function takeWhile(f : (ITuple2<K, V> -> Bool)) : ISet<K, V> {
 		return _factory.createNilSet();
 	}
 	
