@@ -1,0 +1,11 @@
+# Package up the lib
+-cmd rm -rf bin/release
+-cmd cp -r src/main/haxe bin/release
+-cmd cp haxelib.xml bin/release
+-cmd cd bin/release
+-cmd zip -r release.zip *
+-cmd cd ../../
+-cmd mv bin/release/release.zip bin/release.zip
+
+# Test against haxelib
+-cmd haxelib test bin/release.zip
