@@ -15,3 +15,7 @@ along with Apparat. If not, see <http://www.gnu.org/licenses/>.
 
 Copyright (C) 2010 Joa Ebert
 http://www.joa-ebert.com/
+
+Additions:
+Copyright (C) 2012 Simon Richardson
+https://github.com/stickupkid
