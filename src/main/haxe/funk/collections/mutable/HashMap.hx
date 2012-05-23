@@ -149,12 +149,34 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function filter(f : (K -> V -> Bool)) : ISet<K, V> {
-		// FIXME
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			var k : K = _keys.get(i);
+			var v : V = _values.get(i);
+			
+			if(!f(k, v)) {
+				_keys.remove(i);
+				_values.remove(i);
+				
+				_length -= 1;
+			}
+		}
 		return this;
 	}
 	
 	public function filterNot(f : (K -> V -> Bool)) : ISet<K, V> {
-		// FIXME
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			var k : K = _keys.get(i);
+			var v : V = _values.get(i);
+			
+			if(f(k, v)) {
+				_keys.remove(i);
+				_values.remove(i);
+				
+				_length -= 1;
+			}
+		}
 		return this;
 	}
 	
@@ -171,58 +193,48 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function flatMap(f : (ITuple2<K, V> -> ISet<K, V>)) : ISet<K, V> {
-		var n: Int = size;
-      	var buffer: Array<ISet<K, V>> = new Array<ISet<K, V>>();
-      	var p: ISet<K, V> = this;
-      	var i: Int = 0;
-
-      	while(p.nonEmpty) {
-			// TODO (Simon) We should verify the type.
-        	buffer[i++] = f(p.head); 
-        	p = p.tail;
-      	}
-
-      	var s: ISet<K, V> = buffer[--n];
-
+		var buffer: Array<ISet<K, V>> = new Array<ISet<K, V>>();
+		var keys : Iterator<Int> = _keys.keys();
+		var c : Int = 0;
+		for(i in keys) {
+			buffer[c++] = f(tuple2(_keys.get(i), _values.get(i)).instance());
+		}
+		
+		_keys = new IntHash<K>();
+		_values = new IntHash<V>();
+		
+		_length = 0;
+		
+		var n : Int = buffer.length;
       	while(--n > -1) {
-        	s = s.addAll(buffer[n]);
+        	addAll(buffer[n]);
       	}
 		
-		// FIXME
-
-      	return s;
+      	return this;
 	}
 	
 	public function foldLeft(x : ITuple2<K, V>, f : (ITuple2<K, V> -> ITuple2<K, V> -> ITuple2<K, V>)) : ITuple2<K, V> {
 		var value: ITuple2<K, V> = x;
       	var p: ISet<K, V> = this;
 
-      	while(p.nonEmpty) {
-        	value = f(value, p.head);
-        	p = p.tail;
-      	}
-		
-		// FIXME
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			value = f(value, tuple2(_keys.get(i), _values.get(i)).instance());
+		}
 
       	return value;
 	}
 	
 	public function foldRight(x : ITuple2<K, V>, f : (ITuple2<K, V> -> ITuple2<K, V> -> ITuple2<K, V>)) : ITuple2<K, V> {
 		var value: ITuple2<K, V> = x;
-      	var buffer: Array<ITuple2<K, V>> = new Array<ITuple2<K, V>>();
+      	var p: ISet<K, V> = this;
+
+		var keys : Array<Int> = _keys.keys().toArray();
+		keys.reverse();
 		
-		var p: ISet<K, V> = this;
-		while(p.nonEmpty) {
-        	buffer.push(p.head); 
-        	p = p.tail;
-      	}
-		
-		var n : Int = buffer.length;
-      	while(--n > -1) {
-        	value = f(value, buffer[n]);
-      	}
-		
-		// FIXME
+		for(i in keys) {
+			value = f(value, tuple2(_keys.get(i), _values.get(i)).instance());
+		}
 
       	return value;
 	}
@@ -249,7 +261,12 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	public function map(f : (ITuple2<K, V> -> ITuple2<K, V>)) : ISet<K, V> {
-		// FIXME
+		var keys : Iterator<Int> = _keys.keys();
+		for(i in keys) {
+			var t : ITuple2<K,V> = f(tuple2(_keys.get(i), _values.get(i)).instance());
+			_keys.set(i, t._1);
+			_values.set(i, t._2);
+		}
 		return this;
 	}
 	
