@@ -778,10 +778,6 @@ class List<T> extends Product, implements IList<T> {
       	while(p.nonEmpty) {
         	++length;
         	p = p.tail;
-			
-			if(p == null) {
-				break;
-			}
       	}
 
       	_length = length;
