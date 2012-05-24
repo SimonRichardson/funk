@@ -7,37 +7,46 @@ import funk.collections.mutable.Nil;
 import funk.collections.IteratorUtil;
 import funk.FunkObject;
 import funk.product.Product;
+import funk.product.ProductIterator;
 
 using funk.option.Option;
 using funk.collections.mutable.Nil;
 
-class ListIterator<T> extends Product, implements IFunkObject {
+private typedef MutableList<T> = {
+	var _data : Array<T>;
+}
+
+class ListIterator<T> extends Product, implements IFunkObject, implements IProductIterator<T> {
 	
 	private var _array : Array<T>;
+	
+	private var _pointer : Int;
 	
 	public function new(l : IList<T>) {
 		super();
 		
-		_array = l.toArray;
+		var mutable : MutableList<T> = cast l;
+		_array = mutable._data;
+		_pointer = _array.length - 1;
 	}
 	
 	public function hasNext() : Bool {
-		return _array.length > 0;
+		return _pointer >= 0;
 	}
 	
 	public function next() : T {
-		return if(_array.length == 0) {
+		return if(_pointer < 0) {
 			throw new NoSuchElementError();
 		} else {
-			_array.shift();
+			_array[_pointer--];
 		}
 	}
 	
 	public function nextOption() : Option<T> {
-		return if(_array.length == 0) {
+		return if(_pointer < 0) {
 			None;
 		} else {
-			Some(_array.shift());
+			Some(_array[_pointer--]);
 		}
 	}
 	

@@ -1,21 +1,28 @@
 package funk.collections.immutable;
 
-import funk.collections.immutable.Nil;
 import funk.errors.NoSuchElementError;
+import funk.option.Any;
 import funk.option.Option;
-import funk.tuple.Tuple2;
+import funk.collections.IList;
+import funk.collections.immutable.Nil;
+import funk.collections.IteratorUtil;
 import funk.FunkObject;
+import funk.product.Product;
+import funk.product.ProductIterator;
+import funk.tuple.Tuple2;
 
 using funk.collections.IteratorUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Option;
 using funk.tuple.Tuple2;
 
-class HashMapIterator<K, V> {
+class HashMapIterator<K, V> extends Product, implements IFunkObject, implements IProductIterator<ITuple2<K, V>> {
 	
 	private var _set : ISet<K, V>;
 	
 	public function new(l : ISet<K, V>) {
+		super();
+		
 		_set = l;
 	}
 	
@@ -43,9 +50,21 @@ class HashMapIterator<K, V> {
 		}
 	}
 	
-	public function equals(that: IFunkObject): Bool {
+	override public function equals(that: IFunkObject): Bool {
       	return IteratorUtil.eq(this, that);
     }
+	
+	override public function productElement(index : Int) : Dynamic {
+		return _set.productElement(index);
+	}
+	
+	override private function get_productArity() : Int {
+		return _set.size;
+	}
+
+	override private function get_productPrefix() : String {
+		return "HashMapIterator";
+	}
 }
 
 class HashMapIteratorType {

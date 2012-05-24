@@ -1,7 +1,8 @@
 package funk.signal;
 import funk.product.Product;
 
-interface ISlot implements Product {
+interface ISlot implements IProduct {
+	
 	var once(default, default) : Bool;
 	
 	var enabled(default, default)  : Bool;

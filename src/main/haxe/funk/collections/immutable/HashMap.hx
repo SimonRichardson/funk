@@ -6,6 +6,7 @@ import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.FunkObject;
 import funk.product.Product;
+import funk.product.ProductIterator;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 import funk.unit.Expect;
@@ -599,6 +600,10 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
       	throw new NoSuchElementError();
 	}
 	
+	override public function iterator() : IProductIterator<Dynamic> {
+		return new HashMapIterator<K, V>(this);
+	}
+	
 	private function get_nonEmpty() : Bool {
 		return true;
 	}
@@ -700,10 +705,6 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 		return flatMap(function(x: Dynamic): ISet<K, V> { 
 			return Std.is(x, ISet) ? cast x : x.toSet(); 
 		});
-	}
-	
-	private function get_iterator() : Iterator<Dynamic> {
-		return new HashMapIterator<Dynamic, Dynamic>(this);
 	}
 	
 	override private function get_productArity() : Int {

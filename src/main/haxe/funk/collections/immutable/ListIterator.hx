@@ -1,17 +1,20 @@
 package funk.collections.immutable;
 
 import funk.errors.NoSuchElementError;
+import funk.option.Any;
 import funk.option.Option;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
 import funk.collections.IteratorUtil;
 import funk.FunkObject;
 import funk.product.Product;
+import funk.product.ProductIterator;
 
+using funk.option.Any;
 using funk.option.Option;
 using funk.collections.immutable.Nil;
 
-class ListIterator<T> extends Product, implements IFunkObject {
+class ListIterator<T> extends Product, implements IFunkObject, implements IProductIterator<T> {
 	
 	private var _list : IList<T>;
 	
@@ -22,7 +25,7 @@ class ListIterator<T> extends Product, implements IFunkObject {
 	}
 	
 	public function hasNext() : Bool {
-		return _list.nonEmpty;
+		return _list == null ? false : _list.nonEmpty;
 	}
 	
 	public function next() : T {

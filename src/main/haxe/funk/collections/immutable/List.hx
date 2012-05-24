@@ -8,6 +8,7 @@ import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.FunkObject;
 import funk.product.Product;
+import funk.product.ProductIterator;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 import funk.unit.Expect;
@@ -664,10 +665,9 @@ class List<T> extends Product, implements IList<T> {
 	
 	override public function productElement(i : Int) : Dynamic {
 		var p: IList<T> = this;
-
       	while(p.nonEmpty) {
         	if(i == 0) {
-        	  return p.head;
+        		return p.head;
         	}
 
         	p = p.tail;
@@ -675,6 +675,10 @@ class List<T> extends Product, implements IList<T> {
       	}
 
       	throw new NoSuchElementError();
+	}
+	
+	override public function iterator() : IProductIterator<Dynamic> {
+		return new ListIterator<T>(this);
 	}
 	
 	private function get_nonEmpty() : Bool {
@@ -774,6 +778,10 @@ class List<T> extends Product, implements IList<T> {
       	while(p.nonEmpty) {
         	++length;
         	p = p.tail;
+			
+			if(p == null) {
+				break;
+			}
       	}
 
       	_length = length;
@@ -803,10 +811,6 @@ class List<T> extends Product, implements IList<T> {
 		return flatMap(function(x: Dynamic): IList<T> { 
 			return Std.is(x, IList) ? cast x : x.toList(); 
 		});
-	}
-	
-	private function get_iterator() : Iterator<Dynamic> {
-		return new ListIterator<Dynamic>(this);
 	}
 	
 	override private function get_productArity() : Int {
