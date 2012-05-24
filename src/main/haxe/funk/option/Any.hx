@@ -27,7 +27,7 @@ class AnyType {
 	}
 	
 	inline public static function asOption<T>(value : T) : Option<T> {
-		return Some(value);
+		return AnyType.isEmpty(value) ? None : Some(value);
 	}
 	
 	inline public static function toList<T>(value : T) : IList<T> {
