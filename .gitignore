@@ -8,5 +8,5 @@
 *.n
 *.swf
 *.log
-bin/munit
 *_test.*
+bin/*
