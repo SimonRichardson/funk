@@ -42,4 +42,10 @@ class ExpectUtil {
 			case expect(x): Assert.isNotNull(x);
 		}
 	}
+	
+	public static function toBeOfType<T>(e : Expect, type : Class<T>) : Void {
+		switch(e) {
+			case expect(x): Assert.isTrue(Std.is(x, type));
+		}
+	}
 }

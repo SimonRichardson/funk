@@ -2,6 +2,7 @@ package funk.collections.immutable;
 
 import funk.collections.immutable.Nil;
 import funk.errors.ArgumentError;
+import funk.errors.RangeError;
 import funk.option.Option;
 import funk.unit.Expect;
 import funk.Wildcard;
@@ -164,6 +165,41 @@ class NilTest {
 	}
 	
 	@Test
+	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_null() : Void {
+		should("return nil when calling null on indexOf").expect(nil.list().indexOf(null)).toBeEqualTo(-1);
+	}
+	
+	@Test
+	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_true() : Void {
+		should("return nil when calling true on indexOf").expect(nil.list().indexOf(true)).toBeEqualTo(-1);
+	}
+	
+	@Test
+	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_false() : Void {
+		should("return nil when calling false on indexOf").expect(nil.list().indexOf(false)).toBeEqualTo(-1);
+	}
+	
+	@Test
+	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_array() : Void {
+		should("return nil when calling [] on indexOf").expect(nil.list().indexOf([])).toBeEqualTo(-1);
+	}
+	
+	@Test
+	public function when_zip_on_nil__should_not_be_null() : Void {
+		should("zip be not null").expect(nil.list().zip(nil.list())).toBeNotNull();
+	}
+	
+	@Test
+	public function when_zip_on_nil__should_be_equal_to_nil() : Void {
+		should("zip be nil").expect(nil.list().zip(nil.list())).toBeEqualTo(nil.list());
+	}
+	
+	@Test
+	public function when_zip_on_nil__should_be_equal_to_nil_even_if_other_is_not_empty() : Void {
+		should("zip be nil even if other not empty").expect(nil.list().zip(nil.list().prepend(1))).toBeEqualTo(nil.list());
+	}
+	
+	@Test
 	public function when_find_on_nil__should_not_call_findIndexOf() : Void {
 		should("not throw an error when calling findIndexOf on nil").expect(nil.list().findIndexOf(function(x : Dynamic):Bool {
 			should("not be called").fail();
@@ -216,7 +252,37 @@ class NilTest {
 			return 0;
 		})).toBeEqualTo(0);
 	}
+
+	@Test
+	public function when_take_on_nil__should_not_return_null() : Void {
+		should("calling take should not return null").expect(nil.list().take(0)).toBeNotNull();
+	}
 	
+	@Test
+	public function when_take_on_nil__should_return_nil_list() : Void {
+		should("return nil when calling take").expect(nil.list().take(0)).toBeEqualTo(nil.list());
+	}
+	
+	@Test
+	public function when_take_on_nil__should_return_nil_list_with_1() : Void {
+		should("return nil when calling take with 1").expect(nil.list().take(1)).toBeEqualTo(nil.list());
+	}
+	
+	@Test
+	public function when_takeRight_on_nil__should_not_return_null() : Void {
+		should("calling takeRight should not return null").expect(nil.list().takeRight(0)).toBeNotNull();
+	}
+	
+	@Test
+	public function when_takeRight_on_nil__should_return_nil_list() : Void {
+		should("return nil when calling takeRight").expect(nil.list().takeRight(0)).toBeEqualTo(nil.list());
+	}
+	
+	@Test
+	public function when_takeRight_on_nil__should_return_nil_list_with_1() : Void {
+		should("return nil when calling takeRight").expect(nil.list().takeRight(1)).toBeEqualTo(nil.list());
+	}
+
 	@Test
 	public function when_contains_on_nil__should_not_contain_null() : Void {
 		should("not contain null").expect(nil.list().contains(null)).toBeFalsy();
@@ -315,5 +381,30 @@ class NilTest {
 	@Test
 	public function when_zipWithIndex_on_nil__should_be_equal_to_nil() : Void {
 		should("zipWithIndex be nil").expect(nil.list().zipWithIndex).toBeEqualTo(nil.list());
+	}
+	
+	@Test
+	public function when_productArity_on_nil__should_be_equal_to_0() : Void {
+		should("productArity be nil").expect(nil.list().productArity).toBeEqualTo(0);
+	}
+	
+	@Test
+	public function when_calling_productElement_on_nil__should_throw_RangeError() : Void {
+		try {
+			nil.list().productElement(0);
+		} catch(e : RangeError) {
+			should("throw range error").expect(e).toBeOfType(RangeError);
+		}
+	}
+	
+	@Test
+	public function when_calling_appendAll_on_nil__should_not_be_null() : Void {
+		should("return same instance when calling appendAll").expect(nil.list().appendAll(nil.list().prepend(1))).toBeNotNull();
+	}
+	
+	@Test
+	public function when_calling_appendAll_on_nil__should_return_same_instance() : Void {
+		var o = nil.list().prepend(1);
+		should("return same instance when calling appendAll").expect(nil.list().appendAll(o)).toBeEqualTo(o);
 	}
 }
