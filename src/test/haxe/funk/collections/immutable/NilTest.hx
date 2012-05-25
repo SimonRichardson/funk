@@ -306,4 +306,14 @@ class NilTest {
 	public function when_tailOption_on_nil__should_be_None() : Void {
 		should("tailOption be None").expect(nil.list().tailOption).toBeEqualTo(None);
 	}
+	
+	@Test
+	public function when_zipWithIndex_on_nil__should_not_be_null() : Void {
+		should("zipWithIndex be not null").expect(nil.list().zipWithIndex).toBeNotNull();
+	}
+	
+	@Test
+	public function when_zipWithIndex_on_nil__should_be_equal_to_nil() : Void {
+		should("zipWithIndex be nil").expect(nil.list().zipWithIndex).toBeEqualTo(nil.list());
+	}
 }

@@ -1,6 +1,10 @@
+-cmd rm -rf bin/test
+-cmd mkdir bin/test
+
 # js
 
--js bin/js/static/js-debug/App_test.js
+--next
+-js bin/test/App_test.js
 -main TestMain
 -cp src/main/haxe
 -cp src/test/haxe
@@ -9,10 +13,22 @@
 -lib hamcrest
 --js-modern
 
+# swf
+
+--next
+-swf bin/test/as3_test.swf
+-swf-version 11
+-main TestMain
+-cp src/main/haxe
+-cp src/test/haxe
+-debug
+-lib munit
+-lib hamcrest
+
 # neko
 
 --next
--neko bin/neko/App_test.n
+-neko bin/test/App_test.n
 -main TestMain
 -cp src/main/haxe
 -cp src/test/haxe
@@ -21,6 +37,4 @@
 -lib hamcrest
 
 --next
--cmd haxelib run munit test
--cmd haxelib run munit run bin/js/static/js-debug -js 
--cmd haxelib run munit run bin/neko -neko
+-cmd haxelib run munit test -js -swf -neko
