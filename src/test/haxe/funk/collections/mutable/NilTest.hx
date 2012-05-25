@@ -1,12 +1,12 @@
-package funk.collections.immutable;
+package funk.collections.mutable;
 
 import funk.collections.NilTestBase;
-import funk.collections.immutable.Nil;
+import funk.collections.mutable.Nil;
 
-using funk.collections.immutable.Nil;
+using funk.collections.mutable.Nil;
 
 /**
-* Auto generated MassiveUnit Test Class  for funk.collections.immutable.Nil 
+* Auto generated MassiveUnit Test Class  for funk.collections.mutable.Nil 
 */
 class NilTest extends NilTestBase {
 	
