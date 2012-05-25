@@ -6,10 +6,11 @@ import funk.errors.NoSuchElementError;
 import funk.FunkObject;
 import funk.option.Option;
 import funk.product.Product;
+import funk.product.ProductIterator;
 
 using funk.collections.mutable.Nil;
 
-class NilIterator<T> extends Product, implements IFunkObject {
+class NilIterator<T> extends Product, implements IFunkObject, implements IProductIterator<T> {
 	
 	private var _factory : ICollectionFactory<T>;
 	

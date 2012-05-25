@@ -30,4 +30,16 @@ class ExpectUtil {
 			case expect(x): Assert.areEqual(x, a); 
 		}
 	}
+	
+	public static function toBeNull(e : Expect) : Void {
+		switch(e) {
+			case expect(x): Assert.isNull(x);
+		}
+	}
+	
+	public static function toBeNotNull(e : Expect) : Void {
+		switch(e) {
+			case expect(x): Assert.isNotNull(x);
+		}
+	}
 }

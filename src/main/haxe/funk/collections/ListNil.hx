@@ -7,6 +7,7 @@ import funk.collections.mutable.Nil;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.product.Product;
+import funk.product.ProductIterator;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 import funk.util.Require;
@@ -200,6 +201,10 @@ class ListNil<T> extends Product, implements IList<T> {
 		throw new RangeError();
 	}
 	
+	override public function iterator() : IProductIterator<Dynamic> {
+		return new NilIterator<Dynamic>(_factory);
+	}
+	
 	private function get_nonEmpty() : Bool {
 		return false;
 	}
@@ -253,15 +258,11 @@ class ListNil<T> extends Product, implements IList<T> {
 	}
 
 	private function get_toArray() : Array<T> {
-		return [];
+		return new Array<T>();
 	}
 	
 	private function get_flatten() : IList<T> {
 		return _factory.createNilList();
-	}
-	
-	private function get_iterator() : Iterator<Dynamic> {
-		return new NilIterator<Dynamic>(_factory);
 	}
 	
 	override private function get_productArity() : Int {

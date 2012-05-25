@@ -4,12 +4,14 @@ import funk.collections.immutable.Nil;
 import funk.errors.ArgumentError;
 import funk.option.Option;
 import funk.unit.Expect;
+import funk.Wildcard;
 import unit.ExpectUtil;
 import unit.Should;
 
 using funk.collections.immutable.Nil;
 using funk.unit.Expect;
 using funk.option.Option;
+using funk.Wildcard;
 using unit.ExpectUtil;
 using unit.Should;
 
@@ -56,6 +58,7 @@ class NilTest {
 	}
 	
 	@Test
+	@Expect("funk.errors.ArgumentError")
 	public function when_drop_on_nil__throw_argument_when_passing_minus_to_drop() : Void {
 		try {
 			nil.list().drop(-1);
@@ -131,7 +134,7 @@ class NilTest {
 	}
 	
 	@Test
-	public function when_filter_on_nil__should_not_call_filterNot() : Void {
+	public function when_filterNot_on_nil__should_not_throw_error() : Void {
 		should("not throw an error when calling filterNot on nil").expect(nil.list().filterNot(function(x : Dynamic):Bool {
 			should("not be called").fail();
 			return false;
@@ -186,5 +189,121 @@ class NilTest {
 	@Test
 	public function when_flatten_on_nil__should_return_list() : Void {
 		should("return nil when calling flatten").expect(nil.list().flatten).toBeEqualTo(nil.list());
+	}
+	
+	@Test
+	public function when_fold_on_nil__should_foldLeft_should_return_0() : Void {
+		should("return 0 when calling foldLeft").expect(nil.list().foldLeft(0, _.plus_)).toBeEqualTo(0);
+	}
+	
+	@Test
+	public function when_fold_on_nil__should_not_call_foldLeft() : Void {
+		should("return 0 when calling foldLeft").expect(nil.list().foldLeft(0, function(x:Int, y:Int):Int {
+			should("not be called").fail();
+			return 0;
+		})).toBeEqualTo(0);
+	}
+	
+	@Test
+	public function when_fold_on_nil__should_foldRight_should_return_0() : Void {
+		should("return 0 when calling foldRight").expect(nil.list().foldRight(0, _.plus_)).toBeEqualTo(0);
+	}
+	
+	@Test
+	public function when_fold_on_nil__should_not_call_foldRight() : Void {
+		should("return 0 when calling foldRight").expect(nil.list().foldRight(0, function(x:Int, y:Int):Int {
+			should("not be called").fail();
+			return 0;
+		})).toBeEqualTo(0);
+	}
+	
+	@Test
+	public function when_contains_on_nil__should_not_contain_null() : Void {
+		should("not contain null").expect(nil.list().contains(null)).toBeFalsy();
+	}
+	
+	@Test
+	public function when_contains_on_nil__should_not_contain_true() : Void {
+		should("not contain true").expect(nil.list().contains(true)).toBeFalsy();
+	}
+	
+	@Test
+	public function when_contains_on_nil__should_not_contain_object() : Void {
+		should("not contain {}").expect(nil.list().contains({})).toBeFalsy();
+	}
+	
+	@Test
+	public function when_contains_on_nil__should_not_contain_array() : Void {
+		should("not contain []").expect(nil.list().contains([])).toBeFalsy();
+	}
+	
+	@Test
+	public function when_toArray_on_nil__should_not_be_null() : Void {
+		should("not be null").expect(nil.list().toArray).toBeNotNull();
+	}
+	
+	@Test
+	public function when_toArray_on_nil__should_be_length_0() : Void {
+		should("not be 0").expect(nil.list().toArray.length).toBeEqualTo(0);
+	}
+	
+	@Test
+	public function when_head_on_nil__should_be_null() : Void {
+		should("head be null").expect(nil.list().head).toBeNull();
+	}
+	
+	@Test
+	public function when_headOption_on_nil__should_be_None() : Void {
+		should("headOption be None").expect(nil.list().headOption).toBeEqualTo(None);
+	}
+	
+	@Test
+	public function when_indices_on_nil__should_not_be_null() : Void {
+		should("indices be not null").expect(nil.list().indices).toBeNotNull();
+	}
+	
+	@Test
+	public function when_indices_on_nil__should_be_equal_to_nil() : Void {
+		should("indices be nil").expect(nil.list().indices).toBeEqualTo(nil.list());
+	}
+	
+	@Test
+	public function when_init_on_nil__should_not_be_null() : Void {
+		should("init be not null").expect(nil.list().init).toBeNotNull();
+	}
+	
+	@Test
+	public function when_init_on_nil__should_be_equal_to_nil() : Void {
+		should("init be nil").expect(nil.list().init).toBeEqualTo(nil.list());
+	}
+	
+	@Test
+	public function when_last_on_nil__should_not_be_null() : Void {
+		should("last be not null").expect(nil.list().last).toBeNotNull();
+	}
+	
+	@Test
+	public function when_last_on_nil__should_be_equal_to_nil() : Void {
+		should("last be None").expect(nil.list().last).toBeEqualTo(None);
+	}
+	
+	@Test
+	public function when_reverse_on_nil__should_not_be_null() : Void {
+		should("reverse be not null").expect(nil.list().reverse).toBeNotNull();
+	}
+	
+	@Test
+	public function when_reverse_on_nil__should_be_equal_to_nil() : Void {
+		should("reverse be nil").expect(nil.list().reverse).toBeEqualTo(nil.list());
+	}
+	
+	@Test
+	public function when_tail_on_nil__should_be_null() : Void {
+		should("tail be null").expect(nil.list().tail).toBeNull();
+	}
+	
+	@Test
+	public function when_tailOption_on_nil__should_be_None() : Void {
+		should("tailOption be None").expect(nil.list().tailOption).toBeEqualTo(None);
 	}
 }
