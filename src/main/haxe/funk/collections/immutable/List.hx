@@ -2,7 +2,7 @@ package funk.collections.immutable;
 
 import funk.collections.IList;
 import funk.collections.IteratorUtil;
-import funk.collections.ListUtil;
+import funk.collections.immutable.ListUtil;
 import funk.collections.immutable.Nil;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
@@ -15,7 +15,7 @@ import funk.unit.Expect;
 import funk.util.Require;
 
 using funk.collections.IteratorUtil;
-using funk.collections.ListUtil;
+using funk.collections.immutable.ListUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Option;
 using funk.tuple.Tuple2;

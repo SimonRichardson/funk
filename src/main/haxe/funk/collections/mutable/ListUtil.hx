@@ -1,8 +1,8 @@
-package funk.collections;
+package funk.collections.mutable;
 
-import funk.collections.immutable.Nil;
+import funk.collections.mutable.Nil;
 
-using funk.collections.immutable.Nil;
+using funk.collections.mutable.Nil;
 
 class ListUtil {
 	

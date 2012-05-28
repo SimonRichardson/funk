@@ -13,7 +13,6 @@ import funk.unit.Expect;
 import funk.util.Require;
 
 using funk.collections.IteratorUtil;
-using funk.collections.ListUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Option;
 using funk.tuple.Tuple2;

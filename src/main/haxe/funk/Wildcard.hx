@@ -1,7 +1,7 @@
 package funk;
 
 import funk.collections.IList;
-import funk.collections.ListUtil;
+import funk.collections.immutable.ListUtil;
 import funk.unit.Expect;
 
 using funk.unit.Expect;

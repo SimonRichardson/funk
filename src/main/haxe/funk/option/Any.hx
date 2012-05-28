@@ -2,7 +2,7 @@ package funk.option;
 
 import funk.option.Option;
 import funk.collections.IList;
-import funk.collections.ListUtil;
+import funk.collections.immutable.ListUtil;
 
 class AnyType {
 	

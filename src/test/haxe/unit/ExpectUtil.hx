@@ -1,6 +1,7 @@
 package unit;
 
 import massive.munit.Assert;
+import funk.option.Option;
 import funk.unit.Expect;
 
 using funk.unit.Expect;
@@ -15,13 +16,24 @@ class ExpectUtil {
 	
 	public static function toBeTruthy(e : Expect) : Void {
 		switch(e) {
-			case expect(x): Assert.isTrue(x); 
+			case expect(x): Assert.isTrue(x);
 		}
 	}
 	
 	public static function toBeEqualTo(e : Expect, a : Dynamic) : Void {
 		switch(e) {
-			case expect(x): Assert.areEqual(x, a); 
+			case expect(x):
+				var xValue = switch(x) {
+					case None: null;
+					case Some(s): s;
+					default: x;
+				};
+				var aValue = switch(a) {
+					case None: null;
+					case Some(s): s;
+					default: a;
+				};
+				Assert.areEqual(xValue, aValue); 
 		}
 	}
 	
