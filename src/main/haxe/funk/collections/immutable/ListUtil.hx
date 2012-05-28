@@ -6,6 +6,14 @@ using funk.collections.immutable.Nil;
 
 class ListUtil {
 	
+	public static function fill<A>(n : Int, f : (Void -> A)) : IList<A> {
+		var l = nil.list();
+		while(--n > -1) {
+       		l = l.prepend(f());
+       	}
+		return l;
+	}
+	
 	public static function toList<A>(any : A) : IList<A> {
 		var l = nil.list();
 		var n : Int;

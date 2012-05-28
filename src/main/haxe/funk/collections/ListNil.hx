@@ -121,8 +121,8 @@ class ListNil<T> extends Product, implements IList<T> {
 		return None;
 	}
 	
-	public function map(f : (T -> T)) : IList<T> {
-		return _factory.createNilList();
+	public function map<E>(f : (T -> E)) : IList<E> {
+		return cast _factory.createNilList();
 	}
 	
 	public function partition(f : (T -> Bool)) : ITuple2<IList<T>, IList<T>> {

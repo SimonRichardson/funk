@@ -12,6 +12,12 @@ enum Wildcard {
 
 class WildcardType {
 	
+	public static function invoke<T, E>(wildcard : Wildcard, name : String) : T -> E {
+		return function(x : T) : E {
+			return Reflect.callMethod(x, Reflect.field(x, name), []);
+		}
+	}
+	
 	inline public static function binaryNot(value : Int) : Int {
 		return ~value;
 	}

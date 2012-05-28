@@ -225,12 +225,15 @@ class List<T> extends Product, implements IList<T> {
 		return Some(productElement(index));
 	}
 	
-	public function map(f : (T -> T)) : IList<T> {
+	public function map<E>(f : (T -> E)) : IList<E> {
+		var l:List<E> = new List<E>();
+		
 		var total : Int = _data.length;
 		for(i in 0...total) {
-			_data[i] = f(_data[i]);
+			l._data[i] = f(_data[i]);
 		}
-		return this;
+		
+		return l;
 	}
 	
 	public function partition(f : (T -> Bool)) : ITuple2<IList<T>, IList<T>> {

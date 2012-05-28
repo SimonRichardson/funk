@@ -331,15 +331,15 @@ class List<T> extends Product, implements IList<T> {
 		return Some(productElement(index));
 	}
 	
-	public function map(f : (T -> T)) : IList<T> {
+	public function map<E>(f : (T -> E)) : IList<E> {
 		var n: Int = size;
-      	var buffer: Array<List<T>> = new Array<List<T>>();
+      	var buffer: Array<List<E>> = new Array<List<E>>();
       	var m: Int = n - 1;
 
       	var p: IList<T> = this;
 
       	for(i in 0...n) {
-        	buffer[i] = new List<T>(f(p.head), null);
+        	buffer[i] = new List<E>(f(p.head), null);
         	p = p.tail;
       	}
 

@@ -1,0 +1,9 @@
+-swf ../../bin/swf/Example01.swf
+-swf-header 400:400:60:dfdfdf
+-swf-version 11
+-main Example01
+-cp main/haxe
+-lib funk
+-debug
+--flash-strict
+--dead-code-elimination

@@ -64,7 +64,7 @@ interface IList<T> implements IProduct, implements ICollection<T> {
 
     function indexOf(value: T): Int;
 
-    function map(f: (T -> T)): IList<T>;
+    function map<E>(f: (T -> E)): IList<E>;
 
     function partition(f: (T -> Bool)): ITuple2<IList<T>, IList<T>>;
 
