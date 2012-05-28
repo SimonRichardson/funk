@@ -109,11 +109,7 @@ class ProductOption<T> extends Product {
 	}
 	
 	override private function get_productPrefix() : String {
-		// TODO (Simon) : We can be more clever about this : Type.getEnumName
-		return switch(_option) {
-			case Some(value): "Some";
-			case None: "None";
-		}
+		return Type.enumConstructor(_option);
 	}
 	
 	override public function productElement(index : Int) : Dynamic {
