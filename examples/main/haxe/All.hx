@@ -37,6 +37,7 @@ import funk.ioc.IProvider;
 import funk.ioc.IScope;
 import funk.ioc.Module;
 import funk.Lazy;
+import funk.macro.WildcardMacro;
 import funk.option.Any;
 import funk.option.Option;
 import funk.Pass;

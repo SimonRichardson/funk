@@ -1,33 +1,47 @@
 package;
 
 import All;
-import funk.collections.immutable.List;
-import funk.collections.immutable.Nil;
-import funk.collections.ICollection;
 import funk.collections.IList;
-import funk.collections.ISet;
-import funk.collections.ListNil;
-import funk.option.Option;
+import funk.collections.immutable.ListUtil;
 import funk.tuple.Tuple2;
-import funk.unit.Expect;
+import funk.Pass;
 import funk.Wildcard;
-import haxe.Timer;
-import funk.util.Reflect;
 
-using funk.collections.immutable.Nil;
-using funk.tuple.Tuple2;
-using funk.unit.Expect;
+using funk.collections.immutable.ListUtil;
+using funk.Pass;
 using funk.Wildcard;
+using Std;
 
 class Main {
 	
 	public function new(){
-		var o : Option<Int> = Some(10);
-		trace(Type.enumConstructor(o));
-		trace(Reflect.is(Some(10), Some(11)));
+		
+		var items = 4.fill(Item.instanceOf());
+		
+		items.map(_.method).foreach(function(m):Void {
+			trace(m());
+		});
 	}
 	
 	public static function main() : Void {
 		new Main();
+	}
+}
+
+class Item {
+	
+	public function new(){
+		
+	}
+	
+	public function method():Method {
+		return new Method();
+	}
+}
+
+class Method {
+	
+	public function new(){
+		trace("here");
 	}
 }
