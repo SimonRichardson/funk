@@ -19,7 +19,7 @@ class Main {
 		var items = 4.fill(Item.instanceOf());
 		
 		items.map(_.method).foreach(function(m):Void {
-			trace(m());
+			trace(m);
 		});
 	}
 	
@@ -30,11 +30,13 @@ class Main {
 
 class Item {
 	
+	public var method(getMethod, never) : Method;
+	
 	public function new(){
 		
 	}
 	
-	public function method():Method {
+	public function getMethod():Method {
 		return new Method();
 	}
 }

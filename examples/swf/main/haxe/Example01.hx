@@ -8,11 +8,10 @@ import funk.collections.immutable.ListUtil;
 import funk.tuple.Tuple2;
 import funk.Pass;
 import funk.Wildcard;
-import SpriteWildcard;
 
 using funk.collections.immutable.ListUtil;
 using funk.Pass;
-using SpriteWildcard;
+using funk.Wildcard;
 using Std;
 
 class Example01 extends Sprite {
