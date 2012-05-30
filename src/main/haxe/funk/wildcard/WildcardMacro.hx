@@ -1,6 +1,10 @@
-package funk.macro;
+package funk.wildcard;
 
 #if macro
+import funk.macro.IMacroBuilder;
+import funk.macro.MacroFunctionBuilder;
+
+import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
@@ -14,7 +18,7 @@ class WildcardMacro {
         var fields:Array<Field> = Context.getBuildFields();
 		
 		var methodName : String = "method";
-		var code : String = Std.format("public static function $methodName(wildcard:funk.Wildcard, v:Dynamic):Dynamic {
+		var code : String = Std.format("public static function $methodName(wildcard:funk.wildcard.Wildcard, v:Dynamic):Dynamic {
 											return Reflect.getProperty(v, \"$methodName\");
 										}");
 		

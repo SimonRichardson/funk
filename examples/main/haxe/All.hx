@@ -37,7 +37,8 @@ import funk.ioc.IProvider;
 import funk.ioc.IScope;
 import funk.ioc.Module;
 import funk.Lazy;
-import funk.macro.WildcardMacro;
+import funk.macro.IMacroBuilder;
+import funk.macro.MacroFunctionBuilder;
 import funk.option.Any;
 import funk.option.Option;
 import funk.Pass;
@@ -60,5 +61,6 @@ import funk.unit.Expect;
 import funk.util.Reflect;
 import funk.util.Require;
 import funk.util.RequireRange;
-import funk.Wildcard;
+import funk.wildcard.Wildcard;
+import funk.wildcard.WildcardMacro;
 class All{}

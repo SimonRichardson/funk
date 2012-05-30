@@ -36,10 +36,10 @@ class MacroFunctionBuilder implements IMacroBuilder {
                                 pos: f.expr.pos,
                                 meta: []
                             });
-                        default:
+                        default: Context.error("Unexpected Expression", _position);
                     }
                 }
-            default:
+            default: Context.error("Unexpected Block Expression", _position);
         }
 		
 		return fields;

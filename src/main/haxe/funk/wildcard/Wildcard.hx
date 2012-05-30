@@ -1,8 +1,7 @@
-package funk;
+package funk.wildcard;
 
 import funk.collections.IList;
 import funk.collections.immutable.ListUtil;
-import funk.macro.WildcardMacro;
 import funk.unit.Expect;
 
 using funk.unit.Expect;
@@ -11,7 +10,7 @@ enum Wildcard {
 	_;
 }
 
-@:build(funk.macro.WildcardMacro.build()) 
+@:build(funk.wildcard.WildcardMacro.build()) 
 class WildcardType {
 	
 	public static function invoke<T, E>(wildcard : Wildcard, name : String) : T -> E {

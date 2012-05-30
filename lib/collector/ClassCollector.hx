@@ -32,38 +32,37 @@ import neko.io.FileOutput;
 import neko.Lib;
 import neko.Sys;
 
-class ClassCollector
-{
+class ClassCollector {
+	
 	static var _extension:EReg;
 	
 	static var _excludePackage:EReg = null;
 	static var _include:EReg = null;
 	
-	public static function main():Void
-	{
+	static var log:Bool = false;
+	
+	public static function main():Void {
 		var args = Sys.args();
 		
-		if (args.length < 2)
-		{
-			Lib.println("ClassCollector 1.01 - (c) 2009 Michael Baczynski");
-			Lib.println("  Usage : ClassCollector [base directory] [output file] [options]");
-			Lib.println("  Options: ");
-			Lib.println("        -include       package Includes a package or file");
-			Lib.println("        -exclude       package Excludes a package or file");
-			Lib.println("        -class         generates a class with import statements using [output file] as class name");
-			Lib.println("        -property name generates a property file using [output file] as file name and [name] as property name");
-			Lib.println("  Sample usage:");
-			Lib.println("        neko ClassCollector.n ./src output.properties -property classList -include a.b.c -include a/b/c/Class.hx -exclude a.b.c -exclude a/b/c/Class.hx");
-			Lib.println("        neko ClassCollector.n ./src MyClass.hx -class -include a.b.c -include a/b/c/Class.hx -exclude a.b.c -exclude a/b/c/Class.hx");
+		if (args.length < 2) {
+			println("ClassCollector 1.01 - (c) 2009 Michael Baczynski");
+			println("  Usage : ClassCollector [base directory] [output file] [options]");
+			println("  Options: ");
+			println("        -include       package Includes a package or file");
+			println("        -exclude       package Excludes a package or file");
+			println("        -class         generates a class with import statements using [output file] as class name");
+			println("        -property name generates a property file using [output file] as file name and [name] as property name");
+			println("  Sample usage:");
+			println("        neko ClassCollector.n ./src output.properties -property classList -include a.b.c -include a/b/c/Class.hx -exclude a.b.c -exclude a/b/c/Class.hx");
+			println("        neko ClassCollector.n ./src MyClass.hx -class -include a.b.c -include a/b/c/Class.hx -exclude a.b.c -exclude a/b/c/Class.hx");
 			Sys.exit(-1);
 			return;
 		}
 		
 		//base directory
 		var dir = args.shift();
-		if (dir == "-include" || dir == "-exclude")
-		{
-			Lib.println("Error: invalid base directory " + args[0]);
+		if (dir == "-include" || dir == "-exclude") {
+			println("Error: invalid base directory " + args[0]);
 			Sys.exit(-1);
 			return;
 		}
@@ -73,9 +72,8 @@ class ClassCollector
 		
 		//output file
 		var out = args.shift();
-		if (dir == "-include" || dir == "-exclude")
-		{
-			Lib.println("Error: invalid output file " + args[0]);
+		if (dir == "-include" || dir == "-exclude") {
+			println("Error: invalid output file " + args[0]);
 			Sys.exit(-1);
 			return;
 		}
@@ -92,11 +90,11 @@ class ClassCollector
 		var genClass        = false;
 		var genProperty     = false;
 		var propertyName    = "classes";
-		while (args.length > 0)
-		{
+		while (args.length > 0) {
+			
 			var option = args.shift();
-			if (option == "-include")
-			{
+			
+			if (option == "-include") {
 				var name = args.shift();
 				
 				if (~/\\/g.match(name))
@@ -106,9 +104,8 @@ class ClassCollector
 					includeFiles.push(dir + "/" + name);
 				else
 					includePackages.push(name);
-			}
-			else if (option == "-exclude")
-			{
+					
+			} else if (option == "-exclude") {
 				var name = args.shift();
 				
 				if (~/\\/g.match(name))
@@ -118,85 +115,70 @@ class ClassCollector
 					excludeFiles.push(dir + "/" + name);
 				else
 					excludePackages.push(name);
-			}
-			else if (option == "-class")
-			{
-				if (genProperty)
-				{
-					Lib.println("Error: invalid option " + option);
+					
+			} else if (option == "-class") {
+				if (genProperty) {
+					println("Error: invalid option " + option);
 					Sys.exit(-1);
 					return;
 				}
 				
 				genClass = true;
-			}
-			else if (option == "-property")
-			{
-				if (genClass)
-				{
-					Lib.println("Error: invalid option " + option);
+				
+			} else if (option == "-property") {
+				if (genClass) {
+					println("Error: invalid option " + option);
 					Sys.exit(-1);
 					return;
 				}
 				
 				genProperty = true;
 				propertyName = args.shift();
-			}
-			else
-			{
-				Lib.println("Error: invalid option " + option);
+			} else {
+				println("Error: invalid option " + option);
 				Sys.exit(-1);
 				return;
 			}
 		}
 		
-		try
-		{
+		try {
 			var fileList = new Array<String>();
-			if (includePackages.length > 0)
-			{
+			if (includePackages.length > 0) {
 				for (pkg in includePackages)
 					dumpInclude(dir, fileList, pkg.split("."), 0);
-			}
-			else
+			} else
 				dump(dir, fileList);
 			
 			var filteredFileList = new Array<String>();
-			if (excludePackages.length > 0)
-			{
+			if (excludePackages.length > 0) {
 				var t = excludePackages.join("|");
 				t = ~/\./g.replace(t, "\\.");
 				var exclude = new EReg(t, "g");
-				for (file in fileList)
-				{
+				for (file in fileList) {
 					var t = ~/\//g.replace(file, ".");
 					if (!exclude.match(t))
 						filteredFileList.push(file);
 				}
-			}
-			else
+			} else
 				filteredFileList = fileList;
 			
 			for (file in includeFiles)
 				filteredFileList.push(file);
 			
 			var tmp = new Array<String>();
-			for (file in filteredFileList)
-			{
+			for (file in filteredFileList) {
 				var exclude = false;
-				for (e in excludeFiles)
-				{
-					if (file == e)
-					{
+				for (e in excludeFiles) {
+					if (file == e) {
 						exclude = true;
-						Lib.println("- " + file);
+						println("- " + file);
 						break;
 					}
 				}
 				
 				if (exclude) continue;
 				
-				Lib.println("+ " + file);
+				println("+ " + file);
 				tmp.push(file);
 			}
 			
@@ -204,8 +186,7 @@ class ClassCollector
 			
 			var output = new Array<String>();
 			
-			for (i in 0...filteredFileList.length)
-			{
+			for (i in 0...filteredFileList.length) {
 				var s = filteredFileList[i];
 				
 				//remove source directory
@@ -215,15 +196,15 @@ class ClassCollector
 				if(isHx(s)) {
 					s = ~/\//g.replace(s, ".");
 					s = ~/\.hx/g.replace(s, "");
-					Lib.println(s);
+					println(s);
 					output.push(s);
 				}
 			}
 			
 			var s = "";
 			
-			if (genClass)
-			{
+			if (genClass) {
+				
 				for (i in output)
 					s += "import " + i + ";\n";
 				
@@ -232,28 +213,22 @@ class ClassCollector
 				var name = parts[parts.length - 1];
 				
 				s += "class " +  name + "{}"; //remove .hx
-			}
-			else if (genProperty)
-			{
-				Lib.println("properties file written: " + out);
+			} else if (genProperty) {
+				println("properties file written: " + out);
 				s += propertyName + " = " + output.join(" ") + "\n";
 			}
 			
 			var fout:FileOutput = neko.io.File.write(out, false);
 			fout.writeString(s);
 			fout.close();
-		}
-		catch (e:Dynamic)
-		{
+		} catch (e:Dynamic) {
 			Sys.exit(-1);
 		}
 	}
 	
-	static function dump(dir:String, files:Array<String>):Void
-	{
+	static function dump(dir:String, files:Array<String>):Void {
 		var a = FileSystem.readDirectory(dir);
-		for (i in 0...a.length)
-		{
+		for (i in 0...a.length) {
 			var name = a[i];
 			var path = dir + "/" + name;
 			
@@ -261,44 +236,41 @@ class ClassCollector
 				if (!isBannedFile(path))
 					dump(path, files);
 			} else {
-				if (isHx(path) && !isBannedFile(path))
-				{
+				if (isHx(path) && !isBannedFile(path)) {
 					files.push(path);
 				}
 			}
 		}
 	}
 	
-	static function dumpInclude(dir:String, files:Array<String>, pkg:Array<String>, level:Int):Void
-	{
+	static function dumpInclude(dir:String, files:Array<String>, pkg:Array<String>, level:Int):Void {
 		var a = FileSystem.readDirectory(dir);
-		for (i in 0...a.length)
-		{
+		for (i in 0...a.length) {
 			var name = a[i];
 			var path = dir + "/" + name;
 			
 			if(FileSystem.isDirectory(path)) {
-				if (!isBannedFile(path))
-				{
+				if (!isBannedFile(path)) {
 					if (name != pkg[level] && level < pkg.length) continue;
 					dumpInclude(path, files, pkg, level + 1);
 				}
 			} else {
-				if (isHx(path) && !isBannedFile(path))
-				{
+				if (isHx(path) && !isBannedFile(path)) {
 					if (level >= pkg.length) files.push(path);
 				}
 			}
 		}
 	}
 	
-	inline static function isHx(x:String):Bool
-	{
+	inline static function isHx(x:String):Bool {
 		return ~/\.hx/g.match(x);
 	}
 	
-	inline static function isBannedFile(x:String):Bool
-	{
+	inline static function isBannedFile(x:String):Bool {
 		return ~/\.svn/g.match(x) || ~/\.ds_store/ig.match(x);
+	}
+	
+	inline static function println(v:Dynamic):Void {
+		if(log) Lib.println(v);
 	}
 }
