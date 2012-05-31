@@ -567,7 +567,7 @@ class HashMap<K, V> extends Product, implements ISet<K, V> {
 	}
 	
 	private function get_iterator() : Iterator<Dynamic> {
-		return null;//new HashMapIterator<Dynamic, Dynamic>(this);
+		return new HashMapIterator<Dynamic, Dynamic>(this);
 	}
 	
 	override private function get_productArity() : Int {

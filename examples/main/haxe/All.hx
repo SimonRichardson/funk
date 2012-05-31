@@ -14,6 +14,7 @@ import funk.collections.ISetFactory;
 import funk.collections.IteratorUtil;
 import funk.collections.ListNil;
 import funk.collections.mutable.HashMap;
+import funk.collections.mutable.HashMapIterator;
 import funk.collections.mutable.List;
 import funk.collections.mutable.ListIterator;
 import funk.collections.mutable.ListUtil;

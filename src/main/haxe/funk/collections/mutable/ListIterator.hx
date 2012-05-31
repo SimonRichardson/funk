@@ -12,7 +12,7 @@ import funk.product.ProductIterator;
 using funk.option.Option;
 using funk.collections.mutable.Nil;
 
-private typedef MutableList<T> = {
+private typedef MutableListNamespace<T> = {
 	var _data : Array<T>;
 }
 
@@ -25,7 +25,7 @@ class ListIterator<T> extends Product, implements IFunkObject, implements IProdu
 	public function new(l : IList<T>) {
 		super();
 		
-		var mutable : MutableList<T> = cast l;
+		var mutable : MutableListNamespace<T> = cast l;
 		_array = mutable._data;
 		_pointer = _array.length - 1;
 	}
