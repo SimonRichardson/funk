@@ -21,6 +21,8 @@ import funk.collections.mutable.ListUtil;
 import funk.collections.mutable.Nil;
 import funk.collections.NilIterator;
 import funk.collections.Range;
+import funk.errors.AbstractError;
+import funk.errors.AbstractMethodError;
 import funk.errors.ArgumentError;
 import funk.errors.FunkError;
 import funk.errors.IllegalOperationError;

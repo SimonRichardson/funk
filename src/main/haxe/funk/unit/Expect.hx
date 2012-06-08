@@ -20,8 +20,20 @@ class ExpectType {
 					
 					aFunk.equals(bFunk);
 				} else {
-					
+					#if js 
+					if(Reflect.isFunction(a) && Reflect.isFunction(b)) {
+						if(Reflect.field(a, 'scope') == Reflect.field(b, 'scope') && 
+							Reflect.field(a, 'method') == Reflect.field(b, 'method')) {
+							true;
+						} else {
+							a == b;
+						}
+					} else {
+						a == b;
+					}
+					#else
 					a == b;
+					#end
 				}
 		}
 	}
