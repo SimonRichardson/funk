@@ -29,8 +29,6 @@ class Signal1<A> extends Signal, implements ISignal1<A> {
 	public function new() {
 		super();
 
-		trace("WTF");
-		
 		_list = nil.list();
 	}
 	
@@ -90,8 +88,6 @@ class Signal1<A> extends Signal, implements ISignal1<A> {
 	private function registrationPossible(func : (A -> Void), once : Bool) : Bool {
 		if(!_list.nonEmpty) return true;
 
-		trace("HELLO");
-		
 		var slot = _list.find(function(s : ISlot1<A>) : Bool {
 			return expect(s.listener).toEqual(func);
 		});
