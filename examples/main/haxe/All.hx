@@ -20,7 +20,6 @@ import funk.collections.mutable.List;
 import funk.collections.mutable.ListIterator;
 import funk.collections.mutable.ListUtil;
 import funk.collections.mutable.Nil;
-import funk.collections.mutable.QuadTree;
 import funk.collections.NilIterator;
 import funk.collections.Range;
 import funk.errors.AbstractError;

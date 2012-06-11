@@ -1,25 +1,9 @@
 package funk.collections;
 
-typedef QuadTreePoint = {
-	var x : Float;
-	var y : Float;
-};
+import funk.option.Option;
+import funk.product.Product;
 
-typedef QuadTreeRectangle = {
-	var x : Float;
-	var y : Float;
-	var width : Float;
-	var height : Float;
-
-	function intersects(rect : QuadTreeRectangle) : Bool;
-	function containsPoint(point : QuadTreePoint) : Bool;
-};
-
-typedef QuadTarget = {
-	var bounds : QuadTreeRectangle;
-};
-
-interface IQuadTree<T : QuadTarget> {
+interface IQuadTree<T> implements IProduct, implements ICollection<T> {
 	
 	var width(dynamic, dynamic) : Float;
 
@@ -27,11 +11,19 @@ interface IQuadTree<T : QuadTarget> {
 
 	function add(value : T) : IQuadTree<T>;
 
+	function addAt(value : T, index: Int) : IQuadTree<T>;
+
 	function remove(value : T) : IQuadTree<T>;
 
-	function queryPoint(value : QuadTreePoint) : IList<T>;
+	function removeAt(value : Int) : IQuadTree<T>;
 
-	function queryRectangle(value : QuadTreeRectangle) : IList<T>;
+	function get(value : T) : Option<T>;
+
+	function getAt(index : Int) : Option<T>;
+
+	function contains(value : T) : Bool;
+
+	function indexOf(value : T) : Int;
 
 	function integrate() : Void;
 }

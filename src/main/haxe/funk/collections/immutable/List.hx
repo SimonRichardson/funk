@@ -158,9 +158,9 @@ class List<T> extends Product, implements IList<T> {
         	}
 
         	p = p.tail;
-      }
+        }
 
-      return nil.list();
+        return nil.list();
 	}
 	
 	public function exists(f : (T -> Bool)) : Bool {
@@ -422,7 +422,7 @@ class List<T> extends Product, implements IList<T> {
       	var i: Int = 0;
 
       	while(p.nonEmpty) {
-        	buffer[i++] = new List<T>(p.head, null);
+          buffer[i++] = new List<T>(p.head, null);
         	p = p.tail;
       	}
 
@@ -431,7 +431,7 @@ class List<T> extends Product, implements IList<T> {
 		var j : Int = 1;
 		for(i in 0...m) {
         	buffer[i]._tail = buffer[j];
-			j++;
+		    j++;
       	}
 
       	return buffer[0];
@@ -484,7 +484,7 @@ class List<T> extends Product, implements IList<T> {
 		var j : Int = 1;
 		for(i in 0...m) {
         	buffer[i]._tail = buffer[j];
-			j++;
+		    j++;
       	}
 
       	return buffer[0];
@@ -536,10 +536,11 @@ class List<T> extends Product, implements IList<T> {
       
       	buffer[m]._tail = nil.list();
 
+
 		var j : Int = 1;
 		for(i in 0...m) {
         	buffer[i]._tail = buffer[j];
-			j++;
+			    j++;
       	}
 
       	return buffer[0];
