@@ -3,6 +3,18 @@ package funk.collections;
 import funk.option.Option;
 import funk.product.Product;
 
+typedef IQuadTreePoint = {
+	var x : Float;
+	var y : Float;
+};
+
+typedef IQuadTreeRectangle = {
+	var x : Float;
+	var y : Float;
+	var width : Float;
+	var height : Float;
+};
+
 interface IQuadTree<T> implements IProduct, implements ICollection<T> {
 	
 	var width(dynamic, dynamic) : Float;
@@ -26,4 +38,8 @@ interface IQuadTree<T> implements IProduct, implements ICollection<T> {
 	function indexOf(value : T) : Int;
 
 	function integrate() : Void;
+
+	function queryPoint(value : IQuadTreePoint) : IList<T>;
+
+	function queryRectangle(value : IQuadTreeRectangle) : IList<T>;
 }
