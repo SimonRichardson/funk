@@ -17,9 +17,7 @@ typedef IQuadTreeRectangle = {
 
 interface IQuadTree<T> implements IProduct, implements ICollection<T> {
 	
-	var width(dynamic, dynamic) : Float;
-
-	var height(dynamic, dynamic) : Float;
+	var rect(dynamic, dynamic) : IQuadTreeRectangle;
 
 	function add(value : T) : IQuadTree<T>;
 
