@@ -1,5 +1,9 @@
 package funk;
 
+import funk.option.Any;
+
+using funk.option.Any;
+
 class Pass {
 	
 	public static function any<T>(value : T) : Void -> T {
@@ -38,9 +42,9 @@ class Pass {
 		};
 	}
 	
-	public static function instanceOf<T>(value : Class<T>) : Void -> T {
+	public static function instanceOf<T>(value : Class<T>, ?args : Array<Dynamic> = null) : Void -> T {
 		return function() : T {
-			return Type.createInstance(value, []);
+			return Type.createInstance(value, args.isDefined() ? args : []);
 		};
 	}
 }

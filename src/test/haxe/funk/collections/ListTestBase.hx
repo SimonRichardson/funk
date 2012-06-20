@@ -5,13 +5,13 @@ import funk.errors.ArgumentError;
 import funk.errors.RangeError;
 import funk.option.Option;
 import funk.unit.Expect;
-import funk.Wildcard;
+import funk.wildcard.Wildcard;
 import unit.ExpectUtil;
 import unit.Should;
 
 using funk.unit.Expect;
 using funk.option.Option;
-using funk.Wildcard;
+using funk.wildcard.Wildcard;
 using unit.ExpectUtil;
 using unit.Should;
 
