@@ -31,6 +31,6 @@ class AnyType {
 	}
 	
 	inline public static function toList<T>(value : T) : IList<T> {
-		return ListUtil.toList(value);
+		return value.toList();
 	}
 }

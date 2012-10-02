@@ -16,10 +16,5 @@ class TestSuite extends massive.munit.TestSuite
 	public function new()
 	{
 		super();
-
-		add(funk.collections.immutable.ListTest);
-		add(funk.collections.immutable.NilTest);
-		add(funk.collections.mutable.ListTest);
-		add(funk.collections.mutable.NilTest);
 	}
 }

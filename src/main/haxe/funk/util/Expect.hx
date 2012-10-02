@@ -1,6 +1,6 @@
-package funk.unit;
+package funk.util;
 
-import funk.FunkObject;
+import funk.IFunkObject;
 
 enum Expect {
 	expect(x : Dynamic);

@@ -1,0 +1,210 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"to",
+				"toList"
+			],
+			[
+				"Iter",
+				"Iterator [class]"
+			],
+			[
+				"_i",
+				"_window"
+			],
+			[
+				"Comm",
+				"CommonJS [class]"
+			],
+			[
+				"re",
+				"remove(...) : Void>"
+			],
+			[
+				"add",
+				"addOnce(...) : Void>"
+			],
+			[
+				"create",
+				"createEnum(...) : createEnum.T"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "Packages/HaXe/Hxml.sublime-build",
+	"command_palette":
+	{
+		"height": 107.0,
+		"selected_items":
+		[
+			[
+				"Git: Add",
+				"Git: Add..."
+			],
+			[
+				"Git: Status",
+				"Git: Status"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 115.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/cereals/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/cereals/Documents/Sublime-workspace/funk/src/main/haxe/funk/signal/Signal0.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/src/main/haxe/funk/Pass.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/src/test/haxe/funk/collections/ListTestBase.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/src/test/haxe/funk/collections/NilTestBase.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/src/test/haxe/funk/collections/immutable/ListTest.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/src/main/haxe/funk/collections/IQuadTree.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/src/main/haxe/funk/collections/IList.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/src/main/haxe/funk/collections/immutable/List.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/lib/collector/ClassCollector.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/src/main/haxe/funk/product/Product.hx",
+		"/Users/cereals/Documents/Sublime-workspace/funk/funk.sublime-workspace",
+		"/Users/cereals/Downloads/xtools/xlib/XMPTools.jsx",
+		"/Users/cereals/Documents/workspace/gui-hx/src/main/haxe/funk/gui/core/events/AbstractEvent.hx",
+		"/Users/cereals/Documents/workspace/gui-hx/src/main/haxe/funk/gui/Root.hx",
+		"/Users/cereals/Documents/workspace/gui-hx/src/main/haxe/funk/gui/button/IToggleButtonView.hx",
+		"/Users/cereals/Documents/workspace/gui-hx/src/main/haxe/funk/gui/core/IComponentView.hx",
+		"/Users/cereals/Documents/workspace/gui-hx/src/main/haxe/funk/gui/core/ComponentView.hx",
+		"/Users/cereals/Documents/workspace/gui-hx/src/main/haxe/funk/gui/core/geom/Rectangle.hx",
+		"/Users/cereals/Documents/workspace/gui-hx/src/main/haxe/funk/gui/core/events/IEvent.hx",
+		"/Users/cereals/Desktop/Hello.hx",
+		"/Users/cereals/Desktop/Test.hx",
+		"/Users/cereals/Downloads/smartAdRequest.xsd",
+		"/Users/cereals/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/cereals/Documents/eclipse-workspace/java-signals-android/README.md",
+		"/Users/cereals/Documents/intellij-workspace/java-signals/README.md",
+		"/Users/cereals/Downloads/imakewebthings-deck.js-46d52ce/README.md",
+		"/Users/cereals/Downloads/yv_feeds 2/pmlsd/hollyoaks/episode-guide.atom",
+		"/Users/cereals/Documents/repository-workspace/stickupkid-as3-signals/README.md"
+	],
+	"find":
+	{
+		"height": 33.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"\");",
+			"		}",
+			"		",
+			"http://192.168.1.162/c4_stb/test_server_download/yv/200x113/static/programmes/images/defaultImages/mediumADefaultImage.png"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"http://c4.local/yv/200x113/Goks_Fashion_Fix_49799_JULY.jpg"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/Users/cereals/Desktop/Hello.hx"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 236.0,
+	"status_bar_visible": true
+}

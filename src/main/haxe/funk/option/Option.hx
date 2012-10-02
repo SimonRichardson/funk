@@ -1,12 +1,10 @@
 package funk.option;
 
+import funk.IFunkObject;
 import funk.errors.NoSuchElementError;
-import funk.FunkObject;
 import funk.product.Product;
 import funk.product.ProductIterator;
-import funk.unit.Expect;
-
-using funk.unit.Expect;
+import funk.util.Expect;
 
 enum Option<T> {
 	None;
@@ -53,7 +51,7 @@ class OptionType {
 	inline public static function foreach<T>(option : Option<T>, func : T -> Void) : Void {
 		switch(option) {
 			case Some(value): func(get(option));
-			case None:
+			case None: None;
 		}
 	}
 	
@@ -78,12 +76,12 @@ class OptionType {
 		}
 	}
 	
-	inline public static function instance<T>(option : Option<Dynamic>) : ProductOption<Dynamic> {
-		return new ProductOption<Dynamic>(option);
+	inline public static function instance<T>(option : Option<T>) : ProductOption<T> {
+		return new ProductOption<T>(option);
 	}
 	
-	inline public static function iterator<T>(option : Option<Dynamic>) : IProductIterator<Dynamic> {
-		return new ProductOption<Dynamic>(option).iterator();
+	inline public static function iterator<T>(option : Option<T>) : IProductIterator<T> {
+		return new ProductOption<T>(option).iterator();
 	}
 	
 	inline public static function toString<T>(option : Option<T>) : String {
@@ -123,6 +121,7 @@ class ProductOption<T> extends Product {
         	if(OptionType.isDefined(thatOption)) {
 				var aFunk : Dynamic = OptionType.get(_option);
 				var bFunk : Dynamic = OptionType.instance(thatOption).productElement(0);
+
           		return expect(aFunk).toEqual(bFunk);
         	}
       	}

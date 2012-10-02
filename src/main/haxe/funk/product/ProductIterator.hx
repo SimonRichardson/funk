@@ -1,9 +1,9 @@
 package funk.product;
 
+import funk.IFunkObject;
 import funk.collections.IteratorUtil;
 import funk.option.Option;
 import funk.product.Product;
-import funk.FunkObject;
 import funk.errors.NoSuchElementError;
 
 interface IProductIterator<T> implements IFunkObject {
@@ -38,7 +38,7 @@ class ProductIterator<T> extends Product, implements IProductIterator<T> {
 	}
 	
 	override public function equals(that: IFunkObject): Bool {
-      	return IteratorUtil.eq(this, that);
+      	return this.equal(that);
     }
 	
 	override public function productElement(index : Int) : Dynamic {

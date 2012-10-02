@@ -1,10 +1,8 @@
 package funk.product;
 
-import funk.FunkObject;
+import funk.IFunkObject;
 import funk.product.ProductIterator;
-import funk.unit.Expect;
-
-using funk.unit.Expect;
+import funk.util.Expect;
 
 interface IProduct implements IFunkObject {
 
@@ -17,7 +15,6 @@ interface IProduct implements IFunkObject {
 	function iterator() : IProductIterator<Dynamic>;
 }
 
-@:keep
 class Product implements IProduct {
 	
 	public var productArity(get_productArity, null) : Int;
@@ -55,8 +52,7 @@ class Product implements IProduct {
 	public function iterator() : IProductIterator<Dynamic> {
 		return new ProductIterator<Dynamic>(this);
 	}
-	
-	@:final
+
 	private function makeString(separator : String) : String {
 		var total : Int = productArity;
 		var last : Int = total - 1;
@@ -81,7 +77,6 @@ class Product implements IProduct {
 		return "";
 	}
 	
-	@:final
 	public function toString() : String {
 		if(0 == productArity) {
 			return productPrefix;
