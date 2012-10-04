@@ -1,4 +1,3 @@
-import massive.munit.client.PrintClient;
 import massive.munit.client.RichPrintClient;
 import massive.munit.client.HTTPClient;
 import massive.munit.client.JUnitReportClient;
@@ -9,13 +8,15 @@ import js.Lib;
 import js.Dom;
 #end
 
+
 /**
  * Auto generated Test Application.
  * Refer to munit command line tool for more information (haxelib run munit)
  */
+
 class TestMain
 {
-    static function main(){	new TestMain(); }
+    static function main(){ new TestMain(); }
 
     public function new()
     {
@@ -29,7 +30,6 @@ class TestMain
         #end
 
         var runner:TestRunner = new TestRunner(client);
-        runner.addResultClient(new HTTPClient(new JUnitReportClient()));
         runner.completionHandler = completionHandler;
         runner.run(suites);
     }
@@ -38,7 +38,7 @@ class TestMain
         updates the background color and closes the current browser
         for flash and html targets (useful for continous integration servers)
     */
-    function completionHandler(successful:Bool):Void
+    private function completionHandler(successful:Bool):Void
     {
         try
         {
