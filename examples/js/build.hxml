@@ -1,5 +1,0 @@
--js ../../bin/js/static/js/Example01.js
--main Example01
--cp main/haxe
--cp ../../src/main/haxe
--debug

@@ -13,28 +13,5 @@
 -lib hamcrest
 --js-modern
 
-# swf
-
 --next
--swf bin/test/as3_test.swf
--swf-version 11
--main TestMain
--cp src/main/haxe
--cp src/test/haxe
--debug
--lib munit
--lib hamcrest
-
-# neko
-
---next
--neko bin/test/App_test.n
--main TestMain
--cp src/main/haxe
--cp src/test/haxe
--debug
--lib munit
--lib hamcrest
-
---next
--cmd haxelib run munit test -js -swf
+-cmd haxelib run munit test -js
