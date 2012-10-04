@@ -1,9 +1,7 @@
 import massive.munit.TestSuite;
 
-import funk.collections.immutable.ListTest;
-import funk.collections.immutable.NilTest;
-import funk.collections.mutable.ListTest;
-import funk.collections.mutable.NilTest;
+import funk.product.ProductTest;
+import funk.tuple.Tuple1Test;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -16,5 +14,8 @@ class TestSuite extends massive.munit.TestSuite
 	public function new()
 	{
 		super();
+
+		add(funk.product.ProductTest);
+		add(funk.tuple.Tuple1Test);
 	}
 }

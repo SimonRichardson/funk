@@ -1,6 +1,6 @@
 package funk.tuple;
 
-import funk.product.Product;
+import funk.product.Product5;
 import funk.tuple.Tuple;
 import funk.errors.NoSuchElementError;
 
@@ -19,31 +19,31 @@ enum Tuple5<T1, T2, T3, T4, T5> {
 
 class Tuple5Type {
 
-	inline public static function _1<T1, T2, T3, T4, T5>(tuple : Tuple4<T1, T2, T3, T4, T5>) : T1 {
+	inline public static function _1<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T1 {
 		return switch(tuple) {
 			case tuple5(t1, t2, t3, t4, t5): t1;
 		}
 	}
 
-	inline public static function _2<T1, T2, T3, T4, T5>(tuple : Tuple4<T1, T2, T3, T4, T5>) : T2 {
+	inline public static function _2<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T2 {
 		return switch(tuple) {
 			case tuple5(t1, t2, t3, t4, t5): t2;
 		}
 	}
 
-	inline public static function _3<T1, T2, T3, T4, T5>(tuple : Tuple4<T1, T2, T3, T4, T5>) : T3 {
+	inline public static function _3<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T3 {
 		return switch(tuple) {
 			case tuple5(t1, t2, t3, t4, t5): t3;
 		}
 	}
 
-	inline public static function _4<T1, T2, T3, T4, T5>(tuple : Tuple4<T1, T2, T3, T4, T5>) : T4 {
+	inline public static function _4<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T4 {
 		return switch(tuple) {
 			case tuple5(t1, t2, t3, t4, t5): t4;
 		}
 	}
 
-	inline public static function _5<T1, T2, T3, T4, T5>(tuple : Tuple4<T1, T2, T3, T4, T5>) : T5 {
+	inline public static function _5<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T5 {
 		return switch(tuple) {
 			case tuple5(t1, t2, t3, t4, t5): t5;
 		}

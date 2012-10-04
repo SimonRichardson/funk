@@ -1,6 +1,6 @@
 package funk.tuple;
 
-import funk.product.Product;
+import funk.product.Product2;
 import funk.tuple.Tuple;
 import funk.errors.NoSuchElementError;
 

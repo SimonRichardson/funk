@@ -25,7 +25,19 @@ class Product implements IProduct {
 
 	}
 
-	public function equals(that: IFunkObject): Bool {
+    public function equals(that: IFunkObject): Bool {
+      	if (Std.is(that, IProduct)) {
+        	var thatProduct: IProduct = cast that;
+        	if(productArity == thatProduct.productArity) {
+        		for(i in 0...productArity) {
+        			if(productElement(i) != thatProduct.productElement(i)) {
+        				return false;
+        			}
+        		}
+        		return true;
+        	}
+      	}
+
       	return false;
     }
 
@@ -55,10 +67,12 @@ class Product implements IProduct {
 
 	private function get_productArity() : Int {
 		throw new AbstractMethodError();
+		return -1;
 	}
 
 	private function get_productPrefix() : String {
 		throw new AbstractMethodError();
+		return "";
 	}
 
 	public function toString() : String {

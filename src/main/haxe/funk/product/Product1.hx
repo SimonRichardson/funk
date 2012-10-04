@@ -9,15 +9,6 @@ class Product1<T1> extends Product {
 		super();
 	}
 
-	override public function equals(that: IFunkObject): Bool {
-      	if (Std.is(that, Product1)) {
-        	var thatProduct: Product1 = cast that;
-        	return productElement(0) == thatProduct.productElement(0);
-      	}
-
-      	return false;
-    }
-
 	override private function get_productArity() : Int {
 		return 1;
 	}
