@@ -1,7 +1,6 @@
 # js debug
--js bin/js/static/js-debug/App.js
--main Main
+-js bin/main.js
+-main funk.Funk
 -cp src/main/haxe
--cp examples/main/haxe
 -debug
 --js-modern
