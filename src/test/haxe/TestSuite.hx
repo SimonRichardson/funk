@@ -6,6 +6,7 @@ import funk.tuple.Tuple2Test;
 import funk.tuple.Tuple3Test;
 import funk.tuple.Tuple4Test;
 import funk.tuple.Tuple5Test;
+import funk.tuple.TupleTest;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -25,5 +26,6 @@ class TestSuite extends massive.munit.TestSuite
 		add(funk.tuple.Tuple3Test);
 		add(funk.tuple.Tuple4Test);
 		add(funk.tuple.Tuple5Test);
+		add(funk.tuple.TupleTest);
 	}
 }
