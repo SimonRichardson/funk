@@ -1,5 +1,10 @@
 import massive.munit.TestSuite;
 
+import funk.product.Product1Test;
+import funk.product.Product2Test;
+import funk.product.Product3Test;
+import funk.product.Product4Test;
+import funk.product.Product5Test;
 import funk.product.ProductTest;
 import funk.tuple.Tuple1Test;
 import funk.tuple.Tuple2Test;
@@ -20,6 +25,11 @@ class TestSuite extends massive.munit.TestSuite
 	{
 		super();
 
+		add(funk.product.Product1Test);
+		add(funk.product.Product2Test);
+		add(funk.product.Product3Test);
+		add(funk.product.Product4Test);
+		add(funk.product.Product5Test);
 		add(funk.product.ProductTest);
 		add(funk.tuple.Tuple1Test);
 		add(funk.tuple.Tuple2Test);
