@@ -2,6 +2,10 @@ import massive.munit.TestSuite;
 
 import funk.product.ProductTest;
 import funk.tuple.Tuple1Test;
+import funk.tuple.Tuple2Test;
+import funk.tuple.Tuple3Test;
+import funk.tuple.Tuple4Test;
+import funk.tuple.Tuple5Test;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -17,5 +21,9 @@ class TestSuite extends massive.munit.TestSuite
 
 		add(funk.product.ProductTest);
 		add(funk.tuple.Tuple1Test);
+		add(funk.tuple.Tuple2Test);
+		add(funk.tuple.Tuple3Test);
+		add(funk.tuple.Tuple4Test);
+		add(funk.tuple.Tuple5Test);
 	}
 }
