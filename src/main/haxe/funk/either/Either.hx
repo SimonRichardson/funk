@@ -2,9 +2,9 @@ package funk.either;
 
 import funk.IFunkObject;
 import funk.errors.RangeError;
-import funk.product.Product;
+import funk.product.Product2;
+import funk.product.ProductIterator;
 import funk.option.Option;
-import funk.util.Expect;
 
 enum Either<A, B> {
     Left(value : A);
@@ -14,42 +14,42 @@ enum Either<A, B> {
 class EitherType {
 
     inline public static function isLeft<A, B>(either : Either<A, B>) : Bool {
-        return switch(option) {
+        return switch(either) {
             case Left(value): true;
             case Right(value): false;
         }
     }
 
     inline public static function isRight<A, B>(either : Either<A, B>) : Bool {
-        return switch(option) {
+        return switch(either) {
             case Left(value): false;
             case Right(value): true;
         }
     }
 
     inline public static function left<A, B>(either : Either<A, B>) : Option<A> {
-        return switch(option) {
+        return switch(either) {
             case Left(value): Some(value);
             case Right(value): None;
         }
     }
 
     inline public static function right<A, B>(either : Either<A, B>) : Option<B> {
-        return switch(option) {
+        return switch(either) {
             case Left(value): None;
             case Right(value): Some(value);
         }
     }
 
     inline public static function fold<A, B>(either : Either<A, B>, func0 : (A -> A), func1 : (B -> B)) : Either<A, B> {
-        return switch(option) {
+        return switch(either) {
             case Left(value): Left(func0(value));
             case Right(value): Right(func1(value));
         }
     }
 
     inline public static function swap<A, B>(either : Either<A, B>) : Either<B, A> {
-        return switch(option) {
+        return switch(either) {
             case Left(value): Right(value);
             case Right(value): Left(value);
         }
@@ -59,12 +59,16 @@ class EitherType {
         return new ProductEither<A, B>(either);
     }
 
-    inline public static function iterator<A, B>(either : Either<A, B>) : IProductIterator<Dynamic> {
-        return new ProductEither<A, B>(either).iterator();
+    inline public static function productIterator<A, B>(either : Either<A, B>) : IProductIterator<Dynamic> {
+        return new ProductEither<A, B>(either).productIterator();
+    }
+
+    inline public static function toString<A, B>(either : Either<A, B>) : String {
+        return new ProductEither<A, B>(either).toString();
     }
 }
 
-class ProductEither<A, B> extends Product {
+class ProductEither<A, B> extends Product2<A, B> {
 
     private var _either : Either<A, B>;
 
@@ -75,10 +79,7 @@ class ProductEither<A, B> extends Product {
     }
 
     override private function get_productArity() : Int {
-        return switch(_option) {
-            case Left(value): 1;
-            case Right(value): 1;
-        }
+        return 1;
     }
 
     override private function get_productPrefix() : String {
@@ -88,8 +89,8 @@ class ProductEither<A, B> extends Product {
     override public function productElement(index : Int) : Dynamic {
         return if(index == 0) {
             switch(_either) {
-                case Left(value): value;
-                case Right(value): value;
+                case Left(value): cast value;
+                case Right(value): cast value;
             }
         } else {
             throw new RangeError();
@@ -101,12 +102,13 @@ class ProductEither<A, B> extends Product {
             var thatEither: Either<A, B> = cast that;
 
             var aFunk : Dynamic = switch(_either) {
-                case Left(value): value;
-                case Right(value): value;
+                case Left(value): cast value;
+                case Right(value): cast value;
             }
-            var bFunk : Dynamic = EitherType.instance(thatOption).productElement(0);
+            var bFunk : Dynamic = EitherType.instance(thatEither).productElement(0);
 
-            return expect(aFunk).toEqual(bFunk);
+            return aFunk == bFunk;
+            // return expect(aFunk).toEqual(bFunk);
         }
 
         return false;
