@@ -35,7 +35,7 @@ class Tuple3Type {
 		}
 	}
 
-	inline public static function instance<T1, T2, T3>(tuple : Tuple3<T1, T2, T3>)
+	inline public static function toInstance<T1, T2, T3>(tuple : Tuple3<T1, T2, T3>)
 																	 : ITuple3<T1, T2, T3> {
 		return switch(tuple) {
 			case tuple3(t1, t2, t3): new Tuple3Impl<T1, T2, T3>(t1, t2, t3);

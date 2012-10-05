@@ -1,6 +1,7 @@
 package funk.option;
 
 import funk.IFunkObject;
+import funk.either.Either;
 import funk.errors.NoSuchElementError;
 import funk.product.Product1;
 import funk.product.ProductIterator;
@@ -10,7 +11,7 @@ enum Option<T> {
 	Some(value : T);
 }
 
-class OptionType {
+class Options {
 
 	inline public static function get<T>(option : Option<T>) : T {
 		return switch(option) {
@@ -28,14 +29,14 @@ class OptionType {
 
 	inline public static function isDefined<T>(option : Option<T>) : Bool {
 		return switch(option) {
-			case Some(value): true;
+			case Some(_): true;
 			case None: false;
 		}
 	}
 
 	inline public static function isEmpty<T>(option : Option<T>) : Bool {
 		return switch(option) {
-			case Some(value): false;
+			case Some(_): false;
 			case None: true;
 		}
 	}
@@ -54,24 +55,34 @@ class OptionType {
 		}
 	}
 
-	inline public static function flatMap<T, E>(option : Option<T>, func : T -> Option<E>) : Option<E> {
+	inline public static function flatMap<T1, T2>(option : Option<T1>, func : T1 -> Option<T2>)
+																					 : Option<T2> {
 		return switch(option) {
 			case Some(value): func(get(option));
 			case None: None;
 		}
 	}
 
-	inline public static function map<T, E>(option : Option<T>, func : T -> E) : Option<E> {
+	inline public static function map<T1, T2>(option : Option<T1>, func : T1 -> T2) : Option<T2> {
 		return switch(option) {
 			case Some(value): Some(func(get(option)));
 			case None: None;
 		}
 	}
 
-	inline public static function orElse<T>(option : Option<T>, func : Void -> Option<T>) : Option<T> {
+	inline public static function orElse<T>(option : Option<T>, func : Void -> Option<T>)
+																					: Option<T> {
 		return switch(option) {
 			case Some(value): option;
 			case None: func();
+		}
+	}
+
+	inline public static function orEither<T1, T2>(option : Option<T1>, func : Void -> T2)
+																				: Either<T2, T1> {
+		return switch(option) {
+			case Some(value): Right(value);
+			case None: Left(func());
 		}
 	}
 
@@ -81,6 +92,10 @@ class OptionType {
 
 	inline public static function productIterator<T>(option : Option<T>) : IProductIterator<T> {
 		return cast new ProductOption<T>(option).productIterator();
+	}
+
+	inline public static function toOption<T>(value : Null<T>) : Option<T> {
+		return if(null == value) None; else Some(value);
 	}
 
 	inline public static function toString<T>(option : Option<T>) : String {
@@ -100,7 +115,7 @@ class ProductOption<T> extends Product1<T> {
 
 	override private function get_productArity() : Int {
 		return switch(_option) {
-			case Some(value): 1;
+			case Some(_): 1;
 			case None: 0;
 		}
 	}
@@ -110,16 +125,16 @@ class ProductOption<T> extends Product1<T> {
 	}
 
 	override public function productElement(index : Int) : Dynamic {
-		return OptionType.get(_option);
+		return Options.get(_option);
 	}
 
 	override public function equals(that: IFunkObject): Bool {
       	if(Std.is(that, Option)) {
         	var thatOption: Option<T> = cast that;
 
-        	if(OptionType.isDefined(thatOption)) {
-				var aFunk : Dynamic = OptionType.get(_option);
-				var bFunk : Dynamic = OptionType.instance(thatOption).productElement(0);
+        	if(Options.isDefined(thatOption)) {
+				var aFunk : Dynamic = Options.get(_option);
+				var bFunk : Dynamic = Options.instance(thatOption).productElement(0);
 
 				return aFunk == bFunk;
 				// FIXME (Simon) : This is wrong

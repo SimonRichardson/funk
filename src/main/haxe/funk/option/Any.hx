@@ -2,7 +2,7 @@ package funk.option;
 
 import funk.option.Option;
 
-class AnyType {
+class Anys {
 
 	inline public static function get<T>(type : T) : T {
 		return type;
@@ -24,7 +24,7 @@ class AnyType {
 		return type != null ? type : alt;
 	}
 
-	inline public static function asOption<T>(value : T) : Option<T> {
-		return AnyType.isEmpty(value) ? None : Some(value);
+	inline public static function toOption<T>(value : T) : Option<T> {
+		return Anys.isEmpty(value) ? None : Some(value);
 	}
 }

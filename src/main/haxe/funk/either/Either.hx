@@ -6,73 +6,84 @@ import funk.product.Product2;
 import funk.product.ProductIterator;
 import funk.option.Option;
 
-enum Either<A, B> {
-    Left(value : A);
-    Right(value : B);
+enum Either<T1, T2> {
+    Left(value : T1);
+    Right(value : T2);
 }
 
-class EitherType {
+class Eithers {
 
-    inline public static function isLeft<A, B>(either : Either<A, B>) : Bool {
+    inline public static function isLeft<T1, T2>(either : Either<T1, T2>) : Bool {
         return switch(either) {
-            case Left(value): true;
-            case Right(value): false;
+            case Left(_): true;
+            case Right(_): false;
         }
     }
 
-    inline public static function isRight<A, B>(either : Either<A, B>) : Bool {
+    inline public static function isRight<T1, T2>(either : Either<T1, T2>) : Bool {
         return switch(either) {
-            case Left(value): false;
-            case Right(value): true;
+            case Left(_): false;
+            case Right(_): true;
         }
     }
 
-    inline public static function left<A, B>(either : Either<A, B>) : Option<A> {
+    inline public static function left<T1, T2>(either : Either<T1, T2>) : Option<T1> {
         return switch(either) {
             case Left(value): Some(value);
-            case Right(value): None;
+            case Right(_): None;
         }
     }
 
-    inline public static function right<A, B>(either : Either<A, B>) : Option<B> {
+    inline public static function right<T1, T2>(either : Either<T1, T2>) : Option<T2> {
         return switch(either) {
-            case Left(value): None;
+            case Left(_): None;
             case Right(value): Some(value);
         }
     }
 
-    inline public static function fold<A, B>(either : Either<A, B>, func0 : (A -> A), func1 : (B -> B)) : Either<A, B> {
+    inline public static function fold<T1, T2>( either : Either<T1, T2>,
+                                                func0 : (T1 -> T1),
+                                                func1 : (T2 -> T2)) : Either<T1, T2> {
         return switch(either) {
             case Left(value): Left(func0(value));
             case Right(value): Right(func1(value));
         }
     }
 
-    inline public static function swap<A, B>(either : Either<A, B>) : Either<B, A> {
+    inline public static function swap<T1, T2>(either : Either<T1, T2>) : Either<T2, T1> {
         return switch(either) {
             case Left(value): Right(value);
             case Right(value): Left(value);
         }
     }
 
-    inline public static function instance<A, B>(either : Either<A, B>) : ProductEither<A, B> {
-        return new ProductEither<A, B>(either);
+    inline public static function toOption<T1, T2>(either : Either<T1, T2>) : Option<T2> {
+        return switch(either) {
+            case Left(_): None;
+            case Right(value): Some(value);
+        }
     }
 
-    inline public static function productIterator<A, B>(either : Either<A, B>) : IProductIterator<Dynamic> {
-        return new ProductEither<A, B>(either).productIterator();
+    inline public static function productIterator<T1, T2>(either : Either<T1, T2>)
+                                                                    : IProductIterator<Dynamic> {
+        return new ProductEither<T1, T2>(either).productIterator();
     }
 
-    inline public static function toString<A, B>(either : Either<A, B>) : String {
-        return new ProductEither<A, B>(either).toString();
+    inline public static function toInstance<T1, T2>(either : Either<T1, T2>)
+                                                                    : ProductEither<T1, T2> {
+        return new ProductEither<T1, T2>(either);
+    }
+
+    inline public static function toString<T1, T2>(either : Either<T1, T2>) : String {
+        return new ProductEither<T1, T2>(either).toString();
     }
 }
 
-class ProductEither<A, B> extends Product2<A, B> {
+class ProductEither<T1, T2> extends Product2<T1, T2> {
 
-    private var _either : Either<A, B>;
+    private var _either : Either<T1, T2>;
 
-    public function new(either : Either<A, B>) {
+    public function new(either : Either<T1, T2>) {
         super();
 
         _either = either;
@@ -99,13 +110,13 @@ class ProductEither<A, B> extends Product2<A, B> {
 
     override public function equals(that: IFunkObject): Bool {
         if(Std.is(that, Either)) {
-            var thatEither: Either<A, B> = cast that;
+            var thatEither: Either<T1, T2> = cast that;
 
             var aFunk : Dynamic = switch(_either) {
                 case Left(value): cast value;
                 case Right(value): cast value;
             }
-            var bFunk : Dynamic = EitherType.instance(thatEither).productElement(0);
+            var bFunk : Dynamic = Eithers.toInstance(thatEither).productElement(0);
 
             return aFunk == bFunk;
             // return expect(aFunk).toEqual(bFunk);
@@ -113,5 +124,38 @@ class ProductEither<A, B> extends Product2<A, B> {
 
         return false;
     }
+
+    public function isLeft() : Bool {
+        return Eithers.isLeft(_either);
+    }
+
+    public function isRight() : Bool {
+        return Eithers.isRight(_either);
+    }
+
+    public function left() : Option<T1> {
+        return Eithers.left(_either);
+    }
+
+    public function right() : Option<T2> {
+        return Eithers.right(_either);
+    }
+
+    public function fold(func0 : (T1 -> T1), func1 : (T2 -> T2)) : Either<T1, T2> {
+        return Eithers.fold(_either, func0, func1);
+    }
+
+    public function swap() : Either<T2, T1> {
+        return Eithers.swap(_either);
+    }
+
+    public function toOption() : Option<T2> {
+        return Eithers.toOption(_either);
+    }
+
+    private function toEnum() : Either<T1, T2> {
+        return _either;
+    }
 }
+
 

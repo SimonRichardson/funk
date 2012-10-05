@@ -42,7 +42,7 @@ class Tuple4Type {
 		}
 	}
 
-	inline public static function instance<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>)
+	inline public static function toInstance<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>)
 																	 : ITuple4<T1, T2, T3, T4> {
 		return switch(tuple) {
 			case tuple4(t1, t2, t3, t4): new Tuple4Impl<T1, T2, T3, T4>(t1, t2, t3, t4);

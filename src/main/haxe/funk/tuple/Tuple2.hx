@@ -28,7 +28,7 @@ class Tuple2Type {
 		}
 	}
 
-	inline public static function instance<T1, T2>(tuple : Tuple2<T1, T2>) : ITuple2<T1, T2> {
+	inline public static function toInstance<T1, T2>(tuple : Tuple2<T1, T2>) : ITuple2<T1, T2> {
 		return switch(tuple) {
 			case tuple2(t1, t2): new Tuple2Impl<T1, T2>(t1, t2);
 		}

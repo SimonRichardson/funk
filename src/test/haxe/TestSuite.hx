@@ -1,5 +1,6 @@
 import massive.munit.TestSuite;
 
+import funk.option.OptionTest;
 import funk.product.Product1Test;
 import funk.product.Product2Test;
 import funk.product.Product3Test;
@@ -25,6 +26,7 @@ class TestSuite extends massive.munit.TestSuite
 	{
 		super();
 
+		add(funk.option.OptionTest);
 		add(funk.product.Product1Test);
 		add(funk.product.Product2Test);
 		add(funk.product.Product3Test);

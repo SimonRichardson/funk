@@ -11,7 +11,7 @@ interface ITuple implements IProduct {
 
 }
 
-class Tuple {
+class Tuples {
 
 	inline public static function toTuple1<T1>(t1 : T1) : ITuple1<T1> {
 		return new Tuple1Impl<T1>(t1);

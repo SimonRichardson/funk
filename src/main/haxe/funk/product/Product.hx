@@ -79,7 +79,7 @@ class Product implements IProduct {
 		return if(0 == productArity) {
 			productPrefix;
 		} else {
-			Std.format("$productPrefix(${makeString(\",\")})");
+			Std.format("$productPrefix(${makeString(\", \")})");
 		}
 	}
 

@@ -56,77 +56,77 @@ class Tuple4Test {
 
 	@Test
 	public function should_calling_instance_return_not_null() : Void {
-		tuple4(1, "a", 3.3, true).instance().isNotNull();
+		tuple4(1, "a", 3.3, true).toInstance().isNotNull();
 	}
 
 	@Test
 	public function should_calling_instance_return_instance_of_ITuple4() : Void {
-		tuple4(1, "a", 3.3, true).instance().isType(ITuple4);
+		tuple4(1, "a", 3.3, true).toInstance().isType(ITuple4);
 	}
 
 	@Test
 	public function should_calling_productArity_return_4() : Void {
-		tuple4(1, "a", 3.3, true).instance().productArity.areEqual(4);
+		tuple4(1, "a", 3.3, true).toInstance().productArity.areEqual(4);
 	}
 
 	@Test
 	public function should_calling_productPrefix_return_Tuple4() : Void {
-		tuple4(1, "a", 3.3, true).instance().productPrefix.areEqual("Tuple4");
+		tuple4(1, "a", 3.3, true).toInstance().productPrefix.areEqual("Tuple4");
 	}
 
 	@Test
 	public function should_calling_toString_return_Tuple4() : Void {
-		tuple4(1, "a", 3.3, true).instance().toString().areEqual("Tuple4(1,a,3.3,true)");
+		tuple4(1, "a", 3.3, true).toInstance().toString().areEqual("Tuple4(1, a, 3.3, true)");
 	}
 
 	@Test
 	public function should_calling_productElement_0_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).instance().productElement(0).areEqual(1.1);
+		tuple4(1.1, "a", 3.3, true).toInstance().productElement(0).areEqual(1.1);
 	}
 
 	@Test
 	public function should_calling_productElement_1_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).instance().productElement(1).areEqual("a");
+		tuple4(1.1, "a", 3.3, true).toInstance().productElement(1).areEqual("a");
 	}
 
 	@Test
 	public function should_calling_productElement_2_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).instance().productElement(2).areEqual(3.3);
+		tuple4(1.1, "a", 3.3, true).toInstance().productElement(2).areEqual(3.3);
 	}
 
 	@Test
 	public function should_calling_productElement_3_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).instance().productElement(3).areEqual(true);
+		tuple4(1.1, "a", 3.3, true).toInstance().productElement(3).areEqual(true);
 	}
 
 	@Test
 	public function should_calling__1_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).instance()._1.areEqual(1.1);
+		tuple4(1.1, "a", 3.3, true).toInstance()._1.areEqual(1.1);
 	}
 
 	@Test
 	public function should_calling__2_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).instance()._2.areEqual("a");
+		tuple4(1.1, "a", 3.3, true).toInstance()._2.areEqual("a");
 	}
 
 	@Test
 	public function should_calling__3_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).instance()._3.areEqual(3.3);
+		tuple4(1.1, "a", 3.3, true).toInstance()._3.areEqual(3.3);
 	}
 
 	@Test
 	public function should_calling__4_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).instance()._4.areEqual(true);
+		tuple4(1.1, "a", 3.3, true).toInstance()._4.areEqual(true);
 	}
 
 	@Test
 	public function should_calling_productElement_99_return_value() : Void {
 		var called = try {
-			tuple4(1.1, "a", 3.3, true).instance().productElement(99);
+			tuple4(1.1, "a", 3.3, true).toInstance().productElement(99);
+			false;
 		} catch(error : NoSuchElementError) {
 			true;
 		}
-
-		Assert.isTrue(called);
+		called.isTrue();
 	}
 }
