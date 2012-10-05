@@ -86,7 +86,7 @@ class Options {
 		}
 	}
 
-	inline public static function instance<T>(option : Option<T>) : ProductOption<T> {
+	inline public static function toInstance<T>(option : Option<T>) : ProductOption<T> {
 		return new ProductOption<T>(option);
 	}
 
@@ -134,7 +134,7 @@ class ProductOption<T> extends Product1<T> {
 
         	if(Options.isDefined(thatOption)) {
 				var aFunk : Dynamic = Options.get(_option);
-				var bFunk : Dynamic = Options.instance(thatOption).productElement(0);
+				var bFunk : Dynamic = Options.toInstance(thatOption).productElement(0);
 
 				return aFunk == bFunk;
 				// FIXME (Simon) : This is wrong
@@ -144,4 +144,45 @@ class ProductOption<T> extends Product1<T> {
 
       	return false;
     }
+
+    public function get() : T {
+		return Options.get(_option);
+	}
+
+	public function getOrElse(func : Void -> T) : T {
+		return Options.getOrElse(_option, func);
+	}
+
+	public function isDefined() : Bool {
+		return Options.isDefined(_option);
+	}
+
+	public function isEmpty() : Bool {
+		return Options.isEmpty(_option);
+	}
+
+	public function filter(func : T -> Bool) : Option<T> {
+		return Options.filter(_option, func);
+	}
+
+	public function foreach(func : T -> Void) : Void {
+		Options.foreach(_option, func);
+	}
+
+	public function flatMap<T2>(func : T -> Option<T2>) : Option<T2> {
+		return Options.flatMap(_option, func);
+	}
+
+	public function map<T2>(func : T -> T2) : Option<T2> {
+		return Options.map(_option, func);
+	}
+
+	public function orElse(func : Void -> Option<T>) : Option<T> {
+		return Options.orElse(_option, func);
+	}
+
+	public function orEither<T2>(func : Void -> T2) : Either<T2, T> {
+		return Options.orEither(_option, func);
+	}
+
 }
