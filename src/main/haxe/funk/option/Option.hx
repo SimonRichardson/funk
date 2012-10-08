@@ -91,16 +91,21 @@ class Options {
 		return new ProductOption<T>(option);
 	}
 
-	inline public static function productIterator<T>(option : Option<T>) : IProductIterator<T> {
-		return cast new ProductOption<T>(option).productIterator();
-	}
-
 	inline public static function toOption<T>(value : Null<T>) : Option<T> {
 		return if(null == value) None; else Some(value);
 	}
 
+	inline public static function equals<T1, T2>(option : Option<T1>, thatOption : Option<T2>)
+																				: Bool {
+		return Options.toInstance(option).equals(Options.toInstance(thatOption));
+	}
+
+	inline public static function productIterator<T>(option : Option<T>) : IProductIterator<T> {
+		return (cast Options.toInstance(option)).productIterator();
+	}
+
 	inline public static function toString<T>(option : Option<T>) : String {
-		return new ProductOption<T>(option).toString();
+		return Options.toInstance(option).toString();
 	}
 }
 
@@ -133,20 +138,45 @@ class ProductOption<T> extends Product1<T> {
 	}
 
 	override public function equals(that: IFunkObject): Bool {
-      	if(Std.is(that, Option)) {
-        	var thatOption: Option<T> = cast that;
+		return if(this == that) {
+			true;
+		} else if(Std.is(that, ProductOption)) {
 
-        	if(Options.isDefined(thatOption)) {
-				var aFunk : Dynamic = Options.get(_option);
-				var bFunk : Dynamic = Options.toInstance(thatOption).productElement(0);
+			var thatOption : ProductOption<Dynamic> = cast that;
+			if(this.isEmpty() && thatOption.isEmpty()) {
 
-				return aFunk == bFunk;
-				// FIXME (Simon) : This is wrong
-          		//return expect(aFunk).toEqual(bFunk);
-        	}
-      	}
+				true;
 
-      	return false;
+			} else if(this.isDefined() && thatOption.isDefined()) {
+
+				var value0 = this.get();
+				var value1 = thatOption.get();
+
+				if(Std.is(value0, IFunkObject) && Std.is(value1, IFunkObject)) {
+					var funk0 : IFunkObject = cast value0;
+					var funk1 : IFunkObject = cast value1;
+					funk0.equals(funk1);
+				} else {
+
+					switch(Type.typeof(value0)){
+						case TEnum(_):
+							switch(Type.typeof(value1)){
+								case TEnum(_):
+									Type.enumEq(value0, value1);
+								default:
+									false;
+							}
+						default:
+							value0 == value1;
+					}
+
+				}
+			} else {
+				false;
+			}
+		} else {
+			false;
+		}
     }
 
     public function get() : T {

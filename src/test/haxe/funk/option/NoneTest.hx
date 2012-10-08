@@ -4,9 +4,11 @@ import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.option.Option;
 import massive.munit.Assert;
+import massive.munit.AssertExtensions;
 
 using funk.option.Option;
 using massive.munit.Assert;
+using massive.munit.AssertExtensions;
 
 class NoneTest {
 
@@ -87,9 +89,9 @@ class NoneTest {
 
     @Test
     public function when_orElse_on_None_should_calling_orElse_return_a_valid_option_type() {
-    	/*None.orElse(function () {
+    	None.orElse(function () {
             return Some(true);
-        }).isType(Option);*/
+        }).isEnum(Option);
     }
 
     @Test
@@ -101,17 +103,27 @@ class NoneTest {
 
     @Test
     public function when_equals_on_None_should_equal_None() {
-    	//None.equals(None).isTrue();
+    	None.equals(None).isTrue();
     }
 
 	@Test
     public function when_equals_on_None_should_not_equal_Some_false() {
-    	//Some(false).equals(None).isFalse();
+    	Some(false).equals(None).isFalse();
     }
 
 	@Test
     public function when_equals_on_None_should_not_equal_Some_null() {
-    	//Some(null).equals(None).isFalse();
+    	Some(null).equals(None).isFalse();
+    }
+
+    @Test
+    public function when_equals_on_None_should_not_equal_Some_int() {
+    	Some(1).equals(None).isFalse();
+    }
+
+    @Test
+    public function when_equals_on_None_should_not_equal_Some_true() {
+    	Some(true).equals(None).isFalse();
     }
 
     @Test
