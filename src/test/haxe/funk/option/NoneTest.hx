@@ -108,22 +108,22 @@ class NoneTest {
 
 	@Test
     public function when_equals_on_None_should_not_equal_Some_false() {
-    	Some(false).equals(None).isFalse();
+    	None.equals(Some(false)).isFalse();
     }
 
 	@Test
     public function when_equals_on_None_should_not_equal_Some_null() {
-    	Some(null).equals(None).isFalse();
+    	None.equals(Some(null)).isFalse();
     }
 
     @Test
     public function when_equals_on_None_should_not_equal_Some_int() {
-    	Some(1).equals(None).isFalse();
+    	None.equals(Some(1)).isFalse();
     }
 
     @Test
     public function when_equals_on_None_should_not_equal_Some_true() {
-    	Some(true).equals(None).isFalse();
+    	None.equals(Some(true)).isFalse();
     }
 
     @Test

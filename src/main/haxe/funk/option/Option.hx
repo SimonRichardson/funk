@@ -9,7 +9,7 @@ import funk.product.ProductIterator;
 
 enum Option<T> {
 	None;
-	Some(value : T);
+	Some(value : Null<T>);
 }
 
 class Options {
