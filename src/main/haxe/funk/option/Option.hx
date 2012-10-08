@@ -3,6 +3,7 @@ package funk.option;
 import funk.IFunkObject;
 import funk.either.Either;
 import funk.errors.NoSuchElementError;
+import funk.errors.RangeError;
 import funk.product.Product1;
 import funk.product.ProductIterator;
 
@@ -125,7 +126,10 @@ class ProductOption<T> extends Product1<T> {
 	}
 
 	override public function productElement(index : Int) : Dynamic {
-		return Options.get(_option);
+		return switch(_option) {
+			case Some(_): Options.get(_option);
+			case None: throw new RangeError();
+		}
 	}
 
 	override public function equals(that: IFunkObject): Bool {
