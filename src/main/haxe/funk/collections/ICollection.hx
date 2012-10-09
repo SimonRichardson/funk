@@ -1,6 +1,6 @@
 package funk.collections;
 
-import funk.FunkObject;
+import funk.IFunkObject;
 
 interface ICollection<T> implements IFunkObject {
 	
