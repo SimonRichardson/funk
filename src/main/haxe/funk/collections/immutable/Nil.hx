@@ -6,27 +6,41 @@ import funk.collections.NilList;
 import funk.errors.RangeError;
 import funk.option.Option;
 import funk.tuple.Tuple2;
-import funk.util.Require;
-import funk.unit.Expect;
 
 using funk.collections.IteratorUtil;
 using funk.tuple.Tuple2;
-using funk.util.Require;
-using funk.unit.Expect;
 
 enum Lists {
 	Nil;
 }
 
 class Nils {
-	
-	private static var _listFactory : IListFactory<Dynamic> = new ListFactory<Dynamic>();
-	
-	private static var _nilList : IList<Dynamic> = new NilList<Dynamic>(_listFactory);
-	
-	inline public static function list<T>(n : Nils) : IList<T> {
+
+	private static var LIST_FACTORY : IListFactory<Dynamic> = new ListFactory<Dynamic>();
+
+	private static var NIL_LIST : IList<Dynamic> = new NilList<Dynamic>(LIST_FACTORY);
+
+	inline public static function list<T>(n : Lists) : IList<T> {
 		return switch(n) {
-			case Nil: cast _nilList; 
+			case Nil: cast NIL_LIST;
 		}
+	}
+}
+
+private class ListFactory<T> implements IListFactory<T> {
+
+	public function new() {
+	}
+
+	inline public function createList(value : T, tail : IList<T>) : IList<T> {
+		return new List<T>(value, tail);
+	}
+
+	inline public function createNilList() : IList<T> {
+		return Nils.list(Nil);
+	}
+
+	inline public function createNil() : ICollection<T> {
+		return Nils.list(Nil);
 	}
 }
