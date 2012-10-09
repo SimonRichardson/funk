@@ -37,11 +37,17 @@ class ProductIterator<T> extends Product, implements IProductIterator<T> {
 	}
 
 	override public function equals(that: IFunkObject): Bool {
-      	return this.equals(that);
+		return if(this == that) {
+			true;
+		} else if(Std.is(that, IProduct)) {
+			super.equals(that);
+		} else {
+			false;
+		}
     }
 
 	override public function productElement(index : Int) : Dynamic {
-		return _product.productElement(_index);
+		return _product.productElement(index);
 	}
 
 	override private function get_productArity() : Int {

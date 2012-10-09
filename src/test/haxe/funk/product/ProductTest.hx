@@ -150,7 +150,7 @@ class MockProduct extends Product {
 	}
 }
 
-class StackProduct extends Product {
+private class StackProduct extends Product {
 
 	private var _value : Array<Int>;
 
@@ -173,7 +173,7 @@ class StackProduct extends Product {
 	}
 }
 
-class EmptyMockProduct extends Product {
+private class EmptyMockProduct extends Product {
 
 	public function new() {
 		super();
@@ -192,7 +192,7 @@ class EmptyMockProduct extends Product {
 	}
 }
 
-class MockIFunkObject implements IFunkObject {
+private class MockIFunkObject implements IFunkObject {
 
 	public function new(){
 

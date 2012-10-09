@@ -7,6 +7,7 @@ import funk.product.Product2Test;
 import funk.product.Product3Test;
 import funk.product.Product4Test;
 import funk.product.Product5Test;
+import funk.product.ProductIteratorTest;
 import funk.product.ProductTest;
 import funk.tuple.Tuple1Test;
 import funk.tuple.Tuple2Test;
@@ -34,6 +35,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(funk.product.Product3Test);
 		add(funk.product.Product4Test);
 		add(funk.product.Product5Test);
+		add(funk.product.ProductIteratorTest);
 		add(funk.product.ProductTest);
 		add(funk.tuple.Tuple1Test);
 		add(funk.tuple.Tuple2Test);
