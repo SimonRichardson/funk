@@ -1,5 +1,6 @@
 package funk.option;
 
+import funk.either.Either;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.option.Option;
@@ -235,6 +236,28 @@ class SomeTest {
     }
 
     @Test
+    public function when_toEither_on_Some_should_return_Either() {
+        Some(true).toEither(function(){
+            return false;
+        }).isEnum(Either);
+    }
+
+    @Test
+    public function when_toOption_on_true_should_return_Option() {
+        Options.toOption(true).isEnum(Option);
+    }
+
+    @Test
+    public function when_toOption_on_true_should_return_Some() {
+        Options.toOption(true).isDefined().isTrue();
+    }
+
+    @Test
+    public function when_calling_productIterator_on_Some_isNotNull() {
+        Some(true).productIterator().isNotNull();
+    }
+
+    @Test
     public function when_product_on_Some_should_have_product_arity_of_1() {
     	Some({}).toInstance().productArity.areEqual(1);
     }
@@ -263,5 +286,51 @@ class SomeTest {
         	true;
         }
         called.isTrue();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_ProductObject_with_same_instance_isTrue() {
+        var instance = Some(true).toInstance();
+        instance.equals(instance).isTrue();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_ProductObject_with_instance_isTrue() {
+        Some(true).toInstance().equals(Some(true).toInstance()).isTrue();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_Some_with_None_isFalse() {
+        Some(true).toInstance().equals(None.toInstance()).isFalse();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_ProductObject_with_nested_Option_should_be_true() {
+        Some(Some(true)).toInstance().equals(Some(Some(true)).toInstance()).isTrue();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_ProductObject_with_nested_Some_and_None_should_be_false() {
+        Some(Some(true)).toInstance().equals(Some(None).toInstance()).isFalse();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_ProductObject_with_nested_Some_instance_and_None_instance_should_be_false() {
+        Some(Some(true).toInstance()).toInstance().equals(Some(None.toInstance()).toInstance()).isFalse();
+    }
+
+    @Test
+    public function should_calling_deeply_nested_Some_be_equal_to_shallow_Some() {
+        Some(Some(Some(Some(true)))).toInstance().equals(Some(true).toInstance()).isTrue();
+    }
+
+    @Test
+    public function should_calling_deeply_nested_Some_with_true_be_not_equal_to_shallow_Some_with_false() {
+        Some(Some(Some(Some(true)))).toInstance().equals(Some(Some(Some(Some(false)))).toInstance()).isFalse();
+    }
+
+    @Test
+    public function should_calling_deeply_nested_Some_with_true_be_not_equal_to_shallow_None() {
+        Some(Some(Some(Some(true)))).toInstance().equals(None.toInstance()).isFalse();
     }
 }

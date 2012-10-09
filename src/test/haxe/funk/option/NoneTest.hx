@@ -1,5 +1,6 @@
 package funk.option;
 
+import funk.either.Either;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.option.Option;
@@ -132,6 +133,23 @@ class NoneTest {
     }
 
     @Test
+    public function when_toEither_on_None_should_return_Either() {
+        None.toEither(function(){
+            return false;
+        }).isEnum(Either);
+    }
+
+    @Test
+    public function when_toOption_on_null_should_return_Option() {
+        Options.toOption(null).isEnum(Option);
+    }
+
+    @Test
+    public function when_toOption_on_null_should_return_None() {
+        Options.toOption(null).isEmpty().isTrue();
+    }
+
+    @Test
     public function when_product_on_None_should_have_product_arity_of_0() {
     	None.toInstance().productArity.areEqual(0);
     }
@@ -150,5 +168,16 @@ class NoneTest {
         	true;
         }
         called.isTrue();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_ProductObject_with_same_instance_isTrue() {
+        var instance = None.toInstance();
+        instance.equals(instance).isTrue();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_ProductObject_with_instance_isTrue() {
+        None.toInstance().equals(None.toInstance()).isTrue();
     }
 }

@@ -79,7 +79,7 @@ class Options {
 		}
 	}
 
-	inline public static function orEither<T1, T2>(option : Option<T1>, func : Void -> T2)
+	inline public static function toEither<T1, T2>(option : Option<T1>, func : Void -> T2)
 																				: Either<T2, T1> {
 		return switch(option) {
 			case Some(value): Right(value);
@@ -163,18 +163,22 @@ class ProductOption<T> extends Product1<T> {
 					funk0.equals(funk1);
 				} else {
 
-					switch(Type.typeof(value0)){
-						case TEnum(_):
-							switch(Type.typeof(value1)){
-								case TEnum(_):
-									Type.enumEq(value0, value1);
-								default:
-									false;
-							}
-						default:
-							value0 == value1;
-					}
+					// Attempt to flatten the value as much as possible.
+					function flatten(value) : Dynamic {
+						switch(Type.typeof(value)){
+							case TEnum(x):
+								if(x == Option) {
+									var vOption : Option<Dynamic> = cast value;
+									if(Options.isDefined(vOption)) {
+										return flatten(Options.get(vOption));
+									}
+								} 
+							default:
+						}
+						return value;
+					};
 
+					flatten(value0) == flatten(value1);
 				}
 			} else {
 				false;
@@ -220,8 +224,8 @@ class ProductOption<T> extends Product1<T> {
 		return Options.orElse(_option, func);
 	}
 
-	public function orEither<T2>(func : Void -> T2) : Either<T2, T> {
-		return Options.orEither(_option, func);
+	public function toEither<T2>(func : Void -> T2) : Either<T2, T> {
+		return Options.toEither(_option, func);
 	}
 
 }
