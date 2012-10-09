@@ -27,4 +27,18 @@ class Anys {
 	inline public static function toOption<T>(value : T) : Option<T> {
 		return Anys.isEmpty(value) ? None : Some(value);
 	}
+
+	inline public static function equals<T1, T2>(value0 : T1, value1 : T2) : Bool {
+		return if(value0 == value1) {
+			true;
+		} else if(Std.is(value0, IFunkObject) && Std.is(value1, IFunkObject)) {
+			var funk0 : IFunkObject = cast value0;
+			var funk1 : IFunkObject = cast value1;
+			
+			funk0.equals(funk1);
+		} else {
+			// TODO (Simon) : work out if they're enums
+			false; 
+		}
+	}
 }
