@@ -1,6 +1,7 @@
 package funk.option;
 
 import funk.errors.NoSuchElementError;
+import funk.errors.RangeError;
 import funk.option.Option;
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
@@ -233,4 +234,29 @@ class SomeTest {
         Some([1,2,3]).toString().areEqual("Some([1,2,3])");
     }
 
+    @Test
+    public function when_product_on_Some_should_have_product_arity_of_1() {
+    	Some({}).toInstance().productArity.areEqual(1);
+    }
+
+    @Test
+    public function when_product_on_Some_should_have_productPrefix_of_Some_true() {
+        Some(true).toInstance().productPrefix.areEqual("Some(true)");
+    }
+
+    @Test
+    public function when_product_on_Some_should_have_productPrefix_of_Some_Array() {
+        Some([1,2,3]).toInstance().productPrefix.areEqual("Some([1,2,3])");
+    }
+
+	@Test
+    public function when_product_on_Some_should_throw_RangeError() {
+        var called = try {
+        	None.toInstance().productElement(2);
+        	false;
+        } catch(error : RangeError) {
+        	true;
+        }
+        called.isTrue();
+    }
 }
