@@ -41,12 +41,12 @@ class Eithers {
         }
     }
 
-    inline public static function fold<T1, T2>( either : Either<T1, T2>,
-                                                func0 : (T1 -> T1),
-                                                func1 : (T2 -> T2)) : Either<T1, T2> {
+    inline public static function fold<T1, T2, T3>( either : Either<T1, T2>,
+                                                func0 : (T1 -> T3),
+                                                func1 : (T2 -> T3)) : T3 {
         return switch(either) {
-            case Left(value): Left(func0(value));
-            case Right(value): Right(func1(value));
+            case Left(value): func0(value);
+            case Right(value): func1(value);
         }
     }
 
@@ -109,20 +109,32 @@ class ProductEither<T1, T2> extends Product2<T1, T2> {
     }
 
     override public function equals(that: IFunkObject): Bool {
-        if(Std.is(that, Either)) {
-            var thatEither: Either<T1, T2> = cast that;
+        return if(this == that) {
+            true;
+        } else if(Std.is(that, ProductEither)) {
 
-            var aFunk : Dynamic = switch(_either) {
-                case Left(value): cast value;
-                case Right(value): cast value;
+            var thatEither : ProductEither<Dynamic, Dynamic> = cast that;
+            if(isLeft() && thatEither.isLeft() || isRight() && thatEither.isRight()) {
+                var value0 = switch(_either) {
+                    case Left(value): cast value;
+                    case Right(value): cast value;
+                }
+
+                var value1 = thatEither.productElement(0);
+
+                if(Std.is(value0, IFunkObject) && Std.is(value1, IFunkObject)) {
+                    var funk0 : IFunkObject = cast value0;
+                    var funk1 : IFunkObject = cast value1;
+                    funk0.equals(funk1);
+                } else {
+                    value0 == value1;
+                }
+            } else {
+                false;
             }
-            var bFunk : Dynamic = Eithers.toInstance(thatEither).productElement(0);
-
-            return aFunk == bFunk;
-            // return expect(aFunk).toEqual(bFunk);
+        } else {
+            false;
         }
-
-        return false;
     }
 
     public function isLeft() : Bool {
@@ -141,7 +153,7 @@ class ProductEither<T1, T2> extends Product2<T1, T2> {
         return Eithers.right(_either);
     }
 
-    public function fold(func0 : (T1 -> T1), func1 : (T2 -> T2)) : Either<T1, T2> {
+    public function fold<T3>(func0 : (T1 -> T3), func1 : (T2 -> T3)) : T3 {
         return Eithers.fold(_either, func0, func1);
     }
 
@@ -151,10 +163,6 @@ class ProductEither<T1, T2> extends Product2<T1, T2> {
 
     public function toOption() : Option<T2> {
         return Eithers.toOption(_either);
-    }
-
-    private function toEnum() : Either<T1, T2> {
-        return _either;
     }
 }
 

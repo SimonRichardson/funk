@@ -383,4 +383,31 @@ class SomeTest {
     public function should_calling_deeply_nested_Some_with_true_be_not_equal_to_shallow_None() {
         Some(Some(Some(Some(true)))).toInstance().equals(None.toInstance()).isFalse();
     }
+
+    @Test
+    public function should_calling_equals_on_a_Some_with_same_funk_object_isTrue() {
+    	var value = new MockIFunkObject();
+        Some(value).toInstance().equals(Some(value).toInstance()).isTrue();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_Some_with_funk_object_isFalse() {
+        Some(new MockIFunkObject()).toInstance().equals(Some(new MockIFunkObject()).toInstance()).isFalse();
+    }
+}
+
+private class MockIFunkObject implements IFunkObject {
+
+	public function new(){
+		
+	}
+
+	public function equals(value : IFunkObject) : Bool {
+		return (this == value);
+	}
+	
+	public function toString() : String {
+		return "MockIFunkObject";
+	}
+
 }

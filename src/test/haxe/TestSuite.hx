@@ -1,5 +1,6 @@
 import massive.munit.TestSuite;
 
+import funk.either.EitherTest;
 import funk.option.NoneTest;
 import funk.option.SomeTest;
 import funk.product.Product1Test;
@@ -28,6 +29,7 @@ class TestSuite extends massive.munit.TestSuite
 	{
 		super();
 
+		add(funk.either.EitherTest);
 		add(funk.option.NoneTest);
 		add(funk.option.SomeTest);
 		add(funk.product.Product1Test);
