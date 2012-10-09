@@ -36,6 +36,11 @@ class SomeTest {
 	}
 
 	@Test
+	public function should_calling_getOrElse_on_Some_instance_with_none_should_equal_value() {
+		Some(1).toInstance().getOrElse(null).areEqual(1);
+	}
+
+	@Test
 	public function should_calling_Some_isDefined_is_true() {
 		Some(1).isDefined().isTrue();
 	}
@@ -106,6 +111,13 @@ class SomeTest {
 	}
 
 	@Test
+	public function should_calling_filter_with_instance_with_true_return_None() {
+		Some({}).toInstance().filter(function(v){
+			return true;
+		}).isDefined().isTrue();
+	}
+
+	@Test
 	public function should_calling_foreach_on_Some_iterate_once() {
 		var count = 0;
 		Some({}).foreach(function(v){
@@ -118,6 +130,14 @@ class SomeTest {
 	public function should_calling_foreach_on_Some_pass_value() {
 		var value = {};
 		Some(value).foreach(function(v){
+			value.areEqual(v);
+		});
+	}
+
+	@Test
+	public function should_calling_foreach_on_Some_instance_pass_value() {
+		var value = {};
+		Some(value).toInstance().foreach(function(v){
 			value.areEqual(v);
 		});
 	}
@@ -149,6 +169,13 @@ class SomeTest {
 	}
 
 	@Test
+	public function should_calling_flatmap_on_Some_instance_should_return_valid_Option() {
+		Some({}).toInstance().flatMap(function(v){
+			return None;
+		}).isEnum(Option);
+	}
+
+	@Test
 	public function should_calling_map_on_Some_should_call_function() {
 		var called = false;
 		Some({}).map(function(v){
@@ -175,9 +202,25 @@ class SomeTest {
 	}
 
 	@Test
+	public function should_calling_map_on_Some_instance_should_return_valid_Option() {
+		Some({}).toInstance().map(function(v){
+			return v;
+		}).isEnum(Option);
+	}
+
+	@Test
 	public function should_calling_orElse_on_Some_not_call_function() {
 		var value = {};
 		Some(value).orElse(function(){
+			Assert.fail("failed if called");
+			return None;
+		}).get().areEqual(value);
+	}
+
+	@Test
+	public function should_calling_orElse_on_Some_instance_should_not_call_function() {
+		var value = {};
+		Some(value).toInstance().orElse(function(){
 			Assert.fail("failed if called");
 			return None;
 		}).get().areEqual(value);
@@ -238,6 +281,13 @@ class SomeTest {
     @Test
     public function when_toEither_on_Some_should_return_Either() {
         Some(true).toEither(function(){
+            return false;
+        }).isEnum(Either);
+    }
+
+    @Test
+    public function when_toEither_on_Some_instance_should_return_Either() {
+        Some(true).toInstance().toEither(function(){
             return false;
         }).isEnum(Either);
     }
