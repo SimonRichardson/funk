@@ -132,7 +132,12 @@ class ProductOption<T> extends Product1<T> {
 
 	override public function productElement(index : Int) : Dynamic {
 		return switch(_option) {
-			case Some(_): Options.get(_option);
+			case Some(_): 
+				if(index == 0) {
+					Options.get(_option);
+				} else {
+					throw new RangeError();
+				}
 			case None: throw new RangeError();
 		}
 	}
