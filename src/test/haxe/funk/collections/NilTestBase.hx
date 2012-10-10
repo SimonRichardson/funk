@@ -353,69 +353,80 @@ class NilTestBase {
 		actual.init.areEqual(expected);
 	}
 
-	/*@Test
+	@Test
 	public function when_last_on_nil__should_not_be_null() : Void {
-		should("last be not null").expect(actual.last).toBeNotNull();
+		actual.last.isNotNull();
 	}
 
 	@Test
-	public function when_last_on_nil__should_be_equal_to_nil() : Void {
-		should("last be None").expect(actual.last).toBeEqualTo(None);
+	public function when_last_on_nil__should_be_equal_to_Option() : Void {
+		actual.last.isEnum(Option);
+	}
+
+	@Test
+	public function when_last_on_nil__should_be_equal_to_None() : Void {
+		actual.last.isEmpty().isTrue();
 	}
 
 	@Test
 	public function when_reverse_on_nil__should_not_be_null() : Void {
-		should("reverse be not null").expect(actual.reverse).toBeNotNull();
+		actual.reverse.isNotNull();
 	}
 
 	@Test
 	public function when_reverse_on_nil__should_be_equal_to_nil() : Void {
-		should("reverse be nil").expect(actual.reverse).toBeEqualTo(expected);
+		actual.reverse.areEqual(expected);
 	}
 
 	@Test
 	public function when_tail_on_nil__should_be_null() : Void {
-		should("tail be null").expect(actual.tail).toBeNull();
+		actual.tail.isNull();
+	}
+
+	@Test
+	public function when_tailOption_on_nil__should_be_Option() : Void {
+		actual.tailOption.isEnum(Option);
 	}
 
 	@Test
 	public function when_tailOption_on_nil__should_be_None() : Void {
-		should("tailOption be None").expect(actual.tailOption).toBeEqualTo(None);
+		actual.tailOption.isEmpty().isTrue();
 	}
 
 	@Test
 	public function when_zipWithIndex_on_nil__should_not_be_null() : Void {
-		should("zipWithIndex be not null").expect(actual.zipWithIndex).toBeNotNull();
+		actual.zipWithIndex.isNotNull();
 	}
 
 	@Test
 	public function when_zipWithIndex_on_nil__should_be_equal_to_nil() : Void {
-		should("zipWithIndex be nil").expect(actual.zipWithIndex).toBeEqualTo(expected);
+		actual.zipWithIndex.areEqual(expected);
 	}
 
 	@Test
 	public function when_productArity_on_nil__should_be_equal_to_0() : Void {
-		should("productArity be nil").expect(actual.productArity).toBeEqualTo(0);
+		actual.productArity.areEqual(0);
 	}
 
 	@Test
 	public function when_calling_productElement_on_nil__should_throw_RangeError() : Void {
-		try {
+		var called = try {
 			actual.productElement(0);
+			false;
 		} catch(e : RangeError) {
-			should("throw range error").expect(e).toBeOfType(RangeError);
+			true;
 		}
+		called.isTrue();
 	}
 
 	@Test
 	public function when_calling_appendAll_on_nil__should_not_be_null() : Void {
-		should("return same instance when calling appendAll").expect(actual.appendAll(other.prepend(1))).toBeNotNull();
+		actual.appendAll(other.prepend(1)).isNotNull();
 	}
 
 	@Test
 	public function when_calling_appendAll_on_nil__should_return_same_instance() : Void {
 		var o = expected.prepend(1);
-		should("return same instance when calling appendAll").expect(actual.appendAll(o)).toBeEqualTo(o);
-	}*/
-
+		actual.appendAll(o).areEqual(o);
+	}
 }
