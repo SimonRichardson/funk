@@ -49,7 +49,39 @@ class ListIterator<T> extends Product, implements IFunkObject, implements IProdu
 	}
 
 	override public function equals(that: IFunkObject): Bool {
-      	return false;
+		return if(this == that) {
+			true;
+		} else if(Std.is(that, ListIterator)) {
+			var thatIterator : ListIterator<Dynamic> = cast that;
+			var thatList : IList<Dynamic> = cast thatIterator._list;
+
+			if(_list.size == thatList.size) {
+				var result = true;
+
+				for(i in 0..._list.size) {
+					var value0 = _list.productElement(i);
+					var value1 = thatList.productElement(i);
+
+					if(Std.is(value0, IFunkObject) && Std.is(value1, IFunkObject)) {
+						var funk0 : IFunkObject = cast value0;
+						var funk1 : IFunkObject = cast value1;
+						result = funk0.equals(funk1);
+					} else {
+						result = value0 == value1;
+					}
+
+					if(!result) {
+						break;
+					}
+				}
+
+				result;
+			} else {
+				false;
+			}
+		} else {
+			false;
+		}
     }
 
 	override public function productElement(index : Int) : Dynamic {
