@@ -13,7 +13,7 @@ class ListUtil {
 		while(--n > -1) {
        		l = l.prepend(f());
        	}
-		return l;
+		return l.reverse;
 	}
 
 	public static function toList<T>(any : T) : IList<T> {

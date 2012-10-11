@@ -1,5 +1,6 @@
 import massive.munit.TestSuite;
 
+import funk.collections.immutable.ListUtilTest;
 import funk.collections.immutable.NilTest;
 import funk.collections.IteratorUtilTest;
 import funk.collections.ListIteratorTest;
@@ -32,6 +33,7 @@ class TestSuite extends massive.munit.TestSuite
 	{
 		super();
 
+		add(funk.collections.immutable.ListUtilTest);
 		add(funk.collections.immutable.NilTest);
 		add(funk.collections.IteratorUtilTest);
 		add(funk.collections.ListIteratorTest);
