@@ -1,7 +1,9 @@
 package funk.collections.immutable;
 
+import funk.collections.IteratorUtil;
 import funk.collections.immutable.Nil;
 
+using funk.collections.IteratorUtil;
 using funk.collections.immutable.Nil;
 
 class ListUtil {
@@ -20,6 +22,9 @@ class ListUtil {
 
 		if(Std.is(any, IList)) {
 			return cast any;
+
+		} else if(Reflect.field(any, 'next') && Reflect.field(any, 'hasNext')) {
+			return IteratorUtil.toList(cast any);
 
 		} else if(Std.is(any, Array)) {
 
