@@ -1,5 +1,6 @@
 package funk.collections;
 
+import funk.errors.ArgumentError;
 import funk.errors.NoSuchElementError;
 import funk.option.Any;
 import funk.option.Option;
@@ -20,12 +21,19 @@ class ListIterator<T> extends Product, implements IFunkObject, implements IProdu
 	public function new(l : IList<T>, nilList : IList<T>) {
 		super();
 
+		if(l == null) {
+			throw new ArgumentError("List should not be null");
+		}
+		if(nilList == null) {
+			throw new ArgumentError("NilList should not be null");
+		}
+
 		_list = l;
 		_nilList = nilList;
 	}
 
 	public function hasNext() : Bool {
-		return _list == null ? false : _list.nonEmpty;
+		return _list.nonEmpty;
 	}
 
 	public function next() : T {

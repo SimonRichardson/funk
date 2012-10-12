@@ -3,6 +3,7 @@ package funk.collections;
 import funk.collections.immutable.ListUtil;
 import funk.collections.immutable.Nil;
 import funk.errors.AbstractMethodError;
+import funk.errors.ArgumentError;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.option.Option;
@@ -28,6 +29,28 @@ class ListIteratorTest {
 	@After
 	public function tearDown() {
 		iterator = null;
+	}
+
+	@Test
+	public function passing_null_into_list_iterator_should_throw_error() {
+		var called = try {
+			new ListIterator(null, Nil.list());
+			false;
+		} catch (error : ArgumentError) {
+			true;
+		}
+		called.isTrue();
+	}
+
+	@Test
+	public function passing_null_into_nillist_iterator_should_throw_error() {
+		var called = try {
+			new ListIterator([].toList(), null);
+			false;
+		} catch (error : ArgumentError) {
+			true;
+		}
+		called.isTrue();
 	}
 
 	@Test
@@ -109,7 +132,7 @@ class ListIteratorTest {
 	}
 
 	@Test
-	public function should_calling_equals_with_different_instance_is_true() {
+	public function should_calling_equals_with_same_different_instance_is_true() {
 		var list = [1, 2, 3, 4].toList();
 		var thatIterator = new ListIterator(list, Nil.list());
 		iterator.equals(thatIterator).isTrue();
@@ -118,6 +141,14 @@ class ListIteratorTest {
 	@Test
 	public function should_calling_equals_with_different_instances_with_options_is_true() {
 		var list = [Some(1), Some(2), Some(3), Some(4)].toList();
+		var iterator0 = new ListIterator(list, Nil.list());
+		var iterator1 = new ListIterator(list, Nil.list());
+		iterator0.equals(iterator1).isTrue();
+	}
+
+	@Test
+	public function should_calling_equals_with_different_instances_with_options_instances_is_true() {
+		var list = [Some(1).toInstance(), Some(2).toInstance()].toList();
 		var iterator0 = new ListIterator(list, Nil.list());
 		var iterator1 = new ListIterator(list, Nil.list());
 		iterator0.equals(iterator1).isTrue();
