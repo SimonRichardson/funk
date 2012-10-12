@@ -1,8 +1,10 @@
 package funk.collections.immutable;
 
 import funk.collections.NilTestBase;
+import funk.collections.immutable.ListUtil;
 import funk.collections.immutable.Nil;
 
+using funk.collections.immutable.ListUtil;
 using funk.collections.immutable.Nil;
 
 class NilTest extends NilTestBase {
@@ -12,6 +14,7 @@ class NilTest extends NilTestBase {
 		actual = Nil.list();
 		expected = Nil.list();
 		other = Nil.list();
+		filledList = [1, 2, 3, 4].toList();
 	}
 
 	@After

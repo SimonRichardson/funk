@@ -19,6 +19,8 @@ class NilTestBase {
 
 	public var other : IList<Dynamic>;
 
+	public var filledList : IList<Dynamic>;
+
 	@Test
 	public function should_not_be_not_empty():Void {
 		actual.nonEmpty.isFalse();
@@ -420,8 +422,73 @@ class NilTestBase {
 	}
 
 	@Test
+	public function when_calling_append_on_nil__should_not_be_null() : Void {
+		actual.append(1).isNotNull();
+	}
+
+	@Test
+	public function when_calling_append_on_nil__should_be_size_1() : Void {
+		actual.append(1).size.areEqual(1);
+	}
+
+	@Test
+	public function when_calling_appendIterable_on_nil__should_not_be_null() : Void {
+		actual.appendIterable({iterator: filledList.productIterator}).isNotNull();
+	}
+
+	@Test
+	public function when_calling_appendIterable_on_nil__should_be_size_4() : Void {
+		actual.appendIterable({iterator: filledList.productIterator}).size.areEqual(4);
+	}
+
+	@Test
+	public function when_calling_iterator_on_nil__should_not_be_null() : Void {
+		actual.appendIterator(filledList.productIterator()).isNotNull();
+	}
+
+	@Test
+	public function when_calling_iterator_on_nil__should_be_size_4() : Void {
+		actual.appendIterator(filledList.productIterator()).size.areEqual(4);
+	}
+
+	@Test
 	public function when_calling_appendAll_on_nil__should_not_be_null() : Void {
 		actual.appendAll(other.prepend(1)).isNotNull();
+	}
+
+	@Test
+	public function when_calling_prepend_on_nil__should_not_be_null() : Void {
+		actual.prepend(1).isNotNull();
+	}
+
+	@Test
+	public function when_calling_prepend_on_nil__should_be_size_1() : Void {
+		actual.prepend(1).size.areEqual(1);
+	}
+
+	@Test
+	public function when_calling_prependIterable_on_nil__should_not_be_null() : Void {
+		actual.prependIterable({iterator: filledList.productIterator}).isNotNull();
+	}
+
+	@Test
+	public function when_calling_prependIterable_on_nil__should_be_size_4() : Void {
+		actual.prependIterable({iterator: filledList.productIterator}).size.areEqual(4);
+	}
+
+	@Test
+	public function when_calling_prependIterator_on_nil__should_not_be_null() : Void {
+		actual.prependIterator(filledList.productIterator()).isNotNull();
+	}
+
+	@Test
+	public function when_calling_prependIterator_on_nil__should_be_size_4() : Void {
+		actual.prependIterator(filledList.productIterator()).size.areEqual(4);
+	}
+
+	@Test
+	public function when_calling_prependAll_on_nil__should_not_be_null() : Void {
+		actual.prependAll(other.prepend(1)).isNotNull();
 	}
 
 	@Test
