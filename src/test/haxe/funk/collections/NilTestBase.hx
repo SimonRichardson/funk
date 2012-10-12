@@ -341,6 +341,123 @@ class NilTestBase {
 	}
 
 	@Test
+	public function when_reduceRight_on_nil__should_return_Option() : Void {
+		actual.reduceRight(function(a:Int, b:Int):Int {
+			return -1;
+		}).isEnum(Option);
+	}
+
+	@Test
+	public function when_reduceRight_on_nil__should_return_None() : Void {
+		actual.reduceRight(function(a:Int, b:Int):Int {
+			return -1;
+		}).isEnum(Option);
+	}
+
+	@Test
+	public function when_reduceRight_on_nil__should_not_call_method() : Void {
+		actual.reduceRight(function(a:Int, b:Int):Int {
+			Assert.fail("fail if called");
+			return -1;
+		}).isEnum(Option);
+	}
+
+	@Test
+	public function when_reduceLeft_on_nil__should_return_Option() : Void {
+		actual.reduceLeft(function(a:Int, b:Int):Int {
+			return -1;
+		}).isEnum(Option);
+	}
+
+	@Test
+	public function when_reduceLeft_on_nil__should_return_None() : Void {
+		actual.reduceLeft(function(a:Int, b:Int):Int {
+			return -1;
+		}).isEnum(Option);
+	}
+
+	@Test
+	public function when_take_0_on_nil__should_return_isNotNull() : Void {
+		actual.take(0).isNotNull();
+	}
+
+	@Test
+	public function when_take_0_on_nil__should_return_valid_IList() : Void {
+		actual.take(0).isType(IList);
+	}
+
+	@Test
+	public function when_take_0_on_nil__should_return_size_0() : Void {
+		actual.take(0).size.areEqual(0);
+	}
+
+	@Test
+	public function when_take_minus_1_on_nil__should_throw_error() : Void {
+		var called = try {
+			actual.take(-1);
+			false;
+		} catch(error : ArgumentError){
+			true;
+		}
+		called.isTrue();
+	}
+
+	@Test
+	public function when_takeRight_0_on_nil__should_return_isNotNull() : Void {
+		actual.takeRight(0).isNotNull();
+	}
+
+	@Test
+	public function when_takeRight_0_on_nil__should_return_valid_IList() : Void {
+		actual.takeRight(0).isType(IList);
+	}
+
+	@Test
+	public function when_takeRight_0_on_nil__should_return_size_0() : Void {
+		actual.takeRight(0).size.areEqual(0);
+	}
+
+	@Test
+	public function when_takeRight_minus_1_on_nil__should_throw_error() : Void {
+		var called = try {
+			actual.takeRight(-1);
+			false;
+		} catch(error : ArgumentError){
+			true;
+		}
+		called.isTrue();
+	}
+
+	@Test
+	public function when_takeWhile_on_nil__should_return_isNotNull() : Void {
+		actual.takeWhile(function(value : Int) : Bool {
+			return true;
+		}).isNotNull();
+	}
+
+	@Test
+	public function when_takeWhile_on_nil__should_return_valid_IList() : Void {
+		actual.takeWhile(function(value : Int) : Bool {
+			return true;
+		}).isType(IList);
+	}
+
+	@Test
+	public function when_takeWhile_on_nil__should_return_size_0() : Void {
+		actual.takeWhile(function(value : Int) : Bool {
+			return true;
+		}).size.areEqual(0);
+	}
+
+	@Test
+	public function when_takeWhile_on_nil__should_not_call_method() : Void {
+		actual.takeWhile(function(value : Int) : Bool {
+			Assert.fail("fail if called");
+			return true;
+		});
+	}
+
+	@Test
 	public function when_get_0_on_nil__should_return_Option() : Void {
 		actual.get(0).isEnum(Option);
 	}
