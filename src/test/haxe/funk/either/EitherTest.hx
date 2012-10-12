@@ -353,6 +353,21 @@ class EitherTest {
     }
 
     @Test
+    public function should_calling_equals_on_a_Right_with_Option_and_Right_with_Option_isTrue() {
+        Right(Some(true).toInstance()).toInstance().equals(Right(Some(true).toInstance()).toInstance()).isTrue();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_Right_with_Option_and_Left_with_Option_isFalse() {
+        Right(Some(true).toInstance()).toInstance().equals(Left(Some(true).toInstance()).toInstance()).isFalse();
+    }
+
+    @Test
+    public function should_calling_equals_on_a_Right_with_Option_and_Right_with_Option_value_isFalse() {
+        Right(Some(true).toInstance()).toInstance().equals(Right(Some(false).toInstance()).toInstance()).isFalse();
+    }
+
+    @Test
     public function should_calling_equals_on_a_Right_with_same_funk_object_isTrue() {
     	var value = new MockIFunkObject();
         Right(value).toInstance().equals(Right(value).toInstance()).isTrue();
@@ -378,13 +393,13 @@ class EitherTest {
 private class MockIFunkObject implements IFunkObject {
 
 	public function new(){
-		
+
 	}
 
 	public function equals(value : IFunkObject) : Bool {
 		return (this == value);
 	}
-	
+
 	public function toString() : String {
 		return "MockIFunkObject";
 	}
