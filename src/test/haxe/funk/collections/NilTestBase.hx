@@ -4,10 +4,12 @@ import funk.collections.IList;
 import funk.errors.ArgumentError;
 import funk.errors.RangeError;
 import funk.option.Option;
+import funk.tuple.Tuple2;
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
 
 using funk.option.Option;
+using funk.tuple.Tuple2;
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
 
@@ -215,6 +217,20 @@ class NilTestBase {
 	}
 
 	@Test
+	public function when_map_on_nil__should_return_list() : Void {
+		actual.map(function(value : Int) : Float {
+			return 1.1;
+		}).isType(IList);
+	}
+
+	@Test
+	public function when_map_on_nil__should_return_empty_list() : Void {
+		actual.map(function(value : Int) : Float {
+			return 1.1;
+		}).size.areEqual(0);
+	}
+
+	@Test
 	public function when_flatMap_on_nil__should_return_list_when_calling_indentity() : Void {
 		actual.flatMap(function(x : Dynamic):IList<Dynamic> {
 			return other;
@@ -258,6 +274,80 @@ class NilTestBase {
 			Assert.fail("fail if called");
 			return 0;
 		}).areEqual(0);
+	}
+
+	@Test
+	public function when_forall_on_nil__should_return_false() : Void {
+		actual.forall(function(value : Int) : Bool {
+			return true;
+		}).isFalse();
+	}
+
+	@Test
+	public function when_forall_on_nil__should_not_run_function() : Void {
+		actual.forall(function(value : Int) : Bool {
+			Assert.fail("fail if called");
+			return true;
+		}).isFalse();
+	}
+
+	@Test
+	public function when_foreach_on_nil__should_not_run_function() : Void {
+		actual.foreach(function(value : Int) : Void {
+			Assert.fail("fail if called");
+		});
+	}
+
+	@Test
+	public function when_partition__should_return_isNotNull() : Void {
+		actual.partition(function(value : Int) : Bool {
+			return true;
+		}).isNotNull();
+	}
+
+	@Test
+	public function when_partition__should_return_a_ITuple2() : Void {
+		actual.partition(function(value : Int) : Bool {
+			return true;
+		}).isType(ITuple2);
+	}
+
+	@Test
+	public function when_partition__should_return_a_ITuple2_and__1_is_IList() : Void {
+		actual.partition(function(value : Int) : Bool {
+			return true;
+		})._1.isType(IList);
+	}
+
+	@Test
+	public function when_partition__should_return_a_ITuple2_and__1_is_IList_of_size_0() : Void {
+		actual.partition(function(value : Int) : Bool {
+			return true;
+		})._1.size.areEqual(0);
+	}
+
+	@Test
+	public function when_partition__should_return_a_ITuple2_and__2_is_IList() : Void {
+		actual.partition(function(value : Int) : Bool {
+			return true;
+		})._2.isType(IList);
+	}
+
+	@Test
+	public function when_partition__should_return_a_ITuple2_and__2_is_IList_of_size_0() : Void {
+		actual.partition(function(value : Int) : Bool {
+			return true;
+		})._2.size.areEqual(0);
+	}
+
+	@Test
+	public function when_get_0_on_nil__should_return_Option() : Void {
+		actual.get(0).isEnum(Option);
+	}
+
+	@Test
+	public function when_get_0_on_nil__should_return_None() : Void {
+		actual.get(0).isEmpty().isTrue();
 	}
 
 	@Test
@@ -495,5 +585,15 @@ class NilTestBase {
 	public function when_calling_appendAll_on_nil__should_return_same_instance() : Void {
 		var o = expected.prepend(1);
 		actual.appendAll(o).areEqual(o);
+	}
+
+	@Test
+	public function when_calling_toString_on_nil_should_return_Nil() : Void {
+		actual.toString().areEqual('Nil');
+	}
+
+	@Test
+	public function when_calling_productPrefix_on_nil_should_return_Nil() : Void {
+		actual.productPrefix.areEqual('Nil');
 	}
 }
