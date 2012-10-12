@@ -596,4 +596,14 @@ class NilTestBase {
 	public function when_calling_productPrefix_on_nil_should_return_Nil() : Void {
 		actual.productPrefix.areEqual('Nil');
 	}
+
+	@Test
+	public function when_calling_productIterator_on_nil_is_not_null() : Void {
+		actual.productIterator().isNotNull();
+	}
+
+	@Test
+	public function when_calling_productIterator_on_nil_should_hasNext_be_false() : Void {
+		actual.productIterator().hasNext().isFalse();
+	}
 }

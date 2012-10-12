@@ -35,7 +35,7 @@ class IteratorUtilTest {
 
 	@Test
 	public function should_calling_toList_with_iterator_calling_toString_return_correct_value() {
-		new MockIterator(5).toList().toString().areEqual("List(0, 1, 2, 3, 4)");
+		IteratorUtil.toInstance(new MockIterator(5)).toList().toString().areEqual("List(0, 1, 2, 3, 4)");
 	}
 
 	@Test
@@ -50,7 +50,7 @@ class IteratorUtilTest {
 
 	@Test
 	public function should_calling_toList_with_a_empty_iterator_should_return_a_isEmpty_list() {
-		new MockIterator(0).toList().isEmpty.isTrue();
+		IteratorUtil.toInstance(new MockIterator(0)).toList().isEmpty.isTrue();
 	}
 }
 

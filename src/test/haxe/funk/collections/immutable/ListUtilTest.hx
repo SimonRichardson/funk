@@ -1,11 +1,13 @@
 package funk.collections.immutable;
 
 import funk.collections.IList;
+import funk.collections.IteratorUtil;
 import funk.collections.immutable.ListUtil;
 import funk.collections.immutable.Nil;
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
 
+using funk.collections.IteratorUtil;
 using funk.collections.immutable.ListUtil;
 using funk.collections.immutable.Nil;
 using massive.munit.Assert;
@@ -51,7 +53,7 @@ class ListUtilTest {
 
 	@Test
 	public function should_calling_toList_with_iterator_return_list_of_size_5() {
-		new MockIterator(5).toList().size.areEqual(5);
+		new MockIterator(5).toInstance().toList().size.areEqual(5);
 	}
 
 	@Test

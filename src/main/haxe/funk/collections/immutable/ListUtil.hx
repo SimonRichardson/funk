@@ -2,6 +2,7 @@ package funk.collections.immutable;
 
 import funk.collections.IteratorUtil;
 import funk.collections.immutable.Nil;
+import funk.product.ProductIterator;
 
 using funk.collections.IteratorUtil;
 using funk.collections.immutable.Nil;
@@ -21,9 +22,11 @@ class ListUtil {
 		var n : Int;
 
 		if(Std.is(any, IList)) {
+
 			return cast any;
 
-		} else if(Reflect.field(any, 'next') && Reflect.field(any, 'hasNext')) {
+		} else if(Std.is(any, IProductIterator)) {
+
 			return IteratorUtil.toList(cast any);
 
 		} else if(Std.is(any, Array)) {
@@ -41,8 +44,11 @@ class ListUtil {
 	    	while(--n > -1) {
 	    		l = l.prepend(cast string.substr(n, 1));
 	    	}
+
 	    } else {
+
 			l = l.prepend(any);
+
 		}
 
 		return l;

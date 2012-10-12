@@ -1,6 +1,7 @@
 package funk.collections;
 
 import funk.collections.immutable.Nil;
+import funk.product.ProductIterator;
 
 using funk.collections.immutable.Nil;
 
@@ -14,5 +15,9 @@ class IteratorUtil {
 		}
 
 		return if(l.isEmpty) l; else l.reverse;
+	}
+
+	public static function toInstance<T>(iter : Iterator<T>) : IProductIterator<T> {
+		return new ProxyProductIterator(iter);
 	}
 }
