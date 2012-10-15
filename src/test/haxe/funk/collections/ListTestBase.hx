@@ -133,26 +133,23 @@ class ListTestBase {
 		called.isTrue();
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-	/*
 	@Test
-	public function when_drop_on_nil__return_nil_when_calling_dropRight() : Void {
-		actual.dropRight(0).areEqual(expected);
+	public function when_dropRight_0_on_list__return_same_list() : Void {
+		actual.dropRight(0).areEqual(actual);
 	}
 
 	@Test
-	public function when_drop_on_nil__throw_argument_when_passing_minus_to_dropRight() : Void {
+	public function when_dropRight_1_on_list__return_and_get_0_equals_0() : Void {
+		generateIntList(5).dropRight(1).get(0).get().areEqual(0);
+	}
+
+	@Test
+	public function when_dropRight_2_on_list__return_and_get_2_equals_2() : Void {
+		generateIntList(5).dropRight(2).get(2).get().areEqual(2);
+	}
+
+	@Test
+	public function when_dropRight_on_list__throw_argument_when_passing_minus_to_dropRight() : Void {
 		var called = try {
 			actual.dropRight(-1);
 			false;
@@ -163,65 +160,86 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_drop_on_nil__return_nil_when_calling_dropWhile() : Void {
-		actual.dropWhile(function(x : Dynamic):Bool {
-			return true;
-		}).areEqual(expected);
+	public function when_dropWhile__return_not_null() : Void {
+		generateIntList(5).dropWhile(function(x : Int):Bool {
+			return x < 2;
+		}).isNotNull();
 	}
 
 	@Test
-	public function when_drop_on_nil__should_not_call_dropWhile() : Void {
-		actual.dropWhile(function(x : Dynamic):Bool {
-			Assert.fail("fail if called");
-			return false;
-		}).areEqual(expected);
+	public function when_dropWhile__return_is_type_of_list() : Void {
+		generateIntList(5).dropWhile(function(x : Int):Bool {
+			return x < 2;
+		}).isType(IList);
 	}
 
 	@Test
-	public function when_exists_on_nil__should_return_false_when_calling_mapTrue() : Void {
-		actual.exists(function(x : Dynamic):Bool {
-			return true;
-		}).isFalse();
+	public function when_dropWhile__return_size_is_3() : Void {
+		generateIntList(5).dropWhile(function(x : Int):Bool {
+			return x < 2;
+		}).size.areEqual(3);
 	}
 
 	@Test
-	public function when_exists_on_nil__should_not_call_exists() : Void {
-		actual.exists(function(x : Dynamic):Bool {
-			Assert.fail("fail if called");
-			return false;
-		}).isFalse();
+	public function when_dropWhile__return_get_2_equals_4() : Void {
+		generateIntList(5).dropWhile(function(x : Int):Bool {
+			return x < 2;
+		}).get(2).get().areEqual(4);
+	}
+
+
+	@Test
+	public function when_exists__should_return_true_when_calling_exists() : Void {
+		actual.exists(function(x : Int):Bool {
+			return x == 2;
+		}).isTrue();
 	}
 
 	@Test
-	public function when_filter_on_nil__should_return_list_when_calling_mapFalse() : Void {
+	public function when_filter__should_return_list() : Void {
 		actual.filter(function(x : Dynamic):Bool {
-			return false;
-		}).areEqual(expected);
+			return x == 1;
+		}).isType(IList);
 	}
 
 	@Test
-	public function when_filter_on_nil__should_not_call_filter() : Void {
+	public function when_filter__should_return_list_of_size_1() : Void {
 		actual.filter(function(x : Dynamic):Bool {
-			Assert.fail("fail if called");
-			return false;
-		}).areEqual(expected);
+			return x == 1;
+		}).size.areEqual(1);
 	}
 
 	@Test
-	public function when_filterNot_on_nil__should_return_list_when_calling_mapFalse() : Void {
-		actual.filterNot(function(x : Dynamic):Bool {
-			return false;
-		}).areEqual(expected);
+	public function when_filter__should_return_even_list_of_size_2() : Void {
+		actual.filter(function(x : Dynamic):Bool {
+			return x % 2 == 0;
+		}).size.areEqual(2);
 	}
 
 	@Test
-	public function when_filterNot_on_nil__should_not_throw_error() : Void {
+	public function when_filterNot__should_return_list() : Void {
 		actual.filterNot(function(x : Dynamic):Bool {
-			Assert.fail("fail if called");
-			return false;
-		}).areEqual(expected);
+			return x == 1;
+		}).isType(IList);
 	}
 
+	@Test
+	public function when_filterNot__should_return_list_of_size_4() : Void {
+		actual.filterNot(function(x : Dynamic):Bool {
+			return x == 1;
+		}).size.areEqual(3);
+	}
+
+	@Test
+	public function when_filterNot__should_return_even_list_of_size_2() : Void {
+		actual.filterNot(function(x : Dynamic):Bool {
+			return x % 2 == 0;
+		}).size.areEqual(2);
+	}
+
+
+
+	/*
 	@Test
 	public function when_find_on_nil__should_return_Option_when_calling_mapFalse() : Void {
 		actual.find(function(x : Dynamic):Bool {
