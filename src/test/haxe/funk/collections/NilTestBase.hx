@@ -351,7 +351,7 @@ class NilTestBase {
 	public function when_reduceRight_on_nil__should_return_None() : Void {
 		actual.reduceRight(function(a:Int, b:Int):Int {
 			return -1;
-		}).isEnum(Option);
+		}).isEmpty().isTrue();
 	}
 
 	@Test

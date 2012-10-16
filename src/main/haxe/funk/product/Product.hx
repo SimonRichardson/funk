@@ -30,7 +30,16 @@ class Product implements IProduct {
         	var thatProduct: IProduct = cast that;
         	if(productArity == thatProduct.productArity) {
         		for(i in 0...productArity) {
-        			if(productElement(i) != thatProduct.productElement(i)) {
+        			var element0 = productElement(i);
+        			var element1 = thatProduct.productElement(i);
+        			if(Std.is(element0, IFunkObject) && Std.is(element1, IFunkObject)) {
+        				var value0 : IFunkObject = cast element0;
+        				var value1 : IFunkObject = cast element1;
+
+        				if(!value0.equals(value1)) {
+        					return false;
+        				}
+        			} else if(element0 != element1) {
         				return false;
         			}
         		}

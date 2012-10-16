@@ -29,7 +29,7 @@ class Anys {
 	}
 
 	public static function equals<T1, T2>(value0 : T1, value1 : T2) : Bool {
-		return if((cast value0) == (cast value1)) {
+		return if(Type.typeof(value0) == Type.typeof(value1) && (cast value0) == (cast value1)) {
 			true;
 		} else if(Std.is(value0, IFunkObject) && Std.is(value1, IFunkObject)) {
 			var funk0 : IFunkObject = cast value0;

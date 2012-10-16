@@ -690,7 +690,7 @@ class List<T> extends Product, implements IList<T> {
             i -= 1;
         }
 
-        throw new NoSuchElementError();
+        throw new RangeError();
     }
 
     override public function productIterator() : IProductIterator<Dynamic> {
@@ -820,8 +820,8 @@ class List<T> extends Product, implements IList<T> {
     }
 
     private function get_flatten() : IList<T> {
-        return flatMap(function(x: Dynamic): IList<T> {
-            return Std.is(x, IList) ? cast x : x.toList();
+        return flatMap(function(x: T): IList<T> {
+            return Std.is(x, IList) ? cast x : ListUtil.toList(x);
         });
     }
 
