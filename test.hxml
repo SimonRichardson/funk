@@ -1,5 +1,9 @@
+-cmd rm -rf bin
+-cmd mkdir bin
+
 # js
 
+--next
 -js bin/js_test.js
 -main TestMain
 -cp src/main/haxe
