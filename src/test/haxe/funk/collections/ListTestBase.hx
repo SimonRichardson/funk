@@ -237,80 +237,93 @@ class ListTestBase {
 		}).size.areEqual(2);
 	}
 
-
-
-	/*
 	@Test
-	public function when_find_on_nil__should_return_Option_when_calling_mapFalse() : Void {
+	public function when_find__should_return_Option() : Void {
 		actual.find(function(x : Dynamic):Bool {
-			return false;
+			return x == 2;
 		}).isEnum(Option);
 	}
 
 	@Test
-	public function when_find_on_nil__should_return_None_when_calling_mapFalse() : Void {
+	public function when_find__should_return_Some() : Void {
 		actual.find(function(x : Dynamic):Bool {
-			return false;
-		}).isEmpty().isTrue();
+			return x == 2;
+		}).isDefined().isTrue();
 	}
 
 	@Test
-	public function when_find_on_nil__should_not_call_find() : Void {
+	public function when_find_on_nil__should_call_find() : Void {
+		var called = false;
 		actual.find(function(x : Dynamic):Bool {
-			Assert.fail("fail if called");
-			return false;
-		}).isEnum(Option);
+			called = true;
+			return x == 2;
+		});
+		called.isTrue();
 	}
 
 	@Test
-	public function when_findIndexOf_on_nil__should_return_minus_1_when_calling_mapTrue() : Void {
+	public function when_findIndexOf__should_return_1_for_value_2() : Void {
 		actual.findIndexOf(function(x : Dynamic):Bool {
-			return true;
-		}).areEqual(-1);
+			return x == 2;
+		}).areEqual(1);
 	}
 
 	@Test
-	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_null() : Void {
-		actual.indexOf(null).areEqual(-1);
+	public function when_findIndexOf__should_return_2_for_value_3() : Void {
+		actual.findIndexOf(function(x : Dynamic):Bool {
+			return x == 3;
+		}).areEqual(2);
 	}
 
 	@Test
-	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_true() : Void {
-		actual.indexOf(true).areEqual(-1);
+	public function when_indexOf__should_return_1_for_value_2() : Void {
+		actual.indexOf(2).areEqual(1);
 	}
 
 	@Test
-	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_false() : Void {
-		actual.indexOf(false).areEqual(-1);
+	public function when_indexOf__should_return_2_for_value_3() : Void {
+		actual.indexOf(3).areEqual(2);
 	}
 
-	@Test
-	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_array() : Void {
-		actual.indexOf([]).areEqual(-1);
-	}
+
+
 
 	@Test
-	public function when_zip_on_nil__should_not_be_null() : Void {
+	public function when_zip__should_not_be_null() : Void {
 		actual.zip(other).isNotNull();
 	}
 
 	@Test
-	public function when_zip_on_nil__should_be_equal_to_nil() : Void {
-		actual.zip(other).areEqual(expected);
+	public function when_zip__should_be_be_size_0() : Void {
+		actual.zip(other).size.areEqual(0);
 	}
 
 	@Test
-	public function when_zip_on_nil__should_be_equal_to_nil_even_if_other_is_not_empty() : Void {
-		actual.zip(other.prepend(1)).areEqual(expected);
+	public function when_zip__should_be_be_size_4() : Void {
+		actual.zip(filledList).size.areEqual(4);
 	}
 
 	@Test
-	public function when_find_on_nil__should_not_call_findIndexOf() : Void {
-		actual.findIndexOf(function(x : Dynamic):Bool {
-			Assert.fail("fail if called");
-			return false;
-		}).areEqual(-1);
+	public function when_zip__should_calling_get_0_return_tuple2() : Void {
+		actual.zip(filledList).get(0).get().isType(ITuple2);
 	}
+
+	@Test
+	public function when_zip__should_calling_get_3_return_tuple2() : Void {
+		actual.zip(filledList).get(3).get().isType(ITuple2);
+	}
+
+	@Test
+	public function when_zip__should_calling_get_3_return_tuple2_and__1_equals_4() : Void {
+		actual.zip(filledList).get(3).get()._1.areEqual(4);
+	}
+
+	@Test
+	public function when_zip__should_calling_get_2_return_tuple2_and__2_equals_3() : Void {
+		actual.zip(filledList).get(2).get()._2.areEqual(3);
+	}
+
+	/*
 
 	@Test
 	public function when_map_on_nil__should_return_list() : Void {

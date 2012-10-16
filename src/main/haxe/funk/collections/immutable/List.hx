@@ -558,6 +558,11 @@ class List<T> extends Product, implements IList<T> {
 
     public function zip(that : IList<T>) : IList<ITuple2<T, T>> {
         var n: Int = Std.int(Math.min(size, that.size));
+
+        if(n <= 0) {
+            return Nil.list();
+        }
+
         var t: Int = n - 1;
         var buffer: Array<List<ITuple2<T, T>>> = new Array<List<ITuple2<T, T>>>();
 
