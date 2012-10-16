@@ -986,17 +986,19 @@ class ListTestBase {
 		actual.append(5).equals([1, 2, 3, 4, 5].toList()).isTrue();
 	}
 
-
-	/*
-
 	@Test
 	public function when_calling_appendIterable__should_not_be_null() : Void {
 		actual.appendIterable({iterator: filledList.productIterator}).isNotNull();
 	}
 
 	@Test
-	public function when_calling_appendIterable__should_be_size_4() : Void {
-		actual.appendIterable({iterator: filledList.productIterator}).size.areEqual(4);
+	public function when_calling_appendIterable__should_be_size_8() : Void {
+		actual.appendIterable({iterator: filledList.productIterator}).size.areEqual(8);
+	}
+
+	@Test
+	public function when_calling_appendIterable__should_be_size_1_2_3_4_1_2_3_4() : Void {
+		actual.appendIterable({iterator: filledList.productIterator}).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
 	}
 
 	@Test
@@ -1005,13 +1007,23 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_calling_iterator__should_be_size_4() : Void {
-		actual.appendIterator(filledList.productIterator()).size.areEqual(4);
+	public function when_calling_iterator__should_be_size_8() : Void {
+		actual.appendIterator(filledList.productIterator()).size.areEqual(8);
 	}
 
 	@Test
 	public function when_calling_appendAll__should_not_be_null() : Void {
-		actual.appendAll(other.prepend(1)).isNotNull();
+		actual.appendAll(other).isNotNull();
+	}
+
+	@Test
+	public function when_calling_appendAll__should_be_size_8() : Void {
+		actual.appendAll(filledList).size.areEqual(8);
+	}
+
+	@Test
+	public function when_calling_appendAll__should_be_1_2_3_4_1_2_3_4() : Void {
+		actual.appendAll(filledList).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
 	}
 
 	@Test
@@ -1021,7 +1033,12 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_prepend__should_be_size_1() : Void {
-		actual.prepend(1).size.areEqual(1);
+		actual.prepend(5).size.areEqual(5);
+	}
+
+	@Test
+	public function when_calling_prepend__should_be_5_1_2_3_4() : Void {
+		actual.prepend(5).equals([5, 1, 2, 3, 4].toList()).isTrue();
 	}
 
 	@Test
@@ -1030,8 +1047,13 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_calling_prependIterable__should_be_size_4() : Void {
-		actual.prependIterable({iterator: filledList.productIterator}).size.areEqual(4);
+	public function when_calling_prependIterable__should_be_size_8() : Void {
+		actual.prependIterable({iterator: filledList.productIterator}).size.areEqual(8);
+	}
+
+	@Test
+	public function when_calling_prependIterable__should_be_1_2_3_4_1_2_3_4() : Void {
+		actual.prependIterable({iterator: filledList.productIterator}).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
 	}
 
 	@Test
@@ -1040,21 +1062,24 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_calling_prependIterator__should_be_size_4() : Void {
-		actual.prependIterator(filledList.productIterator()).size.areEqual(4);
+	public function when_calling_prependIterator__should_be_size_8() : Void {
+		actual.prependIterator(filledList.productIterator()).size.areEqual(8);
+	}
+
+	@Test
+	public function when_calling_prependIterator__should_be_1_2_3_4_1_2_3_4() : Void {
+		actual.prependIterator(filledList.productIterator()).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
 	}
 
 	@Test
 	public function when_calling_prependAll__should_not_be_null() : Void {
-		actual.prependAll(other.prepend(1)).isNotNull();
+		actual.prependAll(filledList).isNotNull();
 	}
 
 	@Test
-	public function when_calling_appendAll__should_return_same_instance() : Void {
-		var o = expected.prepend(1);
-		actual.appendAll(o).areEqual(o);
+	public function when_calling_prependAll__should_be_1_2_3_4_1_2_3_4() : Void {
+		actual.prependAll(filledList).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
 	}
-	*/
 
 	@Test
 	public function when_calling_toString_should_return_List() : Void {
