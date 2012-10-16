@@ -1,3 +1,4 @@
+import massive.munit.client.PrintClient;
 import massive.munit.client.RichPrintClient;
 import massive.munit.client.HTTPClient;
 import massive.munit.client.JUnitReportClient;
@@ -30,6 +31,8 @@ class TestMain
         #end
 
         var runner:TestRunner = new TestRunner(client);
+        //runner.addResultClient(new HTTPClient(new JUnitReportClient()));
+        //runner.addResultClient(new HTTPClient(new PrintClient()));
         runner.completionHandler = completionHandler;
         runner.run(suites);
     }
@@ -47,7 +50,7 @@ class TestMain
             #elseif js
                 js.Lib.eval("testResult(" + successful + ");");
             #elseif neko
-                neko.Sys.exit(0);
+                neko.Sys.exit(successful ? 0 : 1);
             #end
         }
         // if run from outside browser can get error which we can ignore
