@@ -277,9 +277,8 @@ class List<T> extends Product, implements IList<T> {
         	return this;
       	}
 		
-		var iter = value.productIterator();
-      	for(i in iter) {
-			_data.unshift(i);
+      	for(i in 0...n) {
+			_data.unshift(value.productElement((n - 1) - i));
 		}
 
       	return this;
@@ -288,7 +287,7 @@ class List<T> extends Product, implements IList<T> {
 	public function reduceLeft(f : (T -> T -> T)) : Option<T> {
 		var value : T = head;
 		var total : Int = _data.length;
-		for(i in 0...total) {
+		for(i in 1...total) {
 			value = f(value, _data[i]);
 		}
 		return Some(value);
@@ -307,9 +306,15 @@ class List<T> extends Product, implements IList<T> {
 		if(n < 0){
             throw new ArgumentError("n must be positive");
         }
+
+        if(n > size) {
+        	return this;
+        } else if(0 == n) {
+        	return Nil.list();
+        }
 		
-		var m = Std.int(Math.min(n, size));
-		_data = _data.splice(0, m);
+		var t = Std.int(Math.min(n, size));
+		_data = _data.splice(0, t);
 		
       	return this;
 	}
@@ -318,9 +323,15 @@ class List<T> extends Product, implements IList<T> {
 		if(n < 0){
             throw new ArgumentError("n must be positive");
         }
+
+        if(n > size) {
+        	return this;
+        } else if(0 == n) {
+        	return Nil.list();
+        }
 		
-		var m = Std.int(Math.min(n, size));
-		_data = _data.splice(_data.length - m, m);
+		var t = Std.int(Math.min(n, size));
+		_data = _data.splice(_data.length - t, t);
 
       	return this;
 	}
@@ -343,10 +354,15 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	public function zip(that : IList<T>) : IList<ITuple2<T, T>> {
-		var l: IList<ITuple2<T, T>> = Nil.list();
 		var n: Int = Std.int(Math.min(size, that.size));
+
+		if(n <= 0) {
+            return Nil.list();
+        }
+
+        var l: IList<ITuple2<T, T>> = Nil.list();
 		for(i in 0...n) {
-			l.append(tuple2(_data[i], cast that.get(i).get()).toInstance());
+			l = l.append(tuple2(_data[i], Options.get(that.get(i))).toInstance());
 		}
 		
 		return l;
@@ -468,16 +484,18 @@ class List<T> extends Product, implements IList<T> {
 	}
 	
 	private function get_tail() : IList<T> {
-		var l : List<T> = new List<T>();
-        if(_data.length > 1) {
+        return if(_data.length > 1) {
+        	var l : List<T> = new List<T>();
 			l._data = _data.slice(1);
+			l;
+		} else {
+			Nil.list();
 		}
-		return l;
 	}
 	
 	private function get_tailOption() : Option<IList<T>> {
-		var l : List<T> = new List<T>();
         return if(_data.length > 1) {
+        	var l : List<T> = new List<T>();
 			l._data = _data.slice(1);
 			cast Some(l);
 		} else {
@@ -487,9 +505,9 @@ class List<T> extends Product, implements IList<T> {
 	
 	private function get_zipWithIndex() : IList<ITuple2<T, Int>> {
 		var l: IList<ITuple2<T, Int>> = Nil.list();
-		var n: Int = size;
+		var n: Int = _data.length;
 		for(i in 0...n) {
-			l.append(tuple2(_data[i], i).toInstance());
+			l = l.append(tuple2(_data[i], i).toInstance());
 		}
 		
 		return l;
@@ -518,7 +536,7 @@ class List<T> extends Product, implements IList<T> {
 	
 	private function get_flatten() : IList<T> {
 		return flatMap(function(x: Dynamic): IList<T> { 
-			return Std.is(x, IList) ? cast x : x.toList(); 
+			return Std.is(x, IList) ? cast x : ListUtil.toList(x);
 		});
 	}
 	
