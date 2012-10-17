@@ -11,11 +11,18 @@ class StreamsTest {
 		var counter = 0;
 
 		var stream = Streams.identity();
-		stream.forEach(function(v) {
+		var eventStream = stream.forEach(function(v) {
 			counter++;
 		});
 
+		var iter : Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
+		var result = eventStream.toArray();
+    	for (e in iter) {
+        	stream.emit(e);
+    	}
 
+    	counter.areEqual(7);
 	}
+
 
 }
