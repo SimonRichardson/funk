@@ -53,8 +53,11 @@ class Stream<T> {
     }
 
     public function emit(value : T) : Stream<T> {
+
+    	var pulse = new Pulse<T>(Stamp.next(), value);
+
     	var queue = new PriorityQueue<{stream: Stream<T>, pulse: Pulse<T>}>();
-    	queue.insert({key: _rank, value: {stream: this, pulse: new Pulse<T>(Stamp.next(), value)}});
+    	queue.insert(_rank, {stream: this, pulse: pulse});
 
     	while (queue.length() > 0) {
 		    var keyValue = queue.pop();
@@ -67,13 +70,8 @@ class Stream<T> {
 		    switch (propagation) {
 		        case Propagate(p): {
 		            for (listener in stream._listeners) {
-		                queue.insert({
-		                        key: listener._rank,
-		                        value: {
-		                            stream: listener,
-		                            pulse:  p
-		                        }
-		                    });
+		            	var index = listener._rank;
+		                queue.insert(index, {stream: listener, pulse: p});
 		            }
 		        }
 
@@ -120,7 +118,7 @@ private class Stamp {
     }
 }
 
-typedef KeyValue<T> = { key: Int, value: T };
+private typedef KeyValue<T> = {key: Int, value: T};
 
 private class PriorityQueue<T> {
 
@@ -134,16 +132,18 @@ private class PriorityQueue<T> {
         return values.length;
     }
 
-    public function insert(value: KeyValue<T>) {
-        values.push(value);
+    public function insert(index : Int, value : T) {
+    	var keyValue = {key: index, value: value};
+
+        values.push(keyValue);
 
         var position = values.length - 1;
-        while(position > 0 && value.key < values[(position - 1) >> 1].key) {
+        while(position > 0 && index < values[(position - 1) >> 1].key) {
             var previous = position;
             position = (position - 1) >> 1;
 
             values[previous] = values[position];
-            values[position]  = value;
+            values[position] = keyValue;
         }
     }
 
