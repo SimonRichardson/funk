@@ -11,10 +11,20 @@ class IteratorUtil {
 		var l : IList<T> = null != optionalList ? optionalList : Nil.list();
 
 		while(iter.hasNext()) {
-			l = l.prepend(iter.next());
+			l = l.append(iter.next());
 		}
 
-		return if(l.isEmpty) l; else l.reverse;
+		return l;
+	}
+
+	public static function toArray<T>(iter : Iterator<T>) : Array<T> {
+		var a : Array<T> = [];
+
+		while(iter.hasNext()) {
+			a.push(iter.next());
+		}
+
+		return a;
 	}
 
 	public static function toInstance<T>(iter : Iterator<T>) : IProductIterator<T> {

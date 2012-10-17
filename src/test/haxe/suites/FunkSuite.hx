@@ -1,13 +1,7 @@
+package suites;
+
 import massive.munit.TestSuite;
 
-import funk.collections.immutable.ListTest;
-import funk.collections.immutable.ListUtilTest;
-import funk.collections.immutable.NilTest;
-import funk.collections.IteratorUtilTest;
-import funk.collections.ListIteratorTest;
-import funk.collections.mutable.ListTest;
-import funk.collections.mutable.ListUtilTest;
-import funk.collections.mutable.NilTest;
 import funk.either.EitherTest;
 import funk.option.NoneTest;
 import funk.option.SomeTest;
@@ -18,7 +12,6 @@ import funk.product.Product4Test;
 import funk.product.Product5Test;
 import funk.product.ProductIteratorTest;
 import funk.product.ProductTest;
-import funk.reactive.StreamsTest;
 import funk.tuple.Tuple1Test;
 import funk.tuple.Tuple2Test;
 import funk.tuple.Tuple3Test;
@@ -26,26 +19,13 @@ import funk.tuple.Tuple4Test;
 import funk.tuple.Tuple5Test;
 import funk.tuple.TupleTest;
 
-/**
- * Auto generated Test Suite for MassiveUnit.
- * Refer to munit command line tool for more information (haxelib run munit)
- */
-
-class TestSuite extends massive.munit.TestSuite
-{		
+class FunkSuite extends TestSuite
+{
 
 	public function new()
 	{
 		super();
 
-		add(funk.collections.immutable.ListTest);
-		add(funk.collections.immutable.ListUtilTest);
-		add(funk.collections.immutable.NilTest);
-		add(funk.collections.IteratorUtilTest);
-		add(funk.collections.ListIteratorTest);
-		add(funk.collections.mutable.ListTest);
-		add(funk.collections.mutable.ListUtilTest);
-		add(funk.collections.mutable.NilTest);
 		add(funk.either.EitherTest);
 		add(funk.option.NoneTest);
 		add(funk.option.SomeTest);
@@ -56,7 +36,6 @@ class TestSuite extends massive.munit.TestSuite
 		add(funk.product.Product5Test);
 		add(funk.product.ProductIteratorTest);
 		add(funk.product.ProductTest);
-		add(funk.reactive.StreamsTest);
 		add(funk.tuple.Tuple1Test);
 		add(funk.tuple.Tuple2Test);
 		add(funk.tuple.Tuple3Test);

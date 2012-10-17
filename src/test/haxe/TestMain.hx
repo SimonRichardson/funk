@@ -4,6 +4,10 @@ import massive.munit.client.HTTPClient;
 import massive.munit.client.JUnitReportClient;
 import massive.munit.TestRunner;
 
+import suites.CollectionSuite;
+import suites.FunkSuite;
+import suites.ReactiveSuite;
+
 #if js
 import js.Lib;
 import js.Dom;
@@ -22,7 +26,9 @@ class TestMain
     public function new()
     {
         var suites = new Array<Class<massive.munit.TestSuite>>();
-        suites.push(TestSuite);
+        suites.push(CollectionSuite);
+        suites.push(FunkSuite);
+        suites.push(ReactiveSuite);
 
         #if MCOVER
             var client = new mcover.coverage.munit.client.MCoverPrintClient();
