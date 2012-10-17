@@ -42,14 +42,26 @@ class Stream<T> {
 		}
 	}
 
-	public function forEach(func: T -> Void): Stream<T> {
-        Streams.create(function(pulse: Pulse<T>): Propagation<T> {
+	public function forEach(func : T -> Void) : Stream<T> {
+        Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
             func(pulse.value);
 
             return Negate;
         }, [this]);
 
         return this;
+    }
+
+    public function constant<E>(value : E) : Stream<E> {
+    	return map(function(v) {
+    			return value;
+    		});
+    }
+
+    public function map<E>(func : T -> E) : Stream<E> {
+    	return Streams.create(function(pulse : Pulse<T>) : Propagation<E> {
+    		return Propagate(pulse.map(func));
+    	}, [this]);
     }
 
     public function emit(value : T) : Stream<T> {

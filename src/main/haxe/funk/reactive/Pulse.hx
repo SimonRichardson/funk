@@ -13,12 +13,12 @@ class Pulse<T> {
 		_value = value;
 	}
 
-	public function map<T2>(func : T -> T2) : Pulse<T2> {
+	public function map<E>(func : T -> E) : Pulse<E> {
 		return withValue(func(value));
 	}
 
-	public function withValue<T2>(value : T2) : Pulse<T2> {
-		return new Pulse<T2>(time, value);
+	public function withValue<E>(value : E) : Pulse<E> {
+		return new Pulse<E>(time, value);
 	}
 
 	private function get_time() : Int {
