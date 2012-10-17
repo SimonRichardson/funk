@@ -42,6 +42,18 @@ class Stream<T> {
 		}
 	}
 
+	public function detachListener(listener : Stream<T>): Bool {
+        var index = _listeners.length;
+        while(--index > -1) {
+        	if(_listeners[index] == listener) {
+        		_listeners.splice(index, 1);
+        		return true;
+        	}
+        }
+
+        return false;
+    }
+
 	public function forEach(func : T -> Void) : Stream<T> {
         Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
             func(pulse.value);
@@ -62,6 +74,25 @@ class Stream<T> {
     	return Streams.create(function(pulse : Pulse<T>) : Propagation<E> {
     		return Propagate(pulse.map(func));
     	}, [this]);
+    }
+
+    public function bind<E>(func : T -> Stream<E>) : Stream<E> {
+        var previous: Stream<E> = null;
+
+        var out: Stream<E> = Streams.identity();
+
+        Streams.create(function(pulse : Pulse<T>) : Propagation<E> {
+            if (previous != null) {
+                previous.detachListener(out);
+            }
+
+            previous = func(pulse.value);
+            previous.attachListener(out);
+
+            return Negate;
+        }, [this]);
+
+        return out;
     }
 
     public function emit(value : T) : Stream<T> {

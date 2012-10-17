@@ -61,4 +61,25 @@ class StreamsTest {
         array.arrayEquals([3, 3, 3]);
 	}
 
+	@Test
+	public function when_creating_a_stream__should_calling_bind_with_3_streams() : Void {
+		var stream0 = Streams.identity();
+		var stream1 = Streams.identity();
+		var stream2 = Streams.identity();
+
+		var bound = stream.bind(function(x) {
+			return switch(x) {
+				case 0: stream0;
+				case 1: stream1;
+				case 2: stream2;
+			};
+		});
+
+		var array = bound.toArray();
+
+		stream.emit(0);
+		stream0.emit(123);
+
+		array.pop().areEqual(123);
+	}
 }
