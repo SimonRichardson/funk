@@ -21,4 +21,4 @@
 -lib hamcrest
 
 --next
--cmd haxelib run munit test -coverage
+-cmd haxelib run munit test -coverage -nogen

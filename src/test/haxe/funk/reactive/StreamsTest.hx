@@ -12,6 +12,7 @@ class StreamsTest {
 
 		var stream = Streams.identity();
 		var eventStream = stream.forEach(function(v) {
+			trace(v);
 			counter++;
 		});
 
