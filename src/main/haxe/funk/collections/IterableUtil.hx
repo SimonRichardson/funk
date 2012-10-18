@@ -9,4 +9,12 @@ class IterableUtil {
 	public static function toArray<T>(iter : Iterable<T>) : Array<T> {
 		return IteratorUtil.toArray(iter.iterator());
 	}
+
+	public static function size<T>(iter : Iterable<T>) : Int {
+		var total = 0;
+		for(item in iter) {
+			total++;
+		}
+		return total;
+	}
 }

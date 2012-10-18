@@ -2,6 +2,8 @@ package funk.reactive;
 
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
+import massive.munit.async.AsyncFactory;
+import massive.munit.util.Timer;
 
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
@@ -81,5 +83,44 @@ class StreamsTest {
 		stream0.emit(123);
 
 		array.pop().areEqual(123);
+	}
+
+	@Test
+	public function when_creating_a_stream__should_stream_be_empty() : Void {
+		var array = stream.toArray();
+		array.length.areEqual(0);
+	}
+
+	@Test
+	public function when_creating_a_stream__should_calling_emit_result_in_same_1() : Void {
+		var value = 1.1;
+
+		var array = stream.toArray();
+		stream.emit(value);
+		array.pop().areEqual(value);
+	}
+
+	@Test
+	public function when_creating_a_stream__should_calling_emit_result_in_same_string() : Void {
+		var value = "string";
+
+		var array = stream.toArray();
+		stream.emit(value);
+		array.pop().areEqual(value);
+	}
+
+	@Test
+	public function when_creating_a_stream__should_calling_emit_result_in_same_instance() : Void {
+		var value = {};
+
+		var array = stream.toArray();
+		stream.emit(value);
+		array.pop().areEqual(value);
+	}
+
+	@Test
+	public function when_creating_stream_with_true__should_return_value_of_true() : Void {
+		var result : Bool = stream.startsWith(true).value;
+		result.isTrue();
 	}
 }

@@ -1,5 +1,8 @@
 package funk.reactive;
 
+import funk.reactive.Propagation;
+import funk.reactive.utils.Timer;
+
 class Stream<T> {
 
 	private var _rank : Int;
@@ -70,6 +73,12 @@ class Stream<T> {
     		});
     }
 
+    public function startsWith(value : T) : Signal<T> {
+        return new Signal<T>(this, value, function(pulse : Pulse<T>) : Propagation<T> {
+            return Propagate(pulse);
+        });
+    }
+
     public function map<E>(func : T -> E) : Stream<E> {
     	return Streams.create(function(pulse : Pulse<T>) : Propagation<E> {
     		return Propagate(pulse.map(func));
@@ -122,6 +131,39 @@ class Stream<T> {
 		    }
 		}
 		return this;
+    }
+
+    public function emitWithDelay(value : T, delay : Int) : Stream<T> {
+        Timer.delay(function() {
+            emit(value);
+        }, delay);
+
+        return this;
+    }
+
+    public function delay(signal : Signal<Int>) : Stream<T> {
+        var stream : Stream<T> = Streams.identity();
+
+        Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
+            stream.emitWithDelay(pulse.value, signal.value);
+            return Negate;
+        }, [this]);
+
+        return stream;
+    }
+
+    public function steps() : Stream<T> {
+        var time = -1;
+
+        return Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
+                return if(pulse.time != time) {
+                    time = pulse.time;
+
+                    Propagate(pulse);
+                } else {
+                    Negate;
+                }
+            }, [this]);
     }
 
     public function toArray() : Array<T> {

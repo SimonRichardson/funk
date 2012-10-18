@@ -2,6 +2,7 @@ package suites;
 
 import massive.munit.TestSuite;
 
+import funk.reactive.CollectionsTest;
 import funk.reactive.StreamsTest;
 
 class ReactiveSuite extends TestSuite
@@ -11,6 +12,7 @@ class ReactiveSuite extends TestSuite
 	{
 		super();
 
+		add(funk.reactive.CollectionsTest);
 		add(funk.reactive.StreamsTest);
 	}
 }
