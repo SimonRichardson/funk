@@ -152,6 +152,28 @@ class Stream<T> {
         return stream;
     }
 
+    public function calm(signal : Signal<Int>) : Stream<T> {
+        var stream : Stream<T> = Streams.identity();
+
+        var timer : Timer = null;
+
+        Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
+            if(timer != null) {
+                timer.stop();
+            }
+
+            timer = Timer.delay(function() {
+                timer = null;
+
+                stream.emit(pulse.value);
+            }, signal.value);
+
+            return Negate;
+        }, [this]);
+
+        return stream;
+    }
+
     public function steps() : Stream<T> {
         var time = -1;
 

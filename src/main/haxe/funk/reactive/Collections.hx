@@ -50,7 +50,7 @@ class Collections {
 					value.stop();
 				case None:
 			}
-			
+
 			if(iterator.hasNext()) {
 				timer = createTimer();
 			}

@@ -7,7 +7,11 @@ class IterableUtil {
 	}
 
 	public static function toArray<T>(iter : Iterable<T>) : Array<T> {
-		return IteratorUtil.toArray(iter.iterator());
+		return if(Std.is(iter, Array)) {
+			cast iter;
+		} else {
+			IteratorUtil.toArray(iter.iterator());
+		};
 	}
 
 	public static function size<T>(iter : Iterable<T>) : Int {

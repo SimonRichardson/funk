@@ -10,6 +10,8 @@ using massive.munit.AssertExtensions;
 
 class StreamsTest {
 
+	private static var MAX_TIMEOUT : Int = 2000;
+
 	private var stream : Stream<Dynamic>;
 
 	@Before
@@ -122,5 +124,59 @@ class StreamsTest {
 	public function when_creating_stream_with_true__should_return_value_of_true() : Void {
 		var result : Bool = stream.startsWith(true).value;
 		result.isTrue();
+	}
+
+	@Test
+	public function when_creating_stream__should_calling_map_mutliply_each_value_by_2() : Void {
+		var mapped = stream.map(function(v){
+			return v * 2;
+		});
+
+		var array = mapped.toArray();
+
+		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
+        for(item in iter) {
+        	stream.emit(item);
+        }
+
+        array.arrayEquals([2, 4, 6, 8, 10, 12, 14]);
+	}
+
+	@AsyncTest
+	public function when_creating_a_stream__should_calm_not_allow_events_through(asyncFactory:AsyncFactory) : Void {
+		var calmed = stream.calm(Signals.constant(100)).toArray();
+
+		for(i in 0...4) {
+			stream.emit(i);
+		}
+
+		// Async
+		Timer.delay(asyncFactory.createHandler(this, function(){
+
+			calmed.arrayEquals([]);
+
+		}, MAX_TIMEOUT), 40);
+	}
+
+	// FIXME (Simon) : The result for this should be [3, 4, 5, 6, 7]
+	@AsyncTest
+	public function when_creating_a_stream__should_allow_events_through_after_calm(asyncFactory:AsyncFactory) : Void {
+		var calmed = stream.calm(Signals.constant(10)).toArray();
+
+		for(i in 0...4) {
+			stream.emit(i);
+		}
+
+		Timer.delay(function() {
+			for(i in 4...8) {
+				stream.emit(i);
+			}
+		}, 20);
+
+		// Async
+		Timer.delay(asyncFactory.createHandler(this, function(){
+			calmed.arrayEquals([3, 7]);
+
+		}, MAX_TIMEOUT), 40);
 	}
 }

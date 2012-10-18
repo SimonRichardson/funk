@@ -10,7 +10,7 @@ using massive.munit.AssertExtensions;
 
 class CollectionsTest {
 
-	private static var MAX_TIMEOUT : Int = 500;
+	private static var MAX_TIMEOUT : Int = 2000;
 
 	@AsyncTest
 	public function when_creating_a_stream__should_calling_emitWithDelay(asyncFactory:AsyncFactory) : Void {
@@ -23,7 +23,7 @@ class CollectionsTest {
 		Timer.delay(asyncFactory.createHandler(this, function(){
 
 			array.pop().areEqual(3);
-			
+
 		}, MAX_TIMEOUT), 40);
 	}
 
@@ -47,7 +47,7 @@ class CollectionsTest {
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
-			
+
 			array.shift();
 			array.shift().areEqual(2);
 
@@ -61,7 +61,7 @@ class CollectionsTest {
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
-			
+
 			array.length.areEqual(2);
 
 		}, MAX_TIMEOUT), 40);
@@ -75,8 +75,21 @@ class CollectionsTest {
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
-			
+
 			merged.arrayEquals([1, 2, 3, 4, 1, 2, 3, 4]);
+
+		}, MAX_TIMEOUT), 40);
+	}
+
+	@AsyncTest
+	public function when_creating_a_stream_from_a_collection__should_calm_not_allow_events_through(asyncFactory:AsyncFactory) : Void {
+		var stream = Collections.toStream([1, 2, 3, 4], Signals.constant(10));
+		var calmed = stream.calm(Signals.constant(40)).toArray();
+
+		// Async
+		Timer.delay(asyncFactory.createHandler(this, function(){
+
+			calmed.arrayEquals([]);
 
 		}, MAX_TIMEOUT), 40);
 	}
