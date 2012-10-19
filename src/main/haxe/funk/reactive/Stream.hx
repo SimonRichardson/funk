@@ -2,6 +2,9 @@ package funk.reactive;
 
 import funk.reactive.Propagation;
 import funk.reactive.utils.Timer;
+import funk.tuple.Tuple2;
+
+using funk.tuple.Tuple2;
 
 class Stream<T> {
 
@@ -11,12 +14,19 @@ class Stream<T> {
 
 	private var _listeners : Array<Stream<T>>;
 
+    private var _finished : Bool;
+
+    private var _finishedListeners : Array<Void -> Void>;
+
 	public function new(	propagator : Pulse<T> -> Propagation<T>,
 							sources : Array<Stream<T>> = null
 							) {
 		_rank = Rank.next();
 		_propagator = propagator;
 		_listeners = [];
+
+        _finished = false;
+        _finishedListeners = [];
 
 		if(sources != null && sources.length > 0) {
 			for(source in sources) {
@@ -57,6 +67,14 @@ class Stream<T> {
         return false;
     }
 
+    public function whenFinishedDo(func : Void -> Void) : Void {
+        if(_finished) {
+            func();
+        } else {
+            _finishedListeners.push(func);
+        }
+    }
+
 	public function forEach(func : T -> Void) : Stream<T> {
         Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
             func(pulse.value);
@@ -85,7 +103,7 @@ class Stream<T> {
     	}, [this]);
     }
 
-    public function bind<E>(func : T -> Stream<E>) : Stream<E> {
+    public function flatMap<E>(func : T -> Stream<E>) : Stream<E> {
         var previous: Stream<E> = null;
 
         var out: Stream<E> = Streams.identity();
@@ -102,6 +120,30 @@ class Stream<T> {
         }, [this]);
 
         return out;
+    }
+
+    public function zipWith<E1, E2>(stream : Stream<E1>, func : T -> E1 -> E2) : Stream<E2> {
+        var time = -1;
+        var value : T = null;
+
+        Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
+            time = pulse.time;
+            value = pulse.value;
+
+            return Negate;
+        }, [this]);
+
+        return Streams.create(function(pulse : Pulse<E1>) : Propagation<E2> {
+            return if(time == pulse.time) {
+                Propagate(pulse.withValue(func(value, pulse.value)));
+            } else {
+                Negate;
+            }
+        }, [stream]);
+    }
+
+    public function zip<E>(stream : Stream<E>) : Stream<ITuple2<T, E>> {
+        return zipWith(stream, Tuple2Impl.create);
     }
 
     public function emit(value : T) : Stream<T> {
@@ -139,6 +181,20 @@ class Stream<T> {
         }, delay);
 
         return this;
+    }
+
+    public function shift(value : Int) : Stream<T> {
+        var queue : Array<T> = [];
+
+        return Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
+            queue.push(pulse.value);
+
+            return if(queue.length <= value) {
+                Negate;
+            } else {
+                Propagate(pulse.withValue(queue.shift()));
+            }
+        }, [this]);
     }
 
     public function delay(signal : Signal<Int>) : Stream<T> {
@@ -196,6 +252,14 @@ class Stream<T> {
     	return array;
     }
 
+    public function finish() : Void {
+        _finished = true;
+
+        for(listener in _finishedListeners) {
+            listener();
+        }
+        _finishedListeners = [];
+    }
 }
 
 

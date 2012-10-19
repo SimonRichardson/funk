@@ -25,7 +25,7 @@ class AssertExtensions {
 			var array1 = toArray(b.iterator());
 
 			if(array0.length != array1.length) {
-				Assert.fail("Iterable [" + array0.length + "] does not match Iterable [" + array1.length + "] length");
+				Assert.fail("Iterable [" + array0.length + "] length does not match Iterable [" + array1.length + "] length");
 			} else {
 
 				for(index in 0...array0.length) {

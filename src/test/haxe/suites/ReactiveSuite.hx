@@ -13,6 +13,7 @@ class ReactiveSuite extends TestSuite
 		super();
 
 		add(funk.reactive.CollectionsTest);
+		add(funk.reactive.StreamTest);
 		add(funk.reactive.StreamsTest);
 	}
 }

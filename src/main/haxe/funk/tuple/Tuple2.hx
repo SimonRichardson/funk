@@ -50,6 +50,10 @@ class Tuple2Impl<T1, T2> extends Product2<T1, T2>, implements ITuple2<T1, T2> {
 		__2 = _2;
 	}
 
+	public static function create<T1, T2>(_1 : T1, _2 : T2) : ITuple2<T1, T2> {
+		return new Tuple2Impl(_1, _2);
+	}
+
 	override public function productElement(index : Int) : Dynamic {
 		return switch(index) {
 			case 0: cast __1;
