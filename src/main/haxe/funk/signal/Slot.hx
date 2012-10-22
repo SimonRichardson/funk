@@ -27,6 +27,10 @@ class Slot extends Product, implements ISlot {
 
 	}
 
+	override private function get_productArity() : Int {
+		return -1;
+	}
+
 	override private function get_productPrefix() : String {
 		return "Slot";
 	}

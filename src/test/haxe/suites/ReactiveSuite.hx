@@ -3,6 +3,7 @@ package suites;
 import massive.munit.TestSuite;
 
 import funk.reactive.CollectionsTest;
+import funk.reactive.StreamTest;
 import funk.reactive.StreamsTest;
 
 class ReactiveSuite extends TestSuite
