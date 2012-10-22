@@ -11,11 +11,11 @@ using funk.collections.immutable.Nil;
 
 interface ISignal5<T1, T2, T3, T4, T5> implements ISignal {
 
-	function add(func : (T1 -> T2 -> T3 -> T4 -> T5 -> Void)) : IOption<ISlot5<T1, T2, T3, T4, T5>>;
+	function add(func : Function5<T1, T2, T3, T4, T5, Void>) : IOption<ISlot5<T1, T2, T3, T4, T5>>;
 
-	function addOnce(func : (T1 -> T2 -> T3 -> T4 -> T5 -> Void)) : IOption<ISlot5<T1, T2, T3, T4, T5>>;
+	function addOnce(func : Function5<T1, T2, T3, T4, T5, Void>) : IOption<ISlot5<T1, T2, T3, T4, T5>>;
 
-	function remove(func : (T1 -> T2 -> T3 -> T4 -> T5 -> Void)) : IOption<ISlot5<T1, T2, T3, T4, T5>>;
+	function remove(func : Function5<T1, T2, T3, T4, T5, Void>) : IOption<ISlot5<T1, T2, T3, T4, T5>>;
 
 	function dispatch(value0 : T1, value1 : T2, value2 : T3, value3 : T4, value4 : T5) : Void;
 }
@@ -30,15 +30,18 @@ class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3
 		_list = Nil.list();
 	}
 
-	public function add(func : T1 -> T2 -> T3 -> T4 -> T5 -> Void) : IOption<ISlot5<T1, T2, T3, T4, T5>> {
+	public function add(	func : Function5<T1, T2, T3, T4, T5, Void>
+							) : IOption<ISlot5<T1, T2, T3, T4, T5>> {
 		return registerListener(func, false);
 	}
 
-	public function addOnce(func : T1 -> T2 -> T3 -> T4 -> T5 -> Void) : ISlot5<T1, T2, T3, T4, T5> {
+	public function addOnce(	func : Function5<T1, T2, T3, T4, T5, Void>
+								) : ISlot5<T1, T2, T3, T4, T5> {
 		return registerListener(func, true);
 	}
 
-	public function remove(func : T1 -> T2 -> T3 -> T4 -> T5 -> Void) : ISlot5<T1, T2, T3, T4, T5> {
+	public function remove(	func : Function5<T1, T2, T3, T4, T5, Void>
+							) : ISlot5<T1, T2, T3, T4, T5> {
 		var o = _list.find(function(s : ISlot5<T1, T2, T3, T4, T5>) : Bool {
 			return listenerEquals(s.listener, func);
 		});
@@ -54,7 +57,11 @@ class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3
 		_list = Nil.list();
 	}
 
-	public function dispatch(value0 : T1, value1 : T2, value2 : T3, value3 : T4, value4 : T5) : Void {
+	public function dispatch(	value0 : T1,
+								value1 : T2,
+								value2 : T3,
+								value3 : T4,
+								value4 : T5) : Void {
 		var slots = _list;
 		while(slots.nonEmpty) {
         	slots.head.execute(value0, value1, value2, value3, value4);
@@ -66,7 +73,8 @@ class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3
 		return _list.productElement(index);
 	}
 
-	public function listenerEquals(func0 : T1 -> T2 -> T3 -> T4 -> T5 -> Void, func1 : T1 -> T2 -> T3 -> T4 -> T5 -> Void) : Bool {
+	public function listenerEquals(	func0 : Function5<T1, T2, T3, T4, T5, Void>,
+									func1 : Function5<T1, T2, T3, T4, T5, Void>) : Bool {
 		return if(func0 == func1) {
 			true;
 		}
@@ -83,7 +91,8 @@ class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3
 		}
 	}
 
-	private function registerListener(func : T1 -> T2 -> T3 -> T4 -> T5 -> Void, once : Bool) : Option<ISlot5<T1, T2, T3, T4, T5>> {
+	private function registerListener(	func : Function5<T1, T2, T3, T4, T5, Void>,
+										once : Bool) : Option<ISlot5<T1, T2, T3, T4, T5>> {
 		if(registrationPossible(func, once)) {
 			var slot : ISlot5<T1, T2, T3, T4, T5> = new Slot5<T1, T2, T3, T4, T5>(this, func, once);
 			_list = _list.prepend(slot);
@@ -95,7 +104,8 @@ class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3
 		});
 	}
 
-	private function registrationPossible(func : T1 -> T2 -> T3 -> T4 -> T5 -> Void, once : Bool) : Bool {
+	private function registrationPossible(	func : Function5<T1, T2, T3, T4, T5, Void>,
+											once : Bool) : Bool {
 		if(!_list.nonEmpty) {
 			return true;
 		}

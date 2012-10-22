@@ -1,5 +1,6 @@
 package funk.signal;
 
+import funk.Funk;
 import funk.errors.IllegalOperationError;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
@@ -11,11 +12,11 @@ using funk.collections.immutable.Nil;
 
 interface ISignal0 implements ISignal {
 
-	function add(func : (Void -> Void)) : IOption<ISlot0>;
+	function add(func : Function0<Void>) : IOption<ISlot0>;
 
-	function addOnce(func : (Void -> Void)) : IOption<ISlot0>;
+	function addOnce(func : Function0<Void>) : IOption<ISlot0>;
 
-	function remove(func : (Void -> Void)) : IOption<ISlot0>;
+	function remove(func : Function0<Void, Void>) : IOption<ISlot0>;
 
 	function dispatch() : Void;
 }
@@ -30,15 +31,15 @@ class Signal0 extends Signal, implements ISignal0 {
 		_list = Nil.list();
 	}
 
-	public function add(func : Void -> Void) : IOption<ISlot0> {
+	public function add(func : Function0<Void>) : IOption<ISlot0> {
 		return registerListener(func, false);
 	}
 
-	public function addOnce(func : Void -> Void) : ISlot0 {
+	public function addOnce(func : Function0<Void>) : ISlot0 {
 		return registerListener(func, true);
 	}
 
-	public function remove(func : Void -> Void) : ISlot0 {
+	public function remove(func : Function0<Void>) : ISlot0 {
 		var o = _list.find(function(s : ISlot0) : Bool {
 			return listenerEquals(s.listener, func);
 		});
@@ -66,7 +67,7 @@ class Signal0 extends Signal, implements ISignal0 {
 		return _list.productElement(index);
 	}
 
-	public function listenerEquals(func0 : Void -> Void, func1 : Void -> Void) : Bool {
+	public function listenerEquals(func0 : Function0<Void>, func1 : Function0<Void>) : Bool {
 		return if(func0 == func1) {
 			true;
 		}
@@ -83,7 +84,7 @@ class Signal0 extends Signal, implements ISignal0 {
 		}
 	}
 
-	private function registerListener(func : Void -> Void, once : Bool) : Option<ISlot0> {
+	private function registerListener(func : Function0<Void>, once : Bool) : Option<ISlot0> {
 		if(registrationPossible(func, once)) {
 			var slot : ISlot0 = new Slot0(this, func, once);
 			_list = _list.prepend(slot);
@@ -95,7 +96,7 @@ class Signal0 extends Signal, implements ISignal0 {
 		});
 	}
 
-	private function registrationPossible(func : Void -> Void, once : Bool) : Bool {
+	private function registrationPossible(func : Function0<Void>, once : Bool) : Bool {
 		if(!_list.nonEmpty) {
 			return true;
 		}

@@ -1,22 +1,25 @@
 package funk.signal;
 
+import funk.Funk;
 import funk.errors.RangeError;
 import funk.signal.Signal2;
 
 interface ISlot2<T1, T2> implements ISlot {
 
-	var listener(default, default) : T1 -> T2 -> Void;
+	var listener(default, default) : Function2<T1, T2, Void>;
 
 	function execute(value0 : T1, value1 : T2) : Void;
 }
 
 class Slot2<T1, T2> extends Slot, implements ISlot2<T1, T2> {
 
-	public var listener(default, default) : T1 -> T2 -> Void;
+	public var listener(default, default) : Function2<T1, T2, Void>;
 
 	private var _signal : ISignal2<T1, T2>;
 
-	public function new(signal : ISignal2<T1, T2>, listener : T1 -> T2 -> Void, once : Bool) {
+	public function new(	signal : ISignal2<T1, T2>,
+							listener : Function2<T1, T2, Void>,
+							once : Bool) {
 		super();
 
 		_signal = signal;

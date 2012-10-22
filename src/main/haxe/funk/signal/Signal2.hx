@@ -1,5 +1,6 @@
 package funk.signal;
 
+import funk.Funk;
 import funk.errors.IllegalOperationError;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
@@ -11,11 +12,11 @@ using funk.collections.immutable.Nil;
 
 interface ISignal2<T1, T2> implements ISignal {
 
-	function add(func : (T1 -> T2 -> Void)) : IOption<ISlot2<T1, T2>>;
+	function add(func : Function2<T1, T2, Void>) : IOption<ISlot2<T1, T2>>;
 
-	function addOnce(func : (T1 -> T2 -> Void)) : IOption<ISlot2<T1, T2>>;
+	function addOnce(func : Function2<T1, T2, Void>) : IOption<ISlot2<T1, T2>>;
 
-	function remove(func : (T1 -> T2 -> Void)) : IOption<ISlot2<T1, T2>>;
+	function remove(func : Function2<T1, T2, Void>) : IOption<ISlot2<T1, T2>>;
 
 	function dispatch(value0 : T1, value1 : T2) : Void;
 }
@@ -30,15 +31,15 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		_list = Nil.list();
 	}
 
-	public function add(func : T1 -> T2 -> Void) : IOption<ISlot2<T1, T2>> {
+	public function add(func : Function2<T1, T2, Void>) : IOption<ISlot2<T1, T2>> {
 		return registerListener(func, false);
 	}
 
-	public function addOnce(func : T1 -> T2 -> Void) : ISlot2<T1, T2> {
+	public function addOnce(func : Function2<T1, T2, Void>) : ISlot2<T1, T2> {
 		return registerListener(func, true);
 	}
 
-	public function remove(func : T1 -> T2 -> Void) : ISlot2<T1, T2> {
+	public function remove(func : Function2<T1, T2, Void>) : ISlot2<T1, T2> {
 		var o = _list.find(function(s : ISlot2<T1, T2>) : Bool {
 			return listenerEquals(s.listener, func);
 		});
@@ -66,7 +67,8 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		return _list.productElement(index);
 	}
 
-	public function listenerEquals(func0 : T1 -> T2 -> Void, func1 : T1 -> T2 -> Void) : Bool {
+	public function listenerEquals(	func0 : Function2<T1, T2, Void>,
+									func1 : Function2<T1, T2, Void>) : Bool {
 		return if(func0 == func1) {
 			true;
 		}
@@ -83,7 +85,8 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		}
 	}
 
-	private function registerListener(func : T1 -> T2 -> Void, once : Bool) : Option<ISlot2<T1, T2>> {
+	private function registerListener(	func : Function2<T1, T2, Void>,
+										once : Bool) : Option<ISlot2<T1, T2>> {
 		if(registrationPossible(func, once)) {
 			var slot : ISlot2<T1, T2> = new Slot2<T1, T2>(this, func, once);
 			_list = _list.prepend(slot);
@@ -95,7 +98,7 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		});
 	}
 
-	private function registrationPossible(func : T1 -> T2 -> Void, once : Bool) : Bool {
+	private function registrationPossible(func : Function2<T1, T2, Void>, once : Bool) : Bool {
 		if(!_list.nonEmpty) {
 			return true;
 		}
