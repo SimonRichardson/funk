@@ -1,4 +1,9 @@
-package funk.reactive;
+package funk.reactive.signals;
+
+import funk.reactive.Propagation;
+import funk.reactive.Pulse;
+import funk.reactive.Signal;
+import funk.reactive.Stream;
 
 class SignalBool {
 

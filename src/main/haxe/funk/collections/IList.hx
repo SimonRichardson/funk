@@ -7,12 +7,12 @@ import funk.tuple.Tuple2;
 interface IList<T> implements IProduct, implements ICollection<T> {
 
     var nonEmpty(dynamic, never): Bool;
-	
+
     var flatten(dynamic, never): IList<T>;
-	
+
     var head(dynamic, never): T;
-	
-	var headOption(dynamic, never): Option<T>;
+
+	var headOption(dynamic, never): IOption<T>;
 
     var indices(dynamic, never): IList<Int>;
 
@@ -20,16 +20,16 @@ interface IList<T> implements IProduct, implements ICollection<T> {
 
     var isEmpty(dynamic, never): Bool;
 
-    var last(dynamic, never): Option<T>;
-	
+    var last(dynamic, never): IOption<T>;
+
 	var reverse(dynamic, never): IList<T>;
 
     var tail(dynamic, never): IList<T>;
-	
-	var tailOption(dynamic, never): Option<IList<T>>;
-	
+
+	var tailOption(dynamic, never): IOption<IList<T>>;
+
 	var zipWithIndex(dynamic, never): IList<ITuple2<T, Int>>;
-	
+
     function contains(value: T): Bool;
 
     function count(f: (T -> Bool)): Int;
@@ -46,7 +46,7 @@ interface IList<T> implements IProduct, implements ICollection<T> {
 
     function filterNot(f: (T -> Bool)): IList<T>;
 
-    function find(f: (T -> Bool)): Option<T>;
+    function find(f: (T -> Bool)): IOption<T>;
 
     function findIndexOf(f: (T -> Bool)): Int;
 
@@ -60,7 +60,7 @@ interface IList<T> implements IProduct, implements ICollection<T> {
 
     function foreach(f: (T -> Void)): Void;
 
-    function get(index: Int): Option<T>;
+    function get(index: Int): IOption<T>;
 
     function indexOf(value: T): Int;
 
@@ -79,15 +79,15 @@ interface IList<T> implements IProduct, implements ICollection<T> {
     function append(value: T): IList<T>;
 
     function appendAll(value: IList<T>): IList<T>;
-    
+
     function appendIterator(iterator: Iterator<T>): IList<T>;
 
     function appendIterable(iterable: Iterable<T>): IList<T>;
 
-    function reduceLeft(f: (T -> T -> T)): Option<T>;
+    function reduceLeft(f: (T -> T -> T)): IOption<T>;
 
-    function reduceRight(f: (T -> T -> T)): Option<T>;
-	
+    function reduceRight(f: (T -> T -> T)): IOption<T>;
+
     function take(n: Int): IList<T>;
 
     function takeRight(n: Int): IList<T>;

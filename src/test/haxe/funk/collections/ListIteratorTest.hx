@@ -83,7 +83,7 @@ class ListIteratorTest {
 	@Test
 	public function should_calling_nextOption_on_a_nil_list_returns_option() {
 		var thatIterator = new ListIterator(Nil.list(), Nil.list());
-		thatIterator.nextOption().isEnum(Option);
+		thatIterator.nextOption().isType(IOption);
 	}
 
 	@Test

@@ -2,6 +2,7 @@ package funk.signal;
 
 import funk.Funk;
 import funk.errors.RangeError;
+import funk.signal.Slot;
 import funk.signal.Signal1;
 
 interface ISlot1<T1> implements ISlot {
@@ -41,7 +42,7 @@ class Slot1<T1> extends Slot, implements ISlot1<T1> {
 		_signal.remove(listener);
 	}
 
-	public function productElement(index : Int) : Dynamic {
+	override public function productElement(index : Int) : Dynamic {
 		return switch(index){
 			case 0: listener;
 			default:

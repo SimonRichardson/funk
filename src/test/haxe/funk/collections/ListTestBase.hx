@@ -106,19 +106,19 @@ class ListTestBase {
 
 	@Test
 	public function when_drop_2__return_get_0_is_2() : Void {
-		var opt : Option<Int> = generateIntList(5).drop(2).get(0);
+		var opt : IOption<Int> = generateIntList(5).drop(2).get(0);
 		opt.get().areEqual(2);
 	}
 
 	@Test
 	public function when_drop_2__return_get_1_is_3() : Void {
-		var opt : Option<Int> = generateIntList(5).drop(2).get(1);
+		var opt : IOption<Int> = generateIntList(5).drop(2).get(1);
 		opt.get().areEqual(3);
 	}
 
 	@Test
 	public function when_drop_2_then_1__return_get_0_is_3() : Void {
-		var opt : Option<Int> = generateIntList(5).drop(2).drop(1).get(0);
+		var opt : IOption<Int> = generateIntList(5).drop(2).drop(1).get(0);
 		opt.get().areEqual(3);
 	}
 
@@ -242,7 +242,7 @@ class ListTestBase {
 	public function when_find__should_return_Option() : Void {
 		actual.find(function(x : Dynamic):Bool {
 			return x == 2;
-		}).isEnum(Option);
+		}).isType(IOption);
 	}
 
 	@Test
@@ -504,7 +504,7 @@ class ListTestBase {
 	public function when_reduceRight__should_return_Option() : Void {
 		actual.reduceRight(function(a:Int, b:Int):Int {
 			return a + b;
-		}).isEnum(Option);
+		}).isType(IOption);
 	}
 
 	@Test
@@ -542,7 +542,7 @@ class ListTestBase {
 	public function when_reduceLeft__should_return_Option() : Void {
 		actual.reduceLeft(function(a:Int, b:Int):Int {
 			return a + b;
-		}).isEnum(Option);
+		}).isType(IOption);
 	}
 
 	@Test
@@ -708,7 +708,7 @@ class ListTestBase {
 
 	@Test
 	public function when_get_0__should_return_Option() : Void {
-		actual.get(0).isEnum(Option);
+		actual.get(0).isType(IOption);
 	}
 
 	@Test
@@ -843,7 +843,7 @@ class ListTestBase {
 
 	@Test
 	public function when_headOption__should_be_Option() : Void {
-		actual.headOption.isEnum(Option);
+		actual.headOption.isType(IOption);
 	}
 
 	@Test
@@ -888,7 +888,7 @@ class ListTestBase {
 
 	@Test
 	public function when_last__should_be_equal_to_Option() : Void {
-		actual.last.isEnum(Option);
+		actual.last.isType(IOption);
 	}
 
 	@Test
@@ -928,7 +928,7 @@ class ListTestBase {
 
 	@Test
 	public function when_tailOption__should_be_Option() : Void {
-		actual.tailOption.isEnum(Option);
+		actual.tailOption.isType(IOption);
 	}
 
 	@Test
@@ -948,9 +948,9 @@ class ListTestBase {
 
 	@Test
 	public function when_zipWithIndex__should_be_equal_to_nil() : Void {
-		actual.zipWithIndex.equals([	tuple2(1, 0).toInstance(), 
-										tuple2(2, 1).toInstance(), 
-										tuple2(3, 2).toInstance(), 
+		actual.zipWithIndex.equals([	tuple2(1, 0).toInstance(),
+										tuple2(2, 1).toInstance(),
+										tuple2(3, 2).toInstance(),
 										tuple2(4, 3).toInstance()
 										].toList()).isTrue();
 	}
@@ -1184,8 +1184,8 @@ class ListTestBase {
 		iterator.next();
 		iterator.next();
 		iterator.next();
-		
-		iterator.nextOption().isEnum(Option);
+
+		iterator.nextOption().isType(IOption);
 	}
 
 	@Test
@@ -1195,7 +1195,7 @@ class ListTestBase {
 		iterator.next();
 		iterator.next();
 		iterator.next();
-		
+
 		iterator.nextOption().isEmpty().isTrue();
 	}
 }

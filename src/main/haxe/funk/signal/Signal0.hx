@@ -16,7 +16,7 @@ interface ISignal0 implements ISignal {
 
 	function addOnce(func : Function0<Void>) : IOption<ISlot0>;
 
-	function remove(func : Function0<Void, Void>) : IOption<ISlot0>;
+	function remove(func : Function0<Void>) : IOption<ISlot0>;
 
 	function dispatch() : Void;
 }
@@ -63,11 +63,11 @@ class Signal0 extends Signal, implements ISignal0 {
       	}
 	}
 
-	public function productElement(index : Int) : Dynamic {
+	override public function productElement(index : Int) : Dynamic {
 		return _list.productElement(index);
 	}
 
-	public function listenerEquals(func0 : Function0<Void>, func1 : Function0<Void>) : Bool {
+	private function listenerEquals(func0 : Function0<Void>, func1 : Function0<Void>) : Bool {
 		return if(func0 == func1) {
 			true;
 		}
@@ -105,7 +105,7 @@ class Signal0 extends Signal, implements ISignal0 {
 			return listenerEquals(s.listener, func);
 		});
 
-		return switch(slot) {
+		return switch(slot.toOption()) {
 			case None: true;
 			case Some(x):
 				if(x.once != once) {

@@ -20,7 +20,7 @@ class NilList<T> extends Product, implements IList<T> {
 
 	public var head(get_head, never) : T;
 
-	public var headOption(get_headOption, never) : Option<T>;
+	public var headOption(get_headOption, never) : IOption<T>;
 
 	public var indices(get_indices, never) : IList<Int>;
 
@@ -28,13 +28,13 @@ class NilList<T> extends Product, implements IList<T> {
 
 	public var isEmpty(get_isEmpty, never) : Bool;
 
-	public var last(get_last, never) : Option<T>;
+	public var last(get_last, never) : IOption<T>;
 
 	public var reverse(get_reverse, never) : IList<T>;
 
 	public var tail(get_tail, never) : IList<T>;
 
-	public var tailOption(get_tailOption, never) : Option<IList<T>>;
+	public var tailOption(get_tailOption, never) : IOption<IList<T>>;
 
 	public var zipWithIndex(get_zipWithIndex, never) : IList<ITuple2<T, Int>>;
 
@@ -94,8 +94,8 @@ class NilList<T> extends Product, implements IList<T> {
 		return _factory.createNilList();
 	}
 
-	public function find(f : (T -> Bool)) : Option<T> {
-		return None;
+	public function find(f : (T -> Bool)) : IOption<T> {
+		return None.toInstance();
 	}
 
 	public function flatMap(f : (T -> IList<T>)) : IList<T> {
@@ -117,8 +117,8 @@ class NilList<T> extends Product, implements IList<T> {
 	public function foreach(f : (T -> Void)) : Void {
 	}
 
-	public function get(index : Int) : Option<T> {
-		return None;
+	public function get(index : Int) : IOption<T> {
+		return None.toInstance();
 	}
 
 	public function map<E>(f : (T -> E)) : IList<E> {
@@ -137,12 +137,12 @@ class NilList<T> extends Product, implements IList<T> {
 		return value;
 	}
 
-	public function reduceLeft(f : (T -> T -> T)) : Option<T> {
-		return None;
+	public function reduceLeft(f : (T -> T -> T)) : IOption<T> {
+		return None.toInstance();
 	}
 
-	public function reduceRight(f : (T -> T -> T)) : Option<T> {
-		return None;
+	public function reduceRight(f : (T -> T -> T)) : IOption<T> {
+		return None.toInstance();
 	}
 
 	public function take(n : Int) : IList<T> {
@@ -221,8 +221,8 @@ class NilList<T> extends Product, implements IList<T> {
 		return null;
 	}
 
-	private function get_headOption() : Option<T> {
-		return None;
+	private function get_headOption() : IOption<T> {
+		return None.toInstance();
 	}
 
 	private function get_indices() : IList<Int> {
@@ -233,8 +233,8 @@ class NilList<T> extends Product, implements IList<T> {
 		return _factory.createNilList();
 	}
 
-	private function get_last() : Option<T> {
-		return None;
+	private function get_last() : IOption<T> {
+		return None.toInstance();
 	}
 
 	private function get_reverse() : IList<T> {
@@ -245,8 +245,8 @@ class NilList<T> extends Product, implements IList<T> {
 		return null;
 	}
 
-	private function get_tailOption() : Option<IList<T>> {
-		return None;
+	private function get_tailOption() : IOption<IList<T>> {
+		return None.toInstance();
 	}
 
 	private function get_zipWithIndex() : IList<ITuple2<T, Int>> {

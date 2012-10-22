@@ -63,11 +63,11 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
       	}
 	}
 
-	public function productElement(index : Int) : Dynamic {
+	override public function productElement(index : Int) : Dynamic {
 		return _list.productElement(index);
 	}
 
-	public function listenerEquals(	func0 : Function4<T1, T2, T3, T4, Void>,
+	private function listenerEquals(	func0 : Function4<T1, T2, T3, T4, Void>,
 									func1 : Function4<T1, T2, T3, T4, Void>) : Bool {
 		return if(func0 == func1) {
 			true;
@@ -108,7 +108,7 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
 			return listenerEquals(s.listener, func);
 		});
 
-		return switch(slot) {
+		return switch(slot.toOption()) {
 			case None: true;
 			case Some(x):
 				if(x.once != once) {

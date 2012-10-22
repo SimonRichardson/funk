@@ -4,6 +4,7 @@ import funk.IFunkObject;
 import funk.either.Either;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
+import funk.product.Product;
 import funk.product.Product1;
 import funk.product.ProductIterator;
 
@@ -12,7 +13,34 @@ enum Option<T> {
 	Some(value : Null<T>);
 }
 
+interface IOption<T> implements IProduct {
+
+	function get() : T;
+
+	function getOrElse(func : Void -> T) : T;
+
+	function isDefined() : Bool;
+
+	function isEmpty() : Bool;
+
+	function filter(func : T -> Bool) : Option<T>;
+
+	function foreach(func : T -> Void) : Void;
+
+	function flatMap<T2>(func : T -> Option<T2>) : Option<T2>;
+
+	function map<T2>(func : T -> T2) : Option<T2>;
+
+	function orElse(func : Void -> Option<T>) : Option<T>;
+
+	function toEither<T2>(func : Void -> T2) : Either<T2, T>;
+
+	function toOption() : Option<T>;
+}
+
 class Options {
+
+	private static var NONE_OPTION : IOption<Dynamic> = new ProductOption<Dynamic>(None);
 
 	inline public static function get<T>(option : Option<T>) : T {
 		return switch(option) {
@@ -87,8 +115,11 @@ class Options {
 		}
 	}
 
-	inline public static function toInstance<T>(option : Option<T>) : ProductOption<T> {
-		return new ProductOption<T>(option);
+	inline public static function toInstance<T>(option : Option<T>) : IOption<T> {
+		return switch(option){
+			case Some(value): new ProductOption<T>(option);
+			case None: cast NONE_OPTION;
+		}
 	}
 
 	inline public static function toOption<T>(value : Null<T>) : Option<T> {
@@ -109,7 +140,7 @@ class Options {
 	}
 }
 
-class ProductOption<T> extends Product1<T> {
+class ProductOption<T> extends Product1<T>, implements IOption<T> {
 
 	private var _option : Option<T>;
 
@@ -132,7 +163,7 @@ class ProductOption<T> extends Product1<T> {
 
 	override public function productElement(index : Int) : Dynamic {
 		return switch(_option) {
-			case Some(_): 
+			case Some(_):
 				if(index == 0) {
 					Options.get(_option);
 				} else {
@@ -145,9 +176,9 @@ class ProductOption<T> extends Product1<T> {
 	override public function equals(that: IFunkObject): Bool {
 		return if(this == that) {
 			true;
-		} else if(Std.is(that, ProductOption)) {
+		} else if(Std.is(that, IOption)) {
 
-			var thatOption : ProductOption<Dynamic> = cast that;
+			var thatOption : IOption<Dynamic> = cast that;
 			if(this.isEmpty() && thatOption.isEmpty()) {
 
 				true;
@@ -172,7 +203,7 @@ class ProductOption<T> extends Product1<T> {
 									if(Options.isDefined(vOption)) {
 										return flatten(Options.get(vOption));
 									}
-								} 
+								}
 							default:
 						}
 						return value;
@@ -226,6 +257,10 @@ class ProductOption<T> extends Product1<T> {
 
 	public function toEither<T2>(func : Void -> T2) : Either<T2, T> {
 		return Options.toEither(_option, func);
+	}
+
+	public function toOption() : Option<T> {
+		return _option;
 	}
 
 }

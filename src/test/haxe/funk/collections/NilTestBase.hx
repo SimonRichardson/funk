@@ -148,7 +148,7 @@ class NilTestBase {
 	public function when_find_on_nil__should_return_Option_when_calling_mapFalse() : Void {
 		actual.find(function(x : Dynamic):Bool {
 			return false;
-		}).isEnum(Option);
+		}).isType(IOption);
 	}
 
 	@Test
@@ -163,7 +163,7 @@ class NilTestBase {
 		actual.find(function(x : Dynamic):Bool {
 			Assert.fail("fail if called");
 			return false;
-		}).isEnum(Option);
+		}).isType(IOption);
 	}
 
 	@Test
@@ -344,7 +344,7 @@ class NilTestBase {
 	public function when_reduceRight_on_nil__should_return_Option() : Void {
 		actual.reduceRight(function(a:Int, b:Int):Int {
 			return -1;
-		}).isEnum(Option);
+		}).isType(IOption);
 	}
 
 	@Test
@@ -359,21 +359,21 @@ class NilTestBase {
 		actual.reduceRight(function(a:Int, b:Int):Int {
 			Assert.fail("fail if called");
 			return -1;
-		}).isEnum(Option);
+		}).isType(IOption);
 	}
 
 	@Test
 	public function when_reduceLeft_on_nil__should_return_Option() : Void {
 		actual.reduceLeft(function(a:Int, b:Int):Int {
 			return -1;
-		}).isEnum(Option);
+		}).isType(IOption);
 	}
 
 	@Test
 	public function when_reduceLeft_on_nil__should_return_None() : Void {
 		actual.reduceLeft(function(a:Int, b:Int):Int {
 			return -1;
-		}).isEnum(Option);
+		}).isType(IOption);
 	}
 
 	@Test
@@ -459,7 +459,7 @@ class NilTestBase {
 
 	@Test
 	public function when_get_0_on_nil__should_return_Option() : Void {
-		actual.get(0).isEnum(Option);
+		actual.get(0).isType(IOption);
 	}
 
 	@Test
@@ -534,7 +534,7 @@ class NilTestBase {
 
 	@Test
 	public function when_headOption_on_nil__should_be_Option() : Void {
-		actual.headOption.isEnum(Option);
+		actual.headOption.isType(IOption);
 	}
 
 	@Test
@@ -569,7 +569,7 @@ class NilTestBase {
 
 	@Test
 	public function when_last_on_nil__should_be_equal_to_Option() : Void {
-		actual.last.isEnum(Option);
+		actual.last.isType(IOption);
 	}
 
 	@Test
@@ -594,7 +594,7 @@ class NilTestBase {
 
 	@Test
 	public function when_tailOption_on_nil__should_be_Option() : Void {
-		actual.tailOption.isEnum(Option);
+		actual.tailOption.isType(IOption);
 	}
 
 	@Test

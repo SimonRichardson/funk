@@ -16,5 +16,7 @@ class ReactiveSuite extends TestSuite
 		add(funk.reactive.CollectionsTest);
 		add(funk.reactive.StreamTest);
 		add(funk.reactive.StreamsTest);
+
+		add(funk.reactive.signals.SignalSignal1Test);
 	}
 }

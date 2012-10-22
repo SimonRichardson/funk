@@ -28,7 +28,7 @@ class List<T> extends Product, implements IList<T> {
 
     public var head(get_head, never) : T;
 
-    public var headOption(get_headOption, never) : Option<T>;
+    public var headOption(get_headOption, never) : IOption<T>;
 
     public var indices(get_indices, never) : IList<Int>;
 
@@ -36,13 +36,13 @@ class List<T> extends Product, implements IList<T> {
 
     public var isEmpty(get_isEmpty, never) : Bool;
 
-    public var last(get_last, never) : Option<T>;
+    public var last(get_last, never) : IOption<T>;
 
     public var reverse(get_reverse, never) : IList<T>;
 
     public var tail(get_tail, never) : IList<T>;
 
-    public var tailOption(get_tailOption, never) : Option<IList<T>>;
+    public var tailOption(get_tailOption, never) : IOption<IList<T>>;
 
     public var zipWithIndex(get_zipWithIndex, never) : IList<ITuple2<T, Int>>;
 
@@ -249,7 +249,7 @@ class List<T> extends Product, implements IList<T> {
         return (first == null) ? Nil.list() : first;
     }
 
-    public function find(f : (T -> Bool)) : Option<T> {
+    public function find(f : (T -> Bool)) : IOption<T> {
         var p: IList<T> = this;
 
         while(p.nonEmpty) {
@@ -260,7 +260,7 @@ class List<T> extends Product, implements IList<T> {
             p = p.tail;
         }
 
-        return None;
+        return None.toInstance();
     }
 
     public function flatMap(f : (T -> IList<T>)) : IList<T> {
@@ -331,8 +331,8 @@ class List<T> extends Product, implements IList<T> {
         }
     }
 
-    public function get(index : Int) : Option<T> {
-        return Some(productElement(index));
+    public function get(index : Int) : IOption<T> {
+        return Some(productElement(index)).toInstance();
     }
 
     public function map<E>(f : (T -> E)) : IList<E> {
@@ -443,7 +443,7 @@ class List<T> extends Product, implements IList<T> {
         return buffer[0];
     }
 
-    public function reduceLeft(f : (T -> T -> T)) : Option<T> {
+    public function reduceLeft(f : (T -> T -> T)) : IOption<T> {
         var value: T = head;
         var p: IList<T> = _tail;
 
@@ -452,10 +452,10 @@ class List<T> extends Product, implements IList<T> {
             p = p.tail;
         }
 
-        return Some(value);
+        return Some(value).toInstance();
     }
 
-    public function reduceRight(f : (T -> T -> T)) : Option<T> {
+    public function reduceRight(f : (T -> T -> T)) : IOption<T> {
         var buffer: Array<T> = toArray;
         var value: T = buffer.pop();
         var n: Int = buffer.length;
@@ -464,7 +464,7 @@ class List<T> extends Product, implements IList<T> {
             value = f(value, buffer[n]);
         }
 
-        return Some(value);
+        return Some(value).toInstance();
     }
 
     public function take(n : Int) : IList<T> {
@@ -709,8 +709,8 @@ class List<T> extends Product, implements IList<T> {
         return _head;
     }
 
-    private function get_headOption() : Option<T> {
-        return Some(_head);
+    private function get_headOption() : IOption<T> {
+        return Some(_head).toInstance();
     }
 
     private function get_indices() : IList<Int> {
@@ -728,9 +728,9 @@ class List<T> extends Product, implements IList<T> {
         return dropRight(1);
     }
 
-    private function get_last() : Option<T> {
+    private function get_last() : IOption<T> {
         var p: IList<T> = this;
-        var value: Option<T> = None;
+        var value: IOption<T> = None.toInstance();
 
         while(p.nonEmpty) {
             value = p.headOption;
@@ -756,8 +756,8 @@ class List<T> extends Product, implements IList<T> {
         return _tail;
     }
 
-    private function get_tailOption() : Option<IList<T>> {
-        return Some(_tail);
+    private function get_tailOption() : IOption<IList<T>> {
+        return Some(_tail).toInstance();
     }
 
     private function get_zipWithIndex() : IList<ITuple2<T, Int>> {

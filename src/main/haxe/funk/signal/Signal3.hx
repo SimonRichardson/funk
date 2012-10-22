@@ -63,11 +63,11 @@ class Signal3<T1, T2, T3> extends Signal, implements ISignal3<T1, T2, T3> {
       	}
 	}
 
-	public function productElement(index : Int) : Dynamic {
+	override public function productElement(index : Int) : Dynamic {
 		return _list.productElement(index);
 	}
 
-	public function listenerEquals(	func0 : Function3<T1, T2, T3, Void>,
+	private function listenerEquals(	func0 : Function3<T1, T2, T3, Void>,
 									func1 : Function3<T1, T2, T3, Void>) : Bool {
 		return if(func0 == func1) {
 			true;
@@ -107,7 +107,7 @@ class Signal3<T1, T2, T3> extends Signal, implements ISignal3<T1, T2, T3> {
 			return listenerEquals(s.listener, func);
 		});
 
-		return switch(slot) {
+		return switch(slot.toOption()) {
 			case None: true;
 			case Some(x):
 				if(x.once != once) {
