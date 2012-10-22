@@ -5,24 +5,24 @@ import funk.collections.IList;
 import funk.collections.immutable.Nil;
 import funk.option.Option;
 import funk.signal.Signal;
-import funk.signal.Slot2;
+import funk.signal.Slot3;
 
 using funk.collections.immutable.Nil;
 
-interface ISignal2<T1, T2> implements ISignal {
+interface ISignal3<T1, T2, T3> implements ISignal {
 
-	function add(func : (T1 -> T2 -> Void)) : IOption<ISlot2<T1, T2>>;
+	function add(func : (T1 -> T2 -> T3 -> Void)) : IOption<ISlot3<T1, T2, T3>>;
 
-	function addOnce(func : (T1 -> T2 -> Void)) : IOption<ISlot2<T1, T2>>;
+	function addOnce(func : (T1 -> T2 -> T3 -> Void)) : IOption<ISlot3<T1, T2, T3>>;
 
-	function remove(func : (T1 -> T2 -> Void)) : IOption<ISlot2<T1, T2>>;
+	function remove(func : (T1 -> T2 -> T3 -> Void)) : IOption<ISlot3<T1, T2, T3>>;
 
-	function dispatch(value0 : T1, value1 : T2) : Void;
+	function dispatch(value0 : T1, value1 : T2, value2 : T3) : Void;
 }
 
-class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
+class Signal3<T1, T2, T3> extends Signal, implements ISignal3<T1, T2, T3> {
 
-	private var _list : IList<ISlot2<T1, T2>>;
+	private var _list : IList<ISlot3<T1, T2, T3>>;
 
 	public function new() {
 		super();
@@ -30,20 +30,20 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		_list = Nil.list();
 	}
 
-	public function add(func : T1 -> T2 -> Void) : IOption<ISlot2<T1, T2>> {
+	public function add(func : T1 -> T2 -> T3 -> Void) : IOption<ISlot3<T1, T2, T3>> {
 		return registerListener(func, false);
 	}
 
-	public function addOnce(func : T1 -> T2 -> Void) : ISlot2<T1, T2> {
+	public function addOnce(func : T1 -> T2 -> T3 -> Void) : ISlot3<T1, T2, T3> {
 		return registerListener(func, true);
 	}
 
-	public function remove(func : T1 -> T2 -> Void) : ISlot2<T1, T2> {
-		var o = _list.find(function(s : ISlot2<T1, T2>) : Bool {
+	public function remove(func : T1 -> T2 -> T3 -> Void) : ISlot3<T1, T2, T3> {
+		var o = _list.find(function(s : ISlot3<T1, T2, T3>) : Bool {
 			return listenerEquals(s.listener, func);
 		});
 
-		_list = _list.filterNot(function(s : ISlot2<T1, T2>) : Bool {
+		_list = _list.filterNot(function(s : ISlot3<T1, T2, T3>) : Bool {
 			return listenerEquals(s.listener, func);
 		});
 
@@ -54,10 +54,10 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		_list = Nil.list();
 	}
 
-	public function dispatch(value0 : T1, value1 : T2) : Void {
+	public function dispatch(value0 : T1, value1 : T2, value2 : T3) : Void {
 		var slots = _list;
 		while(slots.nonEmpty) {
-        	slots.head.execute(value0, value1);
+        	slots.head.execute(value0, value1, value2);
         	slots = slots.tail;
       	}
 	}
@@ -66,7 +66,7 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		return _list.productElement(index);
 	}
 
-	public function listenerEquals(func0 : T1 -> T2 -> Void, func1 : T1 -> T2 -> Void) : Bool {
+	public function listenerEquals(func0 : T1 -> T2 -> T3 -> Void, func1 : T1 -> T2 -> T3 -> Void) : Bool {
 		return if(func0 == func1) {
 			true;
 		}
@@ -83,24 +83,24 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		}
 	}
 
-	private function registerListener(func : T1 -> T2 -> Void, once : Bool) : Option<ISlot2<T1, T2>> {
+	private function registerListener(func : T1 -> T2 -> T3 -> Void, once : Bool) : Option<ISlot3<T1, T2, T3>> {
 		if(registrationPossible(func, once)) {
-			var slot : ISlot2<T1, T2> = new Slot2<T1, T2>(this, func, once);
+			var slot : ISlot3<T1, T2, T3> = new Slot3<T1, T2, T3>(this, func, once);
 			_list = _list.prepend(slot);
 			return Some(slot);
 		}
 
-		return _list.find(function(s : ISlot2<T1, T2>) : Bool {
+		return _list.find(function(s : ISlot3<T1, T2, T3>) : Bool {
 			return listenerEquals(s.listener, func);
 		});
 	}
 
-	private function registrationPossible(func : T1 -> T2 -> Void, once : Bool) : Bool {
+	private function registrationPossible(func : T1 -> T2 -> T3 -> Void, once : Bool) : Bool {
 		if(!_list.nonEmpty) {
 			return true;
 		}
 
-		var slot = _list.find(function(s : ISlot2<T1, T2>) : Bool {
+		var slot = _list.find(function(s : ISlot3<T1, T2, T3>) : Bool {
 			return listenerEquals(s.listener, func);
 		});
 

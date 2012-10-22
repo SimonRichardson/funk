@@ -1,7 +1,7 @@
 package funk.signal;
 
 import funk.errors.RangeError;
-import funk.signal.Signal1;
+import funk.signal.Signal2;
 
 interface ISlot2<T1, T2> implements ISlot {
 
@@ -14,9 +14,9 @@ class Slot2<T1, T2> extends Slot, implements ISlot2<T1, T2> {
 
 	public var listener(default, default) : T1 -> T2 -> Void;
 
-	private var _signal : ISignal1<T1, T2>;
+	private var _signal : ISignal2<T1, T2>;
 
-	public function new(signal : ISignal1<T1, T2>, listener : T1 -> T2 -> Void, once : Bool) {
+	public function new(signal : ISignal2<T1, T2>, listener : T1 -> T2 -> Void, once : Bool) {
 		super();
 
 		_signal = signal;
