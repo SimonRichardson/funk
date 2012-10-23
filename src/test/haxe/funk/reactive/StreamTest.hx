@@ -33,7 +33,6 @@ class StreamTest {
 		});
 
 		var iter : Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
-		var result = eventStream.toArray();
     	for(item in iter) {
         	stream.emit(item);
     	}
@@ -42,60 +41,60 @@ class StreamTest {
 	}
 
 	@Test
-	public function when_creating_a_stream__should_calling_toArray() : Void {
-		var array = stream.toArray();
+	public function when_creating_a_stream__should_calling_values() : Void {
+		var values = stream.values();
 
         var iter: Iterable<Int> = [1, 2, 3, 4, 5];
         for(item in iter) {
         	stream.emit(item);
         }
 
-        array.arrayEquals([1, 2, 3, 4, 5]);
+        values.valuesEqualsIterable([1, 2, 3, 4, 5]);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_constant_with_3_return_3_3_3() : Void {
 		var total = 3;
-		var array = stream.constant(total).toArray();
+		var values = stream.constant(total).values();
 
         for(index in 0...total) {
         	stream.emit(index);
         }
 
-        array.arrayEquals([3, 3, 3]);
+        values.valuesEqualsIterable([3, 3, 3]);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_stream_be_empty() : Void {
-		var array = stream.toArray();
-		array.length.areEqual(0);
+		var values = stream.values();
+		values.size.areEqual(0);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_emit_result_in_same_1() : Void {
 		var value = 1.1;
 
-		var array = stream.toArray();
+		var values = stream.values();
 		stream.emit(value);
-		array.pop().areEqual(value);
+		values.last.get().areEqual(value);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_emit_result_in_same_string() : Void {
 		var value = "string";
 
-		var array = stream.toArray();
+		var values = stream.values();
 		stream.emit(value);
-		array.pop().areEqual(value);
+		values.last.get().areEqual(value);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_emit_result_in_same_instance() : Void {
 		var value = {};
 
-		var array = stream.toArray();
+		var values = stream.values();
 		stream.emit(value);
-		array.pop().areEqual(value);
+		values.last.get().areEqual(value);
 	}
 
 	@Test
@@ -110,14 +109,14 @@ class StreamTest {
 			return v * 2;
 		});
 
-		var array = mapped.toArray();
+		var values = mapped.values();
 
 		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
         for(item in iter) {
         	stream.emit(item);
         }
 
-        array.arrayEquals([2, 4, 6, 8, 10, 12, 14]);
+        values.valuesEqualsIterable([2, 4, 6, 8, 10, 12, 14]);
 	}
 
 	@Test
@@ -134,12 +133,12 @@ class StreamTest {
 			};
 		});
 
-		var array = bound.toArray();
+		var values = bound.values();
 
 		stream.emit(0);
 		stream0.emit(123);
 
-		array.pop().areEqual(123);
+		values.last.get().areEqual(123);
 	}
 
 	@Test
@@ -156,12 +155,12 @@ class StreamTest {
 			};
 		});
 
-		var array = bound.toArray();
+		var values = bound.values();
 
 		stream.emit(2);
 		stream2.emit(789);
 
-		array.pop().areEqual(789);
+		values.last.get().areEqual(789);
 	}
 
 	@Test
@@ -178,11 +177,11 @@ class StreamTest {
 			};
 		});
 
-		var array = bound.toArray();
+		var values = bound.values();
 
 		stream.emit(0);
 
-		array.length.areEqual(0);
+		values.size.areEqual(0);
 	}
 
 	@Test
@@ -191,75 +190,75 @@ class StreamTest {
 			return tuple._1 * tuple._2;
 		});
 
-		var array = zipped.toArray();
+		var values = zipped.values();
 
 		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
         for(item in iter) {
         	stream.emit(item);
         }
 
-        array.arrayEquals([1, 4, 9, 16, 25, 36, 49]);
+        values.valuesEqualsIterable([1, 4, 9, 16, 25, 36, 49]);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_shift_with_2_removes_2_items() : Void {
 		var shifted = stream.shift(2);
 
-		var array = shifted.toArray();
+		var values = shifted.values();
 
 		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
         for(item in iter) {
         	stream.emit(item);
         }
 
-        array.arrayEquals([1, 2, 3, 4, 5]);	
+        values.valuesEqualsIterable([1, 2, 3, 4, 5]);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_shift_with_2_has_length_of_5() : Void {
 		var shifted = stream.shift(2);
 
-		var array = shifted.toArray();
+		var values = shifted.values();
 
 		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
         for(item in iter) {
         	stream.emit(item);
         }
 
-        array.length.areEqual(5);
+        values.size.areEqual(5);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_shift_with_5_removes_5_items() : Void {
 		var shifted = stream.shift(5);
 
-		var array = shifted.toArray();
+		var values = shifted.values();
 
 		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
         for(item in iter) {
         	stream.emit(item);
         }
 
-        array.arrayEquals([1, 2]);	
+        values.valuesEqualsIterable([1, 2]);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_shift_with_5_has_length_of_2() : Void {
 		var shifted = stream.shift(5);
 
-		var array = shifted.toArray();
+		var values = shifted.values();
 
 		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
         for(item in iter) {
         	stream.emit(item);
         }
 
-        array.length.areEqual(2);
+        values.size.areEqual(2);
 	}
 
 	@AsyncTest
 	public function when_creating_a_stream__should_calm_not_allow_events_through(asyncFactory : AsyncFactory) : Void {
-		var calmed = stream.calm(Signals.constant(100)).toArray();
+		var calmed = stream.calm(Signals.constant(100)).values();
 
 		for(i in 0...4) {
 			stream.emit(i);
@@ -268,7 +267,7 @@ class StreamTest {
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
 
-			calmed.arrayEquals([]);
+			calmed.valuesEqualsIterable([]);
 
 		}, MAX_TIMEOUT), 40);
 	}
@@ -276,7 +275,7 @@ class StreamTest {
 	// FIXME (Simon) : The result for this should be [3, 4, 5, 6, 7]
 	@AsyncTest
 	public function when_creating_a_stream__should_allow_events_through_after_calm(asyncFactory : AsyncFactory) : Void {
-		var calmed = stream.calm(Signals.constant(10)).toArray();
+		var calmed = stream.calm(Signals.constant(10)).values();
 
 		for(i in 0...4) {
 			stream.emit(i);
@@ -290,7 +289,7 @@ class StreamTest {
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
-			calmed.arrayEquals([3, 7]);
+			calmed.valuesEqualsIterable([3, 7]);
 
 		}, MAX_TIMEOUT), 40);
 	}

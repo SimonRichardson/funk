@@ -249,15 +249,7 @@ class Stream<T> {
             }, [this]);
     }
 
-    public function toArray() : Array<T> {
-    	var array : Array<T> = [];
-    	forEach(function(value : T) {
-    		array.push(value);
-    	});
-    	return array;
-    }
-
-    public function toStreamValues() : StreamValues<T> {
+    public function values() : StreamValues<T> {
         var signal1 = new Signal1();
         var stream = new StreamValues(signal1);
         forEach(function(value : T) {

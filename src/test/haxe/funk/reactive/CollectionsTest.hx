@@ -15,14 +15,14 @@ class CollectionsTest {
 	@AsyncTest
 	public function when_creating_a_stream__should_calling_emitWithDelay(asyncFactory:AsyncFactory) : Void {
 		var stream = Collections.toStream([1, 2], Signals.constant(1));
-		var array = stream.toArray();
+		var values = stream.values();
 
 		stream.emitWithDelay(3, 4);
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
 
-			array.pop().areEqual(3);
+			values.last.get().areEqual(3);
 
 		}, MAX_TIMEOUT), 40);
 	}
@@ -30,12 +30,12 @@ class CollectionsTest {
 	@AsyncTest
 	public function when_creating_a_stream_from_a_collection__should_calling_first_value_be_1(asyncFactory:AsyncFactory) : Void {
 		var stream = Collections.toStream([1, 2], Signals.constant(1));
-		var array = stream.toArray();
+		var values = stream.values();
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
 
-			array.shift().areEqual(1);
+			values.get(0).get().areEqual(1);
 
 		}, MAX_TIMEOUT), 40);
 	}
@@ -43,13 +43,12 @@ class CollectionsTest {
 	@AsyncTest
 	public function when_creating_a_stream_from_a_collection__should_calling_second_value_be_2(asyncFactory:AsyncFactory) : Void {
 		var stream = Collections.toStream([1, 2], Signals.constant(1));
-		var array = stream.toArray();
+		var values = stream.values();
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
 
-			array.shift();
-			array.shift().areEqual(2);
+			values.get(1).get().areEqual(2);
 
 		}, MAX_TIMEOUT), 40);
 	}
@@ -57,12 +56,12 @@ class CollectionsTest {
 	@AsyncTest
 	public function when_creating_a_stream_from_a_collection__should_stream_length_be_2(asyncFactory:AsyncFactory) : Void {
 		var stream = Collections.toStream([1, 2], Signals.constant(1));
-		var array = stream.toArray();
+		var values = stream.values();
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
 
-			array.length.areEqual(2);
+			values.size.areEqual(2);
 
 		}, MAX_TIMEOUT), 40);
 	}
@@ -71,12 +70,12 @@ class CollectionsTest {
 	public function when_creating_a_stream_from_a_collection__should_merging_streams_equal_result(asyncFactory:AsyncFactory) : Void {
 		var stream = Collections.toStream([1, 2, 3, 4], Signals.constant(1));
 		var streams = [stream, stream.delay(Signals.constant(20))];
-		var merged = Streams.merge(streams).toArray();
+		var merged = Streams.merge(streams).values();
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
 
-			merged.arrayEquals([1, 2, 3, 4, 1, 2, 3, 4]);
+			merged.valuesEqualsIterable([1, 2, 3, 4, 1, 2, 3, 4]);
 
 		}, MAX_TIMEOUT), 40);
 	}
@@ -84,12 +83,12 @@ class CollectionsTest {
 	@AsyncTest
 	public function when_creating_a_stream_from_a_collection__should_calm_not_allow_events_through(asyncFactory:AsyncFactory) : Void {
 		var stream = Collections.toStream([1, 2, 3, 4], Signals.constant(10));
-		var calmed = stream.calm(Signals.constant(40)).toArray();
+		var calmed = stream.calm(Signals.constant(40)).values();
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
 
-			calmed.arrayEquals([]);
+			calmed.valuesEqualsIterable([]);
 
 		}, MAX_TIMEOUT), 40);
 	}

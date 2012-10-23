@@ -31,13 +31,13 @@ class StreamsTest {
 	public function when_creating_a_random_stream__should_result_in_a_random_stream(asyncFactory : AsyncFactory) : Void {
 		var stream = Streams.random(Signals.constant(1));
 
-		var randoms = stream.toArray();
+		var randoms = stream.values();
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
 			stream.finish();
 
-			Assert.isTrue(randoms.length > 1);
+			Assert.isTrue(randoms.size > 1);
 
 		}, MAX_TIMEOUT), 40);
 	}

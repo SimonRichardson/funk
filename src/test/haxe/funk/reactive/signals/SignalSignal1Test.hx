@@ -21,7 +21,7 @@ class SignalSignal1Test {
 		var signal = new Signal1<Int>();
 		var values = signal.signal();
 
-		var actual = values.toStreamValues();
+		var actual = values.values();
 
 		actual.isNotNull();
 	}
@@ -32,7 +32,7 @@ class SignalSignal1Test {
 		var signal = new Signal1<Int>();
 		var values = signal.signal();
 
-		var actual = values.toStreamValues();
+		var actual = values.values();
 
 		actual.size.areEqual(0);
 	}
@@ -43,11 +43,11 @@ class SignalSignal1Test {
 		var signal = new Signal1<Int>();
 		var values = signal.signal();
 
-		var actual = values.toStreamValues();
+		var actual = values.values();
 
 		signal.dispatch(1);
 
-		actual.streamValuesEqualsIterable([tuple1(1).toInstance()]);
+		actual.valuesEqualsIterable([tuple1(1).toInstance()]);
 	}
 
 	@Test
@@ -56,7 +56,7 @@ class SignalSignal1Test {
 		var signal = new Signal1<Int>();
 		var values = signal.signal();
 
-		var actual = values.toStreamValues();
+		var actual = values.values();
 
 		signal.dispatch(1);
 		signal.dispatch(2);
@@ -70,11 +70,11 @@ class SignalSignal1Test {
 		var signal = new Signal1<Int>();
 		var values = signal.signal();
 
-		var actual = values.toStreamValues();
+		var actual = values.values();
 
 		signal.dispatch(1);
 		signal.dispatch(2);
 
-		actual.streamValuesEqualsIterable([tuple1(1).toInstance(), tuple1(2).toInstance()]);
+		actual.valuesEqualsIterable([tuple1(1).toInstance(), tuple1(2).toInstance()]);
 	}
 }

@@ -11,6 +11,10 @@ using funk.collections.immutable.Nil;
 
 class StreamValues<T> extends Product, implements ICollection<T> {
 
+    public var head(get_head, never): IOption<T>;
+
+    public var last(get_last, never): IOption<T>;
+
 	public var size(get_size, never) : Int;
 
     public var hasDefinedSize(get_hasDefinedSize, never) : Bool;
@@ -51,6 +55,14 @@ class StreamValues<T> extends Product, implements ICollection<T> {
 
     public function toList() : IList<T> {
         return _list;
+    }
+
+    private function get_head() : IOption<T> {
+        return _list.headOption;
+    }
+
+    private function get_last() : IOption<T> {
+        return _list.last;
     }
 
 	private function get_size() : Int {

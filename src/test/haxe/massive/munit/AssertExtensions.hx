@@ -85,11 +85,11 @@ class AssertExtensions {
 		}
 	}
 
-	public static function streamValuesEquals(a:StreamValues<Dynamic>, b:StreamValues<Dynamic>):Void {
+	public static function valuesEquals(a:StreamValues<Dynamic>, b:StreamValues<Dynamic>):Void {
 		listEquals(a.toList(), b.toList());
 	}
 
-	public static function streamValuesEqualsIterable(a:StreamValues<Dynamic>, b:Iterable<Dynamic>):Void {
+	public static function valuesEqualsIterable(a:StreamValues<Dynamic>, b:Iterable<Dynamic>):Void {
 		listEquals(a.toList(), b.toList());
 	}
 
