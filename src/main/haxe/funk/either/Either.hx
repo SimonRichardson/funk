@@ -2,6 +2,7 @@ package funk.either;
 
 import funk.IFunkObject;
 import funk.errors.RangeError;
+import funk.product.Product;
 import funk.product.Product2;
 import funk.product.ProductIterator;
 import funk.option.Option;
@@ -9,6 +10,23 @@ import funk.option.Option;
 enum Either<T1, T2> {
     Left(value : T1);
     Right(value : T2);
+}
+
+interface IEither<T1, T2> implements IProduct {
+
+    function isLeft() : Bool;
+
+    function isRight() : Bool;
+
+    function left() : Option<T1>;
+
+    function right() : Option<T2>;
+
+    function fold<T3>(func0 : (T1 -> T3), func1 : (T2 -> T3)) : T3;
+
+    function swap() : Either<T2, T1>;
+
+    function toOption() : Option<T2>;
 }
 
 class Eithers {
@@ -69,8 +87,7 @@ class Eithers {
         return new ProductEither<T1, T2>(either).productIterator();
     }
 
-    inline public static function toInstance<T1, T2>(either : Either<T1, T2>)
-                                                                    : ProductEither<T1, T2> {
+    inline public static function toInstance<T1, T2>(either : Either<T1, T2>) : IEither<T1, T2> {
         return new ProductEither<T1, T2>(either);
     }
 
@@ -79,7 +96,7 @@ class Eithers {
     }
 }
 
-class ProductEither<T1, T2> extends Product2<T1, T2> {
+class ProductEither<T1, T2> extends Product2<T1, T2>, implements IEither<T1, T2> {
 
     private var _either : Either<T1, T2>;
 

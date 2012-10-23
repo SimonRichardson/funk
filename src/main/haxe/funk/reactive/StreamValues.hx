@@ -3,11 +3,13 @@ package funk.reactive;
 import funk.collections.ICollection;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
+import funk.option.Any;
 import funk.option.Option;
 import funk.product.Product;
 import funk.signal.Signal1;
 
 using funk.collections.immutable.Nil;
+using funk.option.Any;
 
 class StreamValues<T> extends Product, implements ICollection<T> {
 
@@ -23,15 +25,30 @@ class StreamValues<T> extends Product, implements ICollection<T> {
 
 	private var _list : IList<T>;
 
-	public function new(signal : Signal1<T>) {
+	public function new(?signal : Signal1<T> = null) {
 		super();
 
 		_list = Nil.list();
 
-		signal.add(function(value : T){
-			_list = _list.append(value);
-		});
+        signal.getThen(function(s) {
+
+            s.add(function(value : T){
+                _list = _list.append(value);
+            });
+
+            return s;
+        });
 	}
+
+    public function map<E>(func : T -> E) : StreamValues<E> {
+        var stream = new StreamValues<E>();
+        stream._list = _list.map(func);
+        return stream;
+    }
+
+    public function get(index : Int) : IOption<T> {
+        return _list.get(index);
+    }
 
 	override public function equals(that: IFunkObject): Bool {
         return if(this == that) {
@@ -43,10 +60,6 @@ class StreamValues<T> extends Product, implements ICollection<T> {
         } else {
             false;
         }
-    }
-
-	public function get(index : Int) : IOption<T> {
-        return _list.get(index);
     }
 
     override public function productElement(i : Int) : Dynamic {

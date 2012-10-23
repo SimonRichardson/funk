@@ -8,6 +8,10 @@ class Anys {
 		return type;
 	}
 
+	inline public static function getThen<T>(type : T, func : T -> T) : T {
+		return type != null ? func(type) : type;
+	}
+
 	inline public static function getOrElse<T>(type : T, func : Void -> T) : T {
 		return type != null ? type : func();
 	}

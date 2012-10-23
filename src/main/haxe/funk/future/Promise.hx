@@ -1,8 +1,12 @@
 package funk.future;
 
-class Promise {
+import funk.reactive.Stream;
 
-	public function new() {
+class Promise<T> {
 
+	private var _stream : Stream<State<T>>;
+
+	public function new(stream : Stream<State<T>>) {
+		_stream = stream;
 	}
 }
