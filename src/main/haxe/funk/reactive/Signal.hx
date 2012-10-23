@@ -26,6 +26,10 @@ class Signal<T> {
 		}, [stream.steps()]);
 	}
 
+	public function lift<E>(func : T -> E) : Signal<E> {
+		return _stream.map(func).startsWith(func(_value));
+	}
+
 	public function map<E>(signal : Signal<T -> E>) : Signal<E> {
 		return _stream.map(function(x) {
 			return signal.value(x);

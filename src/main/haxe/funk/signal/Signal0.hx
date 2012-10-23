@@ -9,6 +9,7 @@ import funk.signal.Signal;
 import funk.signal.Slot0;
 
 using funk.collections.immutable.Nil;
+using funk.option.Option;
 
 interface ISignal0 implements ISignal {
 
@@ -35,11 +36,11 @@ class Signal0 extends Signal, implements ISignal0 {
 		return registerListener(func, false);
 	}
 
-	public function addOnce(func : Function0<Void>) : ISlot0 {
+	public function addOnce(func : Function0<Void>) : IOption<ISlot0> {
 		return registerListener(func, true);
 	}
 
-	public function remove(func : Function0<Void>) : ISlot0 {
+	public function remove(func : Function0<Void>) : IOption<ISlot0> {
 		var o = _list.find(function(s : ISlot0) : Bool {
 			return listenerEquals(s.listener, func);
 		});
@@ -84,11 +85,12 @@ class Signal0 extends Signal, implements ISignal0 {
 		}
 	}
 
-	private function registerListener(func : Function0<Void>, once : Bool) : Option<ISlot0> {
+	private function registerListener(func : Function0<Void>, once : Bool) : IOption<ISlot0> {
+
 		if(registrationPossible(func, once)) {
 			var slot : ISlot0 = new Slot0(this, func, once);
 			_list = _list.prepend(slot);
-			return Some(slot);
+			return Some(slot).toInstance();
 		}
 
 		return _list.find(function(s : ISlot0) : Bool {

@@ -69,7 +69,7 @@ class Signal1<T1> extends Signal, implements ISignal1<T1> {
 	}
 
 	private function listenerEquals(	func0 : Function1<T1, Void>,
-									func1 : Function1<T1, Void>) : Bool {
+										func1 : Function1<T1, Void>) : Bool {
 		return if(func0 == func1) {
 			true;
 		}
@@ -88,6 +88,7 @@ class Signal1<T1> extends Signal, implements ISignal1<T1> {
 
 	private function registerListener(	func : Function1<T1, Void>,
 										once : Bool) : IOption<ISlot1<T1>> {
+
 		if(registrationPossible(func, once)) {
 			var slot : ISlot1<T1> = new Slot1<T1>(this, func, once);
 			_list = _list.prepend(slot);

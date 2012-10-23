@@ -42,7 +42,7 @@ class Slot0 extends Slot, implements ISlot0 {
 		_signal.remove(listener);
 	}
 
-	public function productElement(index : Int) : Dynamic {
+	override public function productElement(index : Int) : Dynamic {
 		return switch(index){
 			case 0: listener;
 			default:

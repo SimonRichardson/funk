@@ -1,5 +1,6 @@
 package funk.signal;
 
+import funk.Funk;
 import funk.errors.IllegalOperationError;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
@@ -8,6 +9,7 @@ import funk.signal.Signal;
 import funk.signal.Slot5;
 
 using funk.collections.immutable.Nil;
+using funk.option.Option;
 
 interface ISignal5<T1, T2, T3, T4, T5> implements ISignal {
 
@@ -32,16 +34,19 @@ class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3
 
 	public function add(	func : Function5<T1, T2, T3, T4, T5, Void>
 							) : IOption<ISlot5<T1, T2, T3, T4, T5>> {
+
 		return registerListener(func, false);
 	}
 
 	public function addOnce(	func : Function5<T1, T2, T3, T4, T5, Void>
-								) : ISlot5<T1, T2, T3, T4, T5> {
+								) : IOption<ISlot5<T1, T2, T3, T4, T5>> {
+
 		return registerListener(func, true);
 	}
 
 	public function remove(	func : Function5<T1, T2, T3, T4, T5, Void>
-							) : ISlot5<T1, T2, T3, T4, T5> {
+							) : IOption<ISlot5<T1, T2, T3, T4, T5>> {
+
 		var o = _list.find(function(s : ISlot5<T1, T2, T3, T4, T5>) : Bool {
 			return listenerEquals(s.listener, func);
 		});
@@ -74,7 +79,7 @@ class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3
 	}
 
 	private function listenerEquals(	func0 : Function5<T1, T2, T3, T4, T5, Void>,
-									func1 : Function5<T1, T2, T3, T4, T5, Void>) : Bool {
+										func1 : Function5<T1, T2, T3, T4, T5, Void>) : Bool {
 		return if(func0 == func1) {
 			true;
 		}
@@ -92,11 +97,12 @@ class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3
 	}
 
 	private function registerListener(	func : Function5<T1, T2, T3, T4, T5, Void>,
-										once : Bool) : Option<ISlot5<T1, T2, T3, T4, T5>> {
+										once : Bool) : IOption<ISlot5<T1, T2, T3, T4, T5>> {
+
 		if(registrationPossible(func, once)) {
 			var slot : ISlot5<T1, T2, T3, T4, T5> = new Slot5<T1, T2, T3, T4, T5>(this, func, once);
 			_list = _list.prepend(slot);
-			return Some(slot);
+			return Some(slot).toInstance();
 		}
 
 		return _list.find(function(s : ISlot5<T1, T2, T3, T4, T5>) : Bool {
