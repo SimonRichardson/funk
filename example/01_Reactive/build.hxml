@@ -1,0 +1,14 @@
+-main Main
+-swf ../bin/01_Reactive.swf
+-cp ../../src/main/haxe
+-cp src
+-debug
+-swf-header 600:600:40:FF0000
+-swf-version 11
+
+--next
+-main Main
+-neko ../bin/01_Reactive.n
+-cp ../../src/main/haxe
+-cp src
+-debug

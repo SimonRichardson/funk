@@ -1,5 +1,6 @@
 package funk.reactive;
 
+import funk.Funk;
 import funk.collections.IterableUtil;
 import funk.errors.IllegalOperationError;
 import funk.option.Option;
@@ -39,7 +40,14 @@ class Streams {
         };
     }
 
-    public static function timer(time : Signal<Int>) : Stream<Int> {        
+    public static function bind<T, E>(func : T -> Void, stream : Stream<E>) : Stream<E> {
+        stream.forEach(function(v) {
+            func(cast v);
+        });
+        return stream;
+    }
+
+    public static function timer(time : Signal<Int>) : Stream<Int> {
         var timer : Option<Timer> = None;
         var stream : Stream<Int> = identity();
 
@@ -70,8 +78,8 @@ class Streams {
             }
         };
 
-        timer = createTimer();    
-        
+        timer = createTimer();
+
         return stream;
     }
 
