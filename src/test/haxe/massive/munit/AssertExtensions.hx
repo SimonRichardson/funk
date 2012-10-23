@@ -1,7 +1,13 @@
 package massive.munit;
 
 import funk.IFunkObject;
+import funk.collections.IList;
+import funk.collections.IterableUtil;
+import funk.reactive.StreamValues;
+
 import massive.munit.Assert;
+
+using funk.collections.IterableUtil;
 
 class AssertExtensions {
 
@@ -47,6 +53,44 @@ class AssertExtensions {
 				}
 			}
 		}
+	}
+
+	public static function listEquals(a:IList<Dynamic>, b:IList<Dynamic>):Void {
+		Assert.assertionCount++;
+
+		if (a != b) {
+
+			if(a.size != b.size) {
+				Assert.fail("List [" + a.size + "] size does not match List [" + b.size + "] size");
+			} else {
+
+				for(index in 0...a.size) {
+					var value0 = a.productElement(index);
+					var value1 = b.productElement(index);
+
+					// TODO (Simon) : Remove the funk object stuff.
+					if(Std.is(value0, IFunkObject) && Std.is(value1, IFunkObject)) {
+						var funk0 : IFunkObject = cast value0;
+						var funk1 : IFunkObject = cast value1;
+						if(!funk0.equals(funk1)) {
+							Assert.fail("Value [" + value0 +"] was not equal to expected value [" + value1 + "]");
+						}
+					} else {
+						if(value0 != value1) {
+							Assert.fail("Value [" + value0 +"] was not equal to expected value [" + value1 + "]");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public static function streamValuesEquals(a:StreamValues<Dynamic>, b:StreamValues<Dynamic>):Void {
+		listEquals(a.toList(), b.toList());
+	}
+
+	public static function streamValuesEqualsIterable(a:StreamValues<Dynamic>, b:Iterable<Dynamic>):Void {
+		listEquals(a.toList(), b.toList());
 	}
 
 	private static function toArray(iter : Iterator<Dynamic>) : Array<Dynamic> {

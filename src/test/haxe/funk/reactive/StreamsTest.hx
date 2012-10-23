@@ -20,11 +20,18 @@ class StreamsTest {
 	public function tearDown() {
 	}
 
+	@Test
+	public function when_creating_a_random_stream__should_not_be_null() : Void {
+		var stream = Streams.random(Signals.constant(1));
+		stream.isNotNull();
+		stream.finish();
+	}
+
 	@AsyncTest
 	public function when_creating_a_random_stream__should_result_in_a_random_stream(asyncFactory : AsyncFactory) : Void {
 		var stream = Streams.random(Signals.constant(1));
-		
-		var randoms = stream.toArray();		
+
+		var randoms = stream.toArray();
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){

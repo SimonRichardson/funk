@@ -57,4 +57,8 @@ class Signal<T> {
 	public function toArray() : Array<T> {
 		return _stream.toArray();
 	}
+
+	public function toStreamValues() : StreamValues<T> {
+		return _stream.toStreamValues();
+	}
 }

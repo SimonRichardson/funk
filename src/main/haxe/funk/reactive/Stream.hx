@@ -1,10 +1,14 @@
 package funk.reactive;
 
+import funk.collections.IList;
+import funk.collections.immutable.Nil;
 import funk.reactive.Propagation;
 import funk.reactive.utils.Timer;
+import funk.signal.Signal1;
 import funk.tuple.Tuple2;
 
 using funk.tuple.Tuple2;
+using funk.collections.immutable.Nil;
 
 class Stream<T> {
 
@@ -148,7 +152,8 @@ class Stream<T> {
 
     public function emit(value : T) : Stream<T> {
 
-    	var pulse = new Pulse<T>(Stamp.next(), value);
+        var time = Std.int(Date.now().getTime());
+    	var pulse = new Pulse<T>(time, value);
 
     	var queue = new PriorityQueue<{stream: Stream<T>, pulse: Pulse<T>}>();
     	queue.insert(_rank, {stream: this, pulse: pulse});
@@ -252,6 +257,15 @@ class Stream<T> {
     	return array;
     }
 
+    public function toStreamValues() : StreamValues<T> {
+        var signal1 = new Signal1();
+        var stream = new StreamValues(signal1);
+        forEach(function(value : T) {
+            signal1.dispatch(value);
+        });
+        return stream;
+    }
+
     public function finish() : Void {
         _finished = true;
 
@@ -266,19 +280,6 @@ class Stream<T> {
 private class Rank {
 
 	private static var _value : Int = 0;
-
-    public static function last(): Int {
-        return _value;
-    }
-
-    public static function next(): Int {
-        return _value++;
-    }
-}
-
-private class Stamp {
-
-    private static var _value : Int = 1;
 
     public static function last(): Int {
         return _value;
