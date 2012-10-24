@@ -94,7 +94,7 @@ class Deferred<T> {
 	}
 
 	public function promise() : Promise<T> {
-		return new Promise<T>(_stream);
+		return new Promise<T>(_stream, _values.last);
 	}
 
 	public function values() : StreamValues<Null<T>> {
