@@ -13,13 +13,21 @@ using funk.option.Option;
 
 class Deferred<T> {
 
-	private var _stream : Stream<State<T>>;
+	private var _stateStream : Stream<State<T>>;
+
+	private var _progressStream : Stream<Float>;
 
 	private var _values : StreamValues<State<T>>;
 
 	public function new() {
-		_stream = Streams.identity();
-		_values = _stream.values();
+		_stateStream = Streams.identity();
+		
+		_progressStream = Streams.identity();
+
+		_values = _stateStream.values();
+
+		// Set-up of the state
+		_stateStream.emit(Pending);
 	}
 
 	public function attempt() : IEither<FunkError, T> {
@@ -61,12 +69,24 @@ class Deferred<T> {
 		}
 	}
 
+	public function progress(value : Float) : Void {
+		switch(_values.last.toOption()){
+			case Some(state):
+				switch(state) {
+					case Pending:
+						_progressStream.emit(value);
+					default:
+				}
+			case None:
+		}
+	}
+
 	public function resolve(value : T) : Void {
 		switch(_values.last.toOption()) {
 			case Some(state):
 				switch(state) {
 					case Pending:
-						_stream.emit(Resolved(Some(value).toInstance()));
+						_stateStream.emit(Resolved(Some(value).toInstance()));
 					default:
 						// TODO (Simon) : Throw an error?
 				}
@@ -80,7 +100,7 @@ class Deferred<T> {
 			case Some(state):
 				switch(state) {
 					case Pending:
-						_stream.emit(Rejected(error));
+						_stateStream.emit(Rejected(error));
 					default:
 						// TODO (Simon) : Throw an error?
 				}
@@ -90,11 +110,11 @@ class Deferred<T> {
 	}
 
 	public function abort() : Void {
-		_stream.emit(Aborted);
+		_stateStream.emit(Aborted);
 	}
 
 	public function promise() : Promise<T> {
-		return new Promise<T>(_stream, _values.last);
+		return new Promise<T>(_stateStream, _progressStream, _values.last);
 	}
 
 	public function values() : StreamValues<Null<T>> {

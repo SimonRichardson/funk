@@ -6,6 +6,7 @@ import massive.munit.TestRunner;
 
 import suites.CollectionSuite;
 import suites.FunkSuite;
+import suites.FutureSuite;
 import suites.ReactiveSuite;
 import suites.SignalSuite;
 
@@ -22,13 +23,21 @@ import js.Dom;
 
 class TestMain
 {
+
+    #if neko
+        private var reporting : Bool;
+        private var reportFinished : Bool;
+    #end
+
     static function main(){ new TestMain(); }
 
     public function new()
     {
+        
         var suites = new Array<Class<massive.munit.TestSuite>>();
         suites.push(CollectionSuite);
         suites.push(FunkSuite);
+        suites.push(FutureSuite);
         suites.push(ReactiveSuite);
         suites.push(SignalSuite);
 
@@ -39,8 +48,7 @@ class TestMain
         #end
 
         var runner:TestRunner = new TestRunner(client);
-        //runner.addResultClient(new HTTPClient(new JUnitReportClient()));
-        //runner.addResultClient(new HTTPClient(new PrintClient()));
+        // runner.addResultClient(new HTTPClient(new JUnitReportClient()));
         runner.completionHandler = completionHandler;
         runner.run(suites);
     }

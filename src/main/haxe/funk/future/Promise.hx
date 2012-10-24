@@ -11,7 +11,9 @@ class Promise<T> {
 
 	private var _state : State<T>;
 
-	private var _stream : Stream<State<T>>;
+	private var _stateStream : Stream<State<T>>;
+
+	private var _progressStream : Stream<Float>;
 
 	private var _then : Signal1<T>;
 
@@ -19,10 +21,13 @@ class Promise<T> {
 
 	private var _when : Signal1<Either<FunkError, T>>;
 
-	public function new(stream : Stream<State<T>>, state : IOption<State<T>>) {
+	private var _progress : Signal1<Float>;
+
+	public function new(stateStream : Stream<State<T>>, progressStream : Stream<Float>, state : IOption<State<T>>) {
 		_then = new Signal1<T>();
 		_but = new Signal1<FunkError>();
 		_when = new Signal1<Either<FunkError, T>>();
+		_progress = new Signal1<Float>();
 
 		switch(state.toOption()) {
 			case Some(value):
@@ -31,8 +36,8 @@ class Promise<T> {
 				_state = Aborted;
 		}
 
-		_stream = stream;
-		_stream.forEach(function(value) {
+		_stateStream = stateStream;
+		_stateStream.forEach(function(value) {
 			_state = value;
 
 			switch(value) {
@@ -51,6 +56,11 @@ class Promise<T> {
 					_when.dispatch(Left(cast new NoSuchElementError()));
 				default:
 			}
+		});
+
+		_progressStream = progressStream;
+		_progressStream.forEach(function(value) {
+			_progress.dispatch(value);
 		});
 	}
 
@@ -94,6 +104,11 @@ class Promise<T> {
 				func(Left(value));
 			default:
 		}
+		return this;
+	}
+
+	public function progress(func : Float -> Void) : Promise<T> {
+		_progress.add(func);
 		return this;
 	}
 }
