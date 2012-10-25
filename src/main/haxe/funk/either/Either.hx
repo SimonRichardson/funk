@@ -7,6 +7,8 @@ import funk.product.Product2;
 import funk.product.ProductIterator;
 import funk.option.Option;
 
+using funk.option.Option;
+
 enum Either<T1, T2> {
     Left(value : T1);
     Right(value : T2);
@@ -18,15 +20,15 @@ interface IEither<T1, T2> implements IProduct {
 
     function isRight() : Bool;
 
-    function left() : Option<T1>;
+    function left() : IOption<T1>;
 
-    function right() : Option<T2>;
+    function right() : IOption<T2>;
 
     function fold<T3>(func0 : (T1 -> T3), func1 : (T2 -> T3)) : T3;
 
     function swap() : Either<T2, T1>;
 
-    function toOption() : Option<T2>;
+    function toOption() : IOption<T2>;
 }
 
 class Eithers {
@@ -45,17 +47,17 @@ class Eithers {
         }
     }
 
-    inline public static function left<T1, T2>(either : Either<T1, T2>) : Option<T1> {
+    inline public static function left<T1, T2>(either : Either<T1, T2>) : IOption<T1> {
         return switch(either) {
-            case Left(value): Some(value);
-            case Right(_): None;
+            case Left(value): Some(value).toInstance();
+            case Right(_): None.toInstance();
         }
     }
 
-    inline public static function right<T1, T2>(either : Either<T1, T2>) : Option<T2> {
+    inline public static function right<T1, T2>(either : Either<T1, T2>) : IOption<T2> {
         return switch(either) {
-            case Left(_): None;
-            case Right(value): Some(value);
+            case Left(_): None.toInstance();
+            case Right(value): Some(value).toInstance();
         }
     }
 
@@ -75,10 +77,10 @@ class Eithers {
         }
     }
 
-    inline public static function toOption<T1, T2>(either : Either<T1, T2>) : Option<T2> {
+    inline public static function toOption<T1, T2>(either : Either<T1, T2>) : IOption<T2> {
         return switch(either) {
-            case Left(_): None;
-            case Right(value): Some(value);
+            case Left(_): None.toInstance();
+            case Right(value): Some(value).toInstance();
         }
     }
 
@@ -162,11 +164,11 @@ class ProductEither<T1, T2> extends Product2<T1, T2>, implements IEither<T1, T2>
         return Eithers.isRight(_either);
     }
 
-    public function left() : Option<T1> {
+    public function left() : IOption<T1> {
         return Eithers.left(_either);
     }
 
-    public function right() : Option<T2> {
+    public function right() : IOption<T2> {
         return Eithers.right(_either);
     }
 
@@ -178,7 +180,7 @@ class ProductEither<T1, T2> extends Product2<T1, T2>, implements IEither<T1, T2>
         return Eithers.swap(_either);
     }
 
-    public function toOption() : Option<T2> {
+    public function toOption() : IOption<T2> {
         return Eithers.toOption(_either);
     }
 }

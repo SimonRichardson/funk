@@ -57,7 +57,7 @@ class EitherTest {
 	@Test
 	public function should_creating_left_return_valid_option() {
 		var value = {};
-		Left(value).left().isEnum(Option);
+		Left(value).left().isType(IOption);
 	}
 
 	@Test
@@ -80,7 +80,7 @@ class EitherTest {
 
 	@Test
 	public function should_creating_left_calling_right_returns_valid_option() {
-		Left({}).right().isEnum(Option);
+		Left({}).right().isType(IOption);
 	}
 
 	@Test
@@ -90,7 +90,7 @@ class EitherTest {
 
 	@Test
 	public function should_creating_right_return_valid_option() {
-		Right({}).right().isEnum(Option);
+		Right({}).right().isType(IOption);
 	}
 
 	@Test
@@ -112,7 +112,7 @@ class EitherTest {
 
 	@Test
 	public function should_creating_right_calling_right_returns_valid_option() {
-		Right({}).left().isEnum(Option);
+		Right({}).left().isType(IOption);
 	}
 
 	@Test
@@ -189,7 +189,7 @@ class EitherTest {
 
 	@Test
 	public function should_calling_toOption_on_left_return_valid_Option() {
-		Left(1).toOption().isEnum(Option);
+		Left(1).toOption().isType(IOption);
 	}
 
 	@Test
@@ -204,7 +204,7 @@ class EitherTest {
 
 	@Test
 	public function should_calling_toOption_on_right_return_valid_Option() {
-		Right(1).toOption().isEnum(Option);
+		Right(1).toOption().isType(IOption);
 	}
 
 	@Test

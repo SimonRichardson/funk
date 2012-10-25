@@ -7,6 +7,8 @@ import funk.option.Option;
 import funk.reactive.Stream;
 import funk.signal.Signal1;
 
+using funk.either.Either;
+
 class Promise<T> {
 
 	private var _state : State<T>;
@@ -19,14 +21,14 @@ class Promise<T> {
 
 	private var _but : Signal1<FunkError>;
 
-	private var _when : Signal1<Either<FunkError, T>>;
+	private var _when : Signal1<IEither<FunkError, T>>;
 
 	private var _progress : Signal1<Float>;
 
 	public function new(stateStream : Stream<State<T>>, progressStream : Stream<Float>, state : IOption<State<T>>) {
 		_then = new Signal1<T>();
 		_but = new Signal1<FunkError>();
-		_when = new Signal1<Either<FunkError, T>>();
+		_when = new Signal1<IEither<FunkError, T>>();
 		_progress = new Signal1<Float>();
 
 		switch(state.toOption()) {
@@ -45,15 +47,15 @@ class Promise<T> {
 					switch(option.toOption()) {
 						case Some(v):
 							_then.dispatch(v);
-							_when.dispatch(Right(v));
+							_when.dispatch(Right(v).toInstance());
 						case None:
-							_when.dispatch(Left(cast new NoSuchElementError()));
+							_when.dispatch(Left(cast new NoSuchElementError()).toInstance());
 					}
 				case Rejected(error):
 					_but.dispatch(error);
-					_when.dispatch(Left(error));
+					_when.dispatch(Left(error).toInstance());
 				case Aborted:
-					_when.dispatch(Left(cast new NoSuchElementError()));
+					_when.dispatch(Left(cast new NoSuchElementError()).toInstance());
 				default:
 			}
 		});
@@ -90,18 +92,18 @@ class Promise<T> {
 		return this;
 	}
 
-	public function when(func : Either<FunkError, T> -> Void) : Promise<T> {
+	public function when(func : IEither<FunkError, T> -> Void) : Promise<T> {
 		switch(_state){
 			case Pending:
 				_when.add(func);
 			case Resolved(option):
 				switch(option.toOption()) {
 					case Some(value):
-						func(Right(value));
+						func(Right(value).toInstance());
 					case None:
 				}
 			case Rejected(value):
-				func(Left(value));
+				func(Left(value).toInstance());
 			default:
 		}
 		return this;
