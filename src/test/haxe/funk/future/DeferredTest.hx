@@ -25,6 +25,42 @@ class DeferredTest {
 	}
 
 	@Test
+	public function when_calling_values__should_return_not_null() : Void {
+		deferred.values().isNotNull();
+	}
+
+	@Test
+	public function when_calling_values__should_be_0() : Void {
+		deferred.values().size.areEqual(0);
+	}
+
+	@Test
+	public function when_calling_values_after_resolve__should_be_1() : Void {
+		deferred.resolve(1);
+		deferred.values().size.areEqual(1);
+	}
+
+	@Test
+	public function when_calling_values_with_last_after_resolve__should_be_1() : Void {
+		deferred.resolve(1);
+		deferred.values().last.get().areEqual(1);
+	}
+
+	@Test
+	public function when_calling_values_with_last_after_resolve_twice__should_be_size_1() : Void {
+		deferred.resolve(1);
+		deferred.resolve(2);
+		deferred.values().size.areEqual(1);
+	}
+
+	@Test
+	public function when_calling_values_with_last_after_resolve_twice__should_be_1() : Void {
+		deferred.resolve(1);
+		deferred.resolve(2);
+		deferred.values().last.get().areEqual(1);
+	}
+
+	@Test
 	public function when_calling_attempt__should_return_not_null() : Void {
 		deferred.attempt().isNotNull();
 	}

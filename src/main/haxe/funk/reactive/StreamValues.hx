@@ -40,6 +40,12 @@ class StreamValues<T> extends Product, implements ICollection<T> {
         });
 	}
 
+    public function filter(func : T -> Bool) : StreamValues<T> {
+        var stream = new StreamValues<T>();
+        stream._list = _list.filter(func);
+        return stream;
+    }
+
     public function map<E>(func : T -> E) : StreamValues<E> {
         var stream = new StreamValues<E>();
         stream._list = _list.map(func);

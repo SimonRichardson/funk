@@ -21,7 +21,7 @@ class Deferred<T> {
 
 	public function new() {
 		_stateStream = Streams.identity();
-		
+
 		_progressStream = Streams.identity();
 
 		_values = _stateStream.values();
@@ -117,7 +117,7 @@ class Deferred<T> {
 		return new Promise<T>(_stateStream, _progressStream, _values.last);
 	}
 
-	public function values() : StreamValues<Null<T>> {
+	public function values() : StreamValues<T> {
 		return _values.map(function(state) {
 			return switch(state){
 				case Resolved(option):
@@ -130,6 +130,8 @@ class Deferred<T> {
 				default:
 					null;
 			};
+		}).filter(function(value) {
+			return value != null;
 		});
 	}
 }
