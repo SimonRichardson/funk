@@ -33,7 +33,7 @@ class TestMain
 
     public function new()
     {
-        
+
         var suites = new Array<Class<massive.munit.TestSuite>>();
         suites.push(CollectionSuite);
         suites.push(FunkSuite);

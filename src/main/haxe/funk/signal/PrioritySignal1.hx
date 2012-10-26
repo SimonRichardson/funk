@@ -5,35 +5,36 @@ import funk.collections.IList;
 import funk.collections.immutable.List;
 import funk.collections.immutable.Nil;
 import funk.option.Option;
-import funk.signal.Signal0;
+import funk.signal.Signal1;
 
 using funk.collections.immutable.Nil;
 using funk.option.Option;
 
-class PrioritySignal0 extends Signal0, implements IPrioritySignal {
+class PrioritySignal1<T1> extends Signal1<T1>, implements IPrioritySignal {
 
 	public function new() {
 		super();
 	}
 
-    public function addWithPriority(func : Function0<Void>, ?priority : Int = 0) : IOption<ISlot0> {
+    public function addWithPriority(	func : Function1<T1, Void>,
+    									?priority : Int = 0) : IOption<ISlot1<T1>> {
         return registerListenerWithPriority(func, false, priority);
     }
 
-    public function addOnceWithPriority(	func : Function0<Void>,
-    										?priority:Int = 0) : IOption<ISlot0> {
+    public function addOnceWithPriority(	func : Function1<T1, Void>,
+    										?priority:Int = 0) : IOption<ISlot1<T1>> {
         return registerListenerWithPriority(func, true, priority);
     }
 
-    private function registerListenerWithPriority(	func : Function0<Void>,
+    private function registerListenerWithPriority(	func : Function1<T1, Void>,
     												once : Bool,
-    												priority : Int) : IOption<ISlot0> {
+    												priority : Int) : IOption<ISlot1<T1>> {
     	if(registrationPossible(func, once)) {
     		var added : Bool = false;
-    		var slot : ISlot0 = new PrioritySlot0(this, func, once, priority);
+    		var slot : ISlot1<T1> = new PrioritySlot1<T1>(this, func, once, priority);
 
-			_list = _list.flatMap(function(value : ISlot0) {
-				var prioritySlot : PrioritySlot0 = cast value;
+			_list = _list.flatMap(function(value : ISlot1<T1>) {
+				var prioritySlot : PrioritySlot1<T1> = cast value;
 
 				var list = Nil.list().prepend(value);
 				return if(priority >= prioritySlot.priority) {
@@ -51,7 +52,7 @@ class PrioritySignal0 extends Signal0, implements IPrioritySignal {
 			return Some(slot).toInstance();
     	}
 
-    	return _list.find(function(s : ISlot0) : Bool {
+    	return _list.find(function(s : ISlot1<T1>) : Bool {
 			return listenerEquals(s.listener, func);
 		});
     }
@@ -61,13 +62,16 @@ class PrioritySignal0 extends Signal0, implements IPrioritySignal {
 	}
 }
 
-class PrioritySlot0 extends Slot0, implements ISlot0 {
+class PrioritySlot1<T1> extends Slot1<T1> {
 
 	public var priority(get_priority, never) : Int;
 
 	private var _priority : Int;
 
-	public function new(signal : ISignal0, listener : Function0<Void>, once : Bool, priority : Int) {
+	public function new(	signal : ISignal1<T1>,
+							listener : Function1<T1, Void>,
+							once : Bool,
+							priority : Int) {
 		super(signal, listener, once);
 
 		_priority = priority;
