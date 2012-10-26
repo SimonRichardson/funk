@@ -51,7 +51,6 @@ class Streams {
         var timer : Option<Timer> = None;
         var stream : Stream<Int> = identity();
 
-        var finished : Bool = false;
         var pulser : Void -> Void = null;
         var createTimer : Void -> Option<Timer> = function() {
             return Some(Timer.delay(pulser, time.value));
@@ -62,10 +61,10 @@ class Streams {
                     value.stop();
                 case None:
             }
+            timer = None;
         };
 
         stream.whenFinishedDo(function() {
-            finished = true;
             destroyTimer();
         });
 
@@ -73,7 +72,7 @@ class Streams {
             stream.emit(Std.int(Date.now().getTime()));
             destroyTimer();
 
-            if(!finished) {
+            if(!stream.weakRef) {
                 timer = createTimer();
             }
         };

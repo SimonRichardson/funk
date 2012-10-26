@@ -4,6 +4,7 @@ import funk.collections.IList;
 import funk.collections.immutable.Nil;
 import funk.reactive.Propagation;
 import funk.reactive.utils.Timer;
+import funk.signal.Signal0;
 import funk.signal.Signal1;
 import funk.tuple.Tuple2;
 
@@ -12,15 +13,17 @@ using funk.collections.immutable.Nil;
 
 class Stream<T> {
 
+    public var weakRef(get_weakRef, set_weakRef) : Bool;
+
 	private var _rank : Int;
+
+    private var _weakRef : Bool;
 
 	private var _propagator : Pulse<T> -> Propagation<T>;
 
 	private var _listeners : Array<Stream<T>>;
 
-    private var _finished : Bool;
-
-    private var _finishedListeners : Array<Void -> Void>;
+    private var _finishedListeners : ISignal0;
 
 	public function new(	propagator : Pulse<T> -> Propagation<T>,
 							sources : Array<Stream<T>> = null
@@ -29,8 +32,9 @@ class Stream<T> {
 		_propagator = propagator;
 		_listeners = [];
 
-        _finished = false;
-        _finishedListeners = [];
+        _weakRef = true;
+
+        _finishedListeners = new Signal0();
 
 		if(sources != null && sources.length > 0) {
 			for(source in sources) {
@@ -59,7 +63,7 @@ class Stream<T> {
 		}
 	}
 
-	public function detachListener(listener : Stream<T>): Bool {
+	public function detachListener(listener : Stream<T>, ?weakReference : Bool = false): Bool {
         var index = _listeners.length;
         while(--index > -1) {
         	if(_listeners[index] == listener) {
@@ -68,14 +72,18 @@ class Stream<T> {
         	}
         }
 
+        if(weakReference && _listeners.length == 0) {
+            weakRef = true;
+        }
+
         return false;
     }
 
     public function whenFinishedDo(func : Void -> Void) : Void {
-        if(_finished) {
+        if(_weakRef) {
             func();
         } else {
-            _finishedListeners.push(func);
+            _finishedListeners.add(func);
         }
     }
 
@@ -168,10 +176,18 @@ class Stream<T> {
 
 		    switch (propagation) {
 		        case Propagate(p): {
+                    var weak = true;
+
 		            for (listener in stream._listeners) {
+                        weak = weak && listener.weakRef;
+
 		            	var index = listener._rank;
 		                queue.insert(index, {stream: listener, pulse: p});
 		            }
+
+                    if(stream._listeners.length > 0 && weak) {
+                        stream.weakRef = true;
+                    }
 		        }
 
 		        case Negate:
@@ -259,12 +275,25 @@ class Stream<T> {
     }
 
     public function finish() : Void {
-        _finished = true;
+        weakRef = true;
+        // TODO : We should prevent it from coming back.
+    }
 
-        for(listener in _finishedListeners) {
-            listener();
+    public function get_weakRef() : Bool {
+        return _weakRef;
+    }
+
+    public function set_weakRef(value : Bool) : Bool {
+        if(_weakRef != value) {
+            _weakRef = value;
+
+            if(_weakRef) {
+                _finishedListeners.dispatch();
+                _finishedListeners.removeAll();
+            }
         }
-        _finishedListeners = [];
+
+        return value;
     }
 }
 
