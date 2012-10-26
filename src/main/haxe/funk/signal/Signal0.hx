@@ -2,11 +2,11 @@ package funk.signal;
 
 import funk.Funk;
 import funk.errors.IllegalOperationError;
+import funk.errors.RangeError;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
 import funk.option.Option;
 import funk.signal.Signal;
-import funk.signal.Slot0;
 
 using funk.collections.immutable.Nil;
 using funk.option.Option;
@@ -120,5 +120,55 @@ class Signal0 extends Signal, implements ISignal0 {
 
 	override private function get_size() : Int {
 		return _list.size;
+	}
+}
+
+interface ISlot0 implements ISlot {
+
+	var listener(default, default) : Function0<Void>;
+
+	function execute() : Void;
+}
+
+class Slot0 extends Slot, implements ISlot0 {
+
+	public var listener(default, default) : Function0<Void>;
+
+	private var _signal : ISignal0;
+
+	public function new(signal : ISignal0, listener : Function0<Void>, once : Bool) {
+		super();
+
+		_signal = signal;
+
+		this.listener = listener;
+		this.once = once;
+	}
+
+	public function execute() : Void {
+		if(!enabled) {
+			return;
+		}
+		if(once) {
+			remove();
+		}
+
+		listener();
+	}
+
+	override public function remove() : Void {
+		_signal.remove(listener);
+	}
+
+	override public function productElement(index : Int) : Dynamic {
+		return switch(index){
+			case 0: listener;
+			default:
+				throw new RangeError();
+		}
+	}
+
+	override private function get_productArity() : Int {
+		return 1;
 	}
 }
