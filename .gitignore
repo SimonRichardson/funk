@@ -10,4 +10,5 @@
 *.swf
 *.log
 *_test.*
+.temp
 bin/*
