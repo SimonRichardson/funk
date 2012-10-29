@@ -35,9 +35,9 @@ class StreamsTest {
 
 		// Async
 		Timer.delay(asyncFactory.createHandler(this, function(){
-			stream.finish();
-
 			Assert.isTrue(randoms.size > 1);
+
+			stream.finish();
 
 		}, MAX_TIMEOUT), 40);
 	}

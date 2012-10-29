@@ -1,6 +1,6 @@
 package funk.signal;
 
-import funk.signal.PrioritySignal0;
+import funk.signal.PrioritySignal3;
 
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
@@ -8,13 +8,13 @@ import massive.munit.AssertExtensions;
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
 
-class PrioritySignal0Test {
+class PrioritySignal3Test {
 
-	private var signal : PrioritySignal0;
+	private var signal : PrioritySignal3<Int, Int, Int>;
 
 	@Before
 	public function setup() {
-		signal = new PrioritySignal0();
+		signal = new PrioritySignal3<Int, Int, Int>();
 	}
 
 	@After
@@ -27,15 +27,15 @@ class PrioritySignal0Test {
 		var called0 = false;
 		var called1 = false;
 
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			called0 = true;
 		}, 1);
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.dispatch();
+		signal.dispatch(1, 2, 3);
 
 		called1.isTrue();
 	}
@@ -46,20 +46,20 @@ class PrioritySignal0Test {
 		var called1 = false;
 		var called2 = false;
 
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			called0 = true;
 		}, 1);
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			if(called1) {
 				called2 = true;
 			}
 		}, 3);
-		signal.dispatch();
+		signal.dispatch(1, 2, 3);
 
 		called2.isTrue();
 	}
@@ -69,15 +69,15 @@ class PrioritySignal0Test {
 		var called0 = false;
 		var called1 = false;
 
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			called0 = true;
 		}, 1);
-		signal.dispatch();
+		signal.dispatch(1, 2, 3);
 
 		called1.isTrue();
 	}
@@ -88,20 +88,20 @@ class PrioritySignal0Test {
 		var called1 = false;
 		var called2 = false;
 
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			if(called1) {
 				called2 = true;
 			}
 		}, 3);
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			called0 = true;
 		}, 1);
-		signal.dispatch();
+		signal.dispatch(1, 2, 3);
 
 		called2.isTrue();
 	}
@@ -112,57 +112,57 @@ class PrioritySignal0Test {
 		var called1 = false;
 		var called2 = false;
 
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			if(called1) {
 				called2 = true;
 			}
 		}, 3);
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 			called0 = true;
 		}, 1);
-		signal.dispatch();
+		signal.dispatch(1, 2, 3);
 
 		called2.isTrue();
 	}
 
 	@Test
 	public function when_adding_with_priority__should_size_be_1() : Void {
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 		});
 		signal.size.areEqual(1);
 	}
 
 	@Test
 	public function when_adding_with_priority_after_dispatch__should_size_be_1() : Void {
-		signal.addWithPriority(function(){
+		signal.addWithPriority(function(value0, value1, value2){
 		});
-		signal.dispatch();
+		signal.dispatch(1, 2, 3);
 		signal.size.areEqual(1);
 	}
 
 	@Test
 	public function when_adding_once_with_priority__should_size_be_1() : Void {
-		signal.addOnceWithPriority(function(){
+		signal.addOnceWithPriority(function(value0, value1, value2){
 		});
 		signal.size.areEqual(1);
 	}
 
 	@Test
 	public function when_adding_once_with_priority_after_dispatch__should_size_be_1() : Void {
-		signal.addOnceWithPriority(function(){
+		signal.addOnceWithPriority(function(value0, value1, value2){
 		});
-		signal.dispatch();
+		signal.dispatch(1, 2, 3);
 		signal.size.areEqual(0);
 	}
 
 	@Test
 	public function when_adding_adding_same_function_twice__should_return_same_slot() : Void {
-		var func = function(){
+		var func = function(value0, value1, value2){
 		};
 
 		var slot = signal.addWithPriority(func);
