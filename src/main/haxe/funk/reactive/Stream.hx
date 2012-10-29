@@ -2,8 +2,9 @@ package funk.reactive;
 
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
+import funk.option.Option;
 import funk.reactive.Propagation;
-import funk.reactive.utils.Timer;
+import funk.reactive.Process;
 import funk.signal.Signal0;
 import funk.signal.Signal1;
 import funk.tuple.Tuple2;
@@ -32,7 +33,7 @@ class Stream<T> {
 		_propagator = propagator;
 		_listeners = [];
 
-        _weakRef = true;
+        _weakRef = false;
 
         _finishedListeners = new Signal0();
 
@@ -197,10 +198,10 @@ class Stream<T> {
     }
 
     public function emitWithDelay(value : T, delay : Int) : Stream<T> {
-        Timer.delay(function() {
+        Process.start(function() {
             emit(value);
         }, delay);
-
+        
         return this;
     }
 
@@ -232,15 +233,11 @@ class Stream<T> {
     public function calm(signal : Signal<Int>) : Stream<T> {
         var stream : Stream<T> = Streams.identity();
 
-        var timer : Timer = null;
-
+        var task : Option<Task> = None;
         Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
-            if(timer != null) {
-                timer.stop();
-            }
-
-            timer = Timer.delay(function() {
-                timer = null;
+            task = Process.stop(task);
+            task = Process.start(function() {
+                task = Process.stop(task);
 
                 stream.emit(pulse.value);
             }, signal.value);

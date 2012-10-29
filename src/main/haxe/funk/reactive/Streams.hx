@@ -5,7 +5,7 @@ import funk.collections.IterableUtil;
 import funk.errors.IllegalOperationError;
 import funk.option.Option;
 import funk.reactive.Propagation;
-import funk.reactive.utils.Timer;
+import funk.reactive.Process;
 
 using funk.collections.IterableUtil;
 
@@ -48,36 +48,25 @@ class Streams {
     }
 
     public static function timer(time : Signal<Int>) : Stream<Int> {
-        var timer : Option<Timer> = None;
         var stream : Stream<Int> = identity();
-
-        var pulser : Void -> Void = null;
-        var createTimer : Void -> Option<Timer> = function() {
-            return Some(Timer.delay(pulser, time.value));
-        };
-        var destroyTimer : Void -> Void = function() {
-            switch(timer) {
-                case Some(value):
-                    value.stop();
-                case None:
-            }
-            timer = None;
-        };
+        var task : Option<Task> = None;
 
         stream.whenFinishedDo(function() {
-            destroyTimer();
+            task = Process.stop(task);
         });
 
+        var pulser : Void -> Void = null;
         pulser = function() {
-            stream.emit(Std.int(Date.now().getTime()));
-            destroyTimer();
+            stream.emit(Std.int(Process.stamp()));
+            
+            task = Process.stop(task);
 
             if(!stream.weakRef) {
-                timer = createTimer();
+                task = Process.start(pulser, time.value);
             }
         };
 
-        timer = createTimer();
+        task = Process.start(pulser, time.value);
 
         return stream;
     }

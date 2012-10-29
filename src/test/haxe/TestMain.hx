@@ -35,11 +35,11 @@ class TestMain
     {
 
         var suites = new Array<Class<massive.munit.TestSuite>>();
-        suites.push(CollectionSuite);
-        suites.push(FunkSuite);
-        suites.push(FutureSuite);
+        // suites.push(CollectionSuite);
+        // suites.push(FunkSuite);
+        // suites.push(FutureSuite);
         suites.push(ReactiveSuite);
-        suites.push(SignalSuite);
+        // suites.push(SignalSuite);
 
         #if MCOVER
             var client = new mcover.coverage.munit.client.MCoverPrintClient();

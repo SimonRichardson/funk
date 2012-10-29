@@ -1,7 +1,7 @@
 package funk.reactive;
 
 import funk.option.Option;
-import funk.reactive.utils.Timer;
+import funk.reactive.Process;
 
 class Collections {
 
@@ -15,12 +15,14 @@ class Collections {
 			return Streams.zero();
 		}
 
-		var timer : Option<Timer> = None;
-		var stream : Stream<T> = Streams.identity();
-
+		var task : Option<Task> = None;
 		var pulser : Void -> Void = null;
-		var createTimer : Void -> Option<Timer> = function() {
-			var nowTime = Date.now().getTime();
+		var stream : Stream<T> = Streams.identity();
+		
+		var create : Void -> Option<Task> = function() {
+			task = Process.stop(task);
+
+			var nowTime = Process.stamp();
 
 			if(startTime < 0.0) {
 				startTime = nowTime;
@@ -36,27 +38,23 @@ class Collections {
 				pulser();
 				None;
 			} else {
-				Some(Timer.delay(pulser, Std.int(timeToWait)));
+				Process.start(pulser, timeToWait);
 			}
 		};
-
+		
 		pulser = function() {
 			var next = iterator.next();
 
 			stream.emit(next);
 
-			switch(timer) {
-				case Some(value):
-					value.stop();
-				case None:
-			}
+			task = Process.stop(task);
 
 			if(iterator.hasNext()) {
-				timer = createTimer();
+				task = create();
 			}
 		};
 
-		timer = createTimer();
+		task = create();
 
 		return stream;
 	}
