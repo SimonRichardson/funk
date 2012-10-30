@@ -12,14 +12,22 @@ import cpp.vm.Thread;
 
 class Process {
 
-	public static function start(func : Void -> Void, time : Float) : Option<Task> {
+	#if test 
+	dynamic
+	#end
+	public static function start(func : Void -> Void, time : Int) : Option<Task> {
 		return if(func != null && time > 0) {
-			Some(new Task(func, time));
+			var task = new Task(func, time);
+			task.start();
+			Some(task);
 		} else {
 			None;
 		}
 	}
 
+	#if test 
+	dynamic
+	#end
 	public static function stop(task : Option<Task>) : Option<Task> {
 		switch(task) {
 			case Some(value):
@@ -29,8 +37,11 @@ class Process {
 		return None;
 	}
 
-	public static function stamp() : Float {
-		return Date.now().getTime();
+	#if test 
+	dynamic
+	#end
+	public static function stamp() : Int {
+		return Std.int(Date.now().getTime());
 	}
 }
 
@@ -42,15 +53,20 @@ class Task {
 		private var id:Null<Int>;
 	#end
 
-	private var _time : Float;
+	public var time(get_time, never) : Int;
+	public var func(get_func, never) : Void -> Void;
+
+	private var _time : Int;
 
 	private var _run : Void -> Void;
 	private var _func : Void -> Void;
 
-	public function new(func : Void -> Void, time : Float) {
+	public function new(func : Void -> Void, time : Int) {
 		_func = func;
 		_time = time;
+	}	
 
+	public function start() : Void {
 		_run = function() {
 			stop();
 			_func();
@@ -67,7 +83,7 @@ class Task {
 		#elseif (neko||cpp)
 			id = Thread.create(function() { scope.runLoop(time_ms); } );
 		#end
-	}	
+	}
 
 	public function stop() : Void {
 		if (id == null) {
@@ -93,7 +109,7 @@ class Task {
 	}
 
 	#if (neko||cpp)
-	private function runLoop(time_ms) {
+	private function runLoop(time_ms) : Void {
 		var shouldStop = false;
 		while(!shouldStop) {
 			Sys.sleep(time_ms/1000);
@@ -109,4 +125,12 @@ class Task {
 		}
 	}
 	#end
+
+	private function get_time() : Int {
+		return _time;
+	}
+
+	private function get_func() : Void -> Void {
+		return _func;
+	}
 }

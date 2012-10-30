@@ -44,42 +44,6 @@ class Stream<T> {
 		}
 	}
 
-	public function attachListener(listener : Stream<T>) : Void {
-		_listeners.push(listener);
-
-		if(_rank > listener._rank) {
-			var lowest = Rank.last() + 1;
-			var listeners : Array<Stream<T>> = [listener];
-
-            while(listeners.length > 0) {
-                var item = listeners.shift();
-
-                item._rank = Rank.next();
-
-                var itemListeners = item._listeners;
-                if(itemListeners.length > 0) {
-                	listeners = listeners.concat(itemListeners);
-            	}
-            }
-		}
-	}
-
-	public function detachListener(listener : Stream<T>, ?weakReference : Bool = false): Bool {
-        var index = _listeners.length;
-        while(--index > -1) {
-        	if(_listeners[index] == listener) {
-        		_listeners.splice(index, 1);
-        		return true;
-        	}
-        }
-
-        if(weakReference && _listeners.length == 0) {
-            weakRef = true;
-        }
-
-        return false;
-    }
-
     public function whenFinishedDo(func : Void -> Void) : Void {
         if(_weakRef) {
             func();
@@ -161,7 +125,7 @@ class Stream<T> {
 
     public function emit(value : T) : Stream<T> {
 
-        var time = Std.int(Date.now().getTime());
+        var time = Process.stamp();
     	var pulse = new Pulse<T>(time, value);
 
     	var queue = new PriorityQueue<{stream: Stream<T>, pulse: Pulse<T>}>();
@@ -237,8 +201,6 @@ class Stream<T> {
         Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
             task = Process.stop(task);
             task = Process.start(function() {
-                task = Process.stop(task);
-
                 stream.emit(pulse.value);
             }, signal.value);
 
@@ -274,6 +236,42 @@ class Stream<T> {
     public function finish() : Void {
         weakRef = true;
         // TODO : We should prevent it from coming back.
+    }
+
+    private function attachListener(listener : Stream<T>) : Void {
+        _listeners.push(listener);
+
+        if(_rank > listener._rank) {
+            var lowest = Rank.last() + 1;
+            var listeners : Array<Stream<T>> = [listener];
+
+            while(listeners.length > 0) {
+                var item = listeners.shift();
+
+                item._rank = Rank.next();
+
+                var itemListeners = item._listeners;
+                if(itemListeners.length > 0) {
+                    listeners = listeners.concat(itemListeners);
+                }
+            }
+        }
+    }
+
+    private function detachListener(listener : Stream<T>, ?weakReference : Bool = false): Bool {
+        var index = _listeners.length;
+        while(--index > -1) {
+            if(_listeners[index] == listener) {
+                _listeners.splice(index, 1);
+                return true;
+            }
+        }
+
+        if(weakReference && _listeners.length == 0) {
+            weakRef = true;
+        }
+
+        return false;
     }
 
     public function get_weakRef() : Bool {

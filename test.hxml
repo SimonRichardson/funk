@@ -8,6 +8,7 @@
 -lib munit
 -lib hamcrest
 --js-modern
+-D test
 
 # Neko
 
@@ -19,6 +20,8 @@
 -debug
 -lib munit
 -lib hamcrest
+-D test
 
 --next
 -cmd haxelib run munit test -coverage -nogen
+#-cmd haxelib run munit test -nogen

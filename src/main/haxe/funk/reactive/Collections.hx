@@ -6,7 +6,7 @@ import funk.reactive.Process;
 class Collections {
 
 	public static function toStream<T>(collection: Iterable<T>, time: Signal<Int>) : Stream<T> {
-		var startTime = -1.0;
+		var startTime = -1;
 		var accumulation = 0;
 
 		var iterator = collection.iterator();
@@ -24,7 +24,7 @@ class Collections {
 
 			var nowTime = Process.stamp();
 
-			if(startTime < 0.0) {
+			if(startTime < 0) {
 				startTime = nowTime;
 			}
 
@@ -58,5 +58,4 @@ class Collections {
 
 		return stream;
 	}
-
 }

@@ -3,24 +3,24 @@ package funk.reactive.signals;
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
 
-import funk.reactive.signals.SignalSignal1;
-import funk.signal.Signal1;
-import funk.tuple.Tuple1;
+import funk.reactive.signals.SignalSignal5;
+import funk.signal.Signal5;
+import funk.tuple.Tuple5;
 
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
 
-using funk.reactive.signals.SignalSignal1;
-using funk.tuple.Tuple1;
+using funk.reactive.signals.SignalSignal5;
+using funk.tuple.Tuple5;
 
-class SignalSignal1Test {
+class SignalSignal5Test {
 
-	private var signal : Signal1<Int>;
-	private var actual : StreamValues<ITuple1<Int>>;
+	private var signal : Signal5<Int, Int, Int, Int, Int>;
+	private var actual : StreamValues<ITuple5<Int, Int, Int, Int, Int>>;
 
 	@Before
 	public function setup() : Void {
-		signal = new Signal1<Int>();
+		signal = new Signal5<Int, Int, Int, Int, Int>();
 		actual = signal.signal().values();
 	}
 
@@ -41,24 +41,24 @@ class SignalSignal1Test {
 
 	@Test
 	public function when_creating_a_new_stream__should_emit_new_values() : Void {
-		signal.dispatch(1);
+		signal.dispatch(1, 2, 3, 4, 5);
 
-		actual.valuesEqualsIterable([tuple1(1).toInstance()]);
+		actual.valuesEqualsIterable([tuple5(1, 2, 3, 4, 5).toInstance()]);
 	}
 
 	@Test
 	public function when_creating_a_new_stream__should_emit_2_new_values_be_size_2() : Void {
-		signal.dispatch(1);
-		signal.dispatch(2);
+		signal.dispatch(1, 2, 3, 4, 5);
+		signal.dispatch(6, 7, 8, 9, 10);
 
 		actual.size.areEqual(2);
 	}
 
 	@Test
 	public function when_creating_a_new_stream__should_emit_2_new_values_be_values() : Void {
-		signal.dispatch(1);
-		signal.dispatch(2);
+		signal.dispatch(1, 2, 3, 4, 5);
+		signal.dispatch(6, 7, 8, 9, 10);
 
-		actual.valuesEqualsIterable([tuple1(1).toInstance(), tuple1(2).toInstance()]);
+		actual.valuesEqualsIterable([tuple5(1, 2, 3, 4, 5).toInstance(), tuple5(6, 7, 8, 9, 10).toInstance()]);
 	}
 }

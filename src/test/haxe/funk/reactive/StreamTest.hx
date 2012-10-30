@@ -8,19 +8,21 @@ import massive.munit.util.Timer;
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
 
-class StreamTest {
-
-	private static var MAX_TIMEOUT : Int = 2000;
+class StreamTest extends ProcessAsyncBase {
 
 	private var stream : Stream<Dynamic>;
 
 	@Before
-	public function setup() {
+	override public function setup() {
+		super.setup();
+
 		stream = Streams.identity();
 	}
 
 	@After
-	public function tearDown() {
+	override public function tearDown() {
+		super.tearDown();
+
 		stream = null;
 	}
 
@@ -256,41 +258,85 @@ class StreamTest {
         values.size.areEqual(2);
 	}
 
-	@AsyncTest
-	public function when_creating_a_stream__should_calm_not_allow_events_through(asyncFactory : AsyncFactory) : Void {
-		var calmed = stream.calm(Signals.constant(100)).values();
+	@Test
+	public function when_creating_a_stream__should_calm_not_allow_events_through_if_time_is_less_than_calm_amount() : Void {
+		var calmed = stream.calm(Signals.constant(2)).values();
 
 		for(i in 0...4) {
 			stream.emit(i);
 		}
 
-		// Async
-		Timer.delay(asyncFactory.createHandler(this, function(){
+		advanceProcessBy(1, false);
 
-			calmed.valuesEqualsIterable([]);
-
-		}, MAX_TIMEOUT), 40);
+		calmed.valuesEqualsIterable([]);
 	}
 
-	// FIXME (Simon) : The result for this should be [3, 4, 5, 6, 7]
-	@AsyncTest
-	public function when_creating_a_stream__should_allow_events_through_after_calm(asyncFactory : AsyncFactory) : Void {
-		var calmed = stream.calm(Signals.constant(10)).values();
+	@Test
+	public function when_creating_a_stream__should_calm_allow_last_event_through_if_time_is_greater_than_calm_amount() : Void {
+		var calmed = stream.calm(Signals.constant(1)).values();
 
 		for(i in 0...4) {
 			stream.emit(i);
 		}
 
-		Timer.delay(function() {
-			for(i in 4...8) {
-				stream.emit(i);
-			}
-		}, 20);
+		advanceProcessBy(2, false);
 
-		// Async
-		Timer.delay(asyncFactory.createHandler(this, function(){
-			calmed.valuesEqualsIterable([3, 7]);
+		calmed.valuesEqualsIterable([3]);
+	}
 
-		}, MAX_TIMEOUT), 40);
+	@Test
+	public function when_creating_a_stream__should_allow_events_through_after_calm() : Void {
+		var calmed = stream.calm(Signals.constant(1)).values();
+
+		for(i in 0...4) {
+			stream.emit(i);
+		}
+
+		advanceProcessBy(2, false);
+
+		for(i in 4...8) {
+			stream.emit(i);
+		}
+
+		advanceProcessBy(2, false);
+
+		calmed.valuesEqualsIterable([3, 7]);
+	}
+
+	@Test
+	public function when_creating_a_stream__should_allow_first_events_through_but_not_delayed_events() : Void {
+		var calmed = stream.calm(Signals.constant(1)).values();
+
+		for(i in 0...4) {
+			stream.emit(i);
+		}
+
+		advanceProcessBy(2, false);
+
+		for(i in 4...8) {
+			stream.emitWithDelay(i, 2);
+		}
+
+		calmed.valuesEqualsIterable([3]);
+	}
+
+	@Test
+	public function when_creating_a_stream__should_allow_events_through_after_calm_using_emitWithDelay_which_is_higher_than_the_calm_amount() : Void {
+		var calmed = stream.calm(Signals.constant(1)).values();
+
+		for(i in 0...4) {
+			stream.emit(i);
+		}
+
+		advanceProcessBy(2, false);
+
+		for(i in 4...8) {
+			stream.emitWithDelay(i, 2);
+			advanceProcessBy(2, false);
+		}
+
+		advanceProcessBy(2, false);
+
+		calmed.valuesEqualsIterable([3, 4, 5, 6, 7]);
 	}
 }
