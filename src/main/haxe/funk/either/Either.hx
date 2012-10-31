@@ -62,8 +62,8 @@ class Eithers {
     }
 
     inline public static function fold<T1, T2, T3>( either : Either<T1, T2>,
-                                                func0 : (T1 -> T3),
-                                                func1 : (T2 -> T3)) : T3 {
+                                                    func0 : (T1 -> T3),
+                                                    func1 : (T2 -> T3)) : T3 {
         return switch(either) {
             case Left(value): func0(value);
             case Right(value): func1(value);

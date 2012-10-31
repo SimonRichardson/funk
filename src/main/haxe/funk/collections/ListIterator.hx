@@ -47,13 +47,13 @@ class ListIterator<T> extends Product, implements IFunkObject, implements IProdu
 	}
 
 	public function nextOption() : IOption<T> {
-		return if(_list == _nilList) {
-			None.toInstance();
-		} else {
+		var result : IOption<T> = None.toInstance();
+		if(_list != _nilList) {
 			var head : IOption<T> = _list.headOption;
 			_list = _list.tail;
-			head;
+			result = head;
 		}
+		return result;
 	}
 
 	override public function equals(that: IFunkObject): Bool {

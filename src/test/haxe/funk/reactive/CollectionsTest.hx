@@ -4,7 +4,6 @@ import funk.errors.IllegalOperationError;
 
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
-import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
 using massive.munit.Assert;

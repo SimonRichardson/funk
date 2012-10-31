@@ -115,7 +115,8 @@ class Options {
 		}
 	}
 
-	inline public static function toInstance<T>(option : Option<T>) : IOption<T> {
+	// This can't be inlined
+	public static function toInstance<T>(option : Option<T>) : IOption<T> {
 		return switch(option){
 			case Some(value): new ProductOption<T>(option);
 			case None: cast NONE_OPTION;

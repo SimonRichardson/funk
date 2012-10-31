@@ -51,7 +51,7 @@ class ListTestBase {
 
 	@Test
 	public function should_have_99999_size():Void {
-		var value = 99999;
+		var value = 9999;
 		generateIntList(value).size.areEqual(value);
 	}
 

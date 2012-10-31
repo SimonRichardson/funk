@@ -2,43 +2,38 @@ package funk.reactive;
 
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
-import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
 
-class StreamsTest {
+class StreamsTest extends ProcessAsyncBase {
 
-	private static var MAX_TIMEOUT : Int = 2000;
+	private var stream : Stream<Dynamic>;
 
 	@Before
-	public function setup() {
+	override public function setup() {
+		super.setup();
+
+		stream = Streams.random(Signals.constant(1));
 	}
 
 	@After
-	public function tearDown() {
+	override public function tearDown() {
+		stream = null;
 	}
 
 	@Test
 	public function when_creating_a_random_stream__should_not_be_null() : Void {
-		var stream = Streams.random(Signals.constant(1));
 		stream.isNotNull();
-		stream.finish();
 	}
 
-	@AsyncTest
-	public function when_creating_a_random_stream__should_result_in_a_random_stream(asyncFactory : AsyncFactory) : Void {
-		var stream = Streams.random(Signals.constant(1));
-
+	@Test
+	public function when_creating_a_random_stream__should_result_in_a_random_stream() : Void {
 		var randoms = stream.values();
 
-		// Async
-		Timer.delay(asyncFactory.createHandler(this, function(){
-			Assert.isTrue(randoms.size > 1);
+		advanceProcessByWithIncrements(1, 4);
 
-			stream.finish();
-
-		}, MAX_TIMEOUT), 40);
+		randoms.size.areEqual(4);
 	}
 }

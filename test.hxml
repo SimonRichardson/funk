@@ -22,6 +22,18 @@
 -lib hamcrest
 -D test
 
+# as3
+--next
+-swf bin/as3_test.swf
+-swf-version 9
+-main TestMain
+-cp src/main/haxe
+-cp src/test/haxe
+-debug
+-lib munit
+-lib hamcrest
+-D test
+
 --next
 -cmd haxelib run munit test -coverage -nogen
 #-cmd haxelib run munit test -nogen
