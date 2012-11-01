@@ -70,7 +70,13 @@ class Wildcards {
 	}
 
 	inline public static function equal_<T>(wildcard : Wildcard, a : T, b : T) : Bool {
-		return expect(a).toEqual(b);
+		return if(Std.is(a, IFunkObject) && Std.is(b, IFunkObject)) {
+			var funk0 : IFunkObject = cast a;
+			var funk1 : IFunkObject = cast b;
+			funk0.equals(funk1);
+		} else {
+			a == b;
+		}
 	}
 
 	inline public static function notEqual_<T>(wildcard : Wildcard, a : T, b : T) : Bool {
