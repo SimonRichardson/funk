@@ -1,0 +1,14 @@
+# Neko
+
+-neko bin/neko_test.n
+-main TestMain
+-cp src/main/haxe
+-cp src/test/haxe
+-debug
+-lib munit
+-lib hamcrest
+-D test
+-D ciserver
+
+--next
+-cmd haxelib run munit test -coverage -nogen

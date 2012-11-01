@@ -51,7 +51,11 @@ class TestMain
         #end
 
         var runner:TestRunner = new TestRunner(client);
-        // runner.addResultClient(new HTTPClient(new JUnitReportClient()));
+
+        #if ciserver
+        runner.addResultClient(new HTTPClient(new JUnitReportClient()));
+        #end
+
         runner.completionHandler = completionHandler;
         runner.run(suites);
     }
