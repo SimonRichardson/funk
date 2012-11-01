@@ -18,4 +18,4 @@ http://www.joa-ebert.com/
 
 Additions:
 Copyright (C) 2012 Simon Richardson
-https://github.com/stickupkid
+https://github.com/simonrichardson

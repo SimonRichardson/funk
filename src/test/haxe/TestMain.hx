@@ -9,6 +9,7 @@ import suites.FunkSuite;
 import suites.FutureSuite;
 import suites.ReactiveSuite;
 import suites.SignalSuite;
+import suites.IntegrationSuite;
 
 #if js
 import js.Lib;
@@ -35,12 +36,13 @@ class TestMain
     {
 
         var suites = new Array<Class<massive.munit.TestSuite>>();
-        
+
         suites.push(CollectionSuite);
         suites.push(FunkSuite);
         suites.push(FutureSuite);
         suites.push(ReactiveSuite);
         suites.push(SignalSuite);
+        suites.push(IntegrationSuite);
 
         #if MCOVER
             var client = new mcover.coverage.munit.client.MCoverPrintClient();

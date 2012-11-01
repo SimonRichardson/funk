@@ -35,5 +35,5 @@
 -D test
 
 --next
--cmd haxelib run munit test -coverage -nogen
-#-cmd haxelib run munit test -nogen
+#-cmd haxelib run munit test -coverage -nogen
+-cmd haxelib run munit test -nogen

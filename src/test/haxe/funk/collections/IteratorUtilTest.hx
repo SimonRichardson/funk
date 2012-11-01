@@ -7,12 +7,14 @@ import funk.errors.AbstractMethodError;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.option.Option;
+
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
 
 using funk.collections.immutable.ListUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Option;
+
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
 
