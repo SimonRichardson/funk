@@ -1,4 +1,4 @@
-package funk.wildcard;
+package funk;
 
 import funk.collections.IList;
 import funk.collections.immutable.ListUtil;
