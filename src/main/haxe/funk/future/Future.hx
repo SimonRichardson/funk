@@ -9,7 +9,7 @@ import funk.signal.Signal1;
 
 using funk.either.Either;
 
-class Promise<T> {
+class Future<T> {
 
 	private var _state : State<T>;
 
@@ -25,7 +25,9 @@ class Promise<T> {
 
 	private var _progress : Signal1<Float>;
 
-	public function new(stateStream : Stream<State<T>>, progressStream : Stream<Float>, state : IOption<State<T>>) {
+	public function new(	stateStream : Stream<State<T>>,
+							progressStream : Stream<Float>,
+							state : IOption<State<T>>) {
 		_then = new Signal1<T>();
 		_but = new Signal1<FunkError>();
 		_when = new Signal1<IEither<FunkError, T>>();
@@ -66,7 +68,7 @@ class Promise<T> {
 		});
 	}
 
-	public function then(func : T -> Void) : Promise<T> {
+	public function then(func : T -> Void) : Future<T> {
 		switch(_state){
 			case Pending:
 				_then.add(func);
@@ -81,7 +83,7 @@ class Promise<T> {
 		return this;
 	}
 
-	public function but(func : FunkError -> Void) : Promise<T> {
+	public function but(func : FunkError -> Void) : Future<T> {
 		switch(_state){
 			case Pending:
 				_but.add(func);
@@ -92,7 +94,7 @@ class Promise<T> {
 		return this;
 	}
 
-	public function when(func : IEither<FunkError, T> -> Void) : Promise<T> {
+	public function when(func : IEither<FunkError, T> -> Void) : Future<T> {
 		switch(_state){
 			case Pending:
 				_when.add(func);
@@ -109,7 +111,7 @@ class Promise<T> {
 		return this;
 	}
 
-	public function progress(func : Float -> Void) : Promise<T> {
+	public function progress(func : Float -> Void) : Future<T> {
 		_progress.add(func);
 		return this;
 	}

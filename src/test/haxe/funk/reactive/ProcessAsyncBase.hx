@@ -6,14 +6,14 @@ import funk.reactive.Process;
 import massive.munit.Assert;
 
 private typedef ProcessTypeDef = {
-	var start : (Void -> Void) -> Int -> Option<Task>;
+	var start : (Void -> Void) -> Float -> Option<Task>;
 	var stop : Option<Task> -> Option<Task>;
-	var stamp : Void -> Int;
+	var stamp : Void -> Float;
 }
 
 class ProcessAsyncBase {
 
-	private var _stamp : Int;
+	private var _stamp : Float;
 
 	private var _tasks : Array<Task>;
 
@@ -30,7 +30,7 @@ class ProcessAsyncBase {
 			stamp : Process.stamp
 		};
 
-		Process.start = function(func : Void -> Void, time : Int) : Option<Task> {
+		Process.start = function(func : Void -> Void, time : Float) : Option<Task> {
 			return if(func != null && time > 0) {
 				var task = new Task(func, _stamp + time);
 
@@ -45,12 +45,12 @@ class ProcessAsyncBase {
 			switch(task) {
 				case Some(value):
 					value.stop();
-					_tasks.remove(value);					
+					_tasks.remove(value);
 				case None:
 			}
 			return None;
 		};
-		Process.stamp = function() : Int {
+		Process.stamp = function() : Float {
 			return _stamp;
 		};
 	}
@@ -65,19 +65,19 @@ class ProcessAsyncBase {
 		Process.stamp = _process.stamp;
 	}
 
-	private function advanceProcessBy(time : Int, ?callAssert : Bool = true) : Void {
-		var start = _stamp;
+	private function advanceProcessBy(time : Float, ?callAssert : Bool = true) : Void {
+		var start = Std.int(_stamp);
 
 		if (callAssert) {
 			assertTaskExistsAt(start + time);
 		}
 
-		for(delta in start...(start + time + 1)) {
+		for(delta in start...Std.int(start + time + 1)) {
 			_stamp = delta;
 
 			var tasks = [].concat(_tasks);
 			for(task in tasks) {
-				if (task.time == _stamp) {			
+				if (task.time == _stamp) {
 					task.func();
 					_tasks.remove(task);
 				}
@@ -85,13 +85,13 @@ class ProcessAsyncBase {
 		}
 	}
 
-	private function advanceProcessByWithIncrements(time : Int, increments : Int) : Void {
+	private function advanceProcessByWithIncrements(time : Float, increments : Int) : Void {
 		for(i in 0...increments) {
 			advanceProcessBy(time);
 		}
 	}
 
-	private function assertTaskExistsAt(time : Int) : Void {
+	private function assertTaskExistsAt(time : Float) : Void {
 		var found = false;
 		for(task in _tasks) {
 			if(task.time == time) {

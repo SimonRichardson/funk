@@ -100,7 +100,7 @@ class Stream<T> {
     }
 
     public function zipWith<E1, E2>(stream : Stream<E1>, func : T -> E1 -> E2) : Stream<E2> {
-        var time = -1;
+        var time = -1.0;
         var value : T = null;
 
         Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
@@ -165,7 +165,7 @@ class Stream<T> {
         Process.start(function() {
             emit(value);
         }, delay);
-        
+
         return this;
     }
 
@@ -211,17 +211,17 @@ class Stream<T> {
     }
 
     public function steps() : Stream<T> {
-        var time = -1;
+        var time = -1.0;
 
         return Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
-                return if(pulse.time != time) {
-                    time = pulse.time;
+            return if(pulse.time != time) {
+                time = pulse.time;
 
-                    Propagate(pulse);
-                } else {
-                    Negate;
-                }
-            }, [this]);
+                Propagate(pulse);
+            } else {
+                Negate;
+            }
+        }, [this]);
     }
 
     public function values() : StreamValues<T> {

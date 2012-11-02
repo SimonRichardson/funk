@@ -10,8 +10,7 @@
 --js-modern
 -D test
 
-# Neko
-
+# # Neko
 --next
 -neko bin/neko_test.n
 -main TestMain

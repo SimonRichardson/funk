@@ -12,10 +12,10 @@ import cpp.vm.Thread;
 
 class Process {
 
-	#if test 
+	#if test
 	dynamic
 	#end
-	public static function start(func : Void -> Void, time : Int) : Option<Task> {
+	public static function start(func : Void -> Void, time : Float) : Option<Task> {
 		return if(func != null && time > 0) {
 			var task = new Task(func, time);
 			task.start();
@@ -25,7 +25,7 @@ class Process {
 		}
 	}
 
-	#if test 
+	#if test
 	dynamic
 	#end
 	public static function stop(task : Option<Task>) : Option<Task> {
@@ -37,11 +37,11 @@ class Process {
 		return None;
 	}
 
-	#if test 
+	#if test
 	dynamic
 	#end
-	public static function stamp() : Int {
-		return Std.int(Date.now().getTime());
+	public static function stamp() : Float {
+		return Date.now().getTime();
 	}
 }
 
@@ -53,18 +53,18 @@ class Task {
 		private var id:Null<Int>;
 	#end
 
-	public var time(get_time, never) : Int;
+	public var time(get_time, never) : Float;
 	public var func(get_func, never) : Void -> Void;
 
-	private var _time : Int;
+	private var _time : Float;
 
 	private var _run : Void -> Void;
 	private var _func : Void -> Void;
 
-	public function new(func : Void -> Void, time : Int) {
+	public function new(func : Void -> Void, time : Float) {
 		_func = func;
 		_time = time;
-	}	
+	}
 
 	public function start() : Void {
 		_run = function() {
@@ -89,7 +89,7 @@ class Task {
 		if (id == null) {
 			return;
 		}
-		
+
 		_run = function() {
 		};
 
@@ -126,7 +126,7 @@ class Task {
 	}
 	#end
 
-	private function get_time() : Int {
+	private function get_time() : Float {
 		return _time;
 	}
 

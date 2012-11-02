@@ -47,8 +47,8 @@ class Streams {
         return stream;
     }
 
-    public static function timer(time : Signal<Int>) : Stream<Int> {
-        var stream : Stream<Int> = identity();
+    public static function timer(time : Signal<Float>) : Stream<Float> {
+        var stream : Stream<Float> = identity();
         var task : Option<Task> = None;
 
         stream.whenFinishedDo(function() {
@@ -57,8 +57,8 @@ class Streams {
 
         var pulser : Void -> Void = null;
         pulser = function() {
-            stream.emit(Std.int(Process.stamp()));
-            
+            stream.emit(Process.stamp());
+
             task = Process.stop(task);
 
             if(!stream.weakRef) {
@@ -71,8 +71,8 @@ class Streams {
         return stream;
     }
 
-    public static function random(time : Signal<Int>) : Stream<Float> {
-        var timerStream : Stream<Int> = timer(time);
+    public static function random(time : Signal<Float>) : Stream<Float> {
+        var timerStream : Stream<Float> = timer(time);
         var mapStream : Stream<Float> = timerStream.map(function(value) {
             return Math.random();
         });

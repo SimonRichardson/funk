@@ -15,7 +15,7 @@ class StreamsTest extends ProcessAsyncBase {
 	override public function setup() {
 		super.setup();
 
-		stream = Streams.random(Signals.constant(1));
+		stream = Streams.random(Signals.constant(1.0));
 	}
 
 	@After

@@ -127,7 +127,7 @@ class DeferredTest {
 	}
 
 	@Test
-	public function when_asking_for_a_promise__should_create_a_valid_promise() : Void {
-		deferred.promise().isNotNull();
+	public function when_asking_for_a_future__should_create_a_valid_future() : Void {
+		deferred.future().isNotNull();
 	}
 }

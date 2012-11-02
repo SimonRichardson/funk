@@ -113,8 +113,8 @@ class Deferred<T> {
 		_stateStream.emit(Aborted);
 	}
 
-	public function promise() : Promise<T> {
-		return new Promise<T>(_stateStream, _progressStream, _values.last);
+	public function future() : Future<T> {
+		return new Future<T>(_stateStream, _progressStream, _values.last);
 	}
 
 	public function values() : StreamValues<T> {

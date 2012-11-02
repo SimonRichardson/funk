@@ -6,7 +6,7 @@ import funk.reactive.Process;
 class Collections {
 
 	public static function toStream<T>(collection: Iterable<T>, time: Signal<Int>) : Stream<T> {
-		var startTime = -1;
+		var startTime = -1.0;
 		var accumulation = 0;
 
 		var iterator = collection.iterator();
@@ -18,7 +18,7 @@ class Collections {
 		var task : Option<Task> = None;
 		var pulser : Void -> Void = null;
 		var stream : Stream<T> = Streams.identity();
-		
+
 		var create : Void -> Option<Task> = function() {
 			task = Process.stop(task);
 
@@ -41,7 +41,7 @@ class Collections {
 				Process.start(pulser, timeToWait);
 			}
 		};
-		
+
 		pulser = function() {
 			var next = iterator.next();
 
