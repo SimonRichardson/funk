@@ -1,27 +1,26 @@
-package funk.reactive.signals;
+package funk.reactive.behaviours;
 
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
 
-import funk.Funk;
-import funk.reactive.signals.SignalSignal0;
-import funk.signal.Signal0;
-import funk.tuple.Tuple1;
+import funk.reactive.behaviours.BehaviourSignal5;
+import funk.signal.Signal5;
+import funk.tuple.Tuple5;
 
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
 
-using funk.reactive.signals.SignalSignal0;
-using funk.tuple.Tuple1;
+using funk.reactive.behaviours.BehaviourSignal5;
+using funk.tuple.Tuple5;
 
-class SignalSignal0Test {
+class BehaviourSignal5Test {
 
-	private var signal : Signal0;
-	private var actual : StreamValues<ITuple1<Unit>>;
+	private var signal : Signal5<Int, Int, Int, Int, Int>;
+	private var actual : StreamValues<ITuple5<Int, Int, Int, Int, Int>>;
 
 	@Before
 	public function setup() : Void {
-		signal = new Signal0();
+		signal = new Signal5<Int, Int, Int, Int, Int>();
 		actual = signal.signal().values();
 	}
 
@@ -42,24 +41,24 @@ class SignalSignal0Test {
 
 	@Test
 	public function when_creating_a_new_stream__should_emit_new_values() : Void {
-		signal.dispatch();
+		signal.dispatch(1, 2, 3, 4, 5);
 
-		actual.valuesEqualsIterable([tuple1(Unit).toInstance()]);
+		actual.valuesEqualsIterable([tuple5(1, 2, 3, 4, 5).toInstance()]);
 	}
 
 	@Test
 	public function when_creating_a_new_stream__should_emit_2_new_values_be_size_2() : Void {
-		signal.dispatch();
-		signal.dispatch();
+		signal.dispatch(1, 2, 3, 4, 5);
+		signal.dispatch(6, 7, 8, 9, 10);
 
 		actual.size.areEqual(2);
 	}
 
 	@Test
 	public function when_creating_a_new_stream__should_emit_2_new_values_be_values() : Void {
-		signal.dispatch();
-		signal.dispatch();
+		signal.dispatch(1, 2, 3, 4, 5);
+		signal.dispatch(6, 7, 8, 9, 10);
 
-		actual.valuesEqualsIterable([tuple1(Unit).toInstance(), tuple1(Unit).toInstance()]);
+		actual.valuesEqualsIterable([tuple5(1, 2, 3, 4, 5).toInstance(), tuple5(6, 7, 8, 9, 10).toInstance()]);
 	}
 }

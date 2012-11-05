@@ -13,7 +13,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_an_empty_stream__should_size_be_zero() : Void {
-		var stream = Collections.toStream([], Signals.constant(1));
+		var stream = Collections.toStream([], Behaviours.constant(1));
 		var values = stream.values();
 
 		advanceProcessBy(1, false);
@@ -23,7 +23,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_an_empty_stream__should_calling_emitWithDelay_throw_error() : Void {
-		var stream = Collections.toStream([], Signals.constant(1));
+		var stream = Collections.toStream([], Behaviours.constant(1));
 		var values = stream.values();
 
 		var called = try {
@@ -42,7 +42,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_calling_emitWithDelay() : Void {
-		var stream = Collections.toStream([1, 2], Signals.constant(1));
+		var stream = Collections.toStream([1, 2], Behaviours.constant(1));
 		var values = stream.values();
 
 		stream.emitWithDelay(3, 1);
@@ -54,7 +54,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_calling_first_value_be_1() : Void {
-		var stream = Collections.toStream([1, 2], Signals.constant(1));
+		var stream = Collections.toStream([1, 2], Behaviours.constant(1));
 		var values = stream.values();
 
 		advanceProcessBy(1);
@@ -64,7 +64,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_calling_second_value_be_2() : Void {
-		var stream = Collections.toStream([1, 2], Signals.constant(1));
+		var stream = Collections.toStream([1, 2], Behaviours.constant(1));
 		var values = stream.values();
 
 		advanceProcessByWithIncrements(1, 2);
@@ -74,7 +74,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_stream_length_be_1_after_first_iteration() : Void {
-		var stream = Collections.toStream([1, 2], Signals.constant(1));
+		var stream = Collections.toStream([1, 2], Behaviours.constant(1));
 		var values = stream.values();
 
 		advanceProcessBy(1);
@@ -84,7 +84,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_stream_length_be_2_after_second_iteration() : Void {
-		var stream = Collections.toStream([1, 2], Signals.constant(1));
+		var stream = Collections.toStream([1, 2], Behaviours.constant(1));
 		var values = stream.values();
 
 		advanceProcessByWithIncrements(1, 2);
@@ -94,7 +94,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_stream_length_be_10_after_tenth_iteration() : Void {
-		var stream = Collections.toStream([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], Signals.constant(1));
+		var stream = Collections.toStream([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], Behaviours.constant(1));
 		var values = stream.values();
 
 		advanceProcessByWithIncrements(1, 10);
@@ -104,8 +104,8 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_merging_streams_equal_result() : Void {
-		var stream = Collections.toStream([1, 2, 3, 4], Signals.constant(1));
-		var streams = [stream, stream.delay(Signals.constant(5))];
+		var stream = Collections.toStream([1, 2, 3, 4], Behaviours.constant(1));
+		var streams = [stream, stream.delay(Behaviours.constant(5))];
 		var merged = Streams.merge(streams).values();
 
 		advanceProcessByWithIncrements(1, 4);
@@ -116,8 +116,8 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_calm_not_allow_events_through() : Void {
-		var stream = Collections.toStream([1, 2, 3, 4], Signals.constant(1));
-		var calmed = stream.calm(Signals.constant(5)).values();
+		var stream = Collections.toStream([1, 2, 3, 4], Behaviours.constant(1));
+		var calmed = stream.calm(Behaviours.constant(5)).values();
 
 		advanceProcessByWithIncrements(1, 4);
 

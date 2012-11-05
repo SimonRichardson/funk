@@ -27,8 +27,7 @@ class Stream<T> {
     private var _finishedListeners : ISignal0;
 
 	public function new(	propagator : Pulse<T> -> Propagation<T>,
-							sources : Array<Stream<T>> = null
-							) {
+							sources : Array<Stream<T>> = null) {
 		_rank = Rank.next();
 		_propagator = propagator;
 		_listeners = [];
@@ -68,8 +67,8 @@ class Stream<T> {
     		});
     }
 
-    public function startsWith(value : T) : Signal<T> {
-        return new Signal<T>(this, value, function(pulse : Pulse<T>) : Propagation<T> {
+    public function startsWith(value : T) : Behaviour<T> {
+        return new Behaviour<T>(this, value, function(pulse : Pulse<T>) : Propagation<T> {
             return Propagate(pulse);
         });
     }
@@ -183,18 +182,18 @@ class Stream<T> {
         }, [this]);
     }
 
-    public function delay(signal : Signal<Int>) : Stream<T> {
+    public function delay(behaviour : Behaviour<Int>) : Stream<T> {
         var stream : Stream<T> = Streams.identity();
 
         Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
-            stream.emitWithDelay(pulse.value, signal.value);
+            stream.emitWithDelay(pulse.value, behaviour.value);
             return Negate;
         }, [this]);
 
         return stream;
     }
 
-    public function calm(signal : Signal<Int>) : Stream<T> {
+    public function calm(behaviour : Behaviour<Int>) : Stream<T> {
         var stream : Stream<T> = Streams.identity();
 
         var task : Option<Task> = None;
@@ -202,7 +201,7 @@ class Stream<T> {
             task = Process.stop(task);
             task = Process.start(function() {
                 stream.emit(pulse.value);
-            }, signal.value);
+            }, behaviour.value);
 
             return Negate;
         }, [this]);

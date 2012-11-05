@@ -259,7 +259,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_calm_not_allow_events_through_if_time_is_less_than_calm_amount() : Void {
-		var calmed = stream.calm(Signals.constant(2)).values();
+		var calmed = stream.calm(Behaviours.constant(2)).values();
 
 		for(i in 0...4) {
 			stream.emit(i);
@@ -272,7 +272,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_calm_allow_last_event_through_if_time_is_greater_than_calm_amount() : Void {
-		var calmed = stream.calm(Signals.constant(1)).values();
+		var calmed = stream.calm(Behaviours.constant(1)).values();
 
 		for(i in 0...4) {
 			stream.emit(i);
@@ -285,7 +285,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_allow_events_through_after_calm() : Void {
-		var calmed = stream.calm(Signals.constant(1)).values();
+		var calmed = stream.calm(Behaviours.constant(1)).values();
 
 		for(i in 0...4) {
 			stream.emit(i);
@@ -304,7 +304,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_allow_first_events_through_but_not_delayed_events() : Void {
-		var calmed = stream.calm(Signals.constant(1)).values();
+		var calmed = stream.calm(Behaviours.constant(1)).values();
 
 		for(i in 0...4) {
 			stream.emit(i);
@@ -321,7 +321,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_allow_events_through_after_calm_using_emitWithDelay_which_is_higher_than_the_calm_amount() : Void {
-		var calmed = stream.calm(Signals.constant(1)).values();
+		var calmed = stream.calm(Behaviours.constant(1)).values();
 
 		for(i in 0...4) {
 			stream.emit(i);

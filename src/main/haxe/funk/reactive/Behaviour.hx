@@ -3,7 +3,7 @@ package funk.reactive;
 import funk.reactive.Propagation;
 import funk.tuple.Tuple2;
 
-class Signal<T> {
+class Behaviour<T> {
 
 	public var value(get_value, never) : T;
 
@@ -26,24 +26,24 @@ class Signal<T> {
 		}, [stream.steps()]);
 	}
 
-	public function lift<E>(func : T -> E) : Signal<E> {
+	public function lift<E>(func : T -> E) : Behaviour<E> {
 		return _stream.map(func).startsWith(func(_value));
 	}
 
-	public function map<E>(signal : Signal<T -> E>) : Signal<E> {
+	public function map<E>(behaviour : Behaviour<T -> E>) : Behaviour<E> {
 		return _stream.map(function(x) {
-			return signal.value(x);
-		}).startsWith(signal.value(value));
+			return behaviour.value(x);
+		}).startsWith(behaviour.value(value));
 	}
 
-	public function zipWith<E1, E2>(signal : Signal<E1>, func : T -> E1 -> E2) : Signal<E2> {
+	public function zipWith<E1, E2>(behaviour : Behaviour<E1>, func : T -> E1 -> E2) : Behaviour<E2> {
 		return Streams.create(function(pulse : Pulse<E1>) : Propagation<E2> {
-			return Propagate(pulse.withValue(func(value, signal.value)));
-		}, [this, signal]).startsWith(func(value, signal.value));
+			return Propagate(pulse.withValue(func(value, behaviour.value)));
+		}, [this, behaviour]).startsWith(func(value, behaviour.value));
 	}
 
-	public function zip<E>(signal : Signal<E>) : Signal<ITuple2<T, E>> {
-		return zipWith(signal, Tuple2Impl.create);
+	public function zip<E>(behaviour : Behaviour<E>) : Behaviour<ITuple2<T, E>> {
+		return zipWith(behaviour, Tuple2Impl.create);
 	}
 
 	public function emit(value : T) : Void {

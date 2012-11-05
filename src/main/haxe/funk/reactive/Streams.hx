@@ -47,7 +47,7 @@ class Streams {
         return stream;
     }
 
-    public static function timer(time : Signal<Float>) : Stream<Float> {
+    public static function timer(time : Behaviour<Float>) : Stream<Float> {
         var stream : Stream<Float> = identity();
         var task : Option<Task> = None;
 
@@ -71,7 +71,7 @@ class Streams {
         return stream;
     }
 
-    public static function random(time : Signal<Float>) : Stream<Float> {
+    public static function random(time : Behaviour<Float>) : Stream<Float> {
         var timerStream : Stream<Float> = timer(time);
         var mapStream : Stream<Float> = timerStream.map(function(value) {
             return Math.random();
