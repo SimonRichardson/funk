@@ -32,6 +32,24 @@ class Streams {
             });
     }
 
+    public static function one<T>(value : T) : Stream<T> {
+        var sent = false;
+        var stream = create(function(pulse : Pulse<T>) {
+            return if (sent) {
+                throw new IllegalOperationError("Received a value that wasn't expected " + pulse.value);
+                Negate;
+            } else {
+                sent = true;
+                Propagate(pulse);
+            }
+        });
+
+        // NOTE (Simon) : This will break for concurrent systems
+        stream.emitWithDelay(value, 1);
+
+        return stream;
+    }
+
     public static function merge<T>(streams : Iterable<Stream<T>>) : Stream<T> {
         return if(streams.size() == 0) {
             zero();

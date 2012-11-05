@@ -5,6 +5,7 @@ import funk.tuple.Tuple2;
 
 class Behaviour<T> {
 
+	public var stream(get_stream, never) : Stream<T>;
 	public var value(get_value, never) : T;
 
 	private var _stream : Stream<T>;
@@ -50,11 +51,15 @@ class Behaviour<T> {
 		_stream.emit(value);
 	}
 
-	private function get_value() : T {
-		return _value;
-	}
-
 	public function values() : StreamValues<T> {
 		return _stream.values();
+	}
+
+	private function get_stream() : Stream<T> {
+		return _stream;
+	}
+
+	private function get_value() : T {
+		return _value;
 	}
 }
