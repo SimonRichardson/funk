@@ -73,4 +73,28 @@ class StreamTest {
 		values2.valuesEqualsIterable([1, 2]);
 	}
 
+	@Test
+	public function when_creating_a_stream__should_adding_two_sources_not_pass_stream_values() : Void {
+		var stream0 = Streams.create(function(pulse) {
+			return Propagate(pulse);
+		});
+
+		var stream1 = Streams.create(function(pulse) {
+			return Negate;
+		}, [stream0]);
+
+		var stream2 = Streams.create(function(pulse) {
+			return Propagate(pulse);
+		}, [stream0]);
+
+		var values1 = stream1.values();
+		var values2 = stream2.values();
+
+		stream0.emit(1);
+		stream0.emit(2);
+
+		values1.valuesEqualsIterable([]);
+		values2.valuesEqualsIterable([1, 2]);
+	}
+
 }
