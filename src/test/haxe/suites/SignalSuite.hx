@@ -4,6 +4,7 @@ import massive.munit.TestSuite;
 
 import funk.signal.SignalTest;
 import funk.signal.SlotTest;
+import funk.signal.Signal0Test;
 import funk.signal.PrioritySignal0Test;
 import funk.signal.PrioritySignal1Test;
 import funk.signal.PrioritySignal2Test;
@@ -20,6 +21,8 @@ class SignalSuite extends TestSuite
 
 		add(funk.signal.SignalTest);
 		add(funk.signal.SlotTest);
+
+		add(funk.signal.Signal0Test);
 
 		add(funk.signal.PrioritySignal0Test);
 		add(funk.signal.PrioritySignal1Test);

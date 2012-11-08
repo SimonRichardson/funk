@@ -127,14 +127,16 @@ class Signal3<T1, T2, T3> extends Signal, implements ISignal3<T1, T2, T3> {
 
 interface ISlot3<T1, T2, T3> implements ISlot {
 
-	var listener(default, default) : Function3<T1, T2, T3, Void>;
+	var listener(dynamic, never) : Function3<T1, T2, T3, Void>;
 
 	function execute(value0 : T1, value1 : T2, value2 : T3) : Void;
 }
 
 class Slot3<T1, T2, T3> extends Slot, implements ISlot3<T1, T2, T3> {
 
-	public var listener(default, default) : Function3<T1, T2, T3, Void>;
+	public var listener(dynamic, never) : Function3<T1, T2, T3, Void>;
+
+	private var _listener : Function3<T1, T2, T3, Void>;
 
 	private var _signal : ISignal3<T1, T2, T3>;
 
@@ -144,8 +146,8 @@ class Slot3<T1, T2, T3> extends Slot, implements ISlot3<T1, T2, T3> {
 		super();
 
 		_signal = signal;
+		_listener = listener;
 
-		this.listener = listener;
 		this.once = once;
 	}
 
@@ -174,6 +176,10 @@ class Slot3<T1, T2, T3> extends Slot, implements ISlot3<T1, T2, T3> {
 
 	override private function get_productArity() : Int {
 		return 1;
+	}
+
+	public function get_listener() : Function3<T1, T2, T3, Void> {
+		return _listener;
 	}
 }
 

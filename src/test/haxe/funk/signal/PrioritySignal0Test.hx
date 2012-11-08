@@ -1,5 +1,6 @@
 package funk.signal;
 
+import funk.signal.Signal0;
 import funk.signal.PrioritySignal0;
 
 import massive.munit.Assert;
@@ -8,18 +9,24 @@ import massive.munit.AssertExtensions;
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
 
-class PrioritySignal0Test {
+class PrioritySignal0Test extends Signal0Test {
 
-	private var signal : PrioritySignal0;
+	private var prioritySignal : PrioritySignal0;
 
 	@Before
-	public function setup() {
-		signal = new PrioritySignal0();
+	override public function setup() {
+		super.setup();
+
+		var s = new PrioritySignal0();
+		signal = s;
+		prioritySignal = s;
 	}
 
 	@After
-	public function tearDown() {
-		signal = null;
+	override public function tearDown() {
+		super.tearDown();
+
+		prioritySignal = null;
 	}
 
 	@Test
@@ -27,15 +34,15 @@ class PrioritySignal0Test {
 		var called0 = false;
 		var called1 = false;
 
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			called0 = true;
 		}, 1);
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.dispatch();
+		prioritySignal.dispatch();
 
 		called1.isTrue();
 	}
@@ -46,20 +53,20 @@ class PrioritySignal0Test {
 		var called1 = false;
 		var called2 = false;
 
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			called0 = true;
 		}, 1);
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			if(called1) {
 				called2 = true;
 			}
 		}, 3);
-		signal.dispatch();
+		prioritySignal.dispatch();
 
 		called2.isTrue();
 	}
@@ -69,15 +76,15 @@ class PrioritySignal0Test {
 		var called0 = false;
 		var called1 = false;
 
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			called0 = true;
 		}, 1);
-		signal.dispatch();
+		prioritySignal.dispatch();
 
 		called1.isTrue();
 	}
@@ -88,20 +95,20 @@ class PrioritySignal0Test {
 		var called1 = false;
 		var called2 = false;
 
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			if(called1) {
 				called2 = true;
 			}
 		}, 3);
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			called0 = true;
 		}, 1);
-		signal.dispatch();
+		prioritySignal.dispatch();
 
 		called2.isTrue();
 	}
@@ -112,52 +119,52 @@ class PrioritySignal0Test {
 		var called1 = false;
 		var called2 = false;
 
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			if(called0) {
 				called1 = true;
 			}
 		}, 2);
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			if(called1) {
 				called2 = true;
 			}
 		}, 3);
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 			called0 = true;
 		}, 1);
-		signal.dispatch();
+		prioritySignal.dispatch();
 
 		called2.isTrue();
 	}
 
 	@Test
 	public function when_adding_with_priority__should_size_be_1() : Void {
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 		});
-		signal.size.areEqual(1);
+		prioritySignal.size.areEqual(1);
 	}
 
 	@Test
 	public function when_adding_with_priority_after_dispatch__should_size_be_1() : Void {
-		signal.addWithPriority(function(){
+		prioritySignal.addWithPriority(function(){
 		});
-		signal.dispatch();
-		signal.size.areEqual(1);
+		prioritySignal.dispatch();
+		prioritySignal.size.areEqual(1);
 	}
 
 	@Test
 	public function when_adding_once_with_priority__should_size_be_1() : Void {
-		signal.addOnceWithPriority(function(){
+		prioritySignal.addOnceWithPriority(function(){
 		});
-		signal.size.areEqual(1);
+		prioritySignal.size.areEqual(1);
 	}
 
 	@Test
 	public function when_adding_once_with_priority_after_dispatch__should_size_be_1() : Void {
-		signal.addOnceWithPriority(function(){
+		prioritySignal.addOnceWithPriority(function(){
 		});
-		signal.dispatch();
-		signal.size.areEqual(0);
+		prioritySignal.dispatch();
+		prioritySignal.size.areEqual(0);
 	}
 
 	@Test
@@ -165,7 +172,7 @@ class PrioritySignal0Test {
 		var func = function(){
 		};
 
-		var slot = signal.addWithPriority(func);
-		signal.addWithPriority(func).get().areEqual(slot.get());
+		var slot = prioritySignal.addWithPriority(func);
+		prioritySignal.addWithPriority(func).get().areEqual(slot.get());
 	}
 }

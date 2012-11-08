@@ -138,14 +138,16 @@ class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3
 
 interface ISlot5<T1, T2, T3, T4, T5> implements ISlot {
 
-	var listener(default, default) : Function5<T1, T2, T3, T4, T5, Void>;
+	var listener(dynamic, never) : Function5<T1, T2, T3, T4, T5, Void>;
 
 	function execute(value0 : T1, value1 : T2, value2 : T3, value3 : T4, value : T5) : Void;
 }
 
 class Slot5<T1, T2, T3, T4, T5> extends Slot, implements ISlot5<T1, T2, T3, T4, T5> {
 
-	public var listener(default, default) : Function5<T1, T2, T3, T4, T5, Void>;
+	public var listener(dynamic, never) : Function5<T1, T2, T3, T4, T5, Void>;
+
+	private var _listener : Function5<T1, T2, T3, T4, T5, Void>;
 
 	private var _signal : ISignal5<T1, T2, T3, T4, T5>;
 
@@ -155,8 +157,8 @@ class Slot5<T1, T2, T3, T4, T5> extends Slot, implements ISlot5<T1, T2, T3, T4, 
 		super();
 
 		_signal = signal;
+		_listener = listener;
 
-		this.listener = listener;
 		this.once = once;
 	}
 
@@ -189,6 +191,10 @@ class Slot5<T1, T2, T3, T4, T5> extends Slot, implements ISlot5<T1, T2, T3, T4, 
 
 	override private function get_productArity() : Int {
 		return 1;
+	}
+
+	public function get_listener() : Function5<T1, T2, T3, T4, T5, Void> {
+		return _listener;
 	}
 }
 
