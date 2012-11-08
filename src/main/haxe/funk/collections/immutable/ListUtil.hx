@@ -17,7 +17,7 @@ class ListUtil {
 		return l.reverse;
 	}
 
-	public static function toList<T>(any : T) : IList<T> {
+	public static function toList<T, E>(any : T) : IList<E> {
 		var l = Nil.list();
 		var n : Int;
 
@@ -31,7 +31,7 @@ class ListUtil {
 
 		} else if(Std.is(any, Array)) {
 
-			var array: Array<T> = cast any;
+			var array: Array<E> = cast any;
 		    n = array.length;
 		    while(--n > -1) {
 		    	l = l.prepend(array[n]);
@@ -47,7 +47,7 @@ class ListUtil {
 
 	    } else {
 
-			l = l.prepend(any);
+			l = l.prepend(cast any);
 
 		}
 

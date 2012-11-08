@@ -26,6 +26,8 @@ class ListTestBase {
 
 	public var filledList : IList<Dynamic>;
 
+	public var listClassName : String;
+
 	private function generateIntList(size : Int) : IList<Int> {
 		var count = 0;
 		return size.fill(function() : Int {
@@ -123,7 +125,6 @@ class ListTestBase {
 	}
 
 	@Test
-	@Expect("funk.errors.ArgumentError")
 	public function when_drop_on_list__throw_argument_when_passing_minus_to_drop() : Void {
 		var called = try {
 			actual.drop(-1);
@@ -732,6 +733,11 @@ class ListTestBase {
 	}
 
 	@Test
+	public function when_take__should_return_list_of_size_0() : Void {
+		actual.take(0).size.areEqual(0);
+	}
+
+	@Test
 	public function when_take_with_1__should_return_list_with_1() : Void {
 		Assert.areEqual(actual.take(1).get(0).get(), 1);
 	}
@@ -749,6 +755,11 @@ class ListTestBase {
 	@Test
 	public function when_takeRight__should_return_list() : Void {
 		actual.takeRight(0).areEqual(other);
+	}
+
+	@Test
+	public function when_takeRight__should_return_list_of_size_0() : Void {
+		actual.takeRight(0).size.areEqual(0);
 	}
 
 	@Test
@@ -1083,12 +1094,12 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_toString_should_return_List() : Void {
-		actual.toString().areEqual('List(1, 2, 3, 4)');
+		actual.toString().areEqual(Std.format('$listClassName(1, 2, 3, 4)'));
 	}
 
 	@Test
 	public function when_calling_productPrefix_on_list_should_return_List() : Void {
-		actual.productPrefix.areEqual('List');
+		actual.productPrefix.areEqual(Std.format('$listClassName'));
 	}
 
 	@Test

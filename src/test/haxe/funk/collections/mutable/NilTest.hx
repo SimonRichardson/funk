@@ -22,5 +22,6 @@ class NilTest extends NilTestBase {
 		actual = null;
 		expected = null;
 		other = null;
+		filledList = null;
 	}
 }

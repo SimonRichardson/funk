@@ -11,6 +11,8 @@ class ListTest extends ListTestBase {
 
 	@Before
 	public function setup():Void {
+		listClassName = 'List';
+		
 		actual = [1, 2, 3, 4].toList();
 		expected = [1, 2, 3, 4].toList();
 		other = Nil.list();
@@ -22,5 +24,6 @@ class ListTest extends ListTestBase {
 		actual = null;
 		expected = null;
 		other = null;
+		filledList = null;
 	}
 }

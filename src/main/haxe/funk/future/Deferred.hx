@@ -118,7 +118,7 @@ class Deferred<T> {
 	}
 
 	public function values() : StreamValues<T> {
-		return _values.map(function(state) {
+		return cast _values.map(function(state) {
 			return switch(state){
 				case Resolved(option):
 					switch(option.toOption()) {
