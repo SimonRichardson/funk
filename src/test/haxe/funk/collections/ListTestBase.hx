@@ -7,12 +7,16 @@ import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.option.Option;
 import funk.tuple.Tuple2;
+import funk.Wildcard;
+
 import massive.munit.Assert;
 import massive.munit.AssertExtensions;
 
 using funk.collections.immutable.ListUtil;
 using funk.option.Option;
 using funk.tuple.Tuple2;
+using funk.Wildcard;
+
 using massive.munit.Assert;
 using massive.munit.AssertExtensions;
 
@@ -409,32 +413,38 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_fold__should_foldLeft_should_return_0() : Void {
-		//should("return 0 when calling foldLeft").expect(actual.foldLeft(0, _.plus_)).toBeEqualTo(0);
+	public function when_fold__should_foldLeft_should_return_10() : Void {
+		actual.foldLeft(0, _.plus_).areEqual(10);
 	}
 
-	/*
 	@Test
-	public function when_fold__should_not_call_foldLeft() : Void {
+	public function when_fold__should_foldLeft_should_return_11() : Void {
+		actual.foldLeft(1, _.plus_).areEqual(11);
+	}
+
+	@Test
+	public function when_fold__should_call_foldLeft() : Void {
 		actual.foldLeft(0, function(x:Int, y:Int):Int {
-			Assert.fail("fail if called");
 			return 0;
 		}).areEqual(0);
 	}
 
 	@Test
-	public function when_fold__should_foldRight_should_return_0() : Void {
-		//should("return 0 when calling foldRight").expect(actual.foldRight(0, _.plus_)).toBeEqualTo(0);
+	public function when_fold__should_foldRight_should_return_10() : Void {
+		actual.foldRight(0, _.plus_).areEqual(10);
 	}
 
 	@Test
-	public function when_fold__should_not_call_foldRight() : Void {
+	public function when_fold__should_foldRight_should_return_11() : Void {
+		actual.foldRight(1, _.plus_).areEqual(11);
+	}
+
+	@Test
+	public function when_fold__should_call_foldRight() : Void {
 		actual.foldRight(0, function(x:Int, y:Int):Int {
-			Assert.fail("fail if called");
 			return 0;
 		}).areEqual(0);
 	}
-	*/
 
 	@Test
 	public function when_forall__should_return_true() : Void {

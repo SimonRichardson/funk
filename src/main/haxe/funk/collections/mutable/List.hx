@@ -202,7 +202,12 @@ class List<T> extends Product, implements IList<T> {
 	}
 
 	public function foldRight(x : T, f : (T -> T -> T)) : T {
-		return x;
+		var value : T = x;
+		var index : Int = _data.length;
+		while(--index > -1) {
+			value = f(value, _data[index]);
+		}
+		return value;
 	}
 
 	public function forall(f : (T -> Bool)) : Bool {
