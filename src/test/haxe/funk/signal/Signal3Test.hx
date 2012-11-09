@@ -4,10 +4,10 @@ import funk.errors.IllegalOperationError;
 import funk.option.Option;
 
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class Signal3Test {
 

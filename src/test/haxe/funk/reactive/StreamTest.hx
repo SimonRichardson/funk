@@ -1,11 +1,11 @@
 package funk.reactive;
 
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 import massive.munit.util.Timer;
 
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class StreamTest extends ProcessAsyncBase {
 

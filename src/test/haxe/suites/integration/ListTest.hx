@@ -4,13 +4,13 @@ import funk.collections.immutable.ListUtil;
 import funk.Wildcard;
 
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using funk.collections.immutable.ListUtil;
 using funk.Wildcard;
 
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class ListTest {
 

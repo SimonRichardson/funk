@@ -9,14 +9,14 @@ import funk.errors.RangeError;
 import funk.option.Option;
 
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using funk.collections.immutable.ListUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Option;
 
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class IteratorUtilTest {
 

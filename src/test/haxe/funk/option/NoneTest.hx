@@ -5,11 +5,11 @@ import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.option.Option;
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using funk.option.Option;
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class NoneTest {
 

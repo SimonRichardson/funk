@@ -4,10 +4,10 @@ import funk.signal.Signal0;
 import funk.signal.PrioritySignal0;
 
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class PrioritySignal0Test extends Signal0Test {
 

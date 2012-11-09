@@ -4,10 +4,10 @@ import funk.errors.AbstractMethodError;
 import funk.signal.Signal;
 
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class SlotTest {
 

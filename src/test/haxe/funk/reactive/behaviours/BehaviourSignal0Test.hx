@@ -1,7 +1,7 @@
 package funk.reactive.behaviours;
 
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 import funk.Funk;
 import funk.reactive.behaviours.BehaviourSignal0;
@@ -9,7 +9,7 @@ import funk.signal.Signal0;
 import funk.tuple.Tuple1;
 
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 using funk.reactive.behaviours.BehaviourSignal0;
 using funk.tuple.Tuple1;

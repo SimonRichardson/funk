@@ -5,13 +5,13 @@ import funk.collections.IteratorUtil;
 import funk.collections.immutable.ListUtil;
 import funk.collections.immutable.Nil;
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using funk.collections.IteratorUtil;
 using funk.collections.immutable.ListUtil;
 using funk.collections.immutable.Nil;
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class ListUtilTest {
 

@@ -1,4 +1,4 @@
-package massive.munit;
+package util;
 
 import funk.IFunkObject;
 import funk.collections.IList;

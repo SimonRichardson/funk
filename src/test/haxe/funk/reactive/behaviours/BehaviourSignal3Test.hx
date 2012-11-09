@@ -1,14 +1,14 @@
 package funk.reactive.behaviours;
 
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 import funk.reactive.behaviours.BehaviourSignal3;
 import funk.signal.Signal3;
 import funk.tuple.Tuple3;
 
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 using funk.reactive.behaviours.BehaviourSignal3;
 using funk.tuple.Tuple3;

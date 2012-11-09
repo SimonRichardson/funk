@@ -5,10 +5,10 @@ import funk.errors.FunkError;
 import funk.option.Option;
 
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class DeferredTest {
 

@@ -5,11 +5,11 @@ import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
 import funk.option.Option;
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using funk.option.Option;
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class SomeTest {
 
@@ -399,13 +399,13 @@ class SomeTest {
 private class MockIFunkObject implements IFunkObject {
 
 	public function new(){
-		
+
 	}
 
 	public function equals(value : IFunkObject) : Bool {
 		return (this == value);
 	}
-	
+
 	public function toString() : String {
 		return "MockIFunkObject";
 	}

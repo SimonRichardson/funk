@@ -6,12 +6,12 @@ import funk.errors.RangeError;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 import massive.munit.Assert;
-import massive.munit.AssertExtensions;
+import util.AssertExtensions;
 
 using funk.option.Option;
 using funk.tuple.Tuple2;
 using massive.munit.Assert;
-using massive.munit.AssertExtensions;
+using util.AssertExtensions;
 
 class NilTestBase {
 
