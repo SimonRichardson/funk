@@ -89,7 +89,7 @@ class Wildcards {
 		return a & b;
 	}
 
-	inline public static function binaryXor(wildcard : Wildcard, a : Int, b : Int) : Int {
+	inline public static function binaryXor_(wildcard : Wildcard, a : Int, b : Int) : Int {
 		return a ^ b;
 	}
 }
