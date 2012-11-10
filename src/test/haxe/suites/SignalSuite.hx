@@ -4,6 +4,12 @@ import massive.munit.TestSuite;
 
 import funk.signal.SignalTest;
 import funk.signal.SlotTest;
+import funk.signal.Slot0Test;
+import funk.signal.Slot1Test;
+import funk.signal.Slot2Test;
+import funk.signal.Slot3Test;
+import funk.signal.Slot4Test;
+import funk.signal.Slot5Test;
 import funk.signal.Signal0Test;
 import funk.signal.Signal1Test;
 import funk.signal.Signal2Test;
@@ -26,6 +32,13 @@ class SignalSuite extends TestSuite
 
 		add(funk.signal.SignalTest);
 		add(funk.signal.SlotTest);
+
+		add(funk.signal.Slot0Test);
+		add(funk.signal.Slot1Test);
+		add(funk.signal.Slot2Test);
+		add(funk.signal.Slot3Test);
+		add(funk.signal.Slot4Test);
+		add(funk.signal.Slot5Test);
 
 		add(funk.signal.Signal0Test);
 		add(funk.signal.Signal1Test);
