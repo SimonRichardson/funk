@@ -52,4 +52,10 @@ class SignalTest {
 		called.isTrue();
 	}
 
+	@Test
+	public function when_calling_removeAll__should_size_be_minus_1() : Void {
+		signal.removeAll();
+		signal.size.areEqual(-1);
+	}
+
 }

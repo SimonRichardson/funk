@@ -101,7 +101,7 @@ class ProxyProductIterator<T> extends Product, implements IProductIterator<T> {
 			var productIterator : IProduct = cast _iterator;
 			productIterator.productArity;
 		} else {
-			throw new IllegalOperationError();
+			0;
 		}
 	}
 

@@ -12,6 +12,7 @@ import funk.product.Product4Test;
 import funk.product.Product5Test;
 import funk.product.ProductIteratorTest;
 import funk.product.ProductTest;
+import funk.product.ProxyProductIteratorTest;
 import funk.tuple.Tuple1Test;
 import funk.tuple.Tuple2Test;
 import funk.tuple.Tuple3Test;
@@ -36,6 +37,7 @@ class FunkSuite extends TestSuite
 		add(funk.product.Product5Test);
 		add(funk.product.ProductIteratorTest);
 		add(funk.product.ProductTest);
+		add(funk.product.ProxyProductIteratorTest);
 		add(funk.tuple.Tuple1Test);
 		add(funk.tuple.Tuple2Test);
 		add(funk.tuple.Tuple3Test);

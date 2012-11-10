@@ -49,4 +49,9 @@ class SlotTest {
 		called.isTrue();
 	}
 
+	@Test
+	public function when_calling_remove__should_productArity_be_minus_1() : Void {
+		slot.remove();
+		slot.productArity.areEqual(-1);
+	}
 }

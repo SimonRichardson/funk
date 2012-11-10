@@ -94,6 +94,21 @@ class ProductTest {
 	}
 
 	@Test
+	public function should_calling_equals_on_a_StackMockProduct_with_StackMockProduct_should_return_true() {
+		new StackMockProduct([new MockProduct(true), new MockProduct(true)]).equals(new StackMockProduct([new MockProduct(true), new MockProduct(true)])).isTrue();
+	}
+
+	@Test
+	public function should_calling_equals_on_a_StackMockProduct_with_StackMockProduct_should_return_false() {
+		new StackMockProduct([new MockProduct(true), new MockProduct(false)]).equals(new StackMockProduct([new MockProduct(true), new MockProduct(true)])).isFalse();
+	}
+
+	@Test
+	public function should_calling_equals_on_a_StackMockProduct_with_different_StackMockProduct_should_return_false() {
+		new StackMockProduct([new MockProduct(true)]).equals(new StackMockProduct([new MockProduct(true), new MockProduct(true)])).isFalse();
+	}
+
+	@Test
 	public function should_calling_toString_should_return_MockProduct_true() {
 		new MockProduct(true).toString().areEqual("MockProduct(true)");
 	}
@@ -134,7 +149,7 @@ class MockProduct extends Product {
 
 	override public function productElement(index : Int) : Dynamic {
 		return if(index == 0) {
-			_value; 
+			_value;
 		} else {
 			throw new RangeError();
 			false;
@@ -170,6 +185,29 @@ private class StackProduct extends Product {
 
 	override private function get_productPrefix() : String {
 		return "StackProduct";
+	}
+}
+
+private class StackMockProduct extends Product {
+
+	private var _value : Array<MockProduct>;
+
+	public function new(value : Array<MockProduct>) {
+		super();
+
+		_value = value;
+	}
+
+	override public function productElement(index : Int) : Dynamic {
+		return _value[index];
+	}
+
+	override private function get_productArity() : Int {
+		return _value.length;
+	}
+
+	override private function get_productPrefix() : String {
+		return "StackMockProduct";
 	}
 }
 
