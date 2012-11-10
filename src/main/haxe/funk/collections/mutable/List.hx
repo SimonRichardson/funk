@@ -353,6 +353,10 @@ class List<T> extends Product, implements IList<T> {
 			}
 		}
 
+		if(buffer.length == 0) {
+			return Nil.list();
+		}
+
 		_data = buffer;
 
 		return this;

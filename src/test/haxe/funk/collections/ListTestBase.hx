@@ -96,6 +96,15 @@ class ListTestBase {
 	}
 
 	@Test
+	public function should_count_5_be_0() : Void {
+		var exp = 5;
+		var act = generateIntList(exp).count(function(x) {
+			return false;
+		});
+		act.areEqual(0);
+	}
+
+	@Test
 	public function when_drop_0__return_same_list() : Void {
 		actual.drop(0).areEqual(actual);
 	}
@@ -213,11 +222,31 @@ class ListTestBase {
 		}).get(2).get().areEqual(4);
 	}
 
+	@Test
+	public function when_dropWhile__return_size_equals_0() : Void {
+		generateIntList(5).dropWhile(function(x : Int):Bool {
+			return true;
+		}).size.areEqual(0);
+	}
 
 	@Test
 	public function when_exists__should_return_true_when_calling_exists() : Void {
 		actual.exists(function(x : Int):Bool {
 			return x == 2;
+		}).isTrue();
+	}
+
+	@Test
+	public function when_exists_all_false__should_return_false_when_calling_exists() : Void {
+		actual.exists(function(x : Int):Bool {
+			return false;
+		}).isFalse();
+	}
+
+	@Test
+	public function when_exists_all_true__should_return_true_when_calling_exists() : Void {
+		actual.exists(function(x : Int):Bool {
+			return true;
 		}).isTrue();
 	}
 
@@ -250,6 +279,13 @@ class ListTestBase {
 	}
 
 	@Test
+	public function when_filter_all_false__should_return_size_of_0() : Void {
+		actual.filter(function(x : Dynamic):Bool {
+			return false;
+		}).size.areEqual(0);
+	}
+
+	@Test
 	public function when_filterNot__should_return_list() : Void {
 		actual.filterNot(function(x : Dynamic):Bool {
 			return x == 1;
@@ -278,6 +314,13 @@ class ListTestBase {
 	}
 
 	@Test
+	public function when_filterNot_all_true__should_return_size_of_0() : Void {
+		actual.filterNot(function(x : Dynamic):Bool {
+			return true;
+		}).size.areEqual(0);
+	}
+
+	@Test
 	public function when_find__should_return_Option() : Void {
 		actual.find(function(x : Dynamic):Bool {
 			return x == 2;
@@ -302,6 +345,13 @@ class ListTestBase {
 	}
 
 	@Test
+	public function when_find_all_false__should_return_none() : Void {
+		actual.find(function(x : Dynamic):Bool {
+			return false;
+		}).isEmpty().isTrue();
+	}
+
+	@Test
 	public function when_findIndexOf__should_return_1_for_value_2() : Void {
 		actual.findIndexOf(function(x : Dynamic):Bool {
 			return x == 2;
@@ -316,6 +366,13 @@ class ListTestBase {
 	}
 
 	@Test
+	public function when_findIndexOf_with_false__should_return_minus_1() : Void {
+		actual.findIndexOf(function(x : Dynamic):Bool {
+			return false;
+		}).areEqual(-1);
+	}
+
+	@Test
 	public function when_indexOf__should_return_1_for_value_2() : Void {
 		actual.indexOf(2).areEqual(1);
 	}
@@ -325,8 +382,10 @@ class ListTestBase {
 		actual.indexOf(3).areEqual(2);
 	}
 
-
-
+	@Test
+	public function when_indexOf_99__should_return_minus_1() : Void {
+		actual.indexOf(99).areEqual(-1);
+	}
 
 	@Test
 	public function when_zip__should_not_be_null() : Void {
@@ -522,6 +581,13 @@ class ListTestBase {
 		actual.partition(function(value : Int) : Bool {
 			return true;
 		})._1.isType(IList);
+	}
+
+	@Test
+	public function when_partition_false__should_return_a_ITuple2_and__2_is_IList() : Void {
+		actual.partition(function(value : Int) : Bool {
+			return false;
+		})._2.isType(IList);
 	}
 
 	@Test
@@ -732,6 +798,20 @@ class ListTestBase {
 		actual.takeWhile(function(value : Int) : Bool {
 			return true;
 		}).size.areEqual(4);
+	}
+
+	@Test
+	public function when_takeWhile__should_return_size_0() : Void {
+		actual.takeWhile(function(value : Int) : Bool {
+			return false;
+		}).size.areEqual(0);
+	}
+
+	@Test
+	public function when_takeWhile__should_return_nil() : Void {
+		actual.takeWhile(function(value : Int) : Bool {
+			return false;
+		}).areEqual(other);
 	}
 
 	@Test

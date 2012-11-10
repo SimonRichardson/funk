@@ -53,6 +53,14 @@ class StreamValuesTest extends ListTestBase {
 	}
 
 	@Test
+	override public function when_takeWhile__should_return_nil() : Void {
+		// This isn't required for stream values so we'll test if it's empty
+		actual.takeWhile(function(value : Int) : Bool {
+			return false;
+		}).isEmpty.isTrue();
+	}
+
+	@Test
 	public function when_creating_a_list__should_adding_more_items_add_more_items() : Void {
 		actualSignal.dispatch(5);
 		actualStream.size.areEqual(5);
