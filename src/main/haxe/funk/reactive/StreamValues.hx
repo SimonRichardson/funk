@@ -190,9 +190,15 @@ class StreamValues<T> extends Product, implements IList<T> {
     }
 
     public function prependAll(value : IList<T>) : IList<T> {
+        var n = value.size;
+
+        if(n == 0) {
+            return this;
+        }
+
         var stream = new StreamValues();
         stream._list = _list.prependAll(value);
-        return stream;  
+        return stream;
     }
 
     public function reduceLeft(f : (T -> T -> T)) : IOption<T> {
@@ -268,7 +274,7 @@ class StreamValues<T> extends Product, implements IList<T> {
     public function appendIterable(iterable : Iterable<T>) : IList<T> {
         var stream = new StreamValues();
         stream._list = _list.appendIterable(iterable);
-        return stream;    
+        return stream;
     }
 
     override public function productElement(i : Int) : Dynamic {

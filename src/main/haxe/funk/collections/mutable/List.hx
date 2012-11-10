@@ -99,7 +99,7 @@ class List<T> extends Product, implements IList<T> {
             throw new ArgumentError("n must be positive");
         }
 
-		_data.splice(_data.length - n, _data.length);
+		_data.splice(cast(Math.max(0, _data.length - n)) | 0, _data.length);
 
 		return this;
 	}

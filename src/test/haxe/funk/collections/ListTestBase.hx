@@ -111,6 +111,16 @@ class ListTestBase {
 	}
 
 	@Test
+	public function when_drop_4__return_size_0() : Void {
+		actual.drop(4).size.areEqual(0);
+	}
+
+	@Test
+	public function when_drop_5__return_size_0() : Void {
+		actual.drop(5).size.areEqual(0);
+	}
+
+	@Test
 	public function when_drop_2__return_get_0_is_2() : Void {
 		var opt : IOption<Int> = generateIntList(5).drop(2).get(0);
 		opt.get().areEqual(2);
@@ -152,6 +162,16 @@ class ListTestBase {
 	@Test
 	public function when_dropRight_2_on_list__return_and_get_2_equals_2() : Void {
 		generateIntList(5).dropRight(2).get(2).get().areEqual(2);
+	}
+
+	@Test
+	public function when_dropRight_4__return_size_0() : Void {
+		actual.dropRight(4).size.areEqual(0);
+	}
+
+	@Test
+	public function when_dropRight_5__return_size_0() : Void {
+		actual.dropRight(5).size.areEqual(0);
 	}
 
 	@Test
@@ -223,6 +243,13 @@ class ListTestBase {
 	}
 
 	@Test
+	public function when_filter_all__should_return_size_of_4() : Void {
+		actual.filter(function(x : Dynamic):Bool {
+			return true;
+		}).size.areEqual(4);
+	}
+
+	@Test
 	public function when_filterNot__should_return_list() : Void {
 		actual.filterNot(function(x : Dynamic):Bool {
 			return x == 1;
@@ -241,6 +268,13 @@ class ListTestBase {
 		actual.filterNot(function(x : Dynamic):Bool {
 			return x % 2 == 0;
 		}).size.areEqual(2);
+	}
+
+	@Test
+	public function when_filterNot_all__should_return_size_of_4() : Void {
+		actual.filterNot(function(x : Dynamic):Bool {
+			return false;
+		}).size.areEqual(4);
 	}
 
 	@Test
@@ -1095,6 +1129,11 @@ class ListTestBase {
 	@Test
 	public function when_calling_prependAll__should_not_be_null() : Void {
 		actual.prependAll(filledList).isNotNull();
+	}
+
+	@Test
+	public function when_calling_prependAll_with_nill__should_be_actual() : Void {
+		actual.prependAll(other).areEqual(actual);
 	}
 
 	@Test

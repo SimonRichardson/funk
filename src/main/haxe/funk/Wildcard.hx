@@ -70,12 +70,14 @@ class Wildcards {
 	}
 
 	inline public static function equal_<T>(wildcard : Wildcard, a : T, b : T) : Bool {
-		return if(Std.is(a, IFunkObject) && Std.is(b, IFunkObject)) {
+		return if(a == b) {
+			true;
+		} else if(Std.is(a, IFunkObject) && Std.is(b, IFunkObject)) {
 			var funk0 : IFunkObject = cast a;
 			var funk1 : IFunkObject = cast b;
 			funk0.equals(funk1);
 		} else {
-			a == b;
+			false;
 		}
 	}
 

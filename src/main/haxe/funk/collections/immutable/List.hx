@@ -503,20 +503,15 @@ class List<T> extends Product, implements IList<T> {
             throw new ArgumentError("n must be positive");
         }
 
-        if(n > size) {
+        if(n >= size) {
             return this;
         } else if(0 == n) {
             return Nil.list();
         }
 
-        n = size - n;
-
-        if(n <= 0) {
-            return this;
-        }
-
         var p: IList<T> = this;
 
+        n = size - n;
         for(i in 0...n) {
             p = p.tail;
         }
