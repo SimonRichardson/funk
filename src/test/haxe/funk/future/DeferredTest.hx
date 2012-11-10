@@ -130,4 +130,15 @@ class DeferredTest {
 	public function when_asking_for_a_future__should_create_a_valid_future() : Void {
 		deferred.future().isNotNull();
 	}
+
+	@Test
+	public function when_calling_progress__should_not_throw_an_error() : Void {
+		deferred.progress(1.0);
+	}
+
+	@Test
+	public function when_calling_progress_after_resolve__should_not_throw_an_error() : Void {
+		deferred.resolve(1);
+		deferred.progress(1.0);
+	}
 }

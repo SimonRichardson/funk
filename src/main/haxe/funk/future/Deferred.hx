@@ -31,53 +31,33 @@ class Deferred<T> {
 	}
 
 	public function attempt() : IEither<FunkError, T> {
-		return switch(_values.last.toOption()) {
-			case Some(state):
-
-				switch(state) {
-					case Resolved(option):
-
-						switch(option.toOption()) {
-							case Some(value):
-								Right(value).toInstance();
-							case None:
-								Right(null).toInstance();
-						}
-
-					case Rejected(error):
-						Left(error).toInstance();
-					default:
-						Left(cast new NoSuchElementError()).toInstance();
-				}
-
-			case None:
+		var state = _values.last.get();
+		return switch(state) {
+			case Resolved(option):
+				Right(option.get()).toInstance();
+			case Rejected(error):
+				Left(error).toInstance();
+			default:
 				Left(cast new NoSuchElementError()).toInstance();
 		}
 	}
 
 	public function get() : IOption<T> {
-		return switch(_values.last.toOption()) {
-			case Some(state):
-				switch(state) {
-					case Resolved(option):
-						option;
-					default:
-						None.toInstance();
-				}
-			case None:
+		var state = _values.last.get();
+		return switch(state) {
+			case Resolved(option):
+				option;
+			default:
 				None.toInstance();
-		}
+		};
 	}
 
 	public function progress(value : Float) : Void {
-		switch(_values.last.toOption()){
-			case Some(state):
-				switch(state) {
-					case Pending:
-						_progressStream.emit(value);
-					default:
-				}
-			case None:
+		var state = _values.last.get();
+		switch(state) {
+			case Pending:
+				_progressStream.emit(value);
+			default:
 		}
 	}
 
@@ -121,12 +101,7 @@ class Deferred<T> {
 		return cast _values.map(function(state) {
 			return switch(state){
 				case Resolved(option):
-					switch(option.toOption()) {
-						case Some(value):
-							value;
-						case None:
-							null;
-					}
+					option.get();
 				default:
 					null;
 			};
