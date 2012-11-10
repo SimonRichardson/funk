@@ -52,6 +52,18 @@ class StreamValuesTest extends ListTestBase {
 		filledList = null;
 	}
 
+	override public function generateIntList(size : Int) : IList<Int> {
+		var count = 0;
+		var list = size.fill(function() : Int {
+			return count++;
+		});
+		return new StreamValues().prependAll(list);
+	}
+
+	override public function convertToList<T, E>(any : T) : IList<E> {
+		return new StreamValues().prependAll(cast any.toList());
+	}
+
 	@Test
 	override public function when_takeWhile__should_return_nil() : Void {
 		// This isn't required for stream values so we'll test if it's empty

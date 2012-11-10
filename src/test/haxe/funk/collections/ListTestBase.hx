@@ -1,7 +1,6 @@
 package funk.collections;
 
 import funk.collections.IList;
-import funk.collections.immutable.ListUtil;
 import funk.errors.ArgumentError;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
@@ -12,7 +11,6 @@ import funk.Wildcard;
 import massive.munit.Assert;
 import util.AssertExtensions;
 
-using funk.collections.immutable.ListUtil;
 using funk.option.Option;
 using funk.tuple.Tuple2;
 using funk.Wildcard;
@@ -32,11 +30,12 @@ class ListTestBase {
 
 	public var listClassName : String;
 
-	private function generateIntList(size : Int) : IList<Int> {
-		var count = 0;
-		return size.fill(function() : Int {
-			return count++;
-		});
+	public function generateIntList(size : Int) : IList<Int> {
+		return null;
+	}
+
+	public function convertToList<T, E>(any : T) : IList<E> {
+		return null;
 	}
 
 	@Test
@@ -53,6 +52,11 @@ class ListTestBase {
 	public function should_have_5_size():Void {
 		var value = 5;
 		generateIntList(value).size.areEqual(value);
+	}
+
+	@Test
+	public function should_generate_correct_list():Void {
+		generateIntList(5).productPrefix.areEqual(listClassName);
 	}
 
 	@Test
@@ -480,18 +484,18 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_flatMap__should_return_a_list_containing_concat_lists() : Void {
-		var result = actual.flatMap(function(x : Dynamic):IList<Dynamic> {
-			return expected;
-		});
-		result.equals([1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
-	}
-
-	@Test
 	public function when_find__should_return_size_of_16() : Void {
 		actual.flatMap(function(x : Dynamic):IList<Dynamic> {
 			return expected;
 		}).size.areEqual(16);
+	}
+
+	@Test
+	public function when_flatMap__should_return_a_list_containing_concat_lists() : Void {
+		var result = actual.flatMap(function(x : Dynamic):IList<Dynamic> {
+			return expected;
+		});
+		result.equals(convertToList([1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -501,8 +505,8 @@ class ListTestBase {
 
 	@Test
 	public function when_flatten__should_flatten_sublists() : Void {
-		var a = [[1, 2, 3, 4].toList(), [5, 6, 7, 8].toList(), [9, 10].toList()].toList();
-		a.flatten.equals([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].toList()).isTrue();
+		var a = convertToList([convertToList([1, 2, 3, 4]), convertToList([5, 6, 7, 8]), convertToList([9, 10])]);
+		a.flatten.equals(convertToList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).isTrue();
 	}
 
 	@Test
@@ -644,7 +648,7 @@ class ListTestBase {
 
 	@Test
 	public function when_reduceRight__should_return_fedcba() : Void {
-		Assert.areEqual("abcdef".toList().reduceRight(function(a:String, b:String):String {
+		Assert.areEqual(convertToList("abcdef").reduceRight(function(a:String, b:String):String {
 			return a + b;
 		}).get(), "fedcba");
 	}
@@ -682,7 +686,7 @@ class ListTestBase {
 
 	@Test
 	public function when_reduceLeft__should_return_abcdef() : Void {
-		Assert.areEqual("abcdef".toList().reduceLeft(function(a:String, b:String):String {
+		Assert.areEqual(convertToList("abcdef").reduceLeft(function(a:String, b:String):String {
 			return a + b;
 		}).get(), "abcdef");
 	}
@@ -998,7 +1002,7 @@ class ListTestBase {
 
 	@Test
 	public function when_indices__should_be_equal_0_1_2_3() : Void {
-		actual.indices.toList().equals([0, 1, 2, 3].toList()).isTrue();
+		convertToList(actual.indices).equals(convertToList([0, 1, 2, 3])).isTrue();
 	}
 
 	@Test
@@ -1013,7 +1017,7 @@ class ListTestBase {
 
 	@Test
 	public function when_init__should_be_equal_4() : Void {
-		actual.init.equals([1, 2, 3].toList()).isTrue();
+		actual.init.equals(convertToList([1, 2, 3])).isTrue();
 	}
 
 	@Test
@@ -1048,7 +1052,7 @@ class ListTestBase {
 
 	@Test
 	public function when_reverse__should_be_equal_to_4_3_2_1() : Void {
-		actual.reverse.equals([4, 3, 2, 1].toList()).isTrue();
+		actual.reverse.equals(convertToList([4, 3, 2, 1])).isTrue();
 	}
 
 	@Test
@@ -1058,7 +1062,7 @@ class ListTestBase {
 
 	@Test
 	public function when_tail__should_be_2_3_4() : Void {
-		actual.tail.equals([2, 3, 4].toList()).isTrue();
+		actual.tail.equals(convertToList([2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -1073,7 +1077,7 @@ class ListTestBase {
 
 	@Test
 	public function when_tailOption__should_be_Some_value_of_2_3_4() : Void {
-		actual.tailOption.get().equals([2, 3, 4].toList()).isTrue();
+		actual.tailOption.get().equals(convertToList([2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -1083,11 +1087,11 @@ class ListTestBase {
 
 	@Test
 	public function when_zipWithIndex__should_be_equal_to_nil() : Void {
-		actual.zipWithIndex.equals([	tuple2(1, 0).toInstance(),
-										tuple2(2, 1).toInstance(),
-										tuple2(3, 2).toInstance(),
-										tuple2(4, 3).toInstance()
-										].toList()).isTrue();
+		actual.zipWithIndex.equals(convertToList([	tuple2(1, 0).toInstance(),
+													tuple2(2, 1).toInstance(),
+													tuple2(3, 2).toInstance(),
+													tuple2(4, 3).toInstance()
+													])).isTrue();
 	}
 
 	@Test
@@ -1118,7 +1122,7 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_append__should_equal_1_2_3_4_5() : Void {
-		actual.append(5).equals([1, 2, 3, 4, 5].toList()).isTrue();
+		actual.append(5).equals(convertToList([1, 2, 3, 4, 5])).isTrue();
 	}
 
 	@Test
@@ -1133,7 +1137,7 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_appendIterable__should_be_size_1_2_3_4_1_2_3_4() : Void {
-		actual.appendIterable({iterator: filledList.productIterator}).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
+		actual.appendIterable({iterator: filledList.productIterator}).equals(convertToList([1, 2, 3, 4, 1, 2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -1158,7 +1162,7 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_appendAll__should_be_1_2_3_4_1_2_3_4() : Void {
-		actual.appendAll(filledList).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
+		actual.appendAll(filledList).equals(convertToList([1, 2, 3, 4, 1, 2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -1173,7 +1177,7 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_prepend__should_be_5_1_2_3_4() : Void {
-		actual.prepend(5).equals([5, 1, 2, 3, 4].toList()).isTrue();
+		actual.prepend(5).equals(convertToList([5, 1, 2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -1188,7 +1192,7 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_prependIterable__should_be_1_2_3_4_1_2_3_4() : Void {
-		actual.prependIterable({iterator: filledList.productIterator}).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
+		actual.prependIterable({iterator: filledList.productIterator}).equals(convertToList([1, 2, 3, 4, 1, 2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -1203,7 +1207,7 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_prependIterator__should_be_1_2_3_4_1_2_3_4() : Void {
-		actual.prependIterator(filledList.productIterator()).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
+		actual.prependIterator(filledList.productIterator()).equals(convertToList([1, 2, 3, 4, 1, 2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -1218,7 +1222,7 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_prependAll__should_be_1_2_3_4_1_2_3_4() : Void {
-		actual.prependAll(filledList).equals([1, 2, 3, 4, 1, 2, 3, 4].toList()).isTrue();
+		actual.prependAll(filledList).equals(convertToList([1, 2, 3, 4, 1, 2, 3, 4])).isTrue();
 	}
 
 	@Test

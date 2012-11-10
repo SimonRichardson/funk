@@ -4,8 +4,12 @@ import funk.collections.ListTestBase;
 import funk.collections.mutable.ListUtil;
 import funk.collections.mutable.Nil;
 
+import massive.munit.Assert;
+
 using funk.collections.mutable.ListUtil;
 using funk.collections.mutable.Nil;
+
+using massive.munit.Assert;
 
 class ListTest extends ListTestBase {
 
@@ -25,5 +29,16 @@ class ListTest extends ListTestBase {
 		expected = null;
 		other = null;
 		filledList = null;
+	}
+
+	override public function generateIntList(size : Int) : IList<Int> {
+		var count = 0;
+		return size.fill(function() : Int {
+			return count++;
+		});
+	}
+
+	override public function convertToList<T, E>(any : T) : IList<E> {
+		return cast any.toList();
 	}
 }
