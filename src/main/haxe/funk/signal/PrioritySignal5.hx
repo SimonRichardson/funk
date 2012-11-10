@@ -64,7 +64,7 @@ class PrioritySignal5<T1, T2, T3, T4, T5> extends Signal5<T1, T2, T3, T4, T5>,
     }
 
     override private function get_productPrefix() : String {
-		return "PrioritySignal";
+		return "PrioritySignal5";
 	}
 }
 

@@ -128,6 +128,10 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
 	override private function get_size() : Int {
 		return _list.size;
 	}
+
+	override private function get_productPrefix() : String {
+		return "Signal4";
+	}
 }
 
 interface ISlot4<T1, T2, T3, T4> implements ISlot {

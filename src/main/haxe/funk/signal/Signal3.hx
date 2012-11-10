@@ -123,6 +123,10 @@ class Signal3<T1, T2, T3> extends Signal, implements ISignal3<T1, T2, T3> {
 	override private function get_size() : Int {
 		return _list.size;
 	}
+
+	override private function get_productPrefix() : String {
+		return "Signal3";
+	}
 }
 
 interface ISlot3<T1, T2, T3> implements ISlot {

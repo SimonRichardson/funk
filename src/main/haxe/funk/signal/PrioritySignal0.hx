@@ -57,7 +57,7 @@ class PrioritySignal0 extends Signal0, implements IPrioritySignal {
     }
 
     override private function get_productPrefix() : String {
-		return "PrioritySignal";
+		return "PrioritySignal0";
 	}
 }
 

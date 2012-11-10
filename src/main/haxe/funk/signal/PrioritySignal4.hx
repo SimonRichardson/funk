@@ -62,7 +62,7 @@ class PrioritySignal4<T1, T2, T3, T4> extends Signal4<T1, T2, T3, T4>, implement
     }
 
     override private function get_productPrefix() : String {
-		return "PrioritySignal";
+		return "PrioritySignal4";
 	}
 }
 

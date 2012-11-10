@@ -20,6 +20,8 @@ class PrioritySignal0Test extends Signal0Test {
 		var s = new PrioritySignal0();
 		signal = s;
 		prioritySignal = s;
+
+		signalName = 'PrioritySignal0';
 	}
 
 	@After

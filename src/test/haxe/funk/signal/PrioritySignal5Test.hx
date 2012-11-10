@@ -19,6 +19,8 @@ class PrioritySignal5Test extends Signal5Test {
 		var s = new PrioritySignal5<Int, Int, Int, Int, Int>();
 		signal = s;
 		prioritySignal = s;
+
+		signalName = 'PrioritySignal5';
 	}
 
 	@After

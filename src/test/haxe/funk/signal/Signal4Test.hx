@@ -13,9 +13,12 @@ class Signal4Test {
 
 	public var signal : Signal4<Int, Int, Int, Int>;
 
+	public var signalName : String;
+
 	@Before
 	public function setup() {
 		signal = new Signal4<Int, Int, Int, Int>();
+		signalName = 'Signal4';
 	}
 
 	@After
@@ -194,5 +197,10 @@ class Signal4Test {
 		var listener = function(value0, value1, value2, value3) {};
 		var slot = signal.add(listener);
 		signal.productElement(0).areEqual(slot.get());
+	}
+
+	@Test
+	public function when_calling_productPrefix__should_return_signalName() : Void {
+		signal.productPrefix.areEqual(signalName);
 	}
 }

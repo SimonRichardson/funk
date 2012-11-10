@@ -121,6 +121,10 @@ class Signal0 extends Signal, implements ISignal0 {
 	override private function get_size() : Int {
 		return _list.size;
 	}
+
+	override private function get_productPrefix() : String {
+		return "Signal0";
+	}
 }
 
 interface ISlot0 implements ISlot {
