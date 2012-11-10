@@ -3,6 +3,7 @@ package suites;
 import massive.munit.TestSuite;
 
 import funk.CurryTest;
+import funk.LazyTest;
 import funk.PassTest;
 import funk.WildcardTest;
 import funk.either.EitherTest;
@@ -31,6 +32,7 @@ class FunkSuite extends TestSuite
 		super();
 
 		add(funk.CurryTest);
+		add(funk.LazyTest);
 		add(funk.PassTest);
 		add(funk.WildcardTest);
 

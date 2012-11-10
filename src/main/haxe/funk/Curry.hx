@@ -59,23 +59,23 @@ class Currys {
 		return switch (curry) {
 			case curry1(func):
 				Reflect.callMethod(null, func, args.getOrElse(function(){
-					return [];
+					return [null];
 				}));
 			case curry2(func):
 				Reflect.callMethod(null, func, args.getOrElse(function(){
-					return [];
+					return [null, null];
 				}));
 			case curry3(func):
 				Reflect.callMethod(null, func, args.getOrElse(function(){
-					return [];
+					return [null, null, null];
 				}));
 			case curry4(func):
 				Reflect.callMethod(null, func, args.getOrElse(function(){
-					return [];
+					return [null, null, null, null];
 				}));
 			case curry5(func):
 				Reflect.callMethod(null, func, args.getOrElse(function(){
-					return [];
+					return [null, null, null, null, null];
 				}));
 		}
 	}

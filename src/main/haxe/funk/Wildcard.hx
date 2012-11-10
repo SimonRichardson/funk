@@ -9,12 +9,12 @@ enum Wildcard {
 
 class Wildcards {
 
-	inline public static function toBoolean<T>(wildcard : Wildcard, x : T) : Bool {
-		return if (x == null) {
-      		false;
-    	} else {
-      		Std.is(x, Bool) ? !!(cast(x, Bool)) : true;
-    	}
+	inline public static function toBoolean<T>(wildcard : Wildcard, x : Null<T>) : Bool {
+		return if(x == null) {
+			false;
+		} else {
+			!!(cast x);
+		}
 	}
 
 	inline public static function toList<T>(wildcard : Wildcard, x : T) : IList<T> {

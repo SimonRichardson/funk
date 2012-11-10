@@ -77,4 +77,39 @@ class CurryTest {
 			return value0 + value1 + value2 + value3 + value4;
 		}).complete([1, 2, 3, 4, 5]), 15);
 	}
+
+	@Test
+	public function when_calling_curry1_complete__should_return_value_false() : Void {
+		Assert.areEqual(curry1(function(value0){
+			return false;
+		}).complete(), false);
+	}
+
+	@Test
+	public function when_calling_curry2_complete__should_return_value_false() : Void {
+		Assert.areEqual(curry2(function(value0, value1){
+			return false;
+		}).complete(), false);
+	}
+
+	@Test
+	public function when_calling_curry3_complete__should_return_value_false() : Void {
+		Assert.areEqual(curry3(function(value0, value1, value2){
+			return false;
+		}).complete(), false);
+	}
+
+	@Test
+	public function when_calling_curry4_complete__should_return_value_false() : Void {
+		Assert.areEqual(curry4(function(value0, value1, value2, value3){
+			return false;
+		}).complete(), false);
+	}
+
+	@Test
+	public function when_calling_curry5_complete__should_return_value_false() : Void {
+		Assert.areEqual(curry5(function(value0, value1, value2, value3, value4){
+			return false;
+		}).complete(), false);
+	}
 }
