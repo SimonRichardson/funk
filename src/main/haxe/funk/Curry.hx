@@ -54,11 +54,30 @@ class Currys {
 		}
 	}
 
-	public static function complete<T1, T2, T3, T4, T5, R>(	func : Dynamic -> Dynamic,
+	public static function complete<T1, T2, T3, T4, T5, R>(	curry : Curry<T1, T2, T3, T4, T5, R>,
 															?args : Array<Dynamic> = null) : R {
-		return Reflect.callMethod(null, func, args.getOrElse(function(){
-			return [];
-		}));
+		return switch (curry) {
+			case curry1(func):
+				Reflect.callMethod(null, func, args.getOrElse(function(){
+					return [];
+				}));
+			case curry2(func):
+				Reflect.callMethod(null, func, args.getOrElse(function(){
+					return [];
+				}));
+			case curry3(func):
+				Reflect.callMethod(null, func, args.getOrElse(function(){
+					return [];
+				}));
+			case curry4(func):
+				Reflect.callMethod(null, func, args.getOrElse(function(){
+					return [];
+				}));
+			case curry5(func):
+				Reflect.callMethod(null, func, args.getOrElse(function(){
+					return [];
+				}));
+		}
 	}
 
 }

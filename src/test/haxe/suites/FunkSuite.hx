@@ -2,6 +2,7 @@ package suites;
 
 import massive.munit.TestSuite;
 
+import funk.CurryTest;
 import funk.either.EitherTest;
 import funk.option.NoneTest;
 import funk.option.SomeTest;
@@ -27,6 +28,7 @@ class FunkSuite extends TestSuite
 	{
 		super();
 
+		add(funk.CurryTest);
 		add(funk.either.EitherTest);
 		add(funk.option.NoneTest);
 		add(funk.option.SomeTest);
