@@ -104,6 +104,16 @@ class FutureTest {
 	}
 
 	@Test
+	public function when_adding_but_after_reject__should_calling_reject_dispatch_completed() : Void {
+		var called : Bool = false;
+		deferred.reject(new FunkError());
+		future.but(function(value){
+			called = true;
+		});
+		called.isTrue();
+	}
+
+	@Test
 	public function when_adding_when__should_return_the_same_future() : Void {
 		future.when(function(value){
 			Assert.fail("fail if called");
@@ -153,6 +163,17 @@ class FutureTest {
 	}
 
 	@Test
+	public function when_adding_then_after_resolve__should_calling_resolve_should_dispatch_value() : Void {
+		var actual : Int = 1;
+		var expected : Int = -1;
+		deferred.resolve(actual);
+		future.then(function(value){
+			expected = value;
+		});
+		expected.areEqual(actual);
+	}
+
+	@Test
 	public function when_adding_then_twice__should_calling_resolve_should_dispatch_value() : Void {
 		var expected0 : Int = -1;
 		var expected1 : Int = -1;
@@ -181,6 +202,39 @@ class FutureTest {
 	}
 
 	@Test
+	public function when_adding_when__should_calling_reject_should_dispatch_value() : Void {
+		var actual = new FunkError();
+		var expected = null;
+		future.when(function(value){
+			expected = value.left().get();
+		});
+		deferred.reject(actual);
+		expected.areEqual(actual);
+	}
+
+	@Test
+	public function when_adding_when_after_reject__should_calling_reject_should_dispatch_value() : Void {
+		var actual = new FunkError();
+		var expected = null;
+		deferred.reject(actual);
+		future.when(function(value){
+			expected = value.left().get();
+		});
+		expected.areEqual(actual);
+	}
+
+	@Test
+	public function when_adding_when_after_resolve__should_calling_resolve_should_dispatch_value() : Void {
+		var actual : Int = 1;
+		var expected : Int = -1;
+		deferred.resolve(actual);
+		future.when(function(value){
+			expected = value.right().get();
+		});
+		expected.areEqual(actual);
+	}
+
+	@Test
 	public function when_adding_when_twice__should_calling_resolve_should_dispatch_value() : Void {
 		var expected0 : Int = -1;
 		var expected1 : Int = -1;
@@ -195,5 +249,26 @@ class FutureTest {
 		deferred.resolve(1);
 
 		expected0.areEqual(expected1);
+	}
+
+	@Test
+	public function when_adding_progress__should_call_progress() : Void {
+		var called : Bool = false;
+		future.progress(function(value){
+			called = true;
+		});
+		deferred.progress(1.0);
+		called.isTrue();
+	}
+
+	@Test
+	public function when_adding_progress_after_resolve__should_not_call_progress() : Void {
+		var called : Bool = false;
+		future.progress(function(value){
+			called = true;
+		});
+		deferred.resolve(1);
+		deferred.progress(1.0);
+		called.isFalse();
 	}
 }

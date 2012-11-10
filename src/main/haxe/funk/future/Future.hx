@@ -33,12 +33,7 @@ class Future<T> {
 		_when = new Signal1<IEither<FunkError, T>>();
 		_progress = new Signal1<Float>();
 
-		switch(state.toOption()) {
-			case Some(value):
-				_state = value;
-			case None:
-				_state = Aborted;
-		}
+		_state = state.get();
 
 		_stateStream = stateStream;
 		_stateStream.forEach(function(value) {
@@ -46,13 +41,10 @@ class Future<T> {
 
 			switch(value) {
 				case Resolved(option):
-					switch(option.toOption()) {
-						case Some(v):
-							_then.dispatch(v);
-							_when.dispatch(Right(v).toInstance());
-						case None:
-							_when.dispatch(Left(cast new NoSuchElementError()).toInstance());
-					}
+					var v = option.get();
+
+					_then.dispatch(v);
+					_when.dispatch(Right(v).toInstance());
 				case Rejected(error):
 					_but.dispatch(error);
 					_when.dispatch(Left(error).toInstance());
@@ -73,11 +65,7 @@ class Future<T> {
 			case Pending:
 				_then.add(func);
 			case Resolved(option):
-				switch(option.toOption()) {
-					case Some(value):
-						func(value);
-					case None:
-				}
+				func(option.get());
 			default:
 		}
 		return this;
@@ -99,11 +87,7 @@ class Future<T> {
 			case Pending:
 				_when.add(func);
 			case Resolved(option):
-				switch(option.toOption()) {
-					case Some(value):
-						func(Right(value).toInstance());
-					case None:
-				}
+				func(Right(option.get()).toInstance());
 			case Rejected(value):
 				func(Left(value).toInstance());
 			default:
