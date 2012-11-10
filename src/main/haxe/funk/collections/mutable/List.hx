@@ -251,15 +251,15 @@ class List<T> extends Product, implements IList<T> {
 		for(i in 0...total) {
 			var item = _data[i];
 			if(f(item)) {
-				left._data[left._data.length] = item;
+				left._data.push(item);
 			} else {
-				right._data[right._data.length] = item;
+				right._data.push(item);
 			}
 		}
 
-		var t = left.size;
-		var o = right.size;
-		return tuple2(t >= 0 ? left : Nil.list(), o >= 0 ? right : Nil.list()).toInstance();
+		return tuple2(	left.size > 0 ? left : Nil.list(),
+						right.size > 0 ? right : Nil.list()
+						).toInstance();
 	}
 
 	override public function equals(that: IFunkObject): Bool {
@@ -479,12 +479,7 @@ class List<T> extends Product, implements IList<T> {
 	}
 
 	private function get_last() : IOption<T> {
-		var l: Int = _data.length;
-      	return if(l == 0) {
-			None.toInstance();
-		} else {
-			Some(_data[_data.length - 1]).toInstance();
-		}
+      	return Some(_data[_data.length - 1]).toInstance();
 	}
 
 	private function get_reverse() : IList<T> {
@@ -503,13 +498,9 @@ class List<T> extends Product, implements IList<T> {
 	}
 
 	private function get_tailOption() : IOption<IList<T>> {
-        return if(_data.length > 1) {
-        	var l : List<T> = new List<T>();
-			l._data = _data.slice(1);
-			cast Some(l).toInstance();
-		} else {
-			None.toInstance();
-		}
+        var l : List<T> = new List<T>();
+		l._data = _data.slice(1);
+		return cast Some(l).toInstance();
 	}
 
 	private function get_zipWithIndex() : IList<ITuple2<T, Int>> {

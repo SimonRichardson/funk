@@ -595,6 +595,20 @@ class ListTestBase {
 	}
 
 	@Test
+	public function when_partition_false__should_return_a_ITuple2_and__1_is_empty() : Void {
+		actual.partition(function(value : Int) : Bool {
+			return false;
+		})._1.isEmpty.isTrue();
+	}
+
+	@Test
+	public function when_partition_false__should_return_a_ITuple2_and__2_is_empty() : Void {
+		actual.partition(function(value : Int) : Bool {
+			return true;
+		})._2.isEmpty.isTrue();
+	}
+
+	@Test
 	public function when_partition__should_return_a_ITuple2_and__1_is_IList_of_size_2() : Void {
 		actual.partition(function(value : Int) : Bool {
 			return value % 2 == 0;
