@@ -11,7 +11,7 @@ using funk.collections.IterableUtil;
 
 class Streams {
 
-	public static function create<T1, T2>(	pulse: Pulse<T1> -> Propagation<T2>,
+	public static function create<T1, T2>(	pulse: Function1<Pulse<T1>, Propagation<T2>>,
 										    sources: Iterable<Stream<T1>> = null
 										    ) : Stream<T2> {
         var sourceEvents = sources == null ? null : sources.toArray();
@@ -58,7 +58,7 @@ class Streams {
         };
     }
 
-    public static function bind<T, E>(func : T -> Void, stream : Stream<E>) : Stream<E> {
+    public static function bind<T, E>(func : Function1<T, Void>, stream : Stream<E>) : Stream<E> {
         stream.forEach(function(v) {
             func(cast v);
         });
@@ -73,7 +73,7 @@ class Streams {
             task = Process.stop(task);
         });
 
-        var pulser : Void -> Void = null;
+        var pulser : Function0<Void> = null;
         pulser = function() {
             stream.emit(Process.stamp());
 

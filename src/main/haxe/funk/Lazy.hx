@@ -1,11 +1,12 @@
 package funk;
 
+import funk.Funk;
 import funk.option.Option;
 
 using funk.option.Option;
 
 enum Lazy<T> {
-	lazy(func : Void -> T);
+	lazy(func : Function0<T>);
 }
 
 class Lazys {
@@ -17,7 +18,7 @@ class Lazys {
 		};
 	}
 
-	public static function get<T>(lax : Lazy<T>) : Void -> T {
+	public static function get<T>(lax : Lazy<T>) : Function0<T> {
 		var value : Option<T> = None;
 
 		return function() {

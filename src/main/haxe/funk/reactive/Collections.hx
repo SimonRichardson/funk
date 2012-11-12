@@ -1,5 +1,6 @@
 package funk.reactive;
 
+import funk.Funk;
 import funk.option.Option;
 import funk.reactive.Process;
 
@@ -16,10 +17,10 @@ class Collections {
 		}
 
 		var task : Option<Task> = None;
-		var pulser : Void -> Void = null;
+		var pulser : Function0<Void> = null;
 		var stream : Stream<T> = Streams.identity();
 
-		var create : Void -> Option<Task> = function() {
+		var create : Function0<Option<Task>> = function() {
 			task = Process.stop(task);
 
 			var nowTime = Process.stamp();

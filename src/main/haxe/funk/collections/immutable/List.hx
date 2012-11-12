@@ -1,5 +1,6 @@
 package funk.collections.immutable;
 
+import funk.Funk;
 import funk.collections.IList;
 import funk.collections.IteratorUtil;
 import funk.collections.immutable.ListUtil;
@@ -85,7 +86,7 @@ class List<T> extends Product, implements IList<T> {
         return false;
     }
 
-    public function count(f : (T -> Bool)) : Int {
+    public function count(f : Function1<T, Bool>) : Int {
         var n: Int = 0;
         var p: IList<T> = this;
 
@@ -153,7 +154,7 @@ class List<T> extends Product, implements IList<T> {
         return buffer[0];
     }
 
-    public function dropWhile(f : (T -> Bool)) : IList<T> {
+    public function dropWhile(f : Function1<T, Bool>) : IList<T> {
         var p: IList<T> = this;
 
         while(p.nonEmpty) {
@@ -167,7 +168,7 @@ class List<T> extends Product, implements IList<T> {
         return Nil.list();
     }
 
-    public function exists(f : (T -> Bool)) : Bool {
+    public function exists(f : Function1<T, Bool>) : Bool {
         var p: IList<T> = this;
 
         while(p.nonEmpty) {
@@ -181,7 +182,7 @@ class List<T> extends Product, implements IList<T> {
         return false;
     }
 
-    public function filter(f : (T -> Bool)) : IList<T> {
+    public function filter(f : Function1<T, Bool>) : IList<T> {
         var p: IList<T> = this;
         var q: List<T> = null;
         var first: List<T> = null;
@@ -215,7 +216,7 @@ class List<T> extends Product, implements IList<T> {
         return (first == null) ? Nil.list() : first;
     }
 
-    public function filterNot(f : (T -> Bool)) : IList<T> {
+    public function filterNot(f : Function1<T, Bool>) : IList<T> {
         var p: IList<T> = this;
         var q: List<T> = null;
         var first: List<T> = null;
@@ -249,7 +250,7 @@ class List<T> extends Product, implements IList<T> {
         return (first == null) ? Nil.list() : first;
     }
 
-    public function find(f : (T -> Bool)) : IOption<T> {
+    public function find(f : Function1<T, Bool>) : IOption<T> {
         var p: IList<T> = this;
 
         while(p.nonEmpty) {
@@ -263,7 +264,7 @@ class List<T> extends Product, implements IList<T> {
         return None.toInstance();
     }
 
-    public function flatMap(f : (T -> IList<T>)) : IList<T> {
+    public function flatMap(f : Function1<T, IList<T>>) : IList<T> {
         var n: Int = size;
         var buffer: Array<IList<T>> = new Array<IList<T>>();
         var p: IList<T> = this;
@@ -284,7 +285,7 @@ class List<T> extends Product, implements IList<T> {
         return list;
     }
 
-    public function foldLeft(x : T, f : (T -> T -> T)) : T {
+    public function foldLeft(x : T, f : Function2<T, T, T>) : T {
         var value: T = x;
         var p: IList<T> = this;
 
@@ -296,7 +297,7 @@ class List<T> extends Product, implements IList<T> {
         return value;
     }
 
-    public function foldRight(x : T, f : (T -> T -> T)) : T {
+    public function foldRight(x : T, f : Function2<T, T, T>) : T {
         var value: T = x;
         var buffer: Array<T> = toArray;
         var n: Int = buffer.length;
@@ -308,7 +309,7 @@ class List<T> extends Product, implements IList<T> {
         return value;
     }
 
-    public function forall(f : (T -> Bool)) : Bool {
+    public function forall(f : Function1<T, Bool>) : Bool {
         var p: IList<T> = this;
 
         while(p.nonEmpty) {
@@ -322,7 +323,7 @@ class List<T> extends Product, implements IList<T> {
         return true;
     }
 
-    public function foreach(f : (T -> Void)) : Void {
+    public function foreach(f : Function1<T, Void>) : Void {
         var p: IList<T> = this;
 
         while(p.nonEmpty) {
@@ -335,7 +336,7 @@ class List<T> extends Product, implements IList<T> {
         return Some(productElement(index)).toInstance();
     }
 
-    public function map<E>(f : (T -> E)) : IList<E> {
+    public function map<E>(f : Function1<T, E>) : IList<E> {
         var n: Int = size;
         var buffer: Array<List<E>> = new Array<List<E>>();
         var t: Int = n - 1;
@@ -358,7 +359,7 @@ class List<T> extends Product, implements IList<T> {
         return buffer[0];
     }
 
-    public function partition(f : (T -> Bool)) : ITuple2<IList<T>, IList<T>> {
+    public function partition(f : Function1<T, Bool>) : ITuple2<IList<T>, IList<T>> {
         var left: Array<List<T>> = new Array<List<T>>();
         var right: Array<List<T>> = new Array<List<T>>();
 
@@ -443,7 +444,7 @@ class List<T> extends Product, implements IList<T> {
         return buffer[0];
     }
 
-    public function reduceLeft(f : (T -> T -> T)) : IOption<T> {
+    public function reduceLeft(f : Function2<T, T, T>) : IOption<T> {
         var value: T = head;
         var p: IList<T> = _tail;
 
@@ -455,7 +456,7 @@ class List<T> extends Product, implements IList<T> {
         return Some(value).toInstance();
     }
 
-    public function reduceRight(f : (T -> T -> T)) : IOption<T> {
+    public function reduceRight(f : Function2<T, T, T>) : IOption<T> {
         var buffer: Array<T> = toArray;
         var value: T = buffer.pop();
         var n: Int = buffer.length;
@@ -519,7 +520,7 @@ class List<T> extends Product, implements IList<T> {
         return p;
     }
 
-    public function takeWhile(f : (T -> Bool)) : IList<T> {
+    public function takeWhile(f : Function1<T, Bool>) : IList<T> {
         var buffer: Array<List<T>> = new Array<List<T>>();
         var p: IList<T> = this;
         var n: Int = 0;
@@ -581,7 +582,7 @@ class List<T> extends Product, implements IList<T> {
         return buffer[0];
     }
 
-    public function findIndexOf(f: (T -> Bool)): Int {
+    public function findIndexOf(f: Function1<T, Bool>): Int {
         var index: Int = 0;
         var p: IList<T> = this;
 

@@ -1,5 +1,6 @@
 package funk.either;
 
+import funk.Funk;
 import funk.IFunkObject;
 import funk.errors.RangeError;
 import funk.product.Product;
@@ -24,7 +25,7 @@ interface IEither<T1, T2> implements IProduct {
 
     function right() : IOption<T2>;
 
-    function fold<T3>(func0 : (T1 -> T3), func1 : (T2 -> T3)) : T3;
+    function fold<T3>(func0 : Function1<T1, T3>, func1 : Function1<T2, T3>) : T3;
 
     function swap() : Either<T2, T1>;
 
@@ -62,8 +63,8 @@ class Eithers {
     }
 
     inline public static function fold<T1, T2, T3>( either : Either<T1, T2>,
-                                                    func0 : (T1 -> T3),
-                                                    func1 : (T2 -> T3)) : T3 {
+                                                    func0 : Function1<T1, T3>,
+                                                    func1 : Function1<T2, T3>) : T3 {
         return switch(either) {
             case Left(value): func0(value);
             case Right(value): func1(value);
@@ -172,7 +173,7 @@ class ProductEither<T1, T2> extends Product2<T1, T2>, implements IEither<T1, T2>
         return Eithers.right(_either);
     }
 
-    public function fold<T3>(func0 : (T1 -> T3), func1 : (T2 -> T3)) : T3 {
+    public function fold<T3>(func0 : Function1<T1, T3>, func1 : Function1<T2, T3>) : T3 {
         return Eithers.fold(_either, func0, func1);
     }
 

@@ -1,5 +1,6 @@
 package funk.reactive;
 
+import funk.Funk;
 import funk.collections.IList;
 import funk.collections.immutable.Nil;
 import funk.option.Option;
@@ -20,13 +21,13 @@ class Stream<T> {
 
     private var _weakRef : Bool;
 
-	private var _propagator : Pulse<T> -> Propagation<T>;
+	private var _propagator : Function1<Pulse<T>, Propagation<T>>;
 
 	private var _listeners : Array<Stream<T>>;
 
     private var _finishedListeners : ISignal0;
 
-	public function new(	propagator : Pulse<T> -> Propagation<T>,
+	public function new(	propagator : Function1<Pulse<T>, Propagation<T>>,
 							sources : Array<Stream<T>> = null) {
 		_rank = Rank.next();
 		_propagator = propagator;
@@ -43,7 +44,7 @@ class Stream<T> {
 		}
 	}
 
-    public function whenFinishedDo(func : Void -> Void) : Void {
+    public function whenFinishedDo(func : Function0<Void>) : Void {
         if(_weakRef) {
             func();
         } else {
@@ -51,7 +52,7 @@ class Stream<T> {
         }
     }
 
-	public function forEach(func : T -> Void) : Stream<T> {
+	public function forEach(func : Function1<T, Void>) : Stream<T> {
         Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
             func(pulse.value);
 
@@ -73,13 +74,13 @@ class Stream<T> {
         });
     }
 
-    public function map<E>(func : T -> E) : Stream<E> {
+    public function map<E>(func : Function1<T, E>) : Stream<E> {
     	return Streams.create(function(pulse : Pulse<T>) : Propagation<E> {
     		return Propagate(pulse.map(func));
     	}, [this]);
     }
 
-    public function flatMap<E>(func : T -> Stream<E>) : Stream<E> {
+    public function flatMap<E>(func : Function1<T, Stream<E>>) : Stream<E> {
         var previous: Stream<E> = null;
 
         var out: Stream<E> = Streams.identity();
@@ -98,7 +99,7 @@ class Stream<T> {
         return out;
     }
 
-    public function zipWith<E1, E2>(stream : Stream<E1>, func : T -> E1 -> E2) : Stream<E2> {
+    public function zipWith<E1, E2>(stream : Stream<E1>, func : Function2<T, E1, E2>) : Stream<E2> {
         var time = -1.0;
         var value : T = null;
 

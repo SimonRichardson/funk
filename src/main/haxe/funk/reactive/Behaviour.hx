@@ -1,5 +1,6 @@
 package funk.reactive;
 
+import funk.Funk;
 import funk.reactive.Propagation;
 import funk.tuple.Tuple2;
 
@@ -9,10 +10,10 @@ class Behaviour<T> {
 	public var value(get_value, never) : T;
 
 	private var _stream : Stream<T>;
-	private var _pulse : Pulse<T> -> Propagation<T>;
+	private var _pulse : Function1<Pulse<T>, Propagation<T>>;
 	private var _value : T;
 
-	public function new(stream: Stream<T>, value : T, pulse : Pulse<T> -> Propagation<T>) {
+	public function new(stream: Stream<T>, value : T, pulse : Function1<Pulse<T>, Propagation<T>>) {
 		_value = value;
 		_pulse = pulse;
 
@@ -27,17 +28,17 @@ class Behaviour<T> {
 		}, [stream.steps()]);
 	}
 
-	public function lift<E>(func : T -> E) : Behaviour<E> {
+	public function lift<E>(func : Function1<T, E>) : Behaviour<E> {
 		return _stream.map(func).startsWith(func(_value));
 	}
 
-	public function map<E>(behaviour : Behaviour<T -> E>) : Behaviour<E> {
+	public function map<E>(behaviour : Behaviour<Function1<T, E>>) : Behaviour<E> {
 		return _stream.map(function(x) {
 			return behaviour.value(x);
 		}).startsWith(behaviour.value(value));
 	}
 
-	public function zipWith<E1, E2>(behaviour : Behaviour<E1>, func : T -> E1 -> E2) : Behaviour<E2> {
+	public function zipWith<E1, E2>(behaviour : Behaviour<E1>, func : Function2<T, E1, E2>) : Behaviour<E2> {
 		return Streams.create(function(pulse : Pulse<E1>) : Propagation<E2> {
 			return Propagate(pulse.withValue(func(value, behaviour.value)));
 		}, [this, behaviour]).startsWith(func(value, behaviour.value));

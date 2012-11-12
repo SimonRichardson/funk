@@ -1,5 +1,6 @@
 package funk.option;
 
+import funk.Funk;
 import funk.option.Option;
 
 class Anys {
@@ -8,11 +9,11 @@ class Anys {
 		return type;
 	}
 
-	inline public static function getThen<T>(type : T, func : T -> T) : T {
+	inline public static function getThen<T>(type : T, func : Function1<T, T>) : T {
 		return type != null ? func(type) : type;
 	}
 
-	inline public static function getOrElse<T>(type : T, func : Void -> T) : T {
+	inline public static function getOrElse<T>(type : T, func : Function0<T>) : T {
 		return type != null ? type : func();
 	}
 

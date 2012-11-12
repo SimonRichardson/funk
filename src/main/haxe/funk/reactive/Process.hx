@@ -1,5 +1,6 @@
 package funk.reactive;
 
+import funk.Funk;
 import funk.option.Option;
 
 import haxe.PosInfos;
@@ -15,7 +16,7 @@ class Process {
 	#if test
 	dynamic
 	#end
-	public static function start(func : Void -> Void, time : Float) : Option<Task> {
+	public static function start(func : Function0<Void>, time : Float) : Option<Task> {
 		return if(func != null && time > 0) {
 			var task = new Task(func, time);
 			task.start();
@@ -54,14 +55,14 @@ class Task {
 	#end
 
 	public var time(get_time, never) : Float;
-	public var func(get_func, never) : Void -> Void;
+	public var func(get_func, never) : Function0<Void>;
 
 	private var _time : Float;
 
-	private var _run : Void -> Void;
-	private var _func : Void -> Void;
+	private var _run : Function0<Void>;
+	private var _func : Function0<Void>;
 
-	public function new(func : Void -> Void, time : Float) {
+	public function new(func : Function0<Void>, time : Float) {
 		_func = func;
 		_time = time;
 	}
@@ -130,7 +131,7 @@ class Task {
 		return _time;
 	}
 
-	private function get_func() : Void -> Void {
+	private function get_func() : Function0<Void> {
 		return _func;
 	}
 }

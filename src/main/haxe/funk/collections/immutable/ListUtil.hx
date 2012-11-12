@@ -1,5 +1,6 @@
 package funk.collections.immutable;
 
+import funk.Funk;
 import funk.collections.IteratorUtil;
 import funk.collections.immutable.Nil;
 import funk.product.ProductIterator;
@@ -9,7 +10,7 @@ using funk.collections.immutable.Nil;
 
 class ListUtil {
 
-	public static function fill<T>(n : Int, f : (Void -> T)) : IList<T> {
+	public static function fill<T>(n : Int, f : Function0<T>) : IList<T> {
 		var l = Nil.list();
 		while(--n > -1) {
        		l = l.prepend(f());

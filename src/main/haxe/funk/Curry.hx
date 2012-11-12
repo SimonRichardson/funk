@@ -1,15 +1,16 @@
 package funk;
 
+import funk.Funk;
 import funk.option.Any;
 
 using funk.option.Any;
 
 enum Curry<T1, T2, T3, T4, T5, R> {
-	curry1(func : T1 -> R);
-	curry2(func : T1 -> T2 -> R);
-	curry3(func : T1 -> T2 -> T3 -> R);
-	curry4(func : T1 -> T2 -> T3 -> T4 -> R);
-	curry5(func : T1 -> T2 -> T3 -> T4 -> T5 -> R);
+	curry1(func : Function1<T1, R>);
+	curry2(func : Function2<T1, T2, R>);
+	curry3(func : Function3<T1, T2, T3, R>);
+	curry4(func : Function4<T1, T2, T3, T4, R>);
+	curry5(func : Function5<T1, T2, T3, T4, T5, R>);
 }
 
 class Currys {

@@ -1,5 +1,6 @@
 package funk.reactive;
 
+import funk.Funk;
 import funk.collections.IList;
 import funk.collections.IteratorUtil;
 import funk.collections.immutable.ListUtil;
@@ -75,7 +76,7 @@ class StreamValues<T> extends Product, implements IList<T> {
         return _list.contains(value);
     }
 
-    public function count(f : (T -> Bool)) : Int {
+    public function count(f : Function1<T, Bool>) : Int {
         return _list.count(f);
     }
 
@@ -101,51 +102,51 @@ class StreamValues<T> extends Product, implements IList<T> {
         }
     }
 
-    public function dropWhile(f : (T -> Bool)) : IList<T> {
+    public function dropWhile(f : Function1<T, Bool>) : IList<T> {
         var stream = new StreamValues();
         stream._list = _list.dropWhile(f);
         return stream;
     }
 
-    public function exists(f : (T -> Bool)) : Bool {
+    public function exists(f : Function1<T, Bool>) : Bool {
         return _list.exists(f);
     }
 
-    public function filter(f : (T -> Bool)) : IList<T> {
+    public function filter(f : Function1<T, Bool>) : IList<T> {
         var stream = new StreamValues();
         stream._list = _list.filter(f);
         return stream;
     }
 
-    public function filterNot(f : (T -> Bool)) : IList<T> {
+    public function filterNot(f : Function1<T, Bool>) : IList<T> {
         var stream = new StreamValues();
         stream._list = _list.filterNot(f);
         return stream;
     }
 
-    public function find(f : (T -> Bool)) : IOption<T> {
+    public function find(f : Function1<T, Bool>) : IOption<T> {
         return _list.find(f);
     }
 
-    public function flatMap(f : (T -> IList<T>)) : IList<T> {
+    public function flatMap(f : Function1<T, IList<T>>) : IList<T> {
         var stream = new StreamValues();
         stream._list = _list.flatMap(f);
         return stream;
     }
 
-    public function foldLeft(x : T, f : (T -> T -> T)) : T {
+    public function foldLeft(x : T, f : Function2<T, T, T>) : T {
         return _list.foldLeft(x, f);
     }
 
-    public function foldRight(x : T, f : (T -> T -> T)) : T {
+    public function foldRight(x : T, f : Function2<T, T, T>) : T {
         return _list.foldRight(x, f);
     }
 
-    public function forall(f : (T -> Bool)) : Bool {
+    public function forall(f : Function1<T, Bool>) : Bool {
         return _list.forall(f);
     }
 
-    public function foreach(f : (T -> Void)) : Void {
+    public function foreach(f : Function1<T, Void>) : Void {
         _list.foreach(f);
     }
 
@@ -153,13 +154,13 @@ class StreamValues<T> extends Product, implements IList<T> {
         return _list.get(index);
     }
 
-    public function map<E>(f : (T -> E)) : IList<E> {
+    public function map<E>(f : Function1<T, E>) : IList<E> {
         var stream = new StreamValues();
         stream._list = _list.map(f);
         return stream;
     }
 
-    public function partition(f : (T -> Bool)) : ITuple2<IList<T>, IList<T>> {
+    public function partition(f : Function1<T, Bool>) : ITuple2<IList<T>, IList<T>> {
         var tuple = _list.partition(f);
 
         var left = new StreamValues();
@@ -201,11 +202,11 @@ class StreamValues<T> extends Product, implements IList<T> {
         return stream;
     }
 
-    public function reduceLeft(f : (T -> T -> T)) : IOption<T> {
+    public function reduceLeft(f : Function2<T, T, T>) : IOption<T> {
         return _list.reduceLeft(f);
     }
 
-    public function reduceRight(f : (T -> T -> T)) : IOption<T> {
+    public function reduceRight(f : Function2<T, T, T>) : IOption<T> {
         return _list.reduceRight(f);
     }
 
@@ -221,7 +222,7 @@ class StreamValues<T> extends Product, implements IList<T> {
         return stream;
     }
 
-    public function takeWhile(f : (T -> Bool)) : IList<T> {
+    public function takeWhile(f : Function1<T, Bool>) : IList<T> {
         var stream = new StreamValues();
         stream._list = _list.takeWhile(f);
         return stream;
@@ -233,7 +234,7 @@ class StreamValues<T> extends Product, implements IList<T> {
         return stream;
     }
 
-    public function findIndexOf(f: (T -> Bool)): Int {
+    public function findIndexOf(f: Function1<T, Bool>): Int {
         return _list.findIndexOf(f);
     }
 

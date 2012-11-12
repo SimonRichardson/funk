@@ -1,5 +1,6 @@
 package funk.future;
 
+import funk.Funk;
 import funk.either.Either;
 import funk.errors.FunkError;
 import funk.errors.NoSuchElementError;
@@ -60,7 +61,7 @@ class Future<T> {
 		});
 	}
 
-	public function then(func : T -> Void) : Future<T> {
+	public function then(func : Function1<T, Void>) : Future<T> {
 		switch(_state){
 			case Pending:
 				_then.add(func);
@@ -71,7 +72,7 @@ class Future<T> {
 		return this;
 	}
 
-	public function but(func : FunkError -> Void) : Future<T> {
+	public function but(func : Function1<FunkError, Void>) : Future<T> {
 		switch(_state){
 			case Pending:
 				_but.add(func);
@@ -82,7 +83,7 @@ class Future<T> {
 		return this;
 	}
 
-	public function when(func : IEither<FunkError, T> -> Void) : Future<T> {
+	public function when(func : Function1<IEither<FunkError, T>, Void>) : Future<T> {
 		switch(_state){
 			case Pending:
 				_when.add(func);
@@ -95,7 +96,7 @@ class Future<T> {
 		return this;
 	}
 
-	public function progress(func : Float -> Void) : Future<T> {
+	public function progress(func : Function1<Float, Void>) : Future<T> {
 		_progress.add(func);
 		return this;
 	}

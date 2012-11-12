@@ -1,14 +1,15 @@
 package funk.reactive;
 
+import funk.Funk;
 import funk.option.Option;
 import funk.reactive.Process;
 
 import massive.munit.Assert;
 
 private typedef ProcessTypeDef = {
-	var start : (Void -> Void) -> Float -> Option<Task>;
-	var stop : Option<Task> -> Option<Task>;
-	var stamp : Void -> Float;
+	var start : Function0<Void> -> Float -> Option<Task>;
+	var stop : Function1<Option<Task>, Option<Task>>;
+	var stamp : Function0<Float>;
 }
 
 class ProcessAsyncBase {
@@ -30,7 +31,7 @@ class ProcessAsyncBase {
 			stamp : Process.stamp
 		};
 
-		Process.start = function(func : Void -> Void, time : Float) : Option<Task> {
+		Process.start = function(func : Function0<Void>, time : Float) : Option<Task> {
 			return if(func != null && time > 0) {
 				var task = new Task(func, _stamp + time);
 

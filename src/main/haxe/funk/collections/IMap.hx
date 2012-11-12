@@ -45,7 +45,7 @@ interface IMap<K, V> implements IProduct {
 
     function find(f : Function2<K, V, Bool>) : IOption<ITuple2<K, V>>;
 
-    function flatMap(f : Function1<ITuple2<K, V> -> IMap<K, V>>) : IMap<K, V>;
+    function flatMap(f : Function1<ITuple2<K, V>, IMap<K, V>>) : IMap<K, V>;
 
     function foldLeft(	x : ITuple2<K, V>,
     					f : Function2<ITuple2<K, V>, ITuple2<K, V>, ITuple2<K, V>>

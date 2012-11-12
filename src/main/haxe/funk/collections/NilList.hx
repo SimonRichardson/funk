@@ -1,5 +1,6 @@
 package funk.collections;
 
+import funk.Funk;
 import funk.collections.IList;
 import funk.collections.IteratorUtil;
 import funk.errors.ArgumentError;
@@ -58,7 +59,7 @@ class NilList<T> extends Product, implements IList<T> {
 		return false;
 	}
 
-	public function count(f : (T -> Bool)) : Int {
+	public function count(f : Function1<T, Bool>) : Int {
 		return 0;
 	}
 
@@ -78,54 +79,54 @@ class NilList<T> extends Product, implements IList<T> {
 		return _factory.createNilList();
 	}
 
-	public function dropWhile(f : (T -> Bool)) : IList<T> {
+	public function dropWhile(f : Function1<T, Bool>) : IList<T> {
 		return _factory.createNilList();
 	}
 
-	public function exists(f : (T -> Bool)) : Bool {
+	public function exists(f : Function1<T, Bool>) : Bool {
 		return false;
 	}
 
-	public function filter(f : (T -> Bool)) : IList<T> {
+	public function filter(f : Function1<T, Bool>) : IList<T> {
 		return _factory.createNilList();
 	}
 
-	public function filterNot(f : (T -> Bool)) : IList<T> {
+	public function filterNot(f : Function1<T, Bool>) : IList<T> {
 		return _factory.createNilList();
 	}
 
-	public function find(f : (T -> Bool)) : IOption<T> {
+	public function find(f : Function1<T, Bool>) : IOption<T> {
 		return None.toInstance();
 	}
 
-	public function flatMap(f : (T -> IList<T>)) : IList<T> {
+	public function flatMap(f : Function1<T, IList<T>>) : IList<T> {
 		return _factory.createNilList();
 	}
 
-	public function foldLeft(x : T, f : (T -> T -> T)) : T {
+	public function foldLeft(x : T, f : Function2<T, T, T>) : T {
 		return x;
 	}
 
-	public function foldRight(x : T, f : (T -> T -> T)) : T {
+	public function foldRight(x : T, f : Function2<T, T, T>) : T {
 		return x;
 	}
 
-	public function forall(f : (T -> Bool)) : Bool {
+	public function forall(f : Function1<T, Bool>) : Bool {
 		return false;
 	}
 
-	public function foreach(f : (T -> Void)) : Void {
+	public function foreach(f : Function1<T, Void>) : Void {
 	}
 
 	public function get(index : Int) : IOption<T> {
 		return None.toInstance();
 	}
 
-	public function map<E>(f : (T -> E)) : IList<E> {
+	public function map<E>(f : Function1<T, E>) : IList<E> {
 		return cast _factory.createNilList();
 	}
 
-	public function partition(f : (T -> Bool)) : ITuple2<IList<T>, IList<T>> {
+	public function partition(f : Function1<T, Bool>) : ITuple2<IList<T>, IList<T>> {
 		return tuple2(_factory.createNilList(), _factory.createNilList()).toInstance();
 	}
 
@@ -137,11 +138,11 @@ class NilList<T> extends Product, implements IList<T> {
 		return value;
 	}
 
-	public function reduceLeft(f : (T -> T -> T)) : IOption<T> {
+	public function reduceLeft(f : Function2<T, T, T>) : IOption<T> {
 		return None.toInstance();
 	}
 
-	public function reduceRight(f : (T -> T -> T)) : IOption<T> {
+	public function reduceRight(f : Function2<T, T, T>) : IOption<T> {
 		return None.toInstance();
 	}
 
@@ -161,7 +162,7 @@ class NilList<T> extends Product, implements IList<T> {
 		return _factory.createNilList();
 	}
 
-	public function takeWhile(f : (T -> Bool)) : IList<T> {
+	public function takeWhile(f : Function1<T, Bool>) : IList<T> {
 		return _factory.createNilList();
 	}
 
@@ -169,7 +170,7 @@ class NilList<T> extends Product, implements IList<T> {
 		return cast _factory.createNilList();
 	}
 
-	public function findIndexOf(f: (T -> Bool)): Int {
+	public function findIndexOf(f: Function1<T, Bool>): Int {
 		return -1;
 	}
 

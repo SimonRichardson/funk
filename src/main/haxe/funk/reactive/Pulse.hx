@@ -1,5 +1,6 @@
 package funk.reactive;
 
+import funk.Funk;
 import funk.errors.RangeError;
 import funk.product.Product2;
 
@@ -18,7 +19,7 @@ class Pulse<T> extends Product2<Float, T> {
 		_value = value;
 	}
 
-	public function map<E>(func : T -> E) : Pulse<E> {
+	public function map<E>(func : Function1<T, E>) : Pulse<E> {
 		return withValue(func(value));
 	}
 
