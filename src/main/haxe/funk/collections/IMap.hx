@@ -5,7 +5,7 @@ import funk.product.Product;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 
-interface IMap<K, V> implements IProduct {
+interface IMap<K, V> implements IProduct, implements ICollection<ITuple2<K, V>> {
 
 	var nonEmpty(dynamic, never) : Bool;
 

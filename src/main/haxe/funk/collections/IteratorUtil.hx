@@ -2,6 +2,7 @@ package funk.collections;
 
 import funk.collections.immutable.Nil;
 import funk.product.ProductIterator;
+import funk.tuple.Tuple2;
 
 using funk.collections.immutable.Nil;
 
@@ -15,6 +16,17 @@ class IteratorUtil {
 		}
 
 		return l;
+	}
+
+	inline public static function toMap<K, V>(iter : Iterator<ITuple2<K, V>>, ?optionalMap : IMap<K, V>) : IMap<K, V> {
+		var m : IMap<K, V> = null != optionalMap ? optionalMap : Nil.map();
+
+		while(iter.hasNext()) {
+			var t = iter.next();
+			m = m.add(t._1, t._2);
+		}
+
+		return m;
 	}
 
 	public static function toArray<T>(iter : Iterator<T>) : Array<T> {

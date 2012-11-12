@@ -39,8 +39,4 @@ private class ListFactory<T> implements IListFactory<T> {
 	inline public function createNilList() : IList<T> {
 		return Nils.list(Nil);
 	}
-
-	inline public function createNil() : ICollection<T> {
-		return Nils.list(Nil);
-	}
 }
