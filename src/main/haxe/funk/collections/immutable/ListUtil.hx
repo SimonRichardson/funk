@@ -19,37 +19,29 @@ class ListUtil {
 	}
 
 	public static function toList<T, E>(any : T) : IList<E> {
+		if(Std.is(any, IList)) {
+			return cast any;
+		} else if(Std.is(any, IProductIterator)) {
+			return IteratorUtil.toList(cast any);
+		}
+
 		var l = Nil.list();
 		var n : Int;
 
-		if(Std.is(any, IList)) {
-
-			return cast any;
-
-		} else if(Std.is(any, IProductIterator)) {
-
-			return IteratorUtil.toList(cast any);
-
-		} else if(Std.is(any, Array)) {
-
+		if(Std.is(any, Array)) {
 			var array: Array<E> = cast any;
 		    n = array.length;
 		    while(--n > -1) {
 		    	l = l.prepend(array[n]);
 		    }
-
 		} else if(Std.is(any, String)) {
-
 	    	var string: String = cast any;
 	    	n = string.length;
 	    	while(--n > -1) {
 	    		l = l.prepend(cast string.substr(n, 1));
 	    	}
-
 	    } else {
-
 			l = l.prepend(cast any);
-
 		}
 
 		return l;

@@ -1,6 +1,6 @@
 package funk.collections;
 
-import funk.collections.IList;
+import funk.collections.IMap;
 import funk.errors.ArgumentError;
 import funk.errors.RangeError;
 import funk.option.Option;
@@ -13,15 +13,15 @@ using funk.tuple.Tuple2;
 using massive.munit.Assert;
 using util.AssertExtensions;
 
-class NilTestBase {
+class NilMapTestBase {
 
-	public var actual : IList<Dynamic>;
+	public var actual : IMap<Dynamic, Dynamic>;
 
-	public var expected : IList<Dynamic>;
+	public var expected : IMap<Dynamic, Dynamic>;
 
-	public var other : IList<Dynamic>;
+	public var other : IMap<Dynamic, Dynamic>;
 
-	public var filledList : IList<Dynamic>;
+	public var filledMap : IMap<Dynamic, Dynamic>;
 
 	@Test
 	public function should_not_be_not_empty():Void {
@@ -45,7 +45,7 @@ class NilTestBase {
 
 	@Test
 	public function should_not_call_count() : Void {
-		actual.count(function(x) {
+		actual.count(function(k, v) {
 			Assert.fail("fail if called");
 			return false;
 		});
@@ -57,7 +57,6 @@ class NilTestBase {
 	}
 
 	@Test
-	@Expect("funk.errors.ArgumentError")
 	public function when_drop_on_nil__throw_argument_when_passing_minus_to_drop() : Void {
 		var called = try {
 			actual.drop(-1);
@@ -86,14 +85,14 @@ class NilTestBase {
 
 	@Test
 	public function when_drop_on_nil__return_nil_when_calling_dropWhile() : Void {
-		actual.dropWhile(function(x : Dynamic):Bool {
+		actual.dropWhile(function(k : Dynamic, v : Dynamic):Bool {
 			return true;
 		}).areEqual(expected);
 	}
 
 	@Test
 	public function when_drop_on_nil__should_not_call_dropWhile() : Void {
-		actual.dropWhile(function(x : Dynamic):Bool {
+		actual.dropWhile(function(k : Dynamic, v : Dynamic):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).areEqual(expected);
@@ -101,14 +100,14 @@ class NilTestBase {
 
 	@Test
 	public function when_exists_on_nil__should_return_false_when_calling_mapTrue() : Void {
-		actual.exists(function(x : Dynamic):Bool {
+		actual.exists(function(k : Dynamic, v : Dynamic):Bool {
 			return true;
 		}).isFalse();
 	}
 
 	@Test
 	public function when_exists_on_nil__should_not_call_exists() : Void {
-		actual.exists(function(x : Dynamic):Bool {
+		actual.exists(function(k : Dynamic, v : Dynamic):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).isFalse();
@@ -116,14 +115,14 @@ class NilTestBase {
 
 	@Test
 	public function when_filter_on_nil__should_return_list_when_calling_mapFalse() : Void {
-		actual.filter(function(x : Dynamic):Bool {
+		actual.filter(function(k : Dynamic, v : Dynamic):Bool {
 			return false;
 		}).areEqual(expected);
 	}
 
 	@Test
 	public function when_filter_on_nil__should_not_call_filter() : Void {
-		actual.filter(function(x : Dynamic):Bool {
+		actual.filter(function(k : Dynamic, v : Dynamic):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).areEqual(expected);
@@ -131,14 +130,14 @@ class NilTestBase {
 
 	@Test
 	public function when_filterNot_on_nil__should_return_list_when_calling_mapFalse() : Void {
-		actual.filterNot(function(x : Dynamic):Bool {
+		actual.filterNot(function(k : Dynamic, v : Dynamic):Bool {
 			return false;
 		}).areEqual(expected);
 	}
 
 	@Test
 	public function when_filterNot_on_nil__should_not_throw_error() : Void {
-		actual.filterNot(function(x : Dynamic):Bool {
+		actual.filterNot(function(k : Dynamic, v : Dynamic):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).areEqual(expected);
@@ -146,51 +145,24 @@ class NilTestBase {
 
 	@Test
 	public function when_find_on_nil__should_return_Option_when_calling_mapFalse() : Void {
-		actual.find(function(x : Dynamic):Bool {
+		actual.find(function(k : Dynamic, v : Dynamic):Bool {
 			return false;
 		}).isType(IOption);
 	}
 
 	@Test
 	public function when_find_on_nil__should_return_None_when_calling_mapFalse() : Void {
-		actual.find(function(x : Dynamic):Bool {
+		actual.find(function(k : Dynamic, v : Dynamic):Bool {
 			return false;
 		}).isEmpty().isTrue();
 	}
 
 	@Test
 	public function when_find_on_nil__should_not_call_find() : Void {
-		actual.find(function(x : Dynamic):Bool {
+		actual.find(function(k : Dynamic, v : Dynamic):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).isType(IOption);
-	}
-
-	@Test
-	public function when_findIndexOf_on_nil__should_return_minus_1_when_calling_mapTrue() : Void {
-		actual.findIndexOf(function(x : Dynamic):Bool {
-			return true;
-		}).areEqual(-1);
-	}
-
-	@Test
-	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_null() : Void {
-		actual.indexOf(null).areEqual(-1);
-	}
-
-	@Test
-	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_true() : Void {
-		actual.indexOf(true).areEqual(-1);
-	}
-
-	@Test
-	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_false() : Void {
-		actual.indexOf(false).areEqual(-1);
-	}
-
-	@Test
-	public function when_IndexOf_on_nil__should_return_minus_1_when_finding_array() : Void {
-		actual.indexOf([]).areEqual(-1);
 	}
 
 	@Test
@@ -205,41 +177,33 @@ class NilTestBase {
 
 	@Test
 	public function when_zip_on_nil__should_be_equal_to_nil_even_if_other_is_not_empty() : Void {
-		actual.zip(other.prepend(1)).areEqual(expected);
-	}
-
-	@Test
-	public function when_find_on_nil__should_not_call_findIndexOf() : Void {
-		actual.findIndexOf(function(x : Dynamic):Bool {
-			Assert.fail("fail if called");
-			return false;
-		}).areEqual(-1);
+		actual.zip(other.add(0, 1)).areEqual(expected);
 	}
 
 	@Test
 	public function when_map_on_nil__should_return_list() : Void {
-		actual.map(function(value : Int) : Float {
-			return 1.1;
-		}).isType(IList);
+		actual.map(function(tuple) : ITuple2<Float, Float> {
+			return tuple2(1.1, 1.1).toInstance();
+		}).isType(IMap);
 	}
 
 	@Test
 	public function when_map_on_nil__should_return_empty_list() : Void {
-		actual.map(function(value : Int) : Float {
-			return 1.1;
+		actual.map(function(tuple) : ITuple2<Float, Float> {
+			return tuple2(1.1, 1.1).toInstance();
 		}).size.areEqual(0);
 	}
 
 	@Test
 	public function when_flatMap_on_nil__should_return_list_when_calling_indentity() : Void {
-		actual.flatMap(function(x : Dynamic):IList<Dynamic> {
+		actual.flatMap(function(tuple):IMap<Dynamic, Dynamic> {
 			return other;
 		}).areEqual(expected);
 	}
 
 	@Test
 	public function when_find_on_nil__should_not_call_flatMap() : Void {
-		actual.flatMap(function(x : Dynamic):IList<Dynamic> {
+		actual.flatMap(function(tuple):IMap<Dynamic, Dynamic> {
 			Assert.fail("fail if called");
 			return other;
 		}).areEqual(expected);
@@ -257,10 +221,11 @@ class NilTestBase {
 
 	@Test
 	public function when_fold_on_nil__should_not_call_foldLeft() : Void {
-		actual.foldLeft(0, function(x:Int, y:Int):Int {
+		var tuple = tuple2(0, 0).toInstance();
+		actual.foldLeft(tuple, function(x, y) {
 			Assert.fail("fail if called");
-			return 0;
-		}).areEqual(0);
+			return null;
+		}).areEqual(tuple);
 	}
 
 	@Test
@@ -270,22 +235,23 @@ class NilTestBase {
 
 	@Test
 	public function when_fold_on_nil__should_not_call_foldRight() : Void {
-		actual.foldRight(0, function(x:Int, y:Int):Int {
+		var tuple = tuple2(0, 0).toInstance();
+		actual.foldRight(tuple, function(x, y) {
 			Assert.fail("fail if called");
-			return 0;
-		}).areEqual(0);
+			return null;
+		}).areEqual(tuple);
 	}
 
 	@Test
 	public function when_forall_on_nil__should_return_false() : Void {
-		actual.forall(function(value : Int) : Bool {
+		actual.forall(function(key : Dynamic, value : Dynamic) : Bool {
 			return true;
 		}).isFalse();
 	}
 
 	@Test
 	public function when_forall_on_nil__should_not_run_function() : Void {
-		actual.forall(function(value : Int) : Bool {
+		actual.forall(function(key : Dynamic, value : Dynamic) : Bool {
 			Assert.fail("fail if called");
 			return true;
 		}).isFalse();
@@ -293,86 +259,86 @@ class NilTestBase {
 
 	@Test
 	public function when_foreach_on_nil__should_not_run_function() : Void {
-		actual.foreach(function(value : Int) : Void {
+		actual.foreach(function(key : Dynamic, value : Dynamic) : Void {
 			Assert.fail("fail if called");
 		});
 	}
 
 	@Test
 	public function when_partition__should_return_isNotNull() : Void {
-		actual.partition(function(value : Int) : Bool {
+		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
 			return true;
 		}).isNotNull();
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2() : Void {
-		actual.partition(function(value : Int) : Bool {
+		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
 			return true;
 		}).isType(ITuple2);
 	}
 
 	@Test
-	public function when_partition__should_return_a_ITuple2_and__1_is_IList() : Void {
-		actual.partition(function(value : Int) : Bool {
+	public function when_partition__should_return_a_ITuple2_and__1_is_IMap() : Void {
+		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
 			return true;
-		})._1.isType(IList);
+		})._1.isType(IMap);
 	}
 
 	@Test
-	public function when_partition__should_return_a_ITuple2_and__1_is_IList_of_size_0() : Void {
-		actual.partition(function(value : Int) : Bool {
+	public function when_partition__should_return_a_ITuple2_and__1_is_IMap_of_size_0() : Void {
+		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
 			return true;
 		})._1.size.areEqual(0);
 	}
 
 	@Test
-	public function when_partition__should_return_a_ITuple2_and__2_is_IList() : Void {
-		actual.partition(function(value : Int) : Bool {
+	public function when_partition__should_return_a_ITuple2_and__2_is_IMap() : Void {
+		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
 			return true;
-		})._2.isType(IList);
+		})._2.isType(IMap);
 	}
 
 	@Test
-	public function when_partition__should_return_a_ITuple2_and__2_is_IList_of_size_0() : Void {
-		actual.partition(function(value : Int) : Bool {
+	public function when_partition__should_return_a_ITuple2_and__2_is_IMap_of_size_0() : Void {
+		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
 			return true;
 		})._2.size.areEqual(0);
 	}
 
 	@Test
 	public function when_reduceRight_on_nil__should_return_Option() : Void {
-		actual.reduceRight(function(a:Int, b:Int):Int {
-			return -1;
+		actual.reduceRight(function(x, y) {
+			return null;
 		}).isType(IOption);
 	}
 
 	@Test
 	public function when_reduceRight_on_nil__should_return_None() : Void {
-		actual.reduceRight(function(a:Int, b:Int):Int {
-			return -1;
+		actual.reduceRight(function(x, y) {
+			return null;
 		}).isEmpty().isTrue();
 	}
 
 	@Test
 	public function when_reduceRight_on_nil__should_not_call_method() : Void {
-		actual.reduceRight(function(a:Int, b:Int):Int {
+		actual.reduceRight(function(x, y) {
 			Assert.fail("fail if called");
-			return -1;
+			return null;
 		}).isType(IOption);
 	}
 
 	@Test
 	public function when_reduceLeft_on_nil__should_return_Option() : Void {
-		actual.reduceLeft(function(a:Int, b:Int):Int {
-			return -1;
+		actual.reduceLeft(function(x, y) {
+			return null;
 		}).isType(IOption);
 	}
 
 	@Test
 	public function when_reduceLeft_on_nil__should_return_None() : Void {
-		actual.reduceLeft(function(a:Int, b:Int):Int {
-			return -1;
+		actual.reduceLeft(function(x, y) {
+			return null;
 		}).isType(IOption);
 	}
 
@@ -382,8 +348,8 @@ class NilTestBase {
 	}
 
 	@Test
-	public function when_take_0_on_nil__should_return_valid_IList() : Void {
-		actual.take(0).isType(IList);
+	public function when_take_0_on_nil__should_return_valid_IMap() : Void {
+		actual.take(0).isType(IMap);
 	}
 
 	@Test
@@ -408,8 +374,8 @@ class NilTestBase {
 	}
 
 	@Test
-	public function when_takeRight_0_on_nil__should_return_valid_IList() : Void {
-		actual.takeRight(0).isType(IList);
+	public function when_takeRight_0_on_nil__should_return_valid_IMap() : Void {
+		actual.takeRight(0).isType(IMap);
 	}
 
 	@Test
@@ -430,28 +396,28 @@ class NilTestBase {
 
 	@Test
 	public function when_takeWhile_on_nil__should_return_isNotNull() : Void {
-		actual.takeWhile(function(value : Int) : Bool {
+		actual.takeWhile(function(value) : Bool {
 			return true;
 		}).isNotNull();
 	}
 
 	@Test
-	public function when_takeWhile_on_nil__should_return_valid_IList() : Void {
-		actual.takeWhile(function(value : Int) : Bool {
+	public function when_takeWhile_on_nil__should_return_valid_IMap() : Void {
+		actual.takeWhile(function(value) : Bool {
 			return true;
-		}).isType(IList);
+		}).isType(IMap);
 	}
 
 	@Test
 	public function when_takeWhile_on_nil__should_return_size_0() : Void {
-		actual.takeWhile(function(value : Int) : Bool {
+		actual.takeWhile(function(value) : Bool {
 			return true;
 		}).size.areEqual(0);
 	}
 
 	@Test
 	public function when_takeWhile_on_nil__should_not_call_method() : Void {
-		actual.takeWhile(function(value : Int) : Bool {
+		actual.takeWhile(function(value) : Bool {
 			Assert.fail("fail if called");
 			return true;
 		});
@@ -528,81 +494,6 @@ class NilTestBase {
 	}
 
 	@Test
-	public function when_head_on_nil__should_be_null() : Void {
-		actual.head.isNull();
-	}
-
-	@Test
-	public function when_headOption_on_nil__should_be_Option() : Void {
-		actual.headOption.isType(IOption);
-	}
-
-	@Test
-	public function when_headOption_on_nil__should_be_None() : Void {
-		actual.headOption.isEmpty().isTrue();
-	}
-
-	@Test
-	public function when_indices_on_nil__should_not_be_null() : Void {
-		actual.indices.isNotNull();
-	}
-
-	@Test
-	public function when_indices_on_nil__should_be_equal_to_nil() : Void {
-		actual.indices.areEqual(expected);
-	}
-
-	@Test
-	public function when_init_on_nil__should_not_be_null() : Void {
-		actual.init.isNotNull();
-	}
-
-	@Test
-	public function when_init_on_nil__should_be_equal_to_nil() : Void {
-		actual.init.areEqual(expected);
-	}
-
-	@Test
-	public function when_last_on_nil__should_not_be_null() : Void {
-		actual.last.isNotNull();
-	}
-
-	@Test
-	public function when_last_on_nil__should_be_equal_to_Option() : Void {
-		actual.last.isType(IOption);
-	}
-
-	@Test
-	public function when_last_on_nil__should_be_equal_to_None() : Void {
-		actual.last.isEmpty().isTrue();
-	}
-
-	@Test
-	public function when_reverse_on_nil__should_not_be_null() : Void {
-		actual.reverse.isNotNull();
-	}
-
-	@Test
-	public function when_reverse_on_nil__should_be_equal_to_nil() : Void {
-		actual.reverse.areEqual(expected);
-	}
-
-	@Test
-	public function when_tail_on_nil__should_be_null() : Void {
-		actual.tail.isNull();
-	}
-
-	@Test
-	public function when_tailOption_on_nil__should_be_Option() : Void {
-		actual.tailOption.isType(IOption);
-	}
-
-	@Test
-	public function when_tailOption_on_nil__should_be_None() : Void {
-		actual.tailOption.isEmpty().isTrue();
-	}
-
-	@Test
 	public function when_zipWithIndex_on_nil__should_not_be_null() : Void {
 		actual.zipWithIndex.isNotNull();
 	}
@@ -629,79 +520,44 @@ class NilTestBase {
 	}
 
 	@Test
-	public function when_calling_append_on_nil__should_not_be_null() : Void {
-		actual.append(1).isNotNull();
+	public function when_calling_add_on_nil__should_not_be_null() : Void {
+		actual.add(1, 1).isNotNull();
 	}
 
 	@Test
-	public function when_calling_append_on_nil__should_be_size_1() : Void {
-		actual.append(1).size.areEqual(1);
+	public function when_calling_add_on_nil__should_be_size_1() : Void {
+		actual.add(1, 1).size.areEqual(1);
 	}
 
 	@Test
-	public function when_calling_appendIterable_on_nil__should_not_be_null() : Void {
-		actual.appendIterable({iterator: filledList.productIterator}).isNotNull();
+	public function when_calling_addIterable_on_nil__should_not_be_null() : Void {
+		actual.addIterable({iterator: filledMap.productIterator}).isNotNull();
 	}
 
 	@Test
-	public function when_calling_appendIterable_on_nil__should_be_size_4() : Void {
-		actual.appendIterable({iterator: filledList.productIterator}).size.areEqual(4);
+	public function when_calling_addIterable_on_nil__should_be_size_4() : Void {
+		actual.addIterable({iterator: filledMap.productIterator}).size.areEqual(4);
 	}
 
 	@Test
 	public function when_calling_iterator_on_nil__should_not_be_null() : Void {
-		actual.appendIterator(filledList.productIterator()).isNotNull();
+		actual.addIterator(filledMap.productIterator()).isNotNull();
 	}
 
 	@Test
 	public function when_calling_iterator_on_nil__should_be_size_4() : Void {
-		actual.appendIterator(filledList.productIterator()).size.areEqual(4);
+		actual.addIterator(filledMap.productIterator()).size.areEqual(4);
 	}
 
 	@Test
-	public function when_calling_appendAll_on_nil__should_not_be_null() : Void {
-		actual.appendAll(other.prepend(1)).isNotNull();
+	public function when_calling_addAll_on_nil__should_not_be_null() : Void {
+		actual.addAll(other.add(1, 1)).isNotNull();
 	}
 
 	@Test
-	public function when_calling_prepend_on_nil__should_not_be_null() : Void {
-		actual.prepend(1).isNotNull();
-	}
-
-	@Test
-	public function when_calling_prepend_on_nil__should_be_size_1() : Void {
-		actual.prepend(1).size.areEqual(1);
-	}
-
-	@Test
-	public function when_calling_prependIterable_on_nil__should_not_be_null() : Void {
-		actual.prependIterable({iterator: filledList.productIterator}).isNotNull();
-	}
-
-	@Test
-	public function when_calling_prependIterable_on_nil__should_be_size_4() : Void {
-		actual.prependIterable({iterator: filledList.productIterator}).size.areEqual(4);
-	}
-
-	@Test
-	public function when_calling_prependIterator_on_nil__should_not_be_null() : Void {
-		actual.prependIterator(filledList.productIterator()).isNotNull();
-	}
-
-	@Test
-	public function when_calling_prependIterator_on_nil__should_be_size_4() : Void {
-		actual.prependIterator(filledList.productIterator()).size.areEqual(4);
-	}
-
-	@Test
-	public function when_calling_prependAll_on_nil__should_not_be_null() : Void {
-		actual.prependAll(other.prepend(1)).isNotNull();
-	}
-
-	@Test
-	public function when_calling_appendAll_on_nil__should_return_same_instance() : Void {
-		var o = expected.prepend(1);
-		actual.appendAll(o).areEqual(o);
+	public function when_calling_addAll_on_nil__should_return_same_instance() : Void {
+		var o = expected.add(1, 1);
+		actual.addAll(o).areEqual(o);
 	}
 
 	@Test
@@ -722,5 +578,35 @@ class NilTestBase {
 	@Test
 	public function when_calling_productIterator_on_nil_should_hasNext_be_false() : Void {
 		actual.productIterator().hasNext().isFalse();
+	}
+
+	@Test
+	public function when_head_on_nil__should_be_null() : Void {
+		actual.head.isNull();
+	}
+
+	@Test
+	public function when_headOption_on_nil__should_be_Option() : Void {
+		actual.headOption.isType(IOption);
+	}
+
+	@Test
+	public function when_headOption_on_nil__should_be_None() : Void {
+		actual.headOption.isEmpty().isTrue();
+	}
+
+	@Test
+	public function when_tail_on_nil__should_be_null() : Void {
+		actual.tail.isNull();
+	}
+
+	@Test
+	public function when_tailOption_on_nil__should_be_Option() : Void {
+		actual.tailOption.isType(IOption);
+	}
+
+	@Test
+	public function when_tailOption_on_nil__should_be_None() : Void {
+		actual.tailOption.isEmpty().isTrue();
 	}
 }

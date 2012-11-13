@@ -17,42 +17,41 @@ class MapIterator<K, V> extends Product, implements IFunkObject, implements IPro
 
 	private var _map : IMap<K, V>;
 
-	private var _nilMap : IMap<K, V>;
+	private var _size : Int;
 
-	public function new(l : IMap<K, V>, nilMap : IMap<K, V>) {
+	private var _index : Int;
+
+	public function new(l : IMap<K, V>) {
 		super();
 
 		if(l == null) {
 			throw new ArgumentError("List should not be null");
 		}
-		if(nilMap == null) {
-			throw new ArgumentError("NilMap should not be null");
-		}
 
 		_map = l;
-		_nilMap = nilMap;
+
+		_size = _map.size;
+		_index = 0;
 	}
 
 	public function hasNext() : Bool {
-		return _map.nonEmpty;
+		return _index < _size;
 	}
 
 	public function next() : ITuple2<K, V> {
-		return if(_map == _nilMap) {
+		return if(_index >= _size) {
 			throw new NoSuchElementError();
 		} else {
-			var head : ITuple2<K, V> = _map.head;
-			_map = _map.tail;
-			head;
+			_map.productElement(_index++);
 		}
 	}
 
 	public function nextOption() : IOption<ITuple2<K, V>> {
-		var result : IOption<ITuple2<K, V>> = None.toInstance();
-		if(_map != _nilMap) {
-			var head : IOption<ITuple2<K, V>> = _map.headOption;
-			_map = _map.tail;
-			result = head;
+		var result = null;
+		if(_index < _size) {
+			result = Some(_map.productElement(_index++)).toInstance();
+		} else {
+			result = None.toInstance();
 		}
 		return result;
 	}

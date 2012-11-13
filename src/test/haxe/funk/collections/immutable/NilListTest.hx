@@ -1,13 +1,13 @@
 package funk.collections.immutable;
 
-import funk.collections.NilTestBase;
+import funk.collections.NilListTestBase;
 import funk.collections.immutable.ListUtil;
 import funk.collections.immutable.Nil;
 
 using funk.collections.immutable.ListUtil;
 using funk.collections.immutable.Nil;
 
-class NilTest extends NilTestBase {
+class NilListTest extends NilListTestBase {
 
 	@Before
 	public function setup():Void {

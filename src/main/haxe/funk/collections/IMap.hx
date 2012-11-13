@@ -7,23 +7,19 @@ import funk.tuple.Tuple2;
 
 interface IMap<K, V> implements IProduct, implements ICollection<ITuple2<K, V>> {
 
+    var head(get_head, never) : ITuple2<K, V>;
+
+    var headOption(get_headOption, never) : IOption<ITuple2<K, V>>;
+
+    var tail(get_tail, never) : IMap<K, V>;
+
+    var tailOption(get_tailOption, never) : IOption<IMap<K, V>>;
+
 	var nonEmpty(dynamic, never) : Bool;
 
     var flatten(dynamic, never) : IMap<K, V>;
 
-    var head(dynamic, never) : ITuple2<K, V>;
-
-	var headOption(dynamic, never) : IOption<ITuple2<K, V>>;
-
-    var init(dynamic, never) : IMap<K, V>;
-
     var isEmpty(dynamic, never) : Bool;
-
-    var last(dynamic, never) : IOption<ITuple2<K, V>>;
-
-    var tail(dynamic, never) : IMap<K, V>;
-
-	var tailOption(dynamic, never) : IOption<IMap<K, V>>;
 
 	var zipWithIndex(dynamic, never) : IMap<ITuple2<K, V>, Int>;
 

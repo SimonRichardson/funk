@@ -17,27 +17,23 @@ using funk.tuple.Tuple2;
 
 class NilMap<K, V> extends Product, implements IMap<K, V> {
 
+	public var head(get_head, never) : ITuple2<K, V>;
+
+    public var headOption(get_headOption, never) : IOption<ITuple2<K, V>>;
+
+	public var tail(get_tail, never) : IMap<K, V>;
+
+    public var tailOption(get_tailOption, never) : IOption<IMap<K, V>>;
+
 	public var nonEmpty(get_nonEmpty, never): Bool;
 	
 	public var flatten(get_flatten, never): IMap<K, V>;
 	
 	public var hasDefinedSize(get_hasDefinedSize, never) : Bool;
-	
-	public var head(get_head, never): ITuple2<K, V>;
-
-	public var headOption(get_headOption, never): IOption<ITuple2<K, V>>;
-
-	public var init(get_init, never): IMap<K, V>;
 
 	public var isEmpty(get_isEmpty, never): Bool;
-
-	public var last(get_last, never): IOption<ITuple2<K, V>>;
 	
 	public var size(get_size, never) : Int;
-	
-	public var tail(get_tail, never): IMap<K, V>;
-	
-	public var tailOption(get_tailOption, never): IOption<IMap<K, V>>;
 	
 	public var toArray(get_toArray, never) : Array<ITuple2<K, V>>;
 	
@@ -179,7 +175,7 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 	}
 
 	override public function productIterator() : IProductIterator<Dynamic> {
-		return new MapIterator<K, V>(this, this);
+		return new MapIterator<K, V>(this);
 	}
 	
 	private function get_nonEmpty() : Bool {
@@ -188,30 +184,6 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 	
 	public function get_isEmpty() : Bool {
 		return true;
-	}
-	
-	private function get_head() : ITuple2<K, V> {
-		return null;
-	}
-	
-	private function get_headOption() : IOption<ITuple2<K, V>> {
-		return None.toInstance();
-	}
-	
-	private function get_init() : IMap<K, V> {
-		return _factory.createNilMap();
-	}
-	
-	private function get_last() : IOption<ITuple2<K, V>> {
-		return None.toInstance();
-	}
-		
-	private function get_tail() : IMap<K, V> {
-		return null;
-	}
-	
-	private function get_tailOption() : IOption<IMap<K, V>> {
-		return None.toInstance();
 	}
 	
 	private function get_zipWithIndex() : IMap<ITuple2<K, V>, Int> {
@@ -225,6 +197,22 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 	private function get_hasDefinedSize() : Bool {
 		return true;
 	}
+
+	private function get_head() : ITuple2<K, V> {
+        return null;
+    }
+
+    private function get_headOption() : IOption<ITuple2<K, V>> {
+        return None.toInstance();
+    }
+
+	private function get_tail() : IMap<K, V> {
+        return null;
+    }
+
+    private function get_tailOption() : IOption<IMap<K, V>> {
+        return None.toInstance();
+    }
 
 	private function get_toArray() : Array<ITuple2<K, V>> {
 		return [];

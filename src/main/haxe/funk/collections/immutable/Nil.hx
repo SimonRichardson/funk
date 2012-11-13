@@ -5,6 +5,7 @@ import funk.collections.IListFactory;
 import funk.collections.IMap;
 import funk.collections.IMapFactory;
 import funk.collections.NilList;
+import funk.errors.IllegalOperationError;
 import funk.errors.RangeError;
 import funk.option.Option;
 import funk.tuple.Tuple2;
@@ -27,15 +28,11 @@ class Nils {
 	private static var NIL_MAP : IMap<Dynamic, Dynamic> = new NilMap<Dynamic, Dynamic>(MAP_FACTORY);
 
 	inline public static function list<T>(n : Collections) : IList<T> {
-		return switch(n) {
-			case Nil: cast NIL_LIST;
-		}
+		return cast NIL_LIST;
 	}
 
 	inline public static function map<K, V>(m : Collections) : IMap<K, V> {
-		return switch(m) {
-			case Nil: cast NIL_MAP;
-		}
+		return cast NIL_MAP;
 	}
 }
 
