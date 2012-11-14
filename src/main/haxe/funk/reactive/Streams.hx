@@ -4,6 +4,7 @@ import funk.Funk;
 import funk.collections.IterableUtil;
 import funk.errors.IllegalOperationError;
 import funk.option.Option;
+import funk.reactive.Behaviour;
 import funk.reactive.Propagation;
 import funk.reactive.Process;
 
@@ -93,6 +94,21 @@ class Streams {
         var timerStream : Stream<Float> = timer(time);
         var mapStream : Stream<Float> = timerStream.map(function(value) {
             return Math.random();
+        });
+        mapStream.whenFinishedDo(function() : Void {
+            timerStream.finish();
+        });
+
+        return mapStream;
+    }
+
+    public static function sine(time : Behaviour<Float>) : Stream<Float> {
+        var steps : Int = 100;
+        var angle : Float = Math.PI * 2 / steps;
+
+        var timerStream : Stream<Float> = timer(time);
+        var mapStream : Stream<Float> = timerStream.map(function(value) {
+            return Math.sin(Process.stamp() + angle);
         });
         mapStream.whenFinishedDo(function() : Void {
             timerStream.finish();
