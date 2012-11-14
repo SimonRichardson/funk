@@ -28,6 +28,8 @@ class MapTestBase {
 
 	public var filledList : IMap<Dynamic, Dynamic>;
 
+	public var diffFilledList : IMap<Dynamic, Dynamic>;
+
 	public var listClassName : String;
 
 	public function generateIntMap(size : Int) : IMap<Int, Int> {
@@ -1039,33 +1041,39 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_calling_append__should_not_be_null() : Void {
+	public function when_calling_add__should_not_be_null() : Void {
 		actual.add(1, 5).isNotNull();
 	}
 
 	@Test
-	public function when_calling_append__should_be_size_5() : Void {
+	public function when_calling_add__should_be_size_5() : Void {
 		actual.add(1, 5).size.areEqual(5);
 	}
 
 	@Test
-	public function when_calling_append__should_equal_1_2_3_4_5() : Void {
+	public function when_calling_add__should_equal_1_2_3_4_5() : Void {
 		actual.add(5, 5).equals(convertToMap([1, 2, 3, 4, 5])).isTrue();
 	}
 
 	@Test
-	public function when_calling_appendIterable__should_not_be_null() : Void {
+	public function when_calling_addIterable__should_not_be_null() : Void {
 		actual.addIterable({iterator: filledList.productIterator}).isNotNull();
 	}
 
 	@Test
-	public function when_calling_appendIterable__should_be_size_8() : Void {
-		actual.addIterable({iterator: filledList.productIterator}).size.areEqual(8);
+	public function when_calling_addIterable__should_be_size_4() : Void {
+		actual.addIterable({iterator: filledList.productIterator}).size.areEqual(4);
 	}
 
 	@Test
-	public function when_calling_appendIterable__should_be_size_1_2_3_4_1_2_3_4() : Void {
-		actual.addIterable({iterator: filledList.productIterator}).equals(convertToMap([1, 2, 3, 4, 1, 2, 3, 4])).isTrue();
+	public function when_calling_addIterable__should_be_1_2_3_4() : Void {
+		trace(actual.addIterable({iterator: filledList.productIterator}));
+		actual.addIterable({iterator: filledList.productIterator}).equals(convertToMap([1, 2, 3, 4])).isTrue();
+	}
+
+	@Test
+	public function when_calling_addIterable__should_be_size_8() : Void {
+		actual.addIterable({iterator: diffFilledList.productIterator}).size.areEqual(8);
 	}
 
 	@Test
@@ -1074,23 +1082,28 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_calling_iterator__should_be_size_8() : Void {
-		actual.addIterator(filledList.productIterator()).size.areEqual(8);
+	public function when_calling_iterator__should_be_size_4() : Void {
+		actual.addIterator(filledList.productIterator()).size.areEqual(4);
 	}
 
 	@Test
-	public function when_calling_appendAll__should_not_be_null() : Void {
+	public function when_calling_addAll__should_not_be_null() : Void {
 		actual.addAll(other).isNotNull();
 	}
 
 	@Test
-	public function when_calling_appendAll__should_be_size_8() : Void {
-		actual.addAll(filledList).size.areEqual(8);
+	public function when_calling_addAll__should_be_size_4() : Void {
+		actual.addAll(filledList).size.areEqual(4);
 	}
 
 	@Test
-	public function when_calling_appendAll__should_be_1_2_3_4_1_2_3_4() : Void {
-		actual.addAll(filledList).equals(convertToMap([1, 2, 3, 4, 1, 2, 3, 4])).isTrue();
+	public function when_calling_addAll__should_be_size_8() : Void {
+		actual.addAll(diffFilledList).size.areEqual(8);
+	}
+
+	@Test
+	public function when_calling_addAll__should_be_1_2_3_4() : Void {
+		actual.addAll(filledList).equals(convertToMap([1, 2, 3, 4])).isTrue();
 	}
 
 	@Test

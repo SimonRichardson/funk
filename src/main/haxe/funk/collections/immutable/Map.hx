@@ -403,7 +403,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	override public function equals(that: IFunkObject): Bool {
 		return if(this == that) {
 			true;
-		} else if (Std.is(that, IList)) {
+		} else if (Std.is(that, IMap)) {
 			super.equals(that);
 		} else {
 			false;
@@ -422,14 +422,32 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	}
 
 	  	var buffer: Array<Map<K, V>> = new Array<Map<K, V>>();
-	  	var m: Int = n - 1;
-	  	var p: IMap<K, V> = value;
 
-	  	for(i in 0...n) {
-	  		buffer[i] = new Map<K, V>(p.productElement(i), null);
+	  	var p : IMap<K, V> = this;
+	  	while(p.nonEmpty) {
+			buffer.push(new Map<K, V>(p.head, null));
+			p = p.tail;
 	  	}
 
-	  	buffer[m]._tail = this;
+	  	var np : IMap<K, V> = value;
+	  	while(np.nonEmpty) {
+	  		var h = np.head;
+
+	  		// Go through and remove matching keys
+	  		var index = buffer.length;
+	  		while(--index > -1) {
+	  			if(buffer[index].head.equals(h)) {
+	  				buffer.splice(index, 1);
+	  			}
+	  		}
+
+            buffer.push(new Map<K, V>(h, null));
+            np = np.tail;
+        }
+
+        var m = buffer.length - 1;
+
+	  	buffer[m]._tail = Nil.map();
 
 		var j : Int = 1;
 		for(i in 0...m) {
