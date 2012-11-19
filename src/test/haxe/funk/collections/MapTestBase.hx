@@ -1,6 +1,6 @@
 package funk.collections;
 
-import funk.collections.IList;
+import funk.collections.IMap;
 import funk.errors.ArgumentError;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
@@ -32,11 +32,15 @@ class MapTestBase {
 
 	public var listClassName : String;
 
-	public function generateIntMap(size : Int) : IMap<Int, Int> {
+	public function generateIntMap(size : Int, ?startValue : Int = 0) : IMap<Int, Int> {
 		return null;
 	}
 
 	public function convertToMap<T, K, V>(any : T) : IMap<K, V> {
+		return null;
+	}
+
+	public function convertToMapWithKeys<K, V>(keys : K, values : V) : IMap<K, V> {
 		return null;
 	}
 
@@ -116,8 +120,8 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_drop_3__return_IList() : Void {
-		actual.drop(2).isType(IList);
+	public function when_drop_3__return_IMap() : Void {
+		actual.drop(2).isType(IMap);
 	}
 
 	@Test
@@ -183,12 +187,12 @@ class MapTestBase {
 
 	@Test
 	public function when_dropRight_1_on_list__return_and_get_0_equals_0() : Void {
-		generateIntMap(5).dropRight(1).get(0).get().areEqual(0);
+		generateIntMap(5).dropRight(1).get(1).get()._2.areEqual(1);
 	}
 
 	@Test
 	public function when_dropRight_2_on_list__return_and_get_2_equals_2() : Void {
-		generateIntMap(5).dropRight(2).get(2).get().areEqual(2);
+		generateIntMap(5).dropRight(2).get(2).get()._2.areEqual(2);
 	}
 
 	@Test
@@ -220,10 +224,10 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_dropWhile__return_is_type_of_list() : Void {
+	public function when_dropWhile__return_is_type_of_map() : Void {
 		generateIntMap(5).dropWhile(function(k, v):Bool {
 			return v < 2;
-		}).isType(IList);
+		}).isType(IMap);
 	}
 
 	@Test
@@ -237,7 +241,7 @@ class MapTestBase {
 	public function when_dropWhile__return_get_2_equals_4() : Void {
 		generateIntMap(5).dropWhile(function(k, v):Bool {
 			return v < 2;
-		}).get(2).get().areEqual(4);
+		}).get(2).get()._2.areEqual(4);
 	}
 
 	@Test
@@ -386,22 +390,22 @@ class MapTestBase {
 
 	@Test
 	public function when_zip__should_calling_get_0_return_tuple2() : Void {
-		actual.zip(filledList).get(0).get().isType(ITuple2);
+		actual.zip(filledList).get(cast 0).get().isType(ITuple2);
 	}
 
 	@Test
 	public function when_zip__should_calling_get_3_return_tuple2() : Void {
-		actual.zip(filledList).get(3).get().isType(ITuple2);
+		actual.zip(filledList).get(cast 3).get().isType(ITuple2);
 	}
 
 	@Test
 	public function when_zip__should_calling_get_3_return_tuple2_and__1_equals_4() : Void {
-		actual.zip(filledList).get(3).get()._1.areEqual(4);
+		actual.zip(filledList).get(cast 3).get()._1.areEqual(4);
 	}
 
 	@Test
 	public function when_zip__should_calling_get_2_return_tuple2_and__2_equals_3() : Void {
-		actual.zip(filledList).get(2).get()._2.areEqual(3);
+		actual.zip(filledList).get(cast 2).get()._2.areEqual(3);
 	}
 
 	@Test
@@ -422,35 +426,35 @@ class MapTestBase {
 	public function when_map__should_calling_get_0_return_2() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(0).get().areEqual(2);
+		}).get(0).get()._2.areEqual(2);
 	}
 
 	@Test
 	public function when_map__should_calling_get_1_return_3() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(1).get().areEqual(3);
+		}).get(1).get()._2.areEqual(3);
 	}
 
 	@Test
 	public function when_map__should_calling_get_2_return_4() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(2).get().areEqual(4);
+		}).get(2).get()._2.areEqual(4);
 	}
 
 	@Test
 	public function when_map__should_calling_get_3_return_5() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(3).get().areEqual(5);
+		}).get(3).get()._2.areEqual(5);
 	}
 
 	@Test
 	public function when_map__should_calling_get_0_return_Hello1() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, "Hello" + t._2).toInstance();
-		}).get(0).get().areEqual("Hello1");
+		}).get(0).get()._2.areEqual("Hello1");
 	}
 
 	@Test
@@ -462,22 +466,32 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_find__should_return_size_of_16() : Void {
+	public function when_flatMap_with_same_map__should_return_size_of_4() : Void {
 		actual.flatMap(function(t):IMap<Dynamic, Dynamic> {
 			return expected;
+		}).size.areEqual(4);
+	}
+
+	@Test
+	public function when_flatMap__should_return_size_of_16() : Void {
+		var i : Int = 0;
+		actual.flatMap(function(t):IMap<Dynamic, Dynamic> {
+			return generateIntMap(4, (i++) * 4);
 		}).size.areEqual(16);
 	}
 
 	@Test
 	public function when_flatMap__should_return_a_list_containing_concat_lists() : Void {
+		var i : Int = 0;
 		var result = actual.flatMap(function(t):IMap<Dynamic, Dynamic> {
-			return expected;
+			return generateIntMap(4, (i++) * 4);
 		});
-		result.equals(convertToMap([1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4])).isTrue();
+		result.equals(convertToMap([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])).isTrue();
 	}
 
 	@Test
 	public function when_flatten__should_flatten_list() : Void {
+		trace(actual.flatten);
 		actual.flatten.equals(filledList).isTrue();
 	}
 
@@ -567,17 +581,17 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_partition__should_return_a_ITuple2_and__1_is_IList() : Void {
+	public function when_partition__should_return_a_ITuple2_and__1_is_IMap() : Void {
 		actual.partition(function(k, v) : Bool {
 			return true;
-		})._1.isType(IList);
+		})._1.isType(IMap);
 	}
 
 	@Test
-	public function when_partition_false__should_return_a_ITuple2_and__2_is_IList() : Void {
+	public function when_partition_false__should_return_a_ITuple2_and__2_is_IMap() : Void {
 		actual.partition(function(k, v) : Bool {
 			return false;
-		})._2.isType(IList);
+		})._2.isType(IMap);
 	}
 
 	@Test
@@ -595,21 +609,21 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_partition__should_return_a_ITuple2_and__1_is_IList_of_size_2() : Void {
+	public function when_partition__should_return_a_ITuple2_and__1_is_IMap_of_size_2() : Void {
 		actual.partition(function(k, v) : Bool {
 			return v % 2 == 0;
 		})._1.size.areEqual(2);
 	}
 
 	@Test
-	public function when_partition__should_return_a_ITuple2_and__2_is_IList() : Void {
+	public function when_partition__should_return_a_ITuple2_and__2_is_IMap() : Void {
 		actual.partition(function(k, v) : Bool {
 			return true;
-		})._2.isType(IList);
+		})._2.isType(IMap);
 	}
 
 	@Test
-	public function when_partition__should_return_a_ITuple2_and__2_is_IList_of_size_2() : Void {
+	public function when_partition__should_return_a_ITuple2_and__2_is_IMap_of_size_2() : Void {
 		actual.partition(function(k, v) : Bool {
 			return v % 2 == 0;
 		})._2.size.areEqual(2);
@@ -697,8 +711,8 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_take_0___should_return_valid_IList() : Void {
-		actual.take(0).isType(IList);
+	public function when_take_0___should_return_valid_IMap() : Void {
+		actual.take(0).isType(IMap);
 	}
 
 	@Test
@@ -738,8 +752,8 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_takeRight_0___should_return_valid_IList() : Void {
-		actual.takeRight(0).isType(IList);
+	public function when_takeRight_0___should_return_valid_IMap() : Void {
+		actual.takeRight(0).isType(IMap);
 	}
 
 	@Test
@@ -781,10 +795,10 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_takeWhile__should_return_valid_IList() : Void {
+	public function when_takeWhile__should_return_valid_IMap() : Void {
 		actual.takeWhile(function(t) : Bool {
 			return true;
-		}).isType(IList);
+		}).isType(IMap);
 	}
 
 	@Test
@@ -891,43 +905,73 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_contains__should_not_contain_null() : Void {
-		actual.contains(null).isFalse();
+	public function when_containsKey__should_not_contain_null() : Void {
+		actual.containsKey(null).isFalse();
 	}
 
 	@Test
-	public function when_contains__should_not_contain_true() : Void {
-		actual.contains(true).isFalse();
+	public function when_containsKey__should_not_contain_true() : Void {
+		actual.containsKey(true).isFalse();
 	}
 
 	@Test
-	public function when_contains__should_not_contain_object() : Void {
-		actual.contains({}).isFalse();
+	public function when_containsKey__should_not_contain_object() : Void {
+		actual.containsKey({}).isFalse();
 	}
 
 	@Test
-	public function when_contains__should_not_contain_array() : Void {
-		actual.contains([]).isFalse();
+	public function when_containsKey__should_not_contain_array() : Void {
+		actual.containsKey([]).isFalse();
 	}
 
 	@Test
-	public function when_contains__should_contain_1() : Void {
-		actual.contains(1).isTrue();
+	public function when_containsKey__should_contain_1() : Void {
+		actual.containsKey(1).isTrue();
 	}
 
 	@Test
-	public function when_contains__should_contain_2() : Void {
-		actual.contains(2).isTrue();
+	public function when_containsKey__should_contain_2() : Void {
+		actual.containsKey(2).isTrue();
 	}
 
 	@Test
-	public function when_contains__should_contain_3() : Void {
-		actual.contains(3).isTrue();
+	public function when_containsKey__should_contain_3() : Void {
+		actual.containsKey(3).isTrue();
 	}
 
 	@Test
-	public function when_contains__should_contain_4() : Void {
-		actual.contains(4).isTrue();
+	public function when_containsValue__should_not_contain_null() : Void {
+		actual.containsValue(null).isFalse();
+	}
+
+	@Test
+	public function when_containsValue__should_not_contain_true() : Void {
+		actual.containsValue(true).isFalse();
+	}
+
+	@Test
+	public function when_containsValue__should_not_contain_object() : Void {
+		actual.containsValue({}).isFalse();
+	}
+
+	@Test
+	public function when_containsValue__should_not_contain_array() : Void {
+		actual.containsValue([]).isFalse();
+	}
+
+	@Test
+	public function when_containsValue__should_contain_1() : Void {
+		actual.containsValue(1).isTrue();
+	}
+
+	@Test
+	public function when_containsValue__should_contain_2() : Void {
+		actual.containsValue(2).isTrue();
+	}
+
+	@Test
+	public function when_containsValue__should_contain_3() : Void {
+		actual.containsValue(3).isTrue();
 	}
 
 	@Test
@@ -942,22 +986,22 @@ class MapTestBase {
 
 	@Test
 	public function when_toArray__should_value_0_be_1() : Void {
-		Assert.areEqual(actual.toArray[0], 1);
+		Assert.areEqual(actual.toArray[0]._2, 1);
 	}
 
 	@Test
 	public function when_toArray__should_value_1_be_2() : Void {
-		Assert.areEqual(actual.toArray[1], 2);
+		Assert.areEqual(actual.toArray[1]._2, 2);
 	}
 
 	@Test
 	public function when_toArray__should_value_2_be_3() : Void {
-		Assert.areEqual(actual.toArray[2], 3);
+		Assert.areEqual(actual.toArray[2]._2, 3);
 	}
 
 	@Test
 	public function when_toArray__should_value_3_be_4() : Void {
-		Assert.areEqual(actual.toArray[3], 4);
+		Assert.areEqual(actual.toArray[3]._2, 4);
 	}
 
 	@Test
@@ -967,7 +1011,7 @@ class MapTestBase {
 
 	@Test
 	public function when_head__should_be_1() : Void {
-		Assert.areEqual(actual.head, 1);
+		Assert.areEqual(actual.head._2, 1);
 	}
 
 	@Test
@@ -982,7 +1026,7 @@ class MapTestBase {
 
 	@Test
 	public function when_headOption__should_be_Some_of_value_1() : Void {
-		Assert.areEqual(actual.headOption.get(), 1);
+		Assert.areEqual(actual.headOption.get()._2, 1);
 	}
 
 	@Test
@@ -992,7 +1036,7 @@ class MapTestBase {
 
 	@Test
 	public function when_tail__should_be_2_3_4() : Void {
-		actual.tail.equals(convertToMap([2, 3, 4])).isTrue();
+		actual.tail.equals(convertToMapWithKeys([1, 2, 3], [2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -1007,7 +1051,7 @@ class MapTestBase {
 
 	@Test
 	public function when_tailOption__should_be_Some_value_of_2_3_4() : Void {
-		actual.tailOption.get().equals(convertToMap([2, 3, 4])).isTrue();
+		actual.tailOption.get().equals(convertToMapWithKeys([1, 2, 3], [2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -1106,8 +1150,9 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_calling_toString_should_return_List() : Void {
-		actual.toString().areEqual(Std.format('$listClassName(tuple2(0, 1), tuple2(0, 2), tuple2(0, 3), tuple2(0, 4))'));
+	public function when_calling_toString_should_return_Map() : Void {
+		// TODO (Simon) : Fix this so it's more like Map({0,1}, {1,2}, {2,3}, {3,4})
+		actual.toString().areEqual(Std.format('$listClassName(Tuple2(0, 1), Tuple2(1, 2), Tuple2(2, 3), Tuple2(3, 4))'));
 	}
 
 	@Test
@@ -1127,14 +1172,17 @@ class MapTestBase {
 
 	@Test
 	public function when_calling_productIterator_on_list_should_next_be_1() : Void {
-		actual.productIterator().next().areEqual(1);
+		var tuple : ITuple2<Int, Int> = actual.productIterator().next();
+		tuple._2.areEqual(1);
 	}
 
 	@Test
 	public function when_calling_productIterator_on_list_should_next_be_2() : Void {
 		var iterator = actual.productIterator();
 		iterator.next();
-		iterator.next().areEqual(2);
+
+		var tuple : ITuple2<Int, Int> = iterator.next();
+		tuple._2.areEqual(2);
 	}
 
 	@Test
@@ -1142,7 +1190,9 @@ class MapTestBase {
 		var iterator = actual.productIterator();
 		iterator.next();
 		iterator.next();
-		iterator.next().areEqual(3);
+		
+		var tuple : ITuple2<Int, Int> = iterator.next();
+		tuple._2.areEqual(3);
 	}
 
 	@Test
@@ -1151,7 +1201,9 @@ class MapTestBase {
 		iterator.next();
 		iterator.next();
 		iterator.next();
-		iterator.next().areEqual(4);
+
+		var tuple : ITuple2<Int, Int> = iterator.next();
+		tuple._2.areEqual(4);
 	}
 
 	@Test

@@ -464,23 +464,43 @@ class NilMapTestBase {
 	}
 
 	@Test
-	public function when_contains_on_nil__should_not_contain_null() : Void {
-		actual.contains(null).isFalse();
+	public function when_containsKey_on_nil__should_not_contain_null() : Void {
+		actual.containsKey(null).isFalse();
 	}
 
 	@Test
-	public function when_contains_on_nil__should_not_contain_true() : Void {
-		actual.contains(true).isFalse();
+	public function when_containsKey_on_nil__should_not_contain_true() : Void {
+		actual.containsKey(true).isFalse();
 	}
 
 	@Test
-	public function when_contains_on_nil__should_not_contain_object() : Void {
-		actual.contains({}).isFalse();
+	public function when_containsKey_on_nil__should_not_contain_object() : Void {
+		actual.containsKey({}).isFalse();
 	}
 
 	@Test
-	public function when_contains_on_nil__should_not_contain_array() : Void {
-		actual.contains([]).isFalse();
+	public function when_containsKey_on_nil__should_not_contain_array() : Void {
+		actual.containsKey([]).isFalse();
+	}
+
+	@Test
+	public function when_containsValue_on_nil__should_not_contain_null() : Void {
+		actual.containsValue(null).isFalse();
+	}
+
+	@Test
+	public function when_containsValue_on_nil__should_not_contain_true() : Void {
+		actual.containsValue(true).isFalse();
+	}
+
+	@Test
+	public function when_containsValue_on_nil__should_not_contain_object() : Void {
+		actual.containsValue({}).isFalse();
+	}
+
+	@Test
+	public function when_containsValue_on_nil__should_not_contain_array() : Void {
+		actual.containsValue([]).isFalse();
 	}
 
 	@Test

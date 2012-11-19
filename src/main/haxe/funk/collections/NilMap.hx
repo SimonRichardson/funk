@@ -47,10 +47,14 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 		_factory = factory;
 	}
 	
-	public function contains(value : K) : Bool {
+	public function containsKey(value : K) : Bool {
 	  	return false;
 	}
 	
+	public function containsValue(value : V) : Bool {
+	  	return false;
+	}
+
 	public function count(f : Function2<K, V, Bool>) : Int {
 	  	return 0;
 	}
@@ -110,7 +114,7 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 	public function foreach(f : Function2<K, V, Void>) : Void {
 	}
 	
-	public function get(index : Int) : IOption<ITuple2<K, V>> {
+	public function get(index : K) : IOption<ITuple2<K, V>> {
 		return None.toInstance();
 	}
 	

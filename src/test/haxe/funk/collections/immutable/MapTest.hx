@@ -34,8 +34,8 @@ class MapTest extends MapTestBase {
 		filledList = null;
 	}
 
-	override public function generateIntMap(size : Int) : IMap<Int, Int> {
-		var count = 0;
+	override public function generateIntMap(size : Int, ?startValue : Int = 0) : IMap<Int, Int> {
+		var count = startValue;
 		return size.fill(function() : ITuple2<Int, Int> {
 			return tuple2(count, count++).toInstance();
 		});
@@ -43,5 +43,26 @@ class MapTest extends MapTestBase {
 
 	override public function convertToMap<T, K, V>(any : T) : IMap<K, V> {
 		return cast any.toMap();
+	}
+
+	override public function convertToMapWithKeys<K, V>(keys : K, values : V) : IMap<K, V> {
+		if(Std.is(keys, Array) && Std.is(values, Array)) {
+			var map = Nil.map();
+
+			var k : Array<Dynamic> = cast keys;
+			var v : Array<Dynamic> = cast values;
+
+			if(k.length != v.length) {
+				throw "Invalid length";
+			}
+
+			for(i in 0...k.length) {
+				map = map.add(k[i], v[i]);
+			}
+
+			return map;
+		} else {
+			throw "Unsupported operation";
+		}
 	}
 }

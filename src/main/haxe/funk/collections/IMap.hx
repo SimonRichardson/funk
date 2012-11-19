@@ -23,7 +23,9 @@ interface IMap<K, V> implements IProduct, implements ICollection<ITuple2<K, V>> 
 
 	var zipWithIndex(dynamic, never) : IMap<ITuple2<K, V>, Int>;
 
-    function contains(value : K) : Bool;
+    function containsKey(key : K) : Bool;
+
+    function containsValue(value : V) : Bool;
 
     function count(f : Function2<K, V, Bool>) : Int;
 
@@ -55,7 +57,7 @@ interface IMap<K, V> implements IProduct, implements ICollection<ITuple2<K, V>> 
 
     function foreach(f : Function2<K, V, Void>) : Void;
 
-    function get(index : Int) : IOption<ITuple2<K, V>>;
+    function get(key : K) : IOption<ITuple2<K, V>>;
 
     function map(f : Function1<ITuple2<K, V>, ITuple2<K, V>>) : IMap<K, V>;
 

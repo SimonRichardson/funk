@@ -63,11 +63,24 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 		_lengthKnown = false;
 	}
 
-	public function contains(value : K) : Bool {
+	public function containsKey(keys : K) : Bool {
 		var p: IMap<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(p.head._1.equals(value)) {
+			if(p.head._1.equals(keys)) {
+		  		return true;
+			}
+			p = p.tail;
+	  	}
+
+	  	return false;
+	}
+
+	public function containsValue(value : V) : Bool {
+		var p: IMap<K, V> = this;
+
+	  	while(p.nonEmpty) {
+			if(p.head._2.equals(value)) {
 		  		return true;
 			}
 			p = p.tail;
@@ -330,8 +343,17 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	}
 	}
 
-	public function get(index : Int) : IOption<ITuple2<K, V>> {
-		return Some(productElement(index)).toInstance();
+	public function get(key : K) : IOption<ITuple2<K, V>> {
+		var p: IMap<K, V> = this;
+
+	  	while(p.nonEmpty) {
+			if(p.head._1.equals(key)) {
+		  		return Some(p.head).toInstance();
+			}
+			p = p.tail;
+	  	}
+
+	  	return None.toInstance();
 	}
 
 	public function map(f : Function1<ITuple2<K, V>, ITuple2<K, V>>) : IMap<K, V> {
