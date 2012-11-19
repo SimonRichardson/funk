@@ -401,12 +401,43 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	}
 
 	override public function equals(that: IFunkObject): Bool {
-		return if(this == that) {
-			true;
+		if(this == that) {
+			return true;
 		} else if (Std.is(that, IMap)) {
-			super.equals(that);
+			var thatMap : IMap<Dynamic, Dynamic> = cast that;
+			if (size != thatMap.size) {
+				return false;
+			}
+
+			// This is expensive, but required because a map can be in any order.
+			var p : IMap<K, V> = this;
+			while(p.nonEmpty) {
+				var h0 = p.head;
+
+				var found = false;
+
+				var np : IMap<Dynamic, Dynamic> = thatMap;
+				while(np.nonEmpty) {
+					var h1 = np.head;
+
+					if (h0.equals(h1)) {
+						found = true;
+						break;
+					}
+
+					np = np.tail;
+				}
+
+				if (!found) {
+					return false;
+				}
+
+				p = p.tail;
+			}
+
+			return true;
 		} else {
-			false;
+			return false;
 		}
 	}
 
@@ -579,6 +610,11 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 
 	public function zip<K1, V1>(that : IMap<K1, V1>) : IMap<ITuple2<K, V>, ITuple2<K1, V1>> {
 		var n: Int = Std.int(Math.min(size, that.size));
+
+		if(n <= 0) {
+            return Nil.map();
+        }
+
 	  	var m: Int = n - 1;
 	  	var buffer = new Array<Map<ITuple2<K, V>, ITuple2<K1, V1>>>();
 
@@ -623,7 +659,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			i -= 1;
 	  	}
 
-	  	throw new NoSuchElementError();
+	  	throw new RangeError();
 	}
 
 	override public function productIterator() : IProductIterator<Dynamic> {
@@ -715,7 +751,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 
 	private function get_flatten() : IMap<K, V> {
 		return flatMap(function(x: Dynamic): IMap<K, V> {
-			return Std.is(x, IMap) ? cast x : x.toMap();
+			return Std.is(x, IMap) ? cast x : MapUtil.toMap(x);
 		});
 	}
 

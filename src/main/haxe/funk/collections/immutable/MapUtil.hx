@@ -26,7 +26,7 @@ class MapUtil {
 		} else if(Std.is(any, IProductIterator)) {
 			return IteratorUtil.toMap(cast any);
 		}
-		
+
 		var l = Nil.map();
 		var n : Int;
 
@@ -37,7 +37,7 @@ class MapUtil {
 		    	var item = array[n];
 		    	if(Std.is(item, ITuple2)) {
 		    		var tuple = cast item;
-		    		l = l.add(tuple._1, tuple._2);	
+		    		l = l.add(tuple._1, tuple._2);
 		    	} else {
 		    		l = l.add(n, item);
 		    	}

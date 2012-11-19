@@ -1052,7 +1052,7 @@ class MapTestBase {
 
 	@Test
 	public function when_calling_add__should_equal_1_2_3_4_5() : Void {
-		actual.add(5, 5).equals(convertToMap([1, 2, 3, 4, 5])).isTrue();
+		actual.add(4, 5).equals(convertToMap([1, 2, 3, 4, 5])).isTrue();
 	}
 
 	@Test
@@ -1067,7 +1067,6 @@ class MapTestBase {
 
 	@Test
 	public function when_calling_addIterable__should_be_1_2_3_4() : Void {
-		trace(actual.addIterable({iterator: filledList.productIterator}));
 		actual.addIterable({iterator: filledList.productIterator}).equals(convertToMap([1, 2, 3, 4])).isTrue();
 	}
 
