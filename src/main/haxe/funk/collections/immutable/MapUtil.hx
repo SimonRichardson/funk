@@ -36,7 +36,7 @@ class MapUtil {
 		    while(--n > -1) {
 		    	var item = array[n];
 		    	if(Std.is(item, ITuple2)) {
-		    		var tuple = cast item;
+		    		var tuple : ITuple2<Dynamic, Dynamic> = cast item;
 		    		l = l.add(tuple._1, tuple._2);
 		    	} else {
 		    		l = l.add(n, item);

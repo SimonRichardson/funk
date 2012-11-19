@@ -390,22 +390,22 @@ class MapTestBase {
 
 	@Test
 	public function when_zip__should_calling_get_0_return_tuple2() : Void {
-		actual.zip(filledList).get(cast 0).get().isType(ITuple2);
+		actual.zip(filledList).get(tuple2(0, 1).toInstance()).get().isType(ITuple2);
 	}
 
 	@Test
 	public function when_zip__should_calling_get_3_return_tuple2() : Void {
-		actual.zip(filledList).get(cast 3).get().isType(ITuple2);
+		actual.zip(filledList).get(tuple2(2, 3).toInstance()).get().isType(ITuple2);
 	}
 
 	@Test
 	public function when_zip__should_calling_get_3_return_tuple2_and__1_equals_4() : Void {
-		actual.zip(filledList).get(cast 3).get()._1.areEqual(4);
+		Assert.areEqual(actual.zip(filledList).get(tuple2(3, 4).toInstance()).get()._1._2, 4);
 	}
 
 	@Test
 	public function when_zip__should_calling_get_2_return_tuple2_and__2_equals_3() : Void {
-		actual.zip(filledList).get(cast 2).get()._2.areEqual(3);
+		Assert.areEqual(actual.zip(filledList).get(tuple2(2, 3).toInstance()).get()._2._2, 3);
 	}
 
 	@Test
@@ -694,15 +694,15 @@ class MapTestBase {
 	@Test
 	public function when_reduceLeft__should_return_10() : Void {
 		Assert.areEqual(actual.reduceLeft(function(a, b) {
-			return tuple2(-1, -1).toInstance();
-		}).get(), 10);
+			return tuple2(a._1 + b._1, a._2 + b._2).toInstance();
+		}).get()._2, 10);
 	}
 
 	@Test
 	public function when_reduceLeft__should_return_abcdef() : Void {
 		Assert.areEqual(convertToMap("abcdef").reduceLeft(function(a, b) {
 			return tuple2(a._1 + b._1, a._2 + b._2).toInstance();
-		}).get(), "abcdef");
+		}).get()._2, "abcdef");
 	}
 
 	@Test
@@ -1061,10 +1061,10 @@ class MapTestBase {
 
 	@Test
 	public function when_zipWithIndex__should_be_equal_to_nil() : Void {
-		actual.zipWithIndex.equals(convertToMap([	tuple2(1, 0).toInstance(),
-													tuple2(2, 1).toInstance(),
-													tuple2(3, 2).toInstance(),
-													tuple2(4, 3).toInstance()
+		actual.zipWithIndex.equals(convertToMap([	tuple2(tuple2(0, 1).toInstance(), 0).toInstance(),
+													tuple2(tuple2(1, 2).toInstance(), 1).toInstance(),
+													tuple2(tuple2(2, 3).toInstance(), 2).toInstance(),
+													tuple2(tuple2(3, 4).toInstance(), 3).toInstance()
 													])).isTrue();
 	}
 
