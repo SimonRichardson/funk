@@ -497,7 +497,7 @@ class MapTestBase {
 	@Test
 	public function when_flatten__should_flatten_sublists() : Void {
 		var a = convertToMap([convertToMap([1, 2, 3, 4]), convertToMap([5, 6, 7, 8]), convertToMap([9, 10])]);
-		a.flatten.equals(convertToMap([1, 2, 3, 4])).isTrue();
+		a.flatten.equals(convertToMap([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).isTrue();
 	}
 
 	@Test
@@ -732,7 +732,7 @@ class MapTestBase {
 
 	@Test
 	public function when_take_1__should_return_1() : Void {
-		Assert.areEqual(actual.take(1).get(0).get()._2, 1);
+		Assert.areEqual(actual.take(1).get(1).get()._2, 1);
 	}
 
 	@Test
@@ -773,7 +773,7 @@ class MapTestBase {
 
 	@Test
 	public function when_takeRight_1__should_return_4() : Void {
-		Assert.areEqual(actual.takeRight(1).get(3).get()._2, 4);
+		Assert.areEqual(actual.takeRight(1).get(4).get()._2, 4);
 	}
 
 	@Test
@@ -871,12 +871,12 @@ class MapTestBase {
 
 	@Test
 	public function when_take_with_1__should_return_list_with_1() : Void {
-		Assert.areEqual(actual.take(1).get(0).get()._2, 1);
+		Assert.areEqual(actual.take(1).get(1).get()._2, 1);
 	}
 
 	@Test
 	public function when_take_with_2__should_return_list_with_2() : Void {
-		Assert.areEqual(actual.take(2).get(1).get()._2, 2);
+		Assert.areEqual(actual.take(2).get(2).get()._2, 2);
 	}
 
 	@Test
@@ -896,12 +896,12 @@ class MapTestBase {
 
 	@Test
 	public function when_takeRight_with_1__should_return_list_with_4() : Void {
-		Assert.areEqual(actual.takeRight(1).get(3).get()._2, 4);
+		Assert.areEqual(actual.takeRight(1).get(4).get()._2, 4);
 	}
 
 	@Test
 	public function when_takeRight_with_2__should_return_list_with_4() : Void {
-		Assert.areEqual(actual.takeRight(2).get(3).get()._2, 4);
+		Assert.areEqual(actual.takeRight(2).get(4).get()._2, 4);
 	}
 
 	@Test

@@ -37,6 +37,17 @@ class Nils {
 	}
 }
 
+class Pair<K, V> extends Tuple2Impl<K, V> {
+
+	public function new(key : K, value : V) {
+		super(key, value);
+	}
+
+	override private function get_productPrefix() : String {
+		return "";
+	}
+}
+
 private class ListFactory<T> implements IListFactory<T> {
 
 	public function new() {
@@ -56,12 +67,16 @@ private class MapFactory<K, V> implements IMapFactory<K, V> {
 	public function new() {
 	}
 
-	inline public function createMap(value : ITuple2<K, V>, tail : IMap<K, V>) : IMap<K, V> {
-		return new Map<K, V>(value, tail);
+	inline public function createMap(key : K, value : V, tail : IMap<K, V>) : IMap<K, V> {
+		return new Map<K, V>(createPair(key, value), tail);
 	}
 
 	inline public function createNilMap() : IMap<K, V> {
 		return Nils.map(Nil);
+	}
+
+	inline public function createPair(key : K, value : V) : ITuple2<K, V> {
+		return new Pair(key, value);
 	}
 }
 

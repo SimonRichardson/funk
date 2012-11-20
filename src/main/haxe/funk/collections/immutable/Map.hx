@@ -22,18 +22,6 @@ using funk.option.Option;
 using funk.tuple.Tuple2;
 using funk.Wildcard;
 
-class Pair<K, V> extends Tuple2Impl<K, V> {
-
-	public function new(key : K, value : V) {
-		super(key, value);
-	}
-
-	override private function get_productPrefix() : String {
-		return "";
-	}
-}
-
-
 class Map<K, V> extends Product, implements IMap<K, V> {
 
 	public var nonEmpty(get_nonEmpty, never): Bool;
