@@ -1100,6 +1100,16 @@ class MapTestBase {
 	}
 
 	@Test
+	public function when_calling_keys__should_return_1_2_3_4() : Void {
+		actual.keys.toArray.arrayEquals([1, 2, 3, 4]);
+	}
+
+	@Test
+	public function when_calling_values__should_return_1_2_3_4() : Void {
+		actual.values.toArray.arrayEquals([1, 2, 3, 4]);
+	}
+
+	@Test
 	public function when_calling_toString_should_return_Map() : Void {
 		actual.toString().areEqual(Std.format('$listClassName((1, 1), (2, 2), (3, 3), (4, 4))'));
 	}
