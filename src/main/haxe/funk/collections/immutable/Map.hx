@@ -22,6 +22,17 @@ using funk.option.Option;
 using funk.tuple.Tuple2;
 using funk.Wildcard;
 
+class Pair<K, V> extends Tuple2Impl<K, V> {
+
+	public function new(key : K, value : V) {
+		super(key, value);
+	}
+
+	override private function get_productPrefix() : String {
+		return "";
+	}
+}
+
 
 class Map<K, V> extends Product, implements IMap<K, V> {
 
@@ -419,7 +430,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			}
 	  	}
 
-	  	return tuple2(m > 0 ? left[0] : Nil.map(), o > 0 ? right[0] : Nil.map()).toInstance();
+	  	return new Pair(m > 0 ? left[0] : Nil.map(), o > 0 ? right[0] : Nil.map());
 	}
 
 	override public function equals(that: IFunkObject): Bool {
@@ -432,21 +443,22 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			}
 
 			// This is expensive, but required because a map can be in any order.
-			var p : Map<K, V> = this;
+			var p : IMap<K, V> = this;
 			while(p.nonEmpty) {
+				var imp : Map<K, V> = cast p;
+				var head : ITuple2<K, V> = imp._head;
 
-				var head : ITuple2<K, V> = p._head;
 				var o : Option<ITuple2<Dynamic, Dynamic>> = thatMap.get(head._1).toOption();
 				switch(o) {
 					case Some(value):
-						if(!p._head._2.equals(value)) {
+						if(!head._2.equals(value._2)) {
 							return false;
 						}
 					case None:
 						return false;
 				}
 
-				p = cast p._tail;
+				p = imp._tail;
 			}
 
 			return true;
@@ -456,7 +468,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	}
 
 	public function add(key : K, value : V) : IMap<K, V> {
-		return new Map<K, V>(tuple2(key, value).toInstance(), this);
+		return new Map<K, V>(new Pair(key, value), this);
 	}
 
 	public function addAll(value : IMap<K, V>) : IMap<K, V> {
@@ -470,18 +482,20 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 
 	  	var buffer: Array<Map<K, V>> = new Array<Map<K, V>>();
 
-	  	var p : Map<K, V> = this;
+	  	var p : IMap<K, V> = this;
 	  	while(p.nonEmpty) {
-	  		
-	  		var ck : K = p._head._1;
+	  		var imp : Map<K, V> = cast p;
+	  		var head : ITuple2<K, V> = imp._head;
+
+	  		var ck : K = head._1;
 
 	  		if (!keys.contains(ck)) {
-	  			buffer.push(new Map<K, V>(p._head, null));
+	  			buffer.push(new Map<K, V>(head, null));
 	  		}
 
-			p = cast p._tail;
+			p = imp._tail;
 	  	}
-	  	
+
 	  	var items : Array<ITuple2<K, V>> = value.toArray;
 	  	for(i in 0...items.length) {
 	  		var item : ITuple2<K, V> = items[i];
@@ -507,7 +521,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	var p: IMap<K, V> = _tail;
 	  	while(p.nonEmpty) {
 			var l : Map<K, V> = cast p;
-			
+
 			value = f(value, l._head);
 
 			p = l._tail;
@@ -637,7 +651,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 		var q: Array<ITuple2<K1, V1>> = that.toArray;
 
 		for(i in 0...n) {
-			buffer[i] = new Map<ITuple2<K, V>, ITuple2<K1, V1>>(tuple2(p[i], q[i]).toInstance(), null);
+			buffer[i] = new Map<ITuple2<K, V>, ITuple2<K1, V1>>(new Pair(p[i], q[i]), null);
 	  	}
 
 	  	buffer[m]._tail = cast Nil.map();
@@ -660,14 +674,17 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	}
 
 	override public function productElement(i : Int) : Dynamic {
-		var p: Map<K, V> = this;
+		var p: IMap<K, V> = this;
 
 	  	while(p.nonEmpty) {
+	  		var imp: Map<K, V> = cast p;
+	  		var head: ITuple2<K, V> = imp._head;
+
 			if(i == 0) {
-			  return p._head;
+			  return head;
 			}
 
-			p = cast p._tail;
+			p = imp._tail;
 			i -= 1;
 	  	}
 
@@ -698,7 +715,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	var p: Map<K, V> = this;
 
 		for(i in 0...n) {
-			buffer[i] = new Map<ITuple2<K, V>, Int>(tuple2(p._head, i).toInstance(), null);
+			buffer[i] = new Map<ITuple2<K, V>, Int>(new Pair(p._head, i), null);
 			p = cast p._tail;
 	  	}
 
@@ -799,7 +816,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			l = l.append(p._head._2);
 			p = cast p._tail;
 	  	}
-	  	
+
 	  	return l;
 	}
 

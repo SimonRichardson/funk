@@ -423,38 +423,38 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_map__should_calling_get_0_return_2() : Void {
+	public function when_map__should_calling_get_1_return_2() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(0).get()._2.areEqual(2);
+		}).get(1).get()._2.areEqual(2);
 	}
 
 	@Test
-	public function when_map__should_calling_get_1_return_3() : Void {
+	public function when_map__should_calling_get_2_return_3() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(1).get()._2.areEqual(3);
+		}).get(2).get()._2.areEqual(3);
 	}
 
 	@Test
-	public function when_map__should_calling_get_2_return_4() : Void {
+	public function when_map__should_calling_get_3_return_4() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(2).get()._2.areEqual(4);
+		}).get(3).get()._2.areEqual(4);
 	}
 
 	@Test
-	public function when_map__should_calling_get_3_return_5() : Void {
+	public function when_map__should_calling_get_4_return_5() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(3).get()._2.areEqual(5);
+		}).get(4).get()._2.areEqual(5);
 	}
 
 	@Test
 	public function when_map__should_calling_get_0_return_Hello1() : Void {
 		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, "Hello" + t._2).toInstance();
-		}).get(0).get()._2.areEqual("Hello1");
+		}).get(1).get()._2.areEqual("Hello1");
 	}
 
 	@Test
@@ -462,7 +462,7 @@ class MapTestBase {
 		var instance = {};
 		Assert.areEqual(actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, instance).toInstance();
-		}).get(0).get()._2, instance);
+		}).get(1).get()._2, instance);
 	}
 
 	@Test
@@ -845,13 +845,13 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_get_0__should_return_None() : Void {
-		actual.get(0).isDefined().isTrue();
+	public function when_get_0__should_return_Some() : Void {
+		actual.get(1).isDefined().isTrue();
 	}
 
 	@Test
-	public function when_get_0__should_return_1() : Void {
-		Assert.areEqual(actual.get(0).get()._2, 1);
+	public function when_get_1__should_return_1() : Void {
+		Assert.areEqual(actual.get(1).get()._2, 1);
 	}
 
 	@Test
@@ -1101,8 +1101,7 @@ class MapTestBase {
 
 	@Test
 	public function when_calling_toString_should_return_Map() : Void {
-		// TODO (Simon) : Fix this so it's more like Map({0,1}, {1,2}, {2,3}, {3,4})
-		actual.toString().areEqual(Std.format('$listClassName(Tuple2(1, 1), Tuple2(2, 2), Tuple2(3, 3), Tuple2(4, 4))'));
+		actual.toString().areEqual(Std.format('$listClassName((1, 1), (2, 2), (3, 3), (4, 4))'));
 	}
 
 	@Test
@@ -1140,7 +1139,7 @@ class MapTestBase {
 		var iterator = actual.productIterator();
 		iterator.next();
 		iterator.next();
-		
+
 		var tuple : ITuple2<Int, Int> = iterator.next();
 		tuple._2.areEqual(3);
 	}
