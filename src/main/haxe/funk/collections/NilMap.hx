@@ -3,6 +3,7 @@ package funk.collections;
 import funk.Funk;
 import funk.collections.IList;
 import funk.collections.IteratorUtil;
+import funk.collections.immutable.Nil;
 import funk.errors.ArgumentError;
 import funk.errors.NoSuchElementError;
 import funk.errors.RangeError;
@@ -12,6 +13,7 @@ import funk.option.Option;
 import funk.tuple.Tuple2;
 
 using funk.collections.IteratorUtil;
+using funk.collections.immutable.Nil;
 using funk.option.Option;
 using funk.tuple.Tuple2;
 
@@ -38,6 +40,10 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 	public var toArray(get_toArray, never) : Array<ITuple2<K, V>>;
 	
 	public var zipWithIndex(get_zipWithIndex, never): IMap<ITuple2<K, V>, Int>;
+
+	public var keys(get_keys, never) : IList<K>;
+
+    public var values(get_values, never) : IList<V>;
 	
 	private var _factory : IMapFactory<K,V>;
 	
@@ -55,7 +61,7 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 	  	return false;
 	}
 
-	public function count(f : Function2<K, V, Bool>) : Int {
+	public function count(f : Function1<ITuple2<K, V>, Bool>) : Int {
 	  	return 0;
 	}
 	
@@ -75,23 +81,23 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 		return _factory.createNilMap();
 	}
 	
-	public function dropWhile(f : Function2<K, V, Bool>) : IMap<K, V> {
+	public function dropWhile(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
 		return _factory.createNilMap();
 	}
 	
-	public function exists(f : Function2<K, V, Bool>) : Bool {
+	public function exists(f : Function1<ITuple2<K, V>, Bool>) : Bool {
 	  	return false;
 	}
 	
-	public function filter(f : Function2<K, V, Bool>) : IMap<K, V> {
+	public function filter(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
 		return _factory.createNilMap();
 	}
 	
-	public function filterNot(f : Function2<K, V, Bool>) : IMap<K, V> {
+	public function filterNot(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
 		return _factory.createNilMap();
 	}
 	
-	public function find(f : Function2<K, V, Bool>) : IOption<ITuple2<K, V>> {
+	public function find(f : Function1<ITuple2<K, V>, Bool>) : IOption<ITuple2<K, V>> {
 	  	return None.toInstance();
 	}
 	
@@ -107,11 +113,11 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 	  	return x;
 	}
 	
-	public function forall(f : Function2<K, V, Bool>) : Bool {
+	public function forall(f : Function1<ITuple2<K, V>, Bool>) : Bool {
 	  	return false;
 	}
 	
-	public function foreach(f : Function2<K, V, Void>) : Void {
+	public function foreach(f : Function1<ITuple2<K, V>, Void>) : Void {
 	}
 	
 	public function get(index : K) : IOption<ITuple2<K, V>> {
@@ -122,7 +128,7 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 		return _factory.createNilMap();
 	}
 	
-	public function partition(f : Function2<K, V, Bool>) : ITuple2<IMap<K, V>, IMap<K, V>> {
+	public function partition(f : Function1<ITuple2<K, V>, Bool>) : ITuple2<IMap<K, V>, IMap<K, V>> {
 		return tuple2(_factory.createNilMap(), _factory.createNilMap()).toInstance();
 	}
 	
@@ -224,6 +230,14 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 	
 	private function get_flatten() : IMap<K, V> {
 		return _factory.createNilMap();
+	}
+
+	private function get_keys() : IList<K> {
+		return Nil.list();
+	}
+
+	private function get_values() : IList<V> {
+		return Nil.list();
 	}
 		
 	override private function get_productArity() : Int {

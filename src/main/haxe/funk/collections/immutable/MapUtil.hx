@@ -14,8 +14,8 @@ class MapUtil {
 	public static function fill<K, V>(n : Int, f : Function0<ITuple2<K, V>>) : IMap<K, V> {
 		var l = Nil.map();
 		while(--n > -1) {
-			var func = f();
-       		l = l.add(func._1, func._2);
+			var result : ITuple2<K, V> = f();
+       		l = l.add(result._1, result._2);
        	}
 		return l;
 	}
@@ -39,17 +39,21 @@ class MapUtil {
 		    		var tuple : ITuple2<Dynamic, Dynamic> = cast item;
 		    		l = l.add(tuple._1, tuple._2);
 		    	} else {
-		    		l = l.add(n, item);
+		    		l = l.add(item, item);
 		    	}
 		    }
 		} else if(Std.is(any, String)) {
 	    	var string: String = cast any;
 	    	n = string.length;
 	    	while(--n > -1) {
-	    		l = l.add(n, cast string.substr(n, 1));
+	    		var value : String = string.substr(n, 1);
+	    		l = l.add(cast value, cast value);
 	    	}
+	    } else if(Std.is(any, ITuple2)) {
+	    	var tuple : ITuple2<Dynamic, Dynamic> = cast any;
+	    	l = l.add(tuple._1, tuple._2);
 	    } else {
-			l = l.add(0, cast any);
+			l = l.add(cast any, cast any);
 		}
 
 		return cast l;

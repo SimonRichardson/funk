@@ -23,7 +23,7 @@ class MapTest extends MapTestBase {
 		expected = [1, 2, 3, 4].toMap();
 		other = Nil.map();
 		filledList = [1, 2, 3, 4].toMap();
-		diffFilledList = [5, 6, 7, 8].toMap();
+		diffFilledList = convertToMapWithKeys([5, 6, 7, 8], [5, 6, 7, 8]);
 	}
 
 	@After

@@ -80,7 +80,7 @@ class MapTestBase {
 	public function should_call_count() : Void {
 		var exp = 5;
 		var act = 0;
-		generateIntMap(exp).count(function(k, v) {
+		generateIntMap(exp).count(function(tuple : ITuple2<Dynamic, Dynamic>) {
 			act++;
 			return true;
 		});
@@ -90,7 +90,7 @@ class MapTestBase {
 	@Test
 	public function should_count_be_same_as_expected() : Void {
 		var exp = 5;
-		var act = generateIntMap(exp).count(function(k, v) {
+		var act = generateIntMap(exp).count(function(tuple : ITuple2<Dynamic, Dynamic>) {
 			return true;
 		});
 		act.areEqual(exp);
@@ -99,7 +99,7 @@ class MapTestBase {
 	@Test
 	public function should_count_be_0() : Void {
 		var exp = 0;
-		var act = generateIntMap(exp).count(function(k, v) {
+		var act = generateIntMap(exp).count(function(tuple : ITuple2<Dynamic, Dynamic>) {
 			return false;
 		});
 		act.areEqual(exp);
@@ -108,7 +108,7 @@ class MapTestBase {
 	@Test
 	public function should_count_5_be_0() : Void {
 		var exp = 5;
-		var act = generateIntMap(exp).count(function(k, v) {
+		var act = generateIntMap(exp).count(function(tuple : ITuple2<Dynamic, Dynamic>) {
 			return false;
 		});
 		act.areEqual(0);
@@ -140,33 +140,33 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_drop_2__return_get_0__1_is_2() : Void {
+	public function when_drop_2__return_get_0__1_is_0() : Void {
 		var opt : IOption<ITuple2<Int, Int>> = generateIntMap(5).drop(2).get(0);
-		opt.get()._1.areEqual(2);
+		opt.get()._1.areEqual(0);
 	}
 
 	@Test
-	public function when_drop_2__return_get_0__2_is_2() : Void {
+	public function when_drop_2__return_get_0__2_is_0() : Void {
 		var opt : IOption<ITuple2<Int, Int>> = generateIntMap(5).drop(2).get(0);
-		opt.get()._2.areEqual(2);
+		opt.get()._2.areEqual(0);
 	}
 
 	@Test
-	public function when_drop_2__return_get_1__1_is_3() : Void {
+	public function when_drop_2__return_get_1__1_is_1() : Void {
 		var opt : IOption<ITuple2<Int, Int>> = generateIntMap(5).drop(2).get(1);
-		opt.get()._1.areEqual(3);
+		opt.get()._1.areEqual(1);
 	}
 
 	@Test
-	public function when_drop_2__return_get_1__2_is_3() : Void {
+	public function when_drop_2__return_get_1__2_is_1() : Void {
 		var opt : IOption<ITuple2<Int, Int>> = generateIntMap(5).drop(2).get(1);
-		opt.get()._2.areEqual(3);
+		opt.get()._2.areEqual(1);
 	}
 
 	@Test
-	public function when_drop_2_then_1__return_get_0_is_3() : Void {
+	public function when_drop_2_then_1__return_get_0_is_0() : Void {
 		var opt : IOption<ITuple2<Int, Int>> = generateIntMap(5).drop(2).drop(1).get(0);
-		opt.get()._2.areEqual(3);
+		opt.get()._2.areEqual(0);
 	}
 
 	@Test
@@ -218,157 +218,157 @@ class MapTestBase {
 
 	@Test
 	public function when_dropWhile__return_not_null() : Void {
-		generateIntMap(5).dropWhile(function(k, v):Bool {
-			return v < 2;
+		generateIntMap(5).dropWhile(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 < 2;
 		}).isNotNull();
 	}
 
 	@Test
 	public function when_dropWhile__return_is_type_of_map() : Void {
-		generateIntMap(5).dropWhile(function(k, v):Bool {
-			return v < 2;
+		generateIntMap(5).dropWhile(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 < 2;
 		}).isType(IMap);
 	}
 
 	@Test
-	public function when_dropWhile__return_size_is_3() : Void {
-		generateIntMap(5).dropWhile(function(k, v):Bool {
-			return v < 2;
-		}).size.areEqual(3);
+	public function when_dropWhile__return_size_is_5() : Void {
+		generateIntMap(5).dropWhile(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 <= 0;
+		}).size.areEqual(5);
 	}
 
 	@Test
-	public function when_dropWhile__return_get_2_equals_4() : Void {
-		generateIntMap(5).dropWhile(function(k, v):Bool {
-			return v < 2;
-		}).get(2).get()._2.areEqual(4);
+	public function when_dropWhile__return_get_2_equals_2() : Void {
+		generateIntMap(5).dropWhile(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 < 2;
+		}).get(2).get()._2.areEqual(2);
 	}
 
 	@Test
 	public function when_dropWhile__return_size_equals_0() : Void {
-		generateIntMap(5).dropWhile(function(k, v):Bool {
+		generateIntMap(5).dropWhile(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return true;
 		}).size.areEqual(0);
 	}
 
 	@Test
 	public function when_exists__should_return_true_when_calling_exists() : Void {
-		actual.exists(function(k, v):Bool {
-			return v == 2;
+		actual.exists(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 == 2;
 		}).isTrue();
 	}
 
 	@Test
 	public function when_exists_all_false__should_return_false_when_calling_exists() : Void {
-		actual.exists(function(k, v):Bool {
+		actual.exists(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return false;
 		}).isFalse();
 	}
 
 	@Test
 	public function when_exists_all_true__should_return_true_when_calling_exists() : Void {
-		actual.exists(function(k, v):Bool {
+		actual.exists(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return true;
 		}).isTrue();
 	}
 
 	@Test
 	public function when_filter__should_return_list() : Void {
-		actual.filter(function(k, v):Bool {
-			return v == 1;
+		actual.filter(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 == 1;
 		}).isType(IMap);
 	}
 
 	@Test
 	public function when_filter__should_return_list_of_size_1() : Void {
-		actual.filter(function(k, v):Bool {
-			return v == 1;
+		actual.filter(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 == 1;
 		}).size.areEqual(1);
 	}
 
 	@Test
 	public function when_filter__should_return_even_list_of_size_2() : Void {
-		actual.filter(function(k, v):Bool {
-			return v % 2 == 0;
+		actual.filter(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 % 2 == 0;
 		}).size.areEqual(2);
 	}
 
 	@Test
 	public function when_filter_all__should_return_size_of_4() : Void {
-		actual.filter(function(k, v):Bool {
+		actual.filter(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return true;
 		}).size.areEqual(4);
 	}
 
 	@Test
 	public function when_filter_all_false__should_return_size_of_0() : Void {
-		actual.filter(function(k, v):Bool {
+		actual.filter(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return false;
 		}).size.areEqual(0);
 	}
 
 	@Test
 	public function when_filterNot__should_return_list() : Void {
-		actual.filterNot(function(k, v):Bool {
-			return v == 1;
+		actual.filterNot(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 == 1;
 		}).isType(IMap);
 	}
 
 	@Test
 	public function when_filterNot__should_return_list_of_size_4() : Void {
-		actual.filterNot(function(k, v):Bool {
-			return v == 1;
+		actual.filterNot(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 == 1;
 		}).size.areEqual(3);
 	}
 
 	@Test
 	public function when_filterNot__should_return_even_list_of_size_2() : Void {
-		actual.filterNot(function(k, v):Bool {
-			return v % 2 == 0;
+		actual.filterNot(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 % 2 == 0;
 		}).size.areEqual(2);
 	}
 
 	@Test
 	public function when_filterNot_all__should_return_size_of_4() : Void {
-		actual.filterNot(function(k, v):Bool {
+		actual.filterNot(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return false;
 		}).size.areEqual(4);
 	}
 
 	@Test
 	public function when_filterNot_all_true__should_return_size_of_0() : Void {
-		actual.filterNot(function(k, v):Bool {
+		actual.filterNot(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return true;
 		}).size.areEqual(0);
 	}
 
 	@Test
 	public function when_find__should_return_Option() : Void {
-		actual.find(function(k, v):Bool {
-			return v == 2;
+		actual.find(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 == 2;
 		}).isType(IOption);
 	}
 
 	@Test
 	public function when_find__should_return_Some() : Void {
-		actual.find(function(k, v):Bool {
-			return v == 2;
+		actual.find(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
+			return tuple._2 == 2;
 		}).isDefined().isTrue();
 	}
 
 	@Test
 	public function when_find__should_call_find() : Void {
 		var called = false;
-		actual.find(function(k, v):Bool {
+		actual.find(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			called = true;
-			return v == 2;
+			return tuple._2 == 2;
 		});
 		called.isTrue();
 	}
 
 	@Test
 	public function when_find_all_false__should_return_none() : Void {
-		actual.find(function(k, v):Bool {
+		actual.find(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return false;
 		}).isEmpty().isTrue();
 	}
@@ -491,14 +491,13 @@ class MapTestBase {
 
 	@Test
 	public function when_flatten__should_flatten_list() : Void {
-		trace(actual.flatten);
 		actual.flatten.equals(filledList).isTrue();
 	}
 
 	@Test
 	public function when_flatten__should_flatten_sublists() : Void {
 		var a = convertToMap([convertToMap([1, 2, 3, 4]), convertToMap([5, 6, 7, 8]), convertToMap([9, 10])]);
-		a.flatten.equals(convertToMap([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).isTrue();
+		a.flatten.equals(convertToMap([1, 2, 3, 4])).isTrue();
 	}
 
 	@Test
@@ -545,22 +544,22 @@ class MapTestBase {
 
 	@Test
 	public function when_forall__should_return_true() : Void {
-		actual.forall(function(k, v) : Bool {
+		actual.forall(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		}).isTrue();
 	}
 
 	@Test
 	public function when_forall__should_return_false_if_value_is_less_than_2() : Void {
-		actual.forall(function(k, v) : Bool {
-			return v == 2;
+		actual.forall(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
+			return tuple._2 == 2;
 		}).isFalse();
 	}
 
 	@Test
 	public function when_foreach__should_run_function() : Void {
 		var called = false;
-		actual.foreach(function(k, v) : Void {
+		actual.foreach(function(tuple : ITuple2<Dynamic, Dynamic>) : Void {
 			called = true;
 		});
 		called.isTrue();
@@ -568,64 +567,64 @@ class MapTestBase {
 
 	@Test
 	public function when_partition__should_return_isNotNull() : Void {
-		actual.partition(function(k, v) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		}).isNotNull();
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2() : Void {
-		actual.partition(function(k, v) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		}).isType(ITuple2);
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2_and__1_is_IMap() : Void {
-		actual.partition(function(k, v) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		})._1.isType(IMap);
 	}
 
 	@Test
 	public function when_partition_false__should_return_a_ITuple2_and__2_is_IMap() : Void {
-		actual.partition(function(k, v) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return false;
 		})._2.isType(IMap);
 	}
 
 	@Test
 	public function when_partition_false__should_return_a_ITuple2_and__1_is_empty() : Void {
-		actual.partition(function(k, v) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return false;
 		})._1.isEmpty.isTrue();
 	}
 
 	@Test
 	public function when_partition_false__should_return_a_ITuple2_and__2_is_empty() : Void {
-		actual.partition(function(k, v) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		})._2.isEmpty.isTrue();
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2_and__1_is_IMap_of_size_2() : Void {
-		actual.partition(function(k, v) : Bool {
-			return v % 2 == 0;
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
+			return tuple._2 % 2 == 0;
 		})._1.size.areEqual(2);
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2_and__2_is_IMap() : Void {
-		actual.partition(function(k, v) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		})._2.isType(IMap);
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2_and__2_is_IMap_of_size_2() : Void {
-		actual.partition(function(k, v) : Bool {
-			return v % 2 == 0;
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
+			return tuple._2 % 2 == 0;
 		})._2.size.areEqual(2);
 	}
 
@@ -662,9 +661,10 @@ class MapTestBase {
 
 	@Test
 	public function when_reduceRight__should_return_fedcba() : Void {
-		Assert.areEqual(convertToMap("abcdef").reduceRight(function(a, b) {
-			return tuple2(0, a._2 + b._2).toInstance();
-		}).get()._2, "fedcba");
+		var result : IOption<ITuple2<String, String>> = cast convertToMap("abcdef").reduceRight(function(a, b) {
+			return tuple2(a._1 + b._1, a._2 + b._2).toInstance();
+		});
+		Assert.areEqual(result.get()._2, "fedcba");
 	}
 
 	@Test
@@ -1005,56 +1005,6 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_head__should_not_be_null() : Void {
-		actual.head.isNotNull();
-	}
-
-	@Test
-	public function when_head__should_be_1() : Void {
-		Assert.areEqual(actual.head._2, 1);
-	}
-
-	@Test
-	public function when_headOption__should_be_Option() : Void {
-		actual.headOption.isType(IOption);
-	}
-
-	@Test
-	public function when_headOption__should_be_Some() : Void {
-		actual.headOption.isDefined().isTrue();
-	}
-
-	@Test
-	public function when_headOption__should_be_Some_of_value_1() : Void {
-		Assert.areEqual(actual.headOption.get()._2, 1);
-	}
-
-	@Test
-	public function when_tail__should_not_be_null() : Void {
-		actual.tail.isNotNull();
-	}
-
-	@Test
-	public function when_tail__should_be_2_3_4() : Void {
-		actual.tail.equals(convertToMapWithKeys([1, 2, 3], [2, 3, 4])).isTrue();
-	}
-
-	@Test
-	public function when_tailOption__should_be_Option() : Void {
-		actual.tailOption.isType(IOption);
-	}
-
-	@Test
-	public function when_tailOption__should_be_Some() : Void {
-		actual.tailOption.isDefined().isTrue();
-	}
-
-	@Test
-	public function when_tailOption__should_be_Some_value_of_2_3_4() : Void {
-		actual.tailOption.get().equals(convertToMapWithKeys([1, 2, 3], [2, 3, 4])).isTrue();
-	}
-
-	@Test
 	public function when_zipWithIndex__should_not_be_null() : Void {
 		actual.zipWithIndex.isNotNull();
 	}
@@ -1096,7 +1046,7 @@ class MapTestBase {
 
 	@Test
 	public function when_calling_add__should_equal_1_2_3_4_5() : Void {
-		actual.add(4, 5).equals(convertToMap([1, 2, 3, 4, 5])).isTrue();
+		actual.add(5, 5).equals(convertToMap([1, 2, 3, 4, 5])).isTrue();
 	}
 
 	@Test
@@ -1152,7 +1102,7 @@ class MapTestBase {
 	@Test
 	public function when_calling_toString_should_return_Map() : Void {
 		// TODO (Simon) : Fix this so it's more like Map({0,1}, {1,2}, {2,3}, {3,4})
-		actual.toString().areEqual(Std.format('$listClassName(Tuple2(0, 1), Tuple2(1, 2), Tuple2(2, 3), Tuple2(3, 4))'));
+		actual.toString().areEqual(Std.format('$listClassName(Tuple2(1, 1), Tuple2(2, 2), Tuple2(3, 3), Tuple2(4, 4))'));
 	}
 
 	@Test

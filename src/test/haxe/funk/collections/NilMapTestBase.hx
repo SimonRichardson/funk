@@ -45,7 +45,7 @@ class NilMapTestBase {
 
 	@Test
 	public function should_not_call_count() : Void {
-		actual.count(function(k, v) {
+		actual.count(function(tuple) {
 			Assert.fail("fail if called");
 			return false;
 		});
@@ -85,14 +85,14 @@ class NilMapTestBase {
 
 	@Test
 	public function when_drop_on_nil__return_nil_when_calling_dropWhile() : Void {
-		actual.dropWhile(function(k : Dynamic, v : Dynamic):Bool {
+		actual.dropWhile(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return true;
 		}).areEqual(expected);
 	}
 
 	@Test
 	public function when_drop_on_nil__should_not_call_dropWhile() : Void {
-		actual.dropWhile(function(k : Dynamic, v : Dynamic):Bool {
+		actual.dropWhile(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).areEqual(expected);
@@ -100,14 +100,14 @@ class NilMapTestBase {
 
 	@Test
 	public function when_exists_on_nil__should_return_false_when_calling_mapTrue() : Void {
-		actual.exists(function(k : Dynamic, v : Dynamic):Bool {
+		actual.exists(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return true;
 		}).isFalse();
 	}
 
 	@Test
 	public function when_exists_on_nil__should_not_call_exists() : Void {
-		actual.exists(function(k : Dynamic, v : Dynamic):Bool {
+		actual.exists(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).isFalse();
@@ -115,14 +115,14 @@ class NilMapTestBase {
 
 	@Test
 	public function when_filter_on_nil__should_return_list_when_calling_mapFalse() : Void {
-		actual.filter(function(k : Dynamic, v : Dynamic):Bool {
+		actual.filter(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return false;
 		}).areEqual(expected);
 	}
 
 	@Test
 	public function when_filter_on_nil__should_not_call_filter() : Void {
-		actual.filter(function(k : Dynamic, v : Dynamic):Bool {
+		actual.filter(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).areEqual(expected);
@@ -130,14 +130,14 @@ class NilMapTestBase {
 
 	@Test
 	public function when_filterNot_on_nil__should_return_list_when_calling_mapFalse() : Void {
-		actual.filterNot(function(k : Dynamic, v : Dynamic):Bool {
+		actual.filterNot(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return false;
 		}).areEqual(expected);
 	}
 
 	@Test
 	public function when_filterNot_on_nil__should_not_throw_error() : Void {
-		actual.filterNot(function(k : Dynamic, v : Dynamic):Bool {
+		actual.filterNot(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).areEqual(expected);
@@ -145,21 +145,21 @@ class NilMapTestBase {
 
 	@Test
 	public function when_find_on_nil__should_return_Option_when_calling_mapFalse() : Void {
-		actual.find(function(k : Dynamic, v : Dynamic):Bool {
+		actual.find(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return false;
 		}).isType(IOption);
 	}
 
 	@Test
 	public function when_find_on_nil__should_return_None_when_calling_mapFalse() : Void {
-		actual.find(function(k : Dynamic, v : Dynamic):Bool {
+		actual.find(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return false;
 		}).isEmpty().isTrue();
 	}
 
 	@Test
 	public function when_find_on_nil__should_not_call_find() : Void {
-		actual.find(function(k : Dynamic, v : Dynamic):Bool {
+		actual.find(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			Assert.fail("fail if called");
 			return false;
 		}).isType(IOption);
@@ -244,14 +244,14 @@ class NilMapTestBase {
 
 	@Test
 	public function when_forall_on_nil__should_return_false() : Void {
-		actual.forall(function(key : Dynamic, value : Dynamic) : Bool {
+		actual.forall(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		}).isFalse();
 	}
 
 	@Test
 	public function when_forall_on_nil__should_not_run_function() : Void {
-		actual.forall(function(key : Dynamic, value : Dynamic) : Bool {
+		actual.forall(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			Assert.fail("fail if called");
 			return true;
 		}).isFalse();
@@ -259,49 +259,49 @@ class NilMapTestBase {
 
 	@Test
 	public function when_foreach_on_nil__should_not_run_function() : Void {
-		actual.foreach(function(key : Dynamic, value : Dynamic) : Void {
+		actual.foreach(function(tuple : ITuple2<Dynamic, Dynamic>) : Void {
 			Assert.fail("fail if called");
 		});
 	}
 
 	@Test
 	public function when_partition__should_return_isNotNull() : Void {
-		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		}).isNotNull();
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2() : Void {
-		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		}).isType(ITuple2);
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2_and__1_is_IMap() : Void {
-		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		})._1.isType(IMap);
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2_and__1_is_IMap_of_size_0() : Void {
-		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		})._1.size.areEqual(0);
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2_and__2_is_IMap() : Void {
-		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		})._2.isType(IMap);
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2_and__2_is_IMap_of_size_0() : Void {
-		actual.partition(function(key : Dynamic, value : Dynamic) : Bool {
+		actual.partition(function(tuple : ITuple2<Dynamic, Dynamic>) : Bool {
 			return true;
 		})._2.size.areEqual(0);
 	}
@@ -598,35 +598,5 @@ class NilMapTestBase {
 	@Test
 	public function when_calling_productIterator_on_nil_should_hasNext_be_false() : Void {
 		actual.productIterator().hasNext().isFalse();
-	}
-
-	@Test
-	public function when_head_on_nil__should_be_null() : Void {
-		actual.head.isNull();
-	}
-
-	@Test
-	public function when_headOption_on_nil__should_be_Option() : Void {
-		actual.headOption.isType(IOption);
-	}
-
-	@Test
-	public function when_headOption_on_nil__should_be_None() : Void {
-		actual.headOption.isEmpty().isTrue();
-	}
-
-	@Test
-	public function when_tail_on_nil__should_be_null() : Void {
-		actual.tail.isNull();
-	}
-
-	@Test
-	public function when_tailOption_on_nil__should_be_Option() : Void {
-		actual.tailOption.isType(IOption);
-	}
-
-	@Test
-	public function when_tailOption_on_nil__should_be_None() : Void {
-		actual.tailOption.isEmpty().isTrue();
 	}
 }

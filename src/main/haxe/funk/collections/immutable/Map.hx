@@ -13,23 +13,17 @@ import funk.product.ProductIterator;
 import funk.option.Any;
 import funk.option.Option;
 import funk.tuple.Tuple2;
+import funk.Wildcard;
 
 using funk.collections.IteratorUtil;
 using funk.collections.immutable.Nil;
 using funk.option.Any;
 using funk.option.Option;
 using funk.tuple.Tuple2;
+using funk.Wildcard;
 
 
 class Map<K, V> extends Product, implements IMap<K, V> {
-
-	public var head(get_head, never) : ITuple2<K, V>;
-
-    public var headOption(get_headOption, never) : IOption<ITuple2<K, V>>;
-
-	public var tail(get_tail, never) : IMap<K, V>;
-
-    public var tailOption(get_tailOption, never) : IOption<IMap<K, V>>;
 
 	public var nonEmpty(get_nonEmpty, never): Bool;
 
@@ -44,6 +38,10 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	public var toArray(get_toArray, never) : Array<ITuple2<K, V>>;
 
 	public var zipWithIndex(get_zipWithIndex, never): IMap<ITuple2<K, V>, Int>;
+
+	public var keys(get_keys, never) : IList<K>;
+
+    public var values(get_values, never) : IList<V>;
 
 	private var _head : ITuple2<K, V>;
 
@@ -63,42 +61,42 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 		_lengthKnown = false;
 	}
 
-	public function containsKey(keys : K) : Bool {
-		var p: IMap<K, V> = this;
+	public function containsKey(key : K) : Bool {
+		var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(p.head._1.equals(keys)) {
+			if(p._head._1.equals(key)) {
 		  		return true;
 			}
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return false;
 	}
 
 	public function containsValue(value : V) : Bool {
-		var p: IMap<K, V> = this;
+		var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(p.head._2.equals(value)) {
+			if(p._head._2.equals(value)) {
 		  		return true;
 			}
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return false;
 	}
 
-	public function count(f : Function2<K, V, Bool>) : Int {
+	public function count(f : Function1<ITuple2<K, V>, Bool>) : Int {
 		var n: Int = 0;
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(f(p.head._1, p.head._2)) {
+			if(f(p._head)) {
 		  		++n;
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return n;
@@ -109,14 +107,14 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			throw new ArgumentError("n must be positive");
 		}
 
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 	  	for(i in 0...n) {
 			if(p.isEmpty) {
 		  		return Nil.map();
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return p;
@@ -139,14 +137,14 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 
 	  	var buffer = new Array<Map<K, V>>();
 	  	var m: Int = n - 1;
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 	  	for(i in 0...n) {
-			buffer[i] = new Map<K, V>(p.head, null);
-			p = p.tail;
+			buffer[i] = new Map<K, V>(p._head, null);
+			p = cast p._tail;
 	  	}
 
-	  	buffer[m]._tail = Nil.map();
+	  	buffer[m]._tail = createNilMap();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -157,44 +155,44 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	return buffer[0];
 	}
 
-	public function dropWhile(f : Function2<K, V, Bool>) : IMap<K, V> {
-		var p: IMap<K, V> = this;
+	public function dropWhile(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
+		var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(!f(p.head._1, p.head._2)) {
+			if(!f(p._head)) {
 		  		return p;
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return Nil.map();
 	}
 
-	public function exists(f : Function2<K, V, Bool>) : Bool {
-		var p: IMap<K, V> = this;
+	public function exists(f : Function1<ITuple2<K, V>, Bool>) : Bool {
+		var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(f(p.head._1, p.head._2)) {
+			if(f(p._head)) {
 		  		return true;
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return false;
 	}
 
-	public function filter(f : Function2<K, V, Bool>) : IMap<K, V> {
-		var p: IMap<K, V> = this;
+	public function filter(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
+		var p: Map<K, V> = this;
 	  	var q: Map<K, V> = null;
 	  	var first: Map<K, V> = null;
 	  	var last: Map<K, V> = null;
 	  	var allFiltered: Bool = true;
 
 	  	while(p.nonEmpty) {
-			if(f(p.head._1, p.head._2)) {
-		  		q = new Map<K, V>(p.head, Nil.map());
+			if(f(p._head)) {
+		  		q = new Map<K, V>(p._head, createNilMap());
 
 		  		if(null != last) {
 					last._tail = q;
@@ -209,7 +207,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 		  		allFiltered = false;
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	if(allFiltered) {
@@ -219,16 +217,16 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	return (first == null) ? Nil.map() : first;
 	}
 
-	public function filterNot(f : Function2<K, V, Bool>) : IMap<K, V> {
-		var p: IMap<K, V> = this;
+	public function filterNot(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
+		var p: Map<K, V> = this;
 	  	var q: Map<K, V> = null;
 	  	var first: Map<K, V> = null;
 	  	var last: Map<K, V> = null;
 	  	var allFiltered: Bool = true;
 
 	  	while(p.nonEmpty) {
-			if(!f(p.head._1, p.head._2)) {
-		  		q = new Map<K, V>(p.head, Nil.map());
+			if(!f(p._head)) {
+		  		q = new Map<K, V>(p._head, createNilMap());
 
 		  		if(null != last) {
 					last._tail = q;
@@ -243,7 +241,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 		  		allFiltered = false;
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	if(allFiltered) {
@@ -253,15 +251,16 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	return (first == null) ? Nil.map() : first;
 	}
 
-	public function find(f : Function2<K, V, Bool>) : IOption<ITuple2<K, V>> {
-		var p: IMap<K, V> = this;
+	public function find(f : Function1<ITuple2<K, V>, Bool>) : IOption<ITuple2<K, V>> {
+		var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(f(p.head._1, p.head._2)) {
-		  		return Some(p.head).toInstance();
+	  		var head = p._head;
+			if(f(head)) {
+		  		return Some(head).toInstance();
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return None.toInstance();
@@ -270,13 +269,13 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	public function flatMap(f : Function1<ITuple2<K, V>, IMap<K, V>>) : IMap<K, V> {
 		var n: Int = size;
 	  	var buffer: Array<IMap<K, V>> = new Array<IMap<K, V>>();
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 	  	var i: Int = 0;
 
 	  	while(p.nonEmpty) {
 			// TODO (Simon) We should verify the type.
-			buffer[i++] = f(p.head);
-			p = p.tail;
+			buffer[i++] = f(p._head);
+			p = cast p._tail;
 	  	}
 
 	  	var s: IMap<K, V> = buffer[--n];
@@ -291,11 +290,11 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	public function foldLeft(	x : ITuple2<K, V>,
 								f : Function2<ITuple2<K, V>, ITuple2<K, V>, ITuple2<K, V>>) : ITuple2<K, V> {
 		var value: ITuple2<K, V> = x;
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			value = f(value, p.head);
-			p = p.tail;
+			value = f(value, p._head);
+			p = cast p._tail;
 	  	}
 
 	  	return value;
@@ -306,10 +305,10 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 		var value: ITuple2<K, V> = x;
 	  	var buffer: Array<ITuple2<K, V>> = new Array<ITuple2<K, V>>();
 
-		var p: IMap<K, V> = this;
+		var p: Map<K, V> = this;
 		while(p.nonEmpty) {
-			buffer.push(p.head);
-			p = p.tail;
+			buffer.push(p._head);
+			p = cast p._tail;
 	  	}
 
 		var n : Int = buffer.length;
@@ -320,37 +319,37 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	return value;
 	}
 
-	public function forall(f : Function2<K, V, Bool>) : Bool {
-		var p: IMap<K, V> = this;
+	public function forall(f : Function1<ITuple2<K, V>, Bool>) : Bool {
+		var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(!f(p.head._1, p.head._2)) {
+			if(!f(p._head)) {
 		  		return false;
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return true;
 	}
 
-	public function foreach(f : Function2<K, V, Void>) : Void {
-		var p: IMap<K, V> = this;
+	public function foreach(f : Function1<ITuple2<K, V>, Void>) : Void {
+		var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			f(p.head._1, p.head._2);
-			p = p.tail;
+			f(p._head);
+			p = cast p._tail;
 	  	}
 	}
 
 	public function get(key : K) : IOption<ITuple2<K, V>> {
-		var p: IMap<K, V> = this;
+		var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(p.head._1.equals(key)) {
-		  		return Some(p.head).toInstance();
+			if(p._head._1.equals(key)) {
+		  		return Some(p._head).toInstance();
 			}
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return None.toInstance();
@@ -361,14 +360,14 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	var buffer: Array<Map<K, V>> = new Array<Map<K, V>>();
 	  	var m: Int = n - 1;
 
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 	  	for(i in 0...n) {
-			buffer[i] = new Map<K, V>(f(p.head), null);
-			p = p.tail;
+			buffer[i] = new Map<K, V>(f(p._head), null);
+			p = cast p._tail;
 	  	}
 
-	  	buffer[m]._tail = Nil.map();
+	  	buffer[m]._tail = createNilMap();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -379,7 +378,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	return buffer[0];
 	}
 
-	public function partition(f : Function2<K, V, Bool>) : ITuple2<IMap<K, V>, IMap<K, V>> {
+	public function partition(f : Function1<ITuple2<K, V>, Bool>) : ITuple2<IMap<K, V>, IMap<K, V>> {
 		var left: Array<Map<K, V>> = new Array<Map<K, V>>();
 	  	var right: Array<Map<K, V>> = new Array<Map<K, V>>();
 
@@ -388,16 +387,17 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	var m: Int = 0;
 	  	var o: Int = 0;
 
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
-			if(f(p.head._1, p.head._2)) {
-		  		left[i++] = new Map<K, V>(p.head, Nil.map());
+	  		var head = p._head;
+			if(f(head)) {
+		  		left[i++] = new Map<K, V>(head, createNilMap());
 			} else {
-		  		right[j++] = new Map<K, V>(p.head, Nil.map());
+		  		right[j++] = new Map<K, V>(head, createNilMap());
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	m = i - 1;
@@ -432,29 +432,21 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			}
 
 			// This is expensive, but required because a map can be in any order.
-			var p : IMap<K, V> = this;
+			var p : Map<K, V> = this;
 			while(p.nonEmpty) {
-				var h0 = p.head;
 
-				var found = false;
-
-				var np : IMap<Dynamic, Dynamic> = thatMap;
-				while(np.nonEmpty) {
-					var h1 = np.head;
-
-					if (h0.equals(h1)) {
-						found = true;
-						break;
-					}
-
-					np = np.tail;
+				var head : ITuple2<K, V> = p._head;
+				var o : Option<ITuple2<Dynamic, Dynamic>> = thatMap.get(head._1).toOption();
+				switch(o) {
+					case Some(value):
+						if(!p._head._2.equals(value)) {
+							return false;
+						}
+					case None:
+						return false;
 				}
 
-				if (!found) {
-					return false;
-				}
-
-				p = p.tail;
+				p = cast p._tail;
 			}
 
 			return true;
@@ -474,33 +466,31 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			return this;
 	  	}
 
+	  	var keys : IList<K> = value.keys;
+
 	  	var buffer: Array<Map<K, V>> = new Array<Map<K, V>>();
 
-	  	var p : IMap<K, V> = this;
+	  	var p : Map<K, V> = this;
 	  	while(p.nonEmpty) {
-			buffer.push(new Map<K, V>(p.head, null));
-			p = p.tail;
-	  	}
+	  		
+	  		var ck : K = p._head._1;
 
-	  	var np : IMap<K, V> = value;
-	  	while(np.nonEmpty) {
-	  		var h = np.head;
-
-	  		// Go through and remove matching keys
-	  		var index = buffer.length;
-	  		while(--index > -1) {
-	  			if(buffer[index].head.equals(h)) {
-	  				buffer.splice(index, 1);
-	  			}
+	  		if (!keys.contains(ck)) {
+	  			buffer.push(new Map<K, V>(p._head, null));
 	  		}
 
-            buffer.push(new Map<K, V>(h, null));
-            np = np.tail;
-        }
+			p = cast p._tail;
+	  	}
+	  	
+	  	var items : Array<ITuple2<K, V>> = value.toArray;
+	  	for(i in 0...items.length) {
+	  		var item : ITuple2<K, V> = items[i];
+	  		buffer.push(new Map<K, V>(item, null));
+	  	}
 
         var m = buffer.length - 1;
 
-	  	buffer[m]._tail = Nil.map();
+	  	buffer[m]._tail = createNilMap();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -512,12 +502,15 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	}
 
 	public function reduceLeft(f : Function2<ITuple2<K, V>, ITuple2<K, V>, ITuple2<K, V>>) : IOption<ITuple2<K, V>> {
-		var value: ITuple2<K, V> = head;
-	  	var p: IMap<K, V> = tail;
+		var value: ITuple2<K, V> = _head;
 
+	  	var p: IMap<K, V> = _tail;
 	  	while(p.nonEmpty) {
-			value = f(value, p.head);
-			p = p.tail;
+			var l : Map<K, V> = cast p;
+			
+			value = f(value, l._head);
+
+			p = l._tail;
 	  	}
 
 	  	return Some(value).toInstance();
@@ -526,10 +519,10 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	public function reduceRight(f : Function2<ITuple2<K, V>, ITuple2<K, V>, ITuple2<K, V>>) : IOption<ITuple2<K, V>> {
 		var buffer: Array<ITuple2<K, V>> = new Array<ITuple2<K, V>>();
 
-		var p: IMap<K, V> = this;
+		var p: Map<K, V> = this;
 		while(p.nonEmpty) {
-			buffer.push(p.head);
-			p = p.tail;
+			buffer.push(p._head);
+			p = cast p._tail;
 	  	}
 
 	  	var value: ITuple2<K, V> = buffer.pop();
@@ -555,14 +548,14 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 
 	  	var buffer: Array<Map<K, V>> = new Array<Map<K, V>>();
 	  	var m: Int = n - 1;
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 	  	for(i in 0...n) {
-			buffer[i] = new Map<K, V>(p.head, null);
-			p = p.tail;
+			buffer[i] = new Map<K, V>(p._head, null);
+			p = cast p._tail;
 	  	}
 
-	  	buffer[m]._tail = Nil.map();
+	  	buffer[m]._tail = createNilMap();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -590,10 +583,10 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			return this;
 	  	}
 
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 		for(i in 0...n) {
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	return p;
@@ -601,13 +594,13 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 
 	public function takeWhile(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
 		var buffer: Array<Map<K, V>> = new Array<Map<K, V>>();
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 	  	var n: Int = 0;
 
 	  	while(p.nonEmpty) {
-			if(f(p.head)) {
-		  		buffer[n++] = new Map<K, V>(p.head, null);
-		  		p = p.tail;
+			if(f(p._head)) {
+		  		buffer[n++] = new Map<K, V>(p._head, null);
+		  		p = cast p._tail;
 			} else {
 		  		break;
 			}
@@ -619,7 +612,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			return Nil.map();
 	  	}
 
-	  	buffer[m]._tail = Nil.map();
+	  	buffer[m]._tail = createNilMap();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -640,17 +633,14 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	var m: Int = n - 1;
 	  	var buffer = new Array<Map<ITuple2<K, V>, ITuple2<K1, V1>>>();
 
-	  	var p: IMap<K, V> = this;
-		var q: IMap<K1, V1> = that;
+	  	var p: Array<ITuple2<K, V>> = this.toArray;
+		var q: Array<ITuple2<K1, V1>> = that.toArray;
 
 		for(i in 0...n) {
-			var k = p.productElement(i);
-			var v = q.productElement(i);
-
-			buffer[i] = new Map<ITuple2<K, V>, ITuple2<K1, V1>>(tuple2(k, v).toInstance(), null);
+			buffer[i] = new Map<ITuple2<K, V>, ITuple2<K1, V1>>(tuple2(p[i], q[i]).toInstance(), null);
 	  	}
 
-	  	buffer[m]._tail = Nil.map();
+	  	buffer[m]._tail = cast Nil.map();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -670,14 +660,14 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	}
 
 	override public function productElement(i : Int) : Dynamic {
-		var p: IMap<K, V> = this;
+		var p: Map<K, V> = this;
 
 	  	while(p.nonEmpty) {
 			if(i == 0) {
-			  return p.head;
+			  return p._head;
 			}
 
-			p = p.tail;
+			p = cast p._tail;
 			i -= 1;
 	  	}
 
@@ -688,6 +678,10 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 		return new MapIterator<K, V>(this);
 	}
 
+	inline private function createNilMap() : Map<K, V> {
+		return cast Nil.map();
+	}
+
 	private function get_nonEmpty() : Bool {
 		return true;
 	}
@@ -696,35 +690,19 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 		return false;
 	}
 
-	private function get_head() : ITuple2<K, V> {
-        return _head;
-    }
-
-    private function get_headOption() : IOption<ITuple2<K, V>> {
-        return Some(_head).toInstance();
-    }
-
-	private function get_tail() : IMap<K, V> {
-        return _tail;
-    }
-
-    private function get_tailOption() : IOption<IMap<K, V>> {
-        return Some(_tail).toInstance();
-    }
-
 	private function get_zipWithIndex() : IMap<ITuple2<K, V>, Int> {
 		var n: Int = size;
 	  	var m: Int = n - 1;
 	  	var buffer = new Array<Map<ITuple2<K, V>, Int>>();
 
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 		for(i in 0...n) {
-			buffer[i] = new Map<ITuple2<K, V>, Int>(tuple2(p.head, i).toInstance(), null);
-			p = p.tail;
+			buffer[i] = new Map<ITuple2<K, V>, Int>(tuple2(p._head, i).toInstance(), null);
+			p = cast p._tail;
 	  	}
 
-	  	buffer[m]._tail = Nil.map();
+	  	buffer[m]._tail = cast Nil.map();
 
 		var j : Int = 1;
 		for(i in 0...m) {
@@ -740,12 +718,12 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			return _length;
 	  	}
 
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 	  	var length: Int = 0;
 
 	  	while(p.nonEmpty) {
 			++length;
-			p = p.tail;
+			p = cast p._tail;
 	  	}
 
 	  	_length = length;
@@ -761,20 +739,68 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	private function get_toArray() : Array<ITuple2<K, V>> {
 		var n: Int = size;
 	  	var array: Array<ITuple2<K, V>> = new Array<ITuple2<K, V>>();
-	  	var p: IMap<K, V> = this;
+	  	var p: Map<K, V> = this;
 
 	 	for(i in 0...n) {
-			array[i] = p.head;
-			p = p.tail;
+			array[i] = p._head;
+			p = cast p._tail;
 	  	}
 
 		return array;
 	}
 
 	private function get_flatten() : IMap<K, V> {
-		return flatMap(function(x: Dynamic): IMap<K, V> {
-			return Std.is(x, IMap) ? cast x : MapUtil.toMap(x);
+		return flatMap(function(x: ITuple2<K, V>): IMap<K, V> {
+			if (Std.is(x._2, Map)) {
+				var recursive = null;
+				recursive = function(m : Map<K, V>) : Array<ITuple2<K, V>> {
+					var array = new Array<ITuple2<K, V>>();
+
+					var p : Map<K, V> = m;
+					while(p.nonEmpty) {
+						var h = p._head;
+
+						if (Std.is(h._2, IMap)) {
+							array = array.concat(recursive(cast h._2));
+						} else {
+							array.push(h);
+						}
+
+						p = cast p._tail;
+					}
+
+					return array;
+				};
+
+				return MapUtil.toMap(recursive(cast x._2));
+			} else {
+				return MapUtil.toMap(x);
+			}
 		});
+	}
+
+	private function get_keys() : IList<K> {
+		var l = Nil.list();
+
+		var p: Map<K, V> = this;
+	  	while(p.nonEmpty) {
+			l = l.append(p._head._1);
+			p = cast p._tail;
+	  	}
+
+	  	return l;
+	}
+
+	private function get_values() : IList<V> {
+		var l = Nil.list();
+
+		var p: Map<K, V> = this;
+	  	while(p.nonEmpty) {
+			l = l.append(p._head._2);
+			p = cast p._tail;
+	  	}
+	  	
+	  	return l;
 	}
 
 	override private function get_productArity() : Int {

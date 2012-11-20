@@ -7,14 +7,6 @@ import funk.tuple.Tuple2;
 
 interface IMap<K, V> implements IProduct, implements ICollection<ITuple2<K, V>> {
 
-    var head(get_head, never) : ITuple2<K, V>;
-
-    var headOption(get_headOption, never) : IOption<ITuple2<K, V>>;
-
-    var tail(get_tail, never) : IMap<K, V>;
-
-    var tailOption(get_tailOption, never) : IOption<IMap<K, V>>;
-
 	var nonEmpty(dynamic, never) : Bool;
 
     var flatten(dynamic, never) : IMap<K, V>;
@@ -23,25 +15,29 @@ interface IMap<K, V> implements IProduct, implements ICollection<ITuple2<K, V>> 
 
 	var zipWithIndex(dynamic, never) : IMap<ITuple2<K, V>, Int>;
 
+    var keys(dynamic, never) : IList<K>;
+
+    var values(dynamic, never) : IList<V>;
+
     function containsKey(key : K) : Bool;
 
     function containsValue(value : V) : Bool;
 
-    function count(f : Function2<K, V, Bool>) : Int;
+    function count(f : Function1<ITuple2<K, V>, Bool>) : Int;
 
     function drop(n : Int) : IMap<K, V>;
 
     function dropRight(n : Int) : IMap<K, V>;
 
-    function dropWhile(f : Function2<K, V, Bool>) : IMap<K, V>;
+    function dropWhile(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V>;
 
-    function exists(f : Function2<K, V, Bool>) : Bool;
+    function exists(f : Function1<ITuple2<K, V>, Bool>) : Bool;
 
-    function filter(f : Function2<K, V, Bool>) : IMap<K, V>;
+    function filter(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V>;
 
-    function filterNot(f : Function2<K, V, Bool>) : IMap<K, V>;
+    function filterNot(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V>;
 
-    function find(f : Function2<K, V, Bool>) : IOption<ITuple2<K, V>>;
+    function find(f : Function1<ITuple2<K, V>, Bool>) : IOption<ITuple2<K, V>>;
 
     function flatMap(f : Function1<ITuple2<K, V>, IMap<K, V>>) : IMap<K, V>;
 
@@ -53,15 +49,15 @@ interface IMap<K, V> implements IProduct, implements ICollection<ITuple2<K, V>> 
     					f : Function2<ITuple2<K, V>, ITuple2<K, V>, ITuple2<K, V>>
     					): ITuple2<K, V>;
 
-    function forall(f : Function2<K, V, Bool>) : Bool;
+    function forall(f : Function1<ITuple2<K, V>, Bool>) : Bool;
 
-    function foreach(f : Function2<K, V, Void>) : Void;
+    function foreach(f : Function1<ITuple2<K, V>, Void>) : Void;
 
     function get(key : K) : IOption<ITuple2<K, V>>;
 
     function map(f : Function1<ITuple2<K, V>, ITuple2<K, V>>) : IMap<K, V>;
 
-    function partition(f : Function2<K, V, Bool>) : ITuple2<IMap<K, V>, IMap<K, V>>;
+    function partition(f : Function1<ITuple2<K, V>, Bool>) : ITuple2<IMap<K, V>, IMap<K, V>>;
 
     function add(key : K, value : V) : IMap<K, V>;
 

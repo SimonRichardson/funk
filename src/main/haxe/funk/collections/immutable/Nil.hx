@@ -5,6 +5,7 @@ import funk.collections.IListFactory;
 import funk.collections.IMap;
 import funk.collections.IMapFactory;
 import funk.collections.NilList;
+import funk.errors.ArgumentError;
 import funk.errors.IllegalOperationError;
 import funk.errors.RangeError;
 import funk.option.Option;
