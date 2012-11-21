@@ -2,7 +2,11 @@ package funk.collections.mutable;
 
 import funk.collections.IList;
 import funk.collections.IListFactory;
+import funk.collections.IMap;
+import funk.collections.IMapFactory;
 import funk.collections.NilList;
+import funk.errors.ArgumentError;
+import funk.errors.IllegalOperationError;
 import funk.errors.RangeError;
 import funk.option.Option;
 import funk.tuple.Tuple2;
@@ -10,7 +14,7 @@ import funk.tuple.Tuple2;
 using funk.collections.IteratorUtil;
 using funk.tuple.Tuple2;
 
-enum Lists {
+enum Collections {
 	Nil;
 }
 
@@ -20,10 +24,16 @@ class Nils {
 
 	private static var NIL_LIST : IList<Dynamic> = new NilList<Dynamic>(LIST_FACTORY);
 
-	inline public static function list<T>(n : Lists) : IList<T> {
-		return switch(n) {
-			case Nil: cast NIL_LIST;
-		}
+	private static var MAP_FACTORY : IMapFactory<Dynamic, Dynamic> = new MapFactory<Dynamic, Dynamic>();
+
+	private static var NIL_MAP : IMap<Dynamic, Dynamic> = new NilMap<Dynamic, Dynamic>(MAP_FACTORY);
+
+	inline public static function list<T>(n : Collections) : IList<T> {
+		return cast NIL_LIST;
+	}
+
+	inline public static function map<K, V>(m : Collections) : IMap<K, V> {
+		return cast NIL_MAP;
 	}
 }
 
@@ -40,3 +50,22 @@ private class ListFactory<T> implements IListFactory<T> {
 		return Nils.list(Nil);
 	}
 }
+
+private class MapFactory<K, V> implements IMapFactory<K, V> {
+
+	public function new() {
+	}
+
+	inline public function createMap(key : K, value : V, tail : IMap<K, V>) : IMap<K, V> {
+		return new Map<K, V>().add(key, value);
+	}
+
+	inline public function createNilMap() : IMap<K, V> {
+		return Nils.map(Nil);
+	}
+
+	inline public function createPair(key : K, value : V) : ITuple2<K, V> {
+		return new Pair(key, value);
+	}
+}
+

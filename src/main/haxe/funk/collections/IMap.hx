@@ -5,6 +5,17 @@ import funk.product.Product;
 import funk.option.Option;
 import funk.tuple.Tuple2;
 
+class Pair<K, V> extends Tuple2Impl<K, V> {
+
+    public function new(key : K, value : V) {
+        super(key, value);
+    }
+
+    override private function get_productPrefix() : String {
+        return "";
+    }
+}
+
 interface IMap<K, V> implements IProduct, implements ICollection<ITuple2<K, V>> {
 
 	var nonEmpty(dynamic, never) : Bool;
@@ -55,7 +66,7 @@ interface IMap<K, V> implements IProduct, implements ICollection<ITuple2<K, V>> 
 
     function get(key : K) : IOption<ITuple2<K, V>>;
 
-    function map(f : Function1<ITuple2<K, V>, ITuple2<K, V>>) : IMap<K, V>;
+    function map<K1, V1>(f : Function1<ITuple2<K, V>, ITuple2<K1, V1>>) : IMap<K1, V1>;
 
     function partition(f : Function1<ITuple2<K, V>, Bool>) : ITuple2<IMap<K, V>, IMap<K, V>>;
 

@@ -37,17 +37,6 @@ class Nils {
 	}
 }
 
-class Pair<K, V> extends Tuple2Impl<K, V> {
-
-	public function new(key : K, value : V) {
-		super(key, value);
-	}
-
-	override private function get_productPrefix() : String {
-		return "";
-	}
-}
-
 private class ListFactory<T> implements IListFactory<T> {
 
 	public function new() {

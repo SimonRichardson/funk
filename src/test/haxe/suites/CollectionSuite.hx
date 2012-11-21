@@ -25,10 +25,14 @@ class CollectionSuite extends TestSuite
 		add(funk.collections.immutable.MapTest);
 		add(funk.collections.immutable.NilListTest);
 		add(funk.collections.immutable.NilMapTest);
+
 		add(funk.collections.IteratorUtilTest);
 		add(funk.collections.ListIteratorTest);
+
 		add(funk.collections.mutable.ListTest);
 		add(funk.collections.mutable.ListUtilTest);
+		add(funk.collections.mutable.MapTest);
 		add(funk.collections.mutable.NilListTest);
+		add(funk.collections.mutable.NilMapTest);
 	}
 }

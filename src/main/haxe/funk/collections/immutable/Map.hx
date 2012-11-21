@@ -401,9 +401,9 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	return None.toInstance();
 	}
 
-	public function map(f : Function1<ITuple2<K, V>, ITuple2<K, V>>) : IMap<K, V> {
+	public function map<K1, V1>(f : Function1<ITuple2<K, V>, ITuple2<K1, V1>>) : IMap<K1, V1> {
 		var n: Int = size;
-	  	var buffer: Array<Map<K, V>> = new Array<Map<K, V>>();
+	  	var buffer: Array<Map<K1, V1>> = new Array<Map<K1, V1>>();
 	  	var m: Int = n - 1;
 
 	  	var p: IMap<K, V> = this;
@@ -412,7 +412,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  		var imp : Map<K, V> = cast p;
 	  		var head : ITuple2<K, V> = imp._head;
 
-			buffer[i] = new Map<K, V>(f(head), null);
+			buffer[i] = new Map<K1, V1>(f(head), null);
 
 			p = imp._tail;
 	  	}
@@ -471,7 +471,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			}
 	  	}
 
-	  	return new Pair(m > 0 ? left[0] : Nil.map(), o > 0 ? right[0] : Nil.map());
+	  	return tuple2(m > 0 ? left[0] : Nil.map(), o > 0 ? right[0] : Nil.map()).toInstance();
 	}
 
 	override public function equals(that: IFunkObject): Bool {

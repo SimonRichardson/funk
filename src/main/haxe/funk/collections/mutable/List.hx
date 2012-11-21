@@ -234,7 +234,7 @@ class List<T> extends Product, implements IList<T> {
 	}
 
 	public function map<E>(f : Function1<T, E>) : IList<E> {
-		var l:List<E> = new List<E>();
+		var l: List<E> = new List<E>();
 
 		var total : Int = _data.length;
 		for(i in 0...total) {
@@ -300,8 +300,8 @@ class List<T> extends Product, implements IList<T> {
 	}
 
 	public function reduceRight(f : Function2<T, T, T>) : IOption<T> {
-		var value : T = _data[_data.length - 1];
 		var index : Int = _data.length - 1;
+		var value : T = _data[index];
 		while(--index > -1) {
 			value = f(value, _data[index]);
 		}
@@ -523,16 +523,7 @@ class List<T> extends Product, implements IList<T> {
 	}
 
 	private function get_toArray() : Array<T> {
-		var n: Int = size;
-      	var array: Array<T> = new Array<T>();
-      	var p: IList<T> = this;
-
-     	for(i in 0...n) {
-        	array[i] = p.head;
-        	p = p.tail;
-      	}
-
-	    return array;
+	    return _data.slice(0, _data.length);
 	}
 
 	private function get_flatten() : IList<T> {

@@ -2,6 +2,7 @@ package funk.collections;
 
 import funk.Funk;
 import funk.collections.IList;
+import funk.collections.IMap;
 import funk.collections.IteratorUtil;
 import funk.collections.immutable.Nil;
 import funk.errors.ArgumentError;
@@ -128,8 +129,8 @@ class NilMap<K, V> extends Product, implements IMap<K, V> {
 		return None.toInstance();
 	}
 
-	public function map(f : Function1<ITuple2<K, V>, ITuple2<K, V>>) : IMap<K, V> {
-		return _factory.createNilMap();
+	public function map<K1, V1>(f : Function1<ITuple2<K, V>, ITuple2<K1, V1>>) : IMap<K1, V1> {
+		return cast _factory.createNilMap();
 	}
 
 	public function partition(	f : Function1<ITuple2<K, V>, Bool>
