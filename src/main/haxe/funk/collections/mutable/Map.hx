@@ -120,7 +120,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			index--;
 		}
 
-	  	_data.splice(0, _data.length - index);
+	  	_data.splice(0, (_data.length - 1) - index);
 
 	  	return this;
 	}
@@ -347,20 +347,22 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  	return this;
 	}
 
-	public function reduceLeft(f : Function2<ITuple2<K, V>, ITuple2<K, V>, ITuple2<K, V>>) : IOption<ITuple2<K, V>> {
-		var value : ITuple2<K, V> = _data[0];
-		var total : Int = _data.length;
-		for(i in 1...total) {
-			value = f(value, _data[i]);
-		}
-		return Some(value).toInstance();
-	}
-
-	public function reduceRight(f : Function2<ITuple2<K, V>, ITuple2<K, V>, ITuple2<K, V>>) : IOption<ITuple2<K, V>> {
+	public function reduceLeft(	f : Function2<ITuple2<K, V>, ITuple2<K, V>, ITuple2<K, V>>
+								) : IOption<ITuple2<K, V>> {
 		var index : Int = _data.length - 1;
 		var value : ITuple2<K, V> = _data[index];
 		while(--index > -1) {
 			value = f(value, _data[index]);
+		}
+		return Some(value).toInstance();
+	}
+
+	public function reduceRight(	f : Function2<ITuple2<K, V>, ITuple2<K, V>, ITuple2<K, V>>
+									) : IOption<ITuple2<K, V>> {
+		var value : ITuple2<K, V> = _data[0];
+		var total : Int = _data.length;
+		for(i in 1...total) {
+			value = f(value, _data[i]);
 		}
 		return Some(value).toInstance();
 	}
@@ -377,7 +379,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
         }
 
 		var t = Std.int(Math.min(n, size));
-		_data = _data.splice(0, t);
+		_data = _data.splice(_data.length - t, t);
 
       	return this;
 	}
@@ -394,15 +396,14 @@ class Map<K, V> extends Product, implements IMap<K, V> {
         }
 
 		var t = Std.int(Math.min(n, size));
-		_data = _data.splice(_data.length - t, t);
+		_data = _data.splice(0, t);
 
       	return this;
 	}
 
 	public function takeWhile(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
 		var buffer:Array<ITuple2<K, V>> = new Array<ITuple2<K, V>>();
-		var n = size;
-		for(i in 0...n) {
+		for(i in 0..._data.length) {
 			var item : ITuple2<K, V> = _data[i];
 			if(f(item)) {
 				buffer.push(item);
@@ -450,7 +451,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 
 	override public function productElement(i : Int) : Dynamic {
 		if(i >= 0 && i < size) {
-			return _data[i];
+			return _data[(size - 1) - i];
 		}
 
 	  	throw new RangeError();
@@ -489,7 +490,9 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	}
 
 	private function get_toArray() : Array<ITuple2<K, V>> {
-		return _data.slice(0, _data.length);
+		var data = _data.slice(0, _data.length);
+		data.reverse();
+		return data;
 	}
 
 	private function get_flatten() : IMap<K, V> {

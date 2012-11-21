@@ -231,7 +231,7 @@ class MapTestBase {
 	}
 
 	@Test
-	public function when_dropWhile__return_size_is_5() : Void {
+	public function when_dropWhile__return_size_is_4() : Void {
 		generateIntMap(5).dropWhile(function(tuple : ITuple2<Dynamic, Dynamic>):Bool {
 			return tuple._2 <= 0;
 		}).size.areEqual(5);
