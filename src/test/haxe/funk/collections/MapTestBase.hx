@@ -661,7 +661,7 @@ class MapTestBase {
 
 	@Test
 	public function when_reduceRight__should_return_fedcba() : Void {
-		var result : IOption<ITuple2<String, String>> = cast convertToMap("abcdef").reduceRight(function(a, b) {
+		var result = convertToMap("abcdef").reduceRight(function(a : ITuple2<String, String>, b : ITuple2<String, String>) {
 			return tuple2(a._1 + b._1, a._2 + b._2).toInstance();
 		});
 		Assert.areEqual(result.get()._2, "fedcba");
@@ -700,7 +700,7 @@ class MapTestBase {
 
 	@Test
 	public function when_reduceLeft__should_return_abcdef() : Void {
-		Assert.areEqual(convertToMap("abcdef").reduceLeft(function(a, b) {
+		Assert.areEqual(convertToMap("abcdef").reduceLeft(function(a : ITuple2<String, String>, b : ITuple2<String, String>) {
 			return tuple2(a._1 + b._1, a._2 + b._2).toInstance();
 		}).get()._2, "abcdef");
 	}
