@@ -424,37 +424,37 @@ class MapTestBase {
 
 	@Test
 	public function when_map__should_calling_get_1_return_2() : Void {
-		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
+		Assert.areEqual(actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(1).get()._2.areEqual(2);
+		}).get(1).get()._2, 2);
 	}
 
 	@Test
 	public function when_map__should_calling_get_2_return_3() : Void {
-		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
+		Assert.areEqual(actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(2).get()._2.areEqual(3);
+		}).get(2).get()._2, 3);
 	}
 
 	@Test
 	public function when_map__should_calling_get_3_return_4() : Void {
-		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
+		Assert.areEqual(actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(3).get()._2.areEqual(4);
+		}).get(3).get()._2, 4);
 	}
 
 	@Test
 	public function when_map__should_calling_get_4_return_5() : Void {
-		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
+		Assert.areEqual(actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, t._2 + 1).toInstance();
-		}).get(4).get()._2.areEqual(5);
+		}).get(4).get()._2, 5);
 	}
 
 	@Test
 	public function when_map__should_calling_get_0_return_Hello1() : Void {
-		actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
+		Assert.areEqual(actual.map(function(t) : ITuple2<Dynamic, Dynamic> {
 			return tuple2(t._1, "Hello" + t._2).toInstance();
-		}).get(1).get()._2.areEqual("Hello1");
+		}).get(1).get()._2, "Hello1");
 	}
 
 	@Test
