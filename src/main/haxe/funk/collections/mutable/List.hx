@@ -102,7 +102,7 @@ class List<T> extends Product, implements IList<T> {
 
 		_data.splice(cast(Math.max(0, _data.length - n)) | 0, _data.length);
 
-		return this;
+		return _data.length == 0 ? Nil.list() : this;
 	}
 
 	public function dropWhile(f : Function1<T, Bool>) : IList<T> {

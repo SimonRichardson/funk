@@ -87,27 +87,22 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 
 	public function drop(n : Int) : IMap<K, V> {
 		if(n < 0){
-			throw new ArgumentError("n must be positive");
-		}
+            throw new ArgumentError("n must be positive");
+        }
 
-		var index = Std.int(Math.min(n, size));
+		_data.splice(cast(Math.max(0, _data.length - n)) | 0, _data.length);
 
-	  	_data.splice(0, index);
-
-	  	return _data.length == 0 ? Nil.map() : this;
+		return _data.length == 0 ? Nil.map() : this;
 	}
 
 	public function dropRight(n : Int) : IMap<K, V> {
 		if(n < 0){
-			throw new ArgumentError("n must be positive");
-		}
+            throw new ArgumentError("n must be positive");
+        }
 
-		var length = _data.length;
-		var index = cast(Math.max(0, _data.length - n)) | 0;
+		_data.splice(0, Std.int(Math.min(n, size)));
 
-	  	_data.splice(0, length);
-
-	  	return this;
+		return _data.length == 0 ? Nil.map() : this;
 	}
 
 	public function dropWhile(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
@@ -120,9 +115,12 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 			index--;
 		}
 
-	  	_data.splice(0, (_data.length - 1) - index);
+		var v = _data.length - index;
+		if (v > 0) {
+	  		_data.splice(0, v);
+	  	}
 
-	  	return this;
+	  	return _data.length == 0 ? Nil.map() : this;
 	}
 
 	public function exists(f : Function1<ITuple2<K, V>, Bool>) : Bool {
