@@ -18,12 +18,12 @@ class Tuples1 {
 				switch (b) {
 					case tuple1(t1_1):
 						// Create the function when needed.
-						var eq : Predicate2<T, T> = function(a, b) : Bool {
-							return null == func ? func(a, b) : a == b;
+						var eq : Predicate2<T1, T1> = function(a, b) : Bool {
+							return null != func ? func(a, b) : a == b;
 						};
 
 						eq(t1_0, t1_1);
-				} 
+				}
 		}
 	}
 

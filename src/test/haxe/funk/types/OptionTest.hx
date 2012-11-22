@@ -91,7 +91,7 @@ class OptionTest {
     public function when_orElse_on_None_should_calling_orElse_return_a_valid_option_type() {
     	None.orElse(function () {
             return Some(true);
-        }).isType(Option);
+        }).areEqual(Some(true));
     }
 
     @Test
@@ -133,38 +133,20 @@ class OptionTest {
 
     @Test
     public function when_toEither_on_None_should_return_Either() {
-        None.toEither(function(){
+        Options.toEither(None, function(){
             return false;
-        }).isType(Either);
+        }).areEqual(Left(false));
     }
 
     @Test
     public function when_toOption_on_null_should_return_Option() {
-        Options.toOption(null).isType(Option);
+        Options.toOption(null).areEqual(None);
     }
 
     @Test
     public function when_toOption_on_null_should_return_None() {
         Options.toOption(null).isEmpty().isTrue();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @Test
     public function should_creating_Some_should_not_be_null() {
@@ -239,9 +221,10 @@ class OptionTest {
 
     @Test
     public function should_calling_filter_return_a_valid_option() {
-        Some({}).filter(function(v){
+        var value = {};
+        Some(value).filter(function(v){
             return true;
-        }).isEnum(Option);
+        }).areEqual(Some(value));
     }
 
     @Test
@@ -298,7 +281,7 @@ class OptionTest {
     public function should_calling_flatmap_on_Some_should_return_valid_Option() {
         Some({}).flatMap(function(v){
             return None;
-        }).isEnum(Option);
+        }).areEqual(None);
     }
 
     @Test
@@ -322,9 +305,10 @@ class OptionTest {
 
     @Test
     public function should_calling_map_on_Some_should_return_valid_Option() {
-        Some({}).map(function(v){
+        var value = {};
+        Some(value).map(function(v){
             return v;
-        }).isEnum(Option);
+        }).areEqual(Some(value));
     }
 
     @Test
@@ -390,14 +374,14 @@ class OptionTest {
 
     @Test
     public function when_toEither_on_Some_should_return_Either() {
-        Some(true).toEither(function(){
+        Options.toEither(Some(true), function(){
             return false;
-        }).isEnum(Either);
+        }).areEqual(Right(true));
     }
 
     @Test
     public function when_toOption_on_true_should_return_Option() {
-        Options.toOption(true).isType(Option);
+        Options.toOption(true).areEqual(Some(true));
     }
 
     @Test

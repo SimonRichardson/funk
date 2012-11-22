@@ -32,7 +32,7 @@ class Lazys {
 					switch(value) {
 						case Some(value): value;
 						case None:
-							value = Some(call(func));
+							value = Some(call(lax));
 							value.get();
 					}
 			}

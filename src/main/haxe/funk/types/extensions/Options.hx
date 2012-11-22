@@ -79,10 +79,10 @@ class Options {
 		return switch (a) {
 			case Some(value0):
 				switch(b) {
-					case Some(value1): 
+					case Some(value1):
 						// Create the function when needed.
 						var eq : Predicate2<T, T> = function(a, b) : Bool {
-							return null == func ? func(a, b) : a == b;
+							return null != func ? func(a, b) : a == b;
 						};
 
 						eq(value0, value1);
@@ -96,7 +96,7 @@ class Options {
 		}
 	}
 
-	public static function toLeft<T1, T2>(option : Option<T1>, func : Function0<T2>) : Either<T2, T1> {
+	public static function toLeft<T1, T2>(option : Option<T1>, func : Function0<T2>) : Either<T1, T2> {
 		return switch (option) {
 			case Some(value): Left(value);
 			case None: Right(func());

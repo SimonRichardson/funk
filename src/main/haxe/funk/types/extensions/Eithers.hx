@@ -65,9 +65,9 @@ class Eithers {
 		}
 	}
 
-	public static function fold<T1, T2, T3>(	either : Either<T1, T2>, 
-												funcLeft : Function1<T1, T3>, 
-												funcRight : Function1<T1, T3>
+	public static function fold<T1, T2, T3>(	either : Either<T1, T2>,
+												funcLeft : Function1<T1, T3>,
+												funcRight : Function1<T2, T3>
 												) : T3 {
 		return switch(either) {
 			case Left(value): funcLeft(value);
@@ -78,19 +78,19 @@ class Eithers {
 	public static function foldLeft<T1, T2, T3>(either : Either<T1, T2>, func : Function1<T1, T3>) : T3 {
 		return switch(either) {
 			case Left(value): func(value);
-			case Right(value): value;
+			case Right(value): Funk.error(Errors.IllegalOperationError);
 		}
 	}
 
-	public static function foldRight<T1, T2, T3>(either : Either<T1, T2>, func : Function1<T1, T3>) : T3 {
+	public static function foldRight<T1, T2, T3>(either : Either<T1, T2>, func : Function1<T2, T3>) : T3 {
 		return switch(either) {
-			case Left(value): value;
+			case Left(value): Funk.error(Errors.IllegalOperationError);
 			case Right(value): func(value);
 		}
 	}
 
-	public static function map<T1, T2, T3, T4>(	either : Either<T1, T2>, 
-												funcLeft : Function1<T1, T3>, 
+	public static function map<T1, T2, T3, T4>(	either : Either<T1, T2>,
+												funcLeft : Function1<T1, T3>,
 												funcRight : Function1<T2, T4>
 												) : Either<T3, T4> {
 		return switch(either) {
@@ -113,18 +113,18 @@ class Eithers {
 		}
 	}
 
-	public static function equals<T1, T2>(	a : Either<T1, T2>, 
-											b : Either<T1, T2>, 
+	public static function equals<T1, T2>(	a : Either<T1, T2>,
+											b : Either<T1, T2>,
 											?funcLeft : Predicate2<T1, T1>,
 											?funcRight : Predicate2<T2, T2>
 											) : Bool {
 		return switch (a) {
 			case Left(left0):
 				switch (b) {
-					case Left(left1): 
+					case Left(left1):
 						// Create the function when needed.
 						var eqLeft : Predicate2<T1, T1> = function(a, b) : Bool {
-							return null == funcLeft ? funcLeft(a, b) : a == b;
+							return null != funcLeft ? funcLeft(a, b) : a == b;
 						};
 
 						eqLeft(left0, left1);
@@ -133,10 +133,10 @@ class Eithers {
 			case Right(right0):
 				switch (b) {
 					case Left(_): false;
-					case Right(right1): 
+					case Right(right1):
 						// Create the function when needed.
 						var eqRight : Predicate2<T2, T2> = function(a, b) : Bool {
-							return null == funcRight ? funcRight(a, b) : a == b;
+							return null != funcRight ? funcRight(a, b) : a == b;
 						};
 
 						eqRight(right0, right1);
@@ -152,11 +152,10 @@ class Eithers {
 	}
 
 	public static function toString<T1, T2>(either : Either<T1, T2>) : String {
-		var prefix = switch (either) {
-			case Left(either): 'Left';
-			case Right(either): 'Right';
+		return switch (either) {
+			case Left(value): Std.format('Left($value)');
+			case Right(value): Std.format('Right($value)');
 		}
-		return Std.format('$prefix($value)');
 	}
 
 	public static function toEither<T, T>(any : Null<T>) : Either<T, T> {
