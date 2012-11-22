@@ -1,18 +1,43 @@
 package funk;
 
+import haxe.PosInfos;
+
+enum Errors {
+	Abstract;
+	AbstractMethod;
+	ArgumentError(?message : String);
+	IllegalOperationError;
+	NoSuchElementError;
+	RangeError;
+	TypeError(?message : String);
+}
+
 class Funk {
 
+	@:noUsing
+	public static function error<T>(type : Errors, ?posInfo : PosInfos) : T {
+		var message = switch(type) {
+			case Abstract: 
+				'Type is abstract, you must extend it';
+			case AbstractMethod: 
+				'Method is abstract, you must override it';
+			case ArgumentError(msg): 
+				msg == null ? 'Arguments supplied are not expected' : msg;
+			case IllegalOperationError: 
+				'Required operation can not be executed';
+			case NoSuchElementError: 
+				'No such element exists';
+			case RangeError: 
+				'Value is outside of the expected range';
+			case TypeError(msg): 
+				msg == null ? 'Type error was thrown' : msg;
+		}
+		throw message;
+		return null;
+	}
+
+	@:noUsing
 	public static function main() : Void {
 	}
-}
 
-enum Unit {
-	Unit;
 }
-
-typedef Function0<R> = Void -> R;
-typedef Function1<T1, R> = T1 -> R;
-typedef Function2<T1, T2, R> = T1 -> T2 -> R;
-typedef Function3<T1, T2, T3, R> = T1 -> T2 -> T3 -> R;
-typedef Function4<T1, T2, T3, T4, R> = T1 -> T2 -> T3 -> T4 -> R;
-typedef Function5<T1, T2, T3, T4, T5, R> = T1 -> T2 -> T3 -> T4 -> T5 -> R;
