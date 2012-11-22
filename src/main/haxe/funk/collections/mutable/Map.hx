@@ -108,11 +108,11 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	public function dropWhile(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
 		var total = _data.length;
 		var index = total;
-		for(i in 0...total) {
-			if(!f(_data[i])) {
+		while(--index > -1) {
+			if(!f(_data[index])) {
+				index++;
 				break;
 			}
-			index--;
 		}
 
 		var v = _data.length - index;
@@ -401,8 +401,9 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 
 	public function takeWhile(f : Function1<ITuple2<K, V>, Bool>) : IMap<K, V> {
 		var buffer:Array<ITuple2<K, V>> = new Array<ITuple2<K, V>>();
-		for(i in 0..._data.length) {
-			var item : ITuple2<K, V> = _data[i];
+		var index = _data.length;
+		while(--index > -1) {
+			var item : ITuple2<K, V> = _data[index];
 			if(f(item)) {
 				buffer.push(item);
 			} else {
@@ -471,9 +472,11 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 		var n: Int = size;
 	  	var buffer = new Map<ITuple2<K, V>, Int>();
 
-		for(i in 0...n) {
-	  		var head : ITuple2<K, V> = _data[i];
-			buffer._data[i] = new Pair(head, i);
+	  	var total = _data.length;
+		var index = total;
+		while(--index > -1) {
+	  		var head : ITuple2<K, V> = _data[index];
+			buffer._data.push(new Pair(head, (total - 1) - index));
 	  	}
 
 	  	return buffer;

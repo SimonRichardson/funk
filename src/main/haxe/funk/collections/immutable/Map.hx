@@ -175,7 +175,7 @@ class Map<K, V> extends Product, implements IMap<K, V> {
 	  		var head : ITuple2<K, V> = imp._head;
 
 			if(!f(head)) {
-		  		return imp;
+		  		return p;
 			}
 
 			p = imp._tail;
