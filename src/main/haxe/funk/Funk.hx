@@ -17,19 +17,19 @@ class Funk {
 	@:noUsing
 	public static function error<T>(type : Errors, ?posInfo : PosInfos) : T {
 		var message = switch(type) {
-			case Abstract: 
+			case Abstract:
 				'Type is abstract, you must extend it';
-			case AbstractMethod: 
+			case AbstractMethod:
 				'Method is abstract, you must override it';
-			case ArgumentError(msg): 
+			case ArgumentError(msg):
 				msg == null ? 'Arguments supplied are not expected' : msg;
-			case IllegalOperationError: 
+			case IllegalOperationError:
 				'Required operation can not be executed';
-			case NoSuchElementError: 
+			case NoSuchElementError:
 				'No such element exists';
-			case RangeError: 
+			case RangeError:
 				'Value is outside of the expected range';
-			case TypeError(msg): 
+			case TypeError(msg):
 				msg == null ? 'Type error was thrown' : msg;
 		}
 		throw message;

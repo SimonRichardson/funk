@@ -96,17 +96,25 @@ class Options {
 		}
 	}
 
-	public static function toLeft<T1, T2>(option : Option<T1>, func : Function0<T2>) : Either<T1, T2> {
+	public static function toLeft<T1, T2>(option : Option<T1>, ?func : Function0<T2>) : Either<T1, T2> {
 		return switch (option) {
 			case Some(value): Left(value);
-			case None: Right(func());
+			case None:
+				if (null == func) {
+					Funk.error(Errors.ArgumentError());
+				}
+				Right(func());
 		}
 	}
 
-	public static function toRight<T1, T2>(option : Option<T1>, func : Function0<T2>) : Either<T2, T1> {
+	public static function toRight<T1, T2>(option : Option<T1>, ?func : Function0<T2>) : Either<T2, T1> {
 		return switch (option) {
 			case Some(value): Right(value);
-			case None: Left(func());
+			case None:
+				if (null == func) {
+					Funk.error(Errors.ArgumentError());
+				}
+				Left(func());
 		}
 	}
 
@@ -122,6 +130,10 @@ class Options {
 			case Some(value): Std.format('Some($value)');
 			case None: 'None';
 		}
+	}
+
+	public static function pure<T>(any : T) : Option<T> {
+		return Some(any);
 	}
 
 	public static function toOption<T>(any : Null<T>) : Option<T> {

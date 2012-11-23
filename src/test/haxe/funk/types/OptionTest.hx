@@ -242,7 +242,7 @@ class OptionTest {
     }
 
     @Test
-    public function should_calling_foreach_on_Some_iterate_once() {
+    public function should_calling_each_on_Some_iterate_once() {
         var count = 0;
         Some({}).each(function(v){
             count++;
@@ -251,11 +251,27 @@ class OptionTest {
     }
 
     @Test
-    public function should_calling_foreach_on_Some_pass_value() {
+    public function should_calling_each_on_Some_pass_value() {
         var value = {};
         Some(value).each(function(v){
             value.areEqual(v);
         });
+    }
+
+    @Test
+    public function should_calling_flatten_on_Some_return_Some_with_instance() {
+        var value = {};
+        Some(Some(value)).flatten().areEqual(Some(value));
+    }
+
+    @Test
+    public function should_calling_flatten_on_Some_return_None() {
+        Some(None).flatten().areEqual(None);
+    }
+
+    @Test
+    public function should_calling_flatten_on_None_return_None() {
+        None.flatten().areEqual(None);
     }
 
     @Test
@@ -338,6 +354,13 @@ class OptionTest {
     }
 
     @Test
+    public function when_passing_equality_function_to_equals_on_different_options_values__should_return_false() {
+        Some({}).equals(Some({}), function(a, b) {
+            return a == b;
+        }).isFalse();
+    }
+
+    @Test
     public function when_equals_on_Some_false_should_not_equal_None() {
         Some(false).equals(None).isFalse();
     }
@@ -355,6 +378,52 @@ class OptionTest {
     @Test
     public function when_equals_on_Some_true_should_not_equal_None() {
         Some(true).equals(None).isFalse();
+    }
+
+    @Test
+    public function when_toLeft_on_Some_should_return_Left() {
+        Some(true).toLeft().areEqual(Left(true));
+    }
+
+    @Test
+    public function when_toLeft_on_None_should_return_Right() {
+        None.toLeft(function(){
+            return false;
+        }).areEqual(Right(false));
+    }
+
+    @Test
+    public function when_toLeft_on_None_should_throw_error() {
+        var called = try {
+            None.toLeft();
+            false;
+        } catch(error : Dynamic) {
+            true;
+        }
+        called.isTrue();
+    }
+
+    @Test
+    public function when_toRight_on_Some_should_return_Right() {
+        Some(true).toRight().areEqual(Right(true));
+    }
+
+    @Test
+    public function when_toRight_on_None_should_return_Left() {
+        None.toRight(function(){
+            return false;
+        }).areEqual(Left(false));
+    }
+
+    @Test
+    public function when_toRight_on_None_should_throw_error() {
+        var called = try {
+            None.toRight();
+            false;
+        } catch(error : Dynamic) {
+            true;
+        }
+        called.isTrue();
     }
 
     @Test
@@ -387,5 +456,15 @@ class OptionTest {
     @Test
     public function when_toOption_on_true_should_return_Some() {
         Options.toOption(true).isDefined().isTrue();
+    }
+
+    @Test
+    public function when_pure_on_null_should_return_Some() {
+        Options.pure(null).areEqual(Some(null));
+    }
+
+    @Test
+    public function when_pure_on_true_should_return_Some() {
+        Options.pure(true).areEqual(Some(true));
     }
 }
