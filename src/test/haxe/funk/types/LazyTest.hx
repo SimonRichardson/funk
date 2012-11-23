@@ -54,4 +54,20 @@ class LazyTest {
 			return instance;
 		}).call().areEqual(instance);
 	}
+
+	@Test
+	public function when_calling_lazy_apply_with_args__should_call_func() : Void {
+		var instance = {};
+		lazy(function() {
+			return instance;
+		}).apply(this, []).areEqual(instance);
+	}
+
+	@Test
+	public function when_calling_lazy_apply_with_no_args__should_call_func() : Void {
+		var instance = {};
+		lazy(function() {
+			return instance;
+		}).apply(this).areEqual(instance);
+	}
 }
