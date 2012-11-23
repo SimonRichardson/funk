@@ -8,8 +8,8 @@ import funk.types.OptionTest;
 import funk.types.Tuple1Test;
 import funk.types.Tuple2Test;
 import funk.types.Tuple3Test;
-// import funk.types.Tuple4Test;
-// import funk.types.Tuple5Test;
+import funk.types.Tuple4Test;
+import funk.types.Tuple5Test;
 
 class TypesSuite extends TestSuite
 {
@@ -27,7 +27,7 @@ class TypesSuite extends TestSuite
 		add(funk.types.Tuple1Test);
 		add(funk.types.Tuple2Test);
 		add(funk.types.Tuple3Test);
-		// add(funk.types.Tuple4Test);
-		// add(funk.types.Tuple5Test);
+		add(funk.types.Tuple4Test);
+		add(funk.types.Tuple5Test);
 	}
 }

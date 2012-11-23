@@ -1,132 +1,112 @@
-package funk.tuple;
+package funk.types;
 
-import funk.errors.NoSuchElementError;
-import funk.tuple.Tuple4;
+import funk.types.Predicate2;
+import funk.types.Tuple4;
+import funk.types.Option;
+import funk.types.extensions.Tuples4;
+import funk.types.extensions.Options;
 import massive.munit.Assert;
 
-using funk.tuple.Tuple4;
+using funk.types.extensions.Tuples4;
+using funk.types.extensions.Options;
 using massive.munit.Assert;
 
 class Tuple4Test {
 
 	@Test
+	public function when_calling_toString__should_return_valid_string() : Void {
+		tuple4(1, 'a', 3, 'b').toString().areEqual('(1, a, 3, b)');
+	}
+
+	@Test
 	public function should_allow_creation_of_enum() : Void {
-		tuple4(1, "a", 3.3, true).isNotNull();
+		tuple4(1, 'a', 3, 'b').isNotNull();
 	}
 
 	@Test
 	public function should_calling__1_is_not_null() : Void {
-		tuple4(1, "a", 3.3, true)._1().isNotNull();
-	}
-
-	@Test
-	public function should_calling__2_is_not_null() : Void {
-		tuple4(1, "a", 3.3, true)._2().isNotNull();
-	}
-
-	@Test
-	public function should_calling__3_is_not_null() : Void {
-		tuple4(1, "a", 3.3, true)._3().isNotNull();
-	}
-
-	@Test
-	public function should_calling__4_is_not_null() : Void {
-		tuple4(1, "a", 3.3, true)._4().isNotNull();
+		tuple4(1, 'a', 3, 'b')._1().isNotNull();
 	}
 
 	@Test
 	public function should_calling__1_is_1() : Void {
-		tuple4(1, "a", 3.3, true)._1().areEqual(1);
+		tuple4(1, 'a', 3, 'b')._1().areEqual(1);
+	}
+
+	@Test
+	public function should_calling__2_is_not_null() : Void {
+		tuple4(1, 'a', 3, 'b')._2().isNotNull();
 	}
 
 	@Test
 	public function should_calling__2_is_a() : Void {
-		tuple4(1, "a", 3.3, true)._2().areEqual("a");
+		tuple4(1, 'a', 3, 'b')._2().areEqual('a');
 	}
 
 	@Test
-	public function should_calling__3_is_3_3() : Void {
-		tuple4(1, "a", 3.3, true)._3().areEqual(3.3);
+	public function should_calling__3_is_not_null() : Void {
+		tuple4(1, 'a', 3, 'b')._3().isNotNull();
 	}
 
 	@Test
-	public function should_calling__4_is_true() : Void {
-		tuple4(1, "a", 3.3, true)._4().areEqual(true);
+	public function should_calling__3_is_3() : Void {
+		tuple4(1, 'a', 3, 'b')._3().areEqual(3);
 	}
 
 	@Test
-	public function should_calling_instance_return_not_null() : Void {
-		tuple4(1, "a", 3.3, true).toInstance().isNotNull();
+	public function should_calling__4_is_not_null() : Void {
+		tuple4(1, 'a', 3, 'b')._4().isNotNull();
 	}
 
 	@Test
-	public function should_calling_instance_return_instance_of_ITuple4() : Void {
-		tuple4(1, "a", 3.3, true).toInstance().isType(ITuple4);
+	public function should_calling__4_is_b() : Void {
+		tuple4(1, 'a', 3, 'b')._4().areEqual('b');
 	}
 
 	@Test
-	public function should_calling_productArity_return_4() : Void {
-		tuple4(1, "a", 3.3, true).toInstance().productArity.areEqual(4);
+	public function when_calling_equals_with_same_values__should_be_true() : Void {
+		tuple4(1, 'a', 3, 'b').equals(tuple4(1, 'a', 3, 'b')).isTrue();
 	}
 
 	@Test
-	public function should_calling_productPrefix_return_Tuple4() : Void {
-		tuple4(1, "a", 3.3, true).toInstance().productPrefix.areEqual("Tuple4");
+	public function when_calling_equals_with_different_values__should_be_false() : Void {
+		tuple4(1, 'a', 3, 'b').equals(tuple4(2, 'b', 3, 'd')).isFalse();
 	}
 
 	@Test
-	public function should_calling_toString_return_Tuple4() : Void {
-		tuple4(1, "a", 3.3, true).toInstance().toString().areEqual("Tuple4(1, a, 3.3, true)");
+	public function when_calling_equals_with_optional_equality__should_be_false() : Void {
+		tuple4(Some(1), Some('a'), Some(3), Some('b')).equals(tuple4(Some(1), Some('a'), Some(3), Some('b')), function(a, b) {
+			return a.get() == b.get();
+		}).isFalse();
 	}
 
 	@Test
-	public function should_calling_productElement_0_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).toInstance().productElement(0).areEqual(1.1);
+	public function when_calling_equals_with_optional_second_equality__should_be_false() : Void {
+		tuple4(Some(1), Some('a'), Some(3), Some('b')).equals(tuple4(Some(1), Some('a'), Some(3), Some('b')), null, function(a, b) {
+			return a.get() == b.get();
+		}).isFalse();
 	}
 
 	@Test
-	public function should_calling_productElement_1_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).toInstance().productElement(1).areEqual("a");
+	public function when_calling_equals_with_optional_third_equality__should_be_false() : Void {
+		tuple4(Some(1), Some('a'), Some(3), Some('b')).equals(tuple4(Some(1), Some('a'), Some(3), Some('b')), null, null, function(a, b) {
+			return a.get() == b.get();
+		}).isFalse();
 	}
 
 	@Test
-	public function should_calling_productElement_2_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).toInstance().productElement(2).areEqual(3.3);
+	public function when_calling_equals_with_optional_fourth_equality__should_be_false() : Void {
+		tuple4(Some(1), Some('a'), Some(3), Some('b')).equals(tuple4(Some(1), Some('a'), Some(3), Some('b')), null, null, null, function(a, b) {
+			return a.get() == b.get();
+		}).isFalse();
 	}
 
 	@Test
-	public function should_calling_productElement_3_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).toInstance().productElement(3).areEqual(true);
-	}
+	public function when_calling_equals_with_optional_all_equality__should_be_true() : Void {
+		var equality : Predicate2<Option<Dynamic>, Option<Dynamic>> = function(a, b) : Bool {
+			return a.get() == b.get();
+		};
 
-	@Test
-	public function should_calling__1_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).toInstance()._1.areEqual(1.1);
-	}
-
-	@Test
-	public function should_calling__2_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).toInstance()._2.areEqual("a");
-	}
-
-	@Test
-	public function should_calling__3_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).toInstance()._3.areEqual(3.3);
-	}
-
-	@Test
-	public function should_calling__4_return_value() : Void {
-		tuple4(1.1, "a", 3.3, true).toInstance()._4.areEqual(true);
-	}
-
-	@Test
-	public function should_calling_productElement_99_return_value() : Void {
-		var called = try {
-			tuple4(1.1, "a", 3.3, true).toInstance().productElement(99);
-			false;
-		} catch(error : NoSuchElementError) {
-			true;
-		}
-		called.isTrue();
+		tuple4(Some(1), Some('a'), Some(3), Some('b')).equals(tuple4(Some(1), Some('a'), Some(3), Some('b')), equality, equality, equality, equality).isTrue();
 	}
 }
