@@ -104,9 +104,11 @@ class Lists {
 
 	public static function reverse<T>(list : List<T>) : List<T> {
 		var stack = Nil;
-		while(true) {
+		var valid = true;
+		while(valid) {
 			switch(list) {
-				case Nil: break;
+				case Nil:
+					valid = false;
 				case Cons(head, tail):
 					stack = Cons(head, stack);
 					list = tail;

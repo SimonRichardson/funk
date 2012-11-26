@@ -3,8 +3,23 @@ package funk.collections.extensions;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Function3;
+import funk.types.Predicate1;
 
 class Collections {
+
+	public static function contains<T>(iterable : Iterable<T>, ?func : Predicate1<T>) : Bool {
+		var eq : Predicate1<T> = function(a) : Bool {
+			return null != func ? func(a) : false;
+		};
+
+		for(item in iterable.iterator()) {
+			if (eq(item)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	public static function map<T, R>(iterable : Iterable<T>, func : Function1<T, R>) : Iterable<R> {
 		var mapped = [];
@@ -31,7 +46,7 @@ class Collections {
 
 	public static function toArray<T>(iterator : Iterator<T>) : Array<T> {
 		var stack = [];
-		
+
 		while(iterator.hasNext()) {
 			var item : T = iterator.next();
 			stack.push(item);

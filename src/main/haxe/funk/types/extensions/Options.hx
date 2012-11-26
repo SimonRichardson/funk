@@ -125,9 +125,13 @@ class Options {
 		}
 	}
 
-	public static function toString<T>(option : Option<T>) : String {
+	public static function toString<T>(option : Option<T>, ?func : Function1<T, String>) : String {
 		return switch (option) {
-			case Some(value): Std.format('Some($value)');
+			case Some(value):
+				var str = function() {
+					return null != func ? func(value) : '' + value;
+				}
+				Std.format('Some(${str()})');
 			case None: 'None';
 		}
 	}
