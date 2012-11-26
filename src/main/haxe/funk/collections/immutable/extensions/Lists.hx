@@ -4,6 +4,8 @@ import funk.Funk;
 import funk.collections.extensions.Collections;
 import funk.collections.immutable.List;
 import funk.types.Option;
+import funk.types.Predicate1;
+import funk.types.Predicate2;
 
 private class ListImpl<T> {
 
@@ -42,6 +44,31 @@ private class ListImplIterator<T> {
 }
 
 class Lists {
+
+	public static function contains<T>(list : List<T>, item : T, ?func : Predicate2<T, T>) : Bool {
+		var eq = function(a, b) {
+			return null != func ? func(a, b) : a == b;
+		};
+
+		while(nonEmpty(list)) {
+			if (eq(head(list), item)) {
+				return true;
+			}
+			list = tail(list);
+		}
+		return false;
+	}
+
+	public static function count<T>(list : List<T>, func : Predicate1<T>) : Int {
+		var counter = 0;
+		while(nonEmpty(list)) {
+			if (func(head(list))) {
+				counter++;
+			}
+			list = tail(list);
+		}
+		return counter;
+	}
 
 	public static function append<T>(list : List<T>, item : T) : List<T> {
 		return appendAll(list, Cons(item, Nil));

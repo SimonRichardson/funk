@@ -31,6 +31,61 @@ class ListTestBase {
 		actual.toString().areEqual('List(1, 2, 3, 4)');
 	}
 
+	// Contains
+
+	@Test
+	public function when_contains__should_contain_1() : Void {
+		actual.contains(1).isTrue();
+	}
+
+	@Test
+	public function when_contains__should_not_contain_99() : Void {
+		actual.contains(99).isFalse();
+	}
+
+	@Test
+	public function when_contains_overriding_equality__should_contain_99() : Void {
+		actual.contains(99, function(a, b) {
+			return true;
+		}).isTrue();
+	}
+
+	// Count
+
+	@Test
+	public function should_call_count() : Void {
+		var act = 0;
+		actual.count(function(x) {
+			act++;
+			return true;
+		});
+		act.areEqual(4);
+	}
+
+	@Test
+	public function should_count_be_same_as_expected() : Void {
+		var act = actual.count(function(x) {
+			return true;
+		});
+		act.areEqual(4);
+	}
+
+	@Test
+	public function should_count_be_0() : Void {
+		var act = actual.count(function(x) {
+			return false;
+		});
+		act.areEqual(0);
+	}
+
+	@Test
+	public function should_count_5_be_0() : Void {
+		var act = actual.count(function(x) {
+			return x % 2 == 0;
+		});
+		act.areEqual(2);
+	}
+
 	// Head
 
 	@Test
