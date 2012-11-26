@@ -19,17 +19,17 @@ class ListsUtil {
 				if (Std.is(any, Array)) {
 					var array : Array<T2> = cast any;
 					for (item in array) {
-						list = list.prepend(item);
+						list = list.append(item);
 					}
 				} else {
-					list = list.prepend(cast any);
+					list = list.append(cast any);
 				}
 				list;
 			case TClass(c):
 				if (c == Array) {
 					var array : Array<T2> = cast any;
 					for (item in array) {
-						list = list.prepend(item);
+						list = list.append(item);
 					}
 				} else if (c == String) {
 					var string : String = cast any;
@@ -45,14 +45,14 @@ class ListsUtil {
 					};
 
 					for (item in iterator) {
-						list = list.prepend(cast item);
+						list = list.append(cast item);
 					}
 				} else {
-					list = list.prepend(cast any);
+					list = list.append(cast any);
 				}
 				list;
 			default:
-				list = list.prepend(cast any);
+				list = list.append(cast any);
 				list;
 		}
 	}

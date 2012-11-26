@@ -43,15 +43,35 @@ private class ListImplIterator<T> {
 
 class Lists {
 
-	public static function prepend<T>(list : List<T>, item : T) : List<T> {
-		var stack : List<T> = Cons(item, Nil);
+	public static function append<T>(list : List<T>, item : T) : List<T> {
+		return appendAll(list, Cons(item, Nil));
+	}
 
-		while(nonEmpty(list)) {
-			stack = Cons(head(list), stack);
-			list = tail(list);
+	public static function appendAll<T>(list : List<T>, items : List<T>) : List<T> {
+		var result = items;
+
+		var stack = reverse(list);
+		while(nonEmpty(stack)) {
+			result = Cons(head(stack), result);
+			stack = tail(stack);
 		}
 
-		return stack;
+		return result;
+	}
+
+	public static function prepend<T>(list : List<T>, item : T) : List<T> {
+		return Cons(item, list);
+	}
+
+	public static function prependAll<T>(list : List<T>, items : List<T>) : List<T> {
+		var result = list;
+
+		while(nonEmpty(items)) {
+			result = Cons(head(items), result);
+			items = tail(items);
+		}
+
+		return result;
 	}
 
 	public static function head<T>(list : List<T>) : T {
@@ -82,6 +102,19 @@ class Lists {
 		}
 	}
 
+	public static function reverse<T>(list : List<T>) : List<T> {
+		var stack = Nil;
+		while(true) {
+			switch(list) {
+				case Nil: break;
+				case Cons(head, tail):
+					stack = Cons(head, stack);
+					list = tail;
+			}
+		}
+		return stack;
+	}
+
 	public static function size<T>(list : List<T>) : Int {
 		var count = 0;
 
@@ -96,7 +129,7 @@ class Lists {
 
 	public static function isEmpty<T>(list : List<T>) : Bool {
 		return switch(list) {
-			case Nil: 
+			case Nil:
 				true;
 			case Cons(_):
 				false;
