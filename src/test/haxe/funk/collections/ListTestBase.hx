@@ -14,7 +14,12 @@ class ListTestBase {
 
 	public var actual : List<Int>;
 
+	public var actualTotal : Int;
+
 	public var other : List<Int>;
+
+	public var otherTotal : Int;
+
 
 	@Test
 	public function should_be_non_empty() {
@@ -28,7 +33,7 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_toString__should_return_valid_string() {
-		actual.toString().areEqual('List(1, 2, 3, 4)');
+		actual.toString().areEqual('List(1, 2, 3, 4, 5)');
 	}
 
 	// Contains
@@ -59,7 +64,7 @@ class ListTestBase {
 			act++;
 			return true;
 		});
-		act.areEqual(4);
+		act.areEqual(actualTotal);
 	}
 
 	@Test
@@ -67,7 +72,7 @@ class ListTestBase {
 		var act = actual.count(function(x) {
 			return true;
 		});
-		act.areEqual(4);
+		act.areEqual(actualTotal);
 	}
 
 	@Test
@@ -83,7 +88,7 @@ class ListTestBase {
 		var act = actual.count(function(x) {
 			return x % 2 == 0;
 		});
-		act.areEqual(2);
+		act.areEqual(Math.floor(actualTotal * 0.5));
 	}
 
 	// Head
@@ -122,7 +127,7 @@ class ListTestBase {
 
 	@Test
 	public function when_tail__should_be_2_3_4() : Void {
-		actual.tail().toString().areEqual('List(2, 3, 4)');
+		actual.tail().toString().areEqual('List(2, 3, 4, 5)');
 	}
 
 	@Test
@@ -144,7 +149,7 @@ class ListTestBase {
 	public function when_tailOption__should_be_Some_2_3_4() : Void {
 		actual.tailOption().toString(function(value : List<Int>) {
 			return value.toString();
-		}).areEqual('Some(List(2, 3, 4))');
+		}).areEqual('Some(List(2, 3, 4, 5))');
 	}
 
 	// Reverse
@@ -155,8 +160,8 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_calling_reverse__should_be_4_3_2_1() {
-		actual.reverse().toString().areEqual('List(4, 3, 2, 1)');
+	public function when_calling_reverse__should_be_5_4_3_2_1() {
+		actual.reverse().toString().areEqual('List(5, 4, 3, 2, 1)');
 	}
 
 	// Append
@@ -168,12 +173,12 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_append__should_be_size_5() {
-		actual.append(5).size().areEqual(5);
+		actual.append(6).size().areEqual(actualTotal + 1);
 	}
 
 	@Test
 	public function when_calling_append__should_be_1_2_3_4_5() {
-		actual.append(5).toString().areEqual('List(1, 2, 3, 4, 5)');
+		actual.append(6).toString().areEqual('List(1, 2, 3, 4, 5, 6)');
 	}
 
 	@Test
@@ -182,13 +187,13 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_calling_appendAll__should_be_size_8() {
-		actual.appendAll(other).size().areEqual(8);
+	public function when_calling_appendAll__should_be_correct_size() {
+		actual.appendAll(other).size().areEqual(actualTotal + otherTotal);
 	}
 
 	@Test
-	public function when_calling_appendAll__should_be_1_2_3_4_5_6_7_8() {
-		actual.appendAll(other).toString().areEqual('List(1, 2, 3, 4, 5, 6, 7, 8)');
+	public function when_calling_appendAll__should_be_1_2_3_4_5_6_7_8_9() {
+		actual.appendAll(other).toString().areEqual('List(1, 2, 3, 4, 5, 6, 7, 8, 9)');
 	}
 
 	// Prepend
@@ -199,13 +204,13 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_calling_prepend__should_be_size_5() {
-		actual.prepend(5).size().areEqual(5);
+	public function when_calling_prepend__should_be_correct_size() {
+		actual.prepend(6).size().areEqual(actualTotal + 1);
 	}
 
 	@Test
-	public function when_calling_prepend__should_be_5_1_2_3_4() {
-		actual.prepend(5).toString().areEqual('List(5, 1, 2, 3, 4)');
+	public function when_calling_prepend__should_be_6_1_2_3_4_5() {
+		actual.prepend(6).toString().areEqual('List(6, 1, 2, 3, 4, 5)');
 	}
 
 	@Test
@@ -214,12 +219,77 @@ class ListTestBase {
 	}
 
 	@Test
-	public function when_calling_prependAll__should_be_size_8() {
-		actual.prependAll(other).size().areEqual(8);
+	public function when_calling_prependAll__should_be_correct_size() {
+		actual.prependAll(other).size().areEqual(actualTotal + otherTotal);
 	}
 
 	@Test
-	public function when_calling_prependAll__should_be_8_7_6_5_1_2_3_4() {
-		actual.prependAll(other).toString().areEqual('List(8, 7, 6, 5, 1, 2, 3, 4)');
+	public function when_calling_prependAll__should_be_9_8_7_6_1_2_3_4_5() {
+		actual.prependAll(other).toString().areEqual('List(9, 8, 7, 6, 1, 2, 3, 4, 5)');
+	}
+
+	// Indices
+
+	@Test
+	public function when_indices__should_not_be_null() : Void {
+		actual.indices().isNotNull();
+	}
+
+	@Test
+	public function when_indices__should_be_equal_0_1_2_3_4() : Void {
+		actual.indices().toString().areEqual('List(0, 1, 2, 3, 4)');
+	}
+
+	// Drop
+
+	@Test
+	public function when_drop_0__return_same_list() : Void {
+		actual.drop(0).areEqual(actual);
+	}
+
+	@Test
+	public function when_drop_2__return_List_3_4_5() : Void {
+		actual.drop(2).toString().areEqual('List(3, 4, 5)');
+	}
+
+	@Test
+	public function when_drop_2__return_size_3() : Void {
+		actual.drop(2).size().areEqual(3);
+	}
+
+	@Test
+	public function when_drop_4__return_size_1() : Void {
+		actual.drop(4).size().areEqual(1);
+	}
+
+	@Test
+	public function when_drop_5__return_size_0() : Void {
+		actual.drop(5).size().areEqual(0);
+	}
+
+	@Test
+	public function when_drop_2__return_get_0_is_3() : Void {
+		actual.drop(2).get(0).areEqual(Some(3));
+	}
+
+	@Test
+	public function when_drop_2__return_get_1_is_4() : Void {
+		actual.drop(2).get(1).areEqual(Some(4));
+	}
+
+	@Test
+	public function when_drop_2_then_1__return_get_0_is_4() : Void {
+		actual.drop(2).drop(1).get(0).areEqual(Some(4));
+	}
+
+	@Test
+	public function when_drop_on_list__throw_argument_when_passing_minus_to_drop() : Void {
+		var called = try {
+			actual.drop(-1);
+			false;
+		} catch(error : Dynamic) {
+			true;
+		}
+		called.isTrue();
 	}
 }

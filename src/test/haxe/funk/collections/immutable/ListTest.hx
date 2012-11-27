@@ -9,8 +9,11 @@ class ListTest extends ListTestBase {
 
 	@Before
 	public function setup() : Void {
-		actual = [1, 2, 3, 4].toList();
-		other = [5, 6, 7, 8].toList();
+		actual = [1, 2, 3, 4, 5].toList();
+		actualTotal = 5;
+
+		other = [6, 7, 8, 9].toList();
+		otherTotal = 4;
 	}
 
 }

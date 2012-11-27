@@ -3,9 +3,12 @@ package funk.collections.immutable.extensions;
 import funk.Funk;
 import funk.collections.extensions.Collections;
 import funk.collections.immutable.List;
+import funk.collections.immutable.extensions.IteratorsUtil;
 import funk.types.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
+
+using funk.collections.immutable.extensions.IteratorsUtil;
 
 private class ListImpl<T> {
 
@@ -70,6 +73,40 @@ class Lists {
 		return counter;
 	}
 
+	public static function drop<T>(list : List<T>, amount : Int) : List<T> {
+		if (amount < 0) {
+			Funk.error(Errors.ArgumentError('Amount must be positive'));
+		}
+
+		var stack = list;
+		for(i in 0...amount) {
+			if (isEmpty(stack)) {
+				return Nil;
+			}
+			stack = tail(stack);
+		}
+
+		return stack;
+	}
+
+	public static function get<T>(list : List<T>, index : Int) : Option<T> {
+		if (index < 0 || index > size(list)) {
+			return None;
+		}
+
+		var stack = list;
+		while(nonEmpty(stack)) {
+			if (index == 0) {
+				return headOption(stack);
+			}
+
+			index--;
+			stack = tail(stack);
+		}
+
+		return None;
+	}
+
 	public static function append<T>(list : List<T>, item : T) : List<T> {
 		return appendAll(list, Cons(item, Nil));
 	}
@@ -86,6 +123,14 @@ class Lists {
 		return result;
 	}
 
+	public static function appendIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
+		return appendAll(list, iterator.toList());
+	}
+
+	public static function appendIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
+		return appendIterator(list, iterable.iterator());
+	}
+
 	public static function prepend<T>(list : List<T>, item : T) : List<T> {
 		return Cons(item, list);
 	}
@@ -99,6 +144,14 @@ class Lists {
 		}
 
 		return result;
+	}
+
+	public static function prependIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
+		return prependAll(list, iterator.toList());
+	}
+
+	public static function prependIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
+		return prependIterator(list, iterable.iterator());
 	}
 
 	public static function head<T>(list : List<T>) : T {
@@ -154,6 +207,15 @@ class Lists {
 		}
 
 		return count;
+	}
+
+	public static function indices<T>(list : List<T>) : List<Int> {
+		var n = size(list);
+		var stack = Nil;
+		while(--n > -1) {
+			stack = prepend(stack, n);
+		}
+		return stack;
 	}
 
 	public static function isEmpty<T>(list : List<T>) : Bool {
