@@ -4,9 +4,11 @@ import funk.Funk;
 import funk.collections.extensions.Collections;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.IteratorsUtil;
+import funk.types.Function1;
 import funk.types.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
+import funk.types.Tuple2;
 
 using funk.collections.immutable.extensions.IteratorsUtil;
 
@@ -234,10 +236,9 @@ class Lists {
 	public static function size<T>(list : List<T>) : Int {
 		var count = 0;
 
-		var p : List<T> = list;
-		while(nonEmpty(p)) {
+		while(nonEmpty(list)) {
 			count++;
-			p = tail(p);
+			list = tail(list);
 		}
 
 		return count;
@@ -252,17 +253,52 @@ class Lists {
 		return stack;
 	}
 
+	public static function init<T>(list : List<T>) : List<T> {
+		return dropRight(list, 1);
+	}
+
+	public static function last<T>(list : List<T>) : Option<T> {
+		var value = None;
+
+		while(nonEmpty(list)) {
+			value = headOption(list);
+			list = tail(list);
+		}
+
+		return value;
+	}
+
+	public static function zipWithIndex<T>(list : List<T>) : List<Tuple2<T, Int>> {
+		var amount = size(list);
+
+		var stack = Nil;
+		for (i in 0...amount) {
+			var h = head(list);
+			list = tail(list);
+			stack = prepend(stack, tuple2(h, i));
+		}
+
+		return reverse(stack);
+	}
+
 	public static function isEmpty<T>(list : List<T>) : Bool {
 		return switch(list) {
 			case Nil:
 				true;
-			case Cons(_):
+			case Cons(_, _):
 				false;
 		};
 	}
 
 	public static function nonEmpty<T>(list : List<T>) : Bool {
 		return !isEmpty(list);
+	}
+
+	public static function hasDefinedSize<T>(list : List<T>) : Bool {
+		return switch (list) {
+			case Nil: false;
+			case Cons(_, _): true;
+		};
 	}
 
 	public static function iterable<T>(list : List<T>) : Iterable<T> {
@@ -273,13 +309,16 @@ class Lists {
 		return new ListImplIterator(list);
 	}
 
-	public static function toString<T>(list : List<T>) : String {
+	public static function toString<T>(list : List<T>, ?func : Function1<T, String>) : String {
+		var mapper : Function1<T, String> = function(value) {
+			return null != func ? func(value) : '' + value;
+		};
 		var mapped : Iterable<String> = Collections.map({
 			iterator: function() {
 				return iterator(list);
 			}
 		}, function(value) {
-			return '' + value;
+			return mapper(value);
 		});
 		return 'List(' + Collections.foldLeftWithIndex(mapped, '', function(a, b, index) {
 			return (index < 1) ? b : a + ', ' + b;

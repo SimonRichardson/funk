@@ -3,12 +3,15 @@ package funk.collections;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Option;
+import funk.types.Tuple2;
 import funk.types.extensions.Options;
+import funk.types.extensions.Tuples2;
 import massive.munit.Assert;
 
 using massive.munit.Assert;
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Options;
+using funk.types.extensions.Tuples2;
 
 class ListTestBase {
 
@@ -366,5 +369,65 @@ class ListTestBase {
 		actual.dropWhile(function(x) {
 			return true;
 		}).size().areEqual(0);
+	}
+
+	// Init
+
+	@Test
+	public function when_init__should_not_be_null() : Void {
+		actual.init().isNotNull();
+	}
+
+	@Test
+	public function when_init__should_size_should_be_4() : Void {
+		actual.init().size().areEqual(4);
+	}
+
+	@Test
+	public function when_init__should_be_equal_4() : Void {
+		actual.init().toString().areEqual('List(1, 2, 3, 4)');
+	}
+
+	// Last
+
+	@Test
+	public function when_last__should_not_be_null() : Void {
+		actual.last().isNotNull();
+	}
+
+	@Test
+	public function when_last__should_be_equal_to_Option() : Void {
+		actual.last().areEqual(Some(5));
+	}
+
+	@Test
+	public function when_last__should_be_equal_to_Some() : Void {
+		actual.last().isDefined().isTrue();
+	}
+
+	@Test
+	public function when_last__should_be_equal_to_Some_value_of_5() : Void {
+		actual.last().get().areEqual(5);
+	}
+
+	// Zip With Index
+
+	@Test
+	public function when_zipWithIndex__should_not_be_null() : Void {
+		actual.zipWithIndex().isNotNull();
+	}
+
+	@Test
+	public function when_zipWithIndex__should_be_equal_to_nil() : Void {
+		actual.zipWithIndex().toString(function (tuple) {
+			return tuple.toString();
+		}).areEqual('List((1, 0), (2, 1), (3, 2), (4, 3), (5, 4))');
+	}
+
+	// Has Defined Size
+
+	@Test
+	public function should_have_a_defined_size():Void {
+		actual.hasDefinedSize().isTrue();
 	}
 }
