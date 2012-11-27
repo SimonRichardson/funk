@@ -292,4 +292,79 @@ class ListTestBase {
 		}
 		called.isTrue();
 	}
+
+	// Drop Right
+
+	@Test
+	public function when_dropRight_0_on_list__return_same_list() : Void {
+		actual.dropRight(0).areEqual(actual);
+	}
+
+	@Test
+	public function when_dropRight_1_on_list__return_and_get_0_equals_1() : Void {
+		actual.dropRight(1).get(0).areEqual(Some(1));
+	}
+
+	@Test
+	public function when_dropRight_2_on_list__returns_1_2_3() : Void {
+		actual.dropRight(2).toString().areEqual('List(1, 2, 3)');
+	}
+
+	@Test
+	public function when_dropRight_2_on_list__return_and_get_2_equals_3() : Void {
+		actual.dropRight(2).get(2).areEqual(Some(3));
+	}
+
+	@Test
+	public function when_dropRight_5__return_size_0() : Void {
+		actual.dropRight(5).size().areEqual(0);
+	}
+
+	@Test
+	public function when_dropRight_on_list__throw_argument_when_passing_minus_to_dropRight() : Void {
+		var called = try {
+			actual.dropRight(-1);
+			false;
+		} catch(error : Dynamic) {
+			true;
+		}
+		called.isTrue();
+	}
+
+	// Drop While
+
+	@Test
+	public function when_dropWhile__return_not_null() : Void {
+		actual.dropWhile(function(x) {
+			return x < 2;
+		}).isNotNull();
+	}
+
+	@Test
+	public function when_dropWhile__return_is_type_of_list() : Void {
+		actual.dropWhile(function(x) {
+			return x < 2;
+		}).toString().areEqual('List(2, 3, 4, 5)');
+	}
+
+	@Test
+	public function when_dropWhile__return_size_is_4() : Void {
+		actual.dropWhile(function(x) {
+			return x < 2;
+		}).size().areEqual(4);
+	}
+
+	@Test
+	public function when_dropWhile__return_get_2_equals_4() : Void {
+		actual.dropWhile(function(x) {
+			return x < 2;
+		}).get(2).areEqual(Some(4));
+	}
+
+	@Test
+	public function when_dropWhile__return_size_equals_0() : Void {
+		actual.dropWhile(function(x) {
+			return true;
+		}).size().areEqual(0);
+	}
 }

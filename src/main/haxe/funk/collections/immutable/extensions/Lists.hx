@@ -89,6 +89,40 @@ class Lists {
 		return stack;
 	}
 
+	public static function dropRight<T>(list : List<T>, amount : Int) : List<T> {
+		if (amount < 0) {
+			Funk.error(Errors.ArgumentError('Amount must be positive'));
+		} else if (amount == 0) {
+			return list;
+		}
+
+		amount = size(list) - amount;
+		if (amount <= 0) {
+			return Nil;
+		}
+
+		var stack = Nil;
+		for (i in 0...amount) {
+			var h = head(list);
+			list = tail(list);
+			stack = prepend(stack, h);
+		}
+
+		return reverse(stack);
+	}
+
+	public static function dropWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+		while (nonEmpty(list)) {
+			if (!func(head(list))) {
+				return list;
+			}
+
+			list = tail(list);
+		}
+
+		return Nil;
+	}
+
 	public static function get<T>(list : List<T>, index : Int) : Option<T> {
 		if (index < 0 || index > size(list)) {
 			return None;
@@ -229,6 +263,10 @@ class Lists {
 
 	public static function nonEmpty<T>(list : List<T>) : Bool {
 		return !isEmpty(list);
+	}
+
+	public static function iterable<T>(list : List<T>) : Iterable<T> {
+		return new ListImpl(list);
 	}
 
 	public static function iterator<T>(list : List<T>) : Iterator<T> {
