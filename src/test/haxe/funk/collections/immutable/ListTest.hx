@@ -9,6 +9,8 @@ class ListTest extends ListTestBase {
 
 	@Before
 	public function setup() : Void {
+		alpha = 'abcde'.toList();
+
 		actual = [1, 2, 3, 4, 5].toList();
 		actualTotal = 5;
 

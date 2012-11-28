@@ -15,6 +15,8 @@ using funk.types.extensions.Tuples2;
 
 class ListTestBase {
 
+	public var alpha : List<String>;
+
 	public var actual : List<Int>;
 
 	public var actualTotal : Int;
@@ -394,6 +396,17 @@ class ListTestBase {
 		}).isTrue();
 	}
 
+	// Flat Map
+
+	@Test
+	public function when_flatMap__should_return_a_list_containing_concat_lists() : Void {
+		var result = actual.flatMap(function(x) {
+			return other;
+		});
+
+		result.toString().areEqual('List(6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9)');
+	}
+
 	// Filter
 
 	@Test
@@ -494,6 +507,180 @@ class ListTestBase {
 		actual.filterNot(function(x) {
 			return true;
 		}).size().areEqual(0);
+	}
+
+	// Find
+
+	@Test
+	public function when_find__should_return_Option() : Void {
+		actual.find(function(x) {
+			return x == 2;
+		}).areEqual(Some(2));
+	}
+
+	@Test
+	public function when_find__should_return_Some() : Void {
+		actual.find(function(x) {
+			return x == 2;
+		}).isDefined().isTrue();
+	}
+
+	@Test
+	public function when_find__should_call_find() : Void {
+		var called = false;
+		actual.find(function(x) {
+			called = true;
+			return x == 2;
+		});
+		called.isTrue();
+	}
+
+	@Test
+	public function when_find_all_false__should_return_none() : Void {
+		actual.find(function(x) {
+			return false;
+		}).areEqual(None);
+	}
+
+	// Fold Left
+
+	@Test
+	public function when_foldLeft__should_foldLeft_should_return_10() : Void {
+		actual.foldLeft(0, function (a, b) {
+			return a + b;
+		}).areEqual(15);
+	}
+
+	@Test
+	public function when_foldLeft__should_foldLeft_should_return_11() : Void {
+		actual.foldLeft(1, function (a, b) {
+			return a + b;
+		}).areEqual(16);
+	}
+
+	@Test
+	public function when_foldLeft__should_call_foldLeft() : Void {
+		actual.foldLeft(0, function(x, y) {
+			return 0;
+		}).areEqual(0);
+	}
+
+	@Test
+	public function when_foldLeft__should_foldLeft_should_return_abcde() : Void {
+		alpha.foldLeft('', function (a, b) {
+			return a + b;
+		}).areEqual('abcde');
+	}
+
+	// Fold Right
+
+	@Test
+	public function when_foldRight__should_foldRight_should_return_10() : Void {
+		actual.foldRight(0, function (a, b) {
+			return a + b;
+		}).areEqual(15);
+	}
+
+	@Test
+	public function when_foldRight__should_foldRight_should_return_11() : Void {
+		actual.foldRight(1, function (a, b) {
+			return a + b;
+		}).areEqual(16);
+	}
+
+	@Test
+	public function when_foldRight__should_call_foldRight() : Void {
+		actual.foldRight(0, function(x, y) {
+			return 0;
+		}).areEqual(0);
+	}
+
+	@Test
+	public function when_foldRight__should_foldRight_should_return_abcde() : Void {
+		alpha.foldRight('', function (a, b) {
+			return a + b;
+		}).areEqual('edcba');
+	}
+
+	// For All
+
+	@Test
+	public function when_forall__should_return_true() : Void {
+		actual.forall(function(value) {
+			return true;
+		}).isTrue();
+	}
+
+	@Test
+	public function when_forall__should_return_false_if_value_is_less_than_2() : Void {
+		actual.forall(function(value) {
+			return value == 2;
+		}).isFalse();
+	}
+
+	// For Each
+
+	@Test
+	public function when_foreach__should_run_function() : Void {
+		var called = false;
+		actual.foreach(function(value : Int) : Void {
+			called = true;
+		});
+		called.isTrue();
+	}
+
+	@Test
+	public function when_foreach__should_run_function_correct_num_times() : Void {
+		var act = 0;
+		actual.foreach(function(value) {
+			act++;
+		});
+		act.areEqual(actualTotal);
+	}
+
+	// Map
+
+	@Test
+	public function when_map__should_return_list() : Void {
+		actual.map(function(value) {
+			return value + 1.1;
+		}).toString().areEqual('List(2.1, 3.1, 4.1, 5.1, 6.1)');
+	}
+
+	@Test
+	public function when_map__should_return_list_of_size() : Void {
+		actual.map(function(value) {
+			return value + 1.1;
+		}).size().areEqual(actualTotal);
+	}
+
+	@Test
+	public function when_map__should_calling_get_0_return_2() : Void {
+		actual.map(function(value) {
+			return value + 1.1;
+		}).get(0).areEqual(Some(2.1));
+	}
+
+	@Test
+	public function when_map__should_calling_get_1_return_3() : Void {
+		actual.map(function(value) {
+			return value + 1.1;
+		}).get(1).areEqual(Some(3.1));
+	}
+
+	@Test
+	public function when_map__should_calling_get_0_return_Hello1() : Void {
+		actual.map(function(value : Int) : String {
+			return "Hello" + value;
+		}).get(0).areEqual(Some("Hello1"));
+	}
+
+	@Test
+	public function when_map__should_calling_get_0_return_same_instance_as_past_in() : Void {
+		var instance = {};
+		actual.map(function(value) {
+			return instance;
+		}).get(0).areEqual(Some(instance));
 	}
 
 	// Init

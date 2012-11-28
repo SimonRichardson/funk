@@ -5,6 +5,7 @@ import funk.collections.extensions.Collections;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.IteratorsUtil;
 import funk.types.Function1;
+import funk.types.Function2;
 import funk.types.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
@@ -135,6 +136,15 @@ class Lists {
 		return false;
 	}
 
+	public static function flatMap<T>(list : List<T>, func : Function1<T, List<T>>) : List<T> {
+		var stack = Nil;
+		while (nonEmpty(list)) {
+			stack = prependAll(stack, func(head(list)));
+			list = tail(list);
+		}
+		return reverse(stack);
+	}
+
 	public static function filter<T>(list : List<T>, func : Predicate1<T>) : List<T> {
 		var stack = Nil;
 		var allFiltered = true;
@@ -183,22 +193,74 @@ class Lists {
 		return reverse(stack);
 	}
 
+	public static function find<T>(list : List<T>, func : Predicate1<T>) : Option<T> {
+		while (nonEmpty(list)) {
+			if (func(head(list))) {
+				return headOption(list);
+			}
+			list = tail(list);
+		}
+		return None;
+	}
+
+	public static function foldLeft<T>(list : List<T>, value : T, func : Function2<T, T, T>) : T {
+		while (nonEmpty(list)) {
+			value = func(value, head(list));
+			list = tail(list);
+		}
+		return value;
+	}
+
+	public static function foldRight<T>(list : List<T>, value : T, func : Function2<T, T, T>) : T {
+		list = reverse(list);
+		while (nonEmpty(list)) {
+			value = func(value, head(list));
+			list = tail(list);
+		}
+		return value;
+	}
+
+	public static function forall<T>(list : List<T>, func : Predicate1<T>) : Bool {
+		while (nonEmpty(list)) {
+			if (!func(head(list))) {
+				return false;
+			}
+			list = tail(list);
+		}
+		return true;
+	}
+
+	public static function foreach<T>(list : List<T>, func : Function1<T, Void>) : Void {
+		while (nonEmpty(list)) {
+			func(head(list));
+			list = tail(list);
+		}
+	}
+
 	public static function get<T>(list : List<T>, index : Int) : Option<T> {
 		if (index < 0 || index > size(list)) {
 			return None;
 		}
 
-		var stack = list;
-		while(nonEmpty(stack)) {
+		while(nonEmpty(list)) {
 			if (index == 0) {
-				return headOption(stack);
+				return headOption(list);
 			}
 
 			index--;
-			stack = tail(stack);
+			list = tail(list);
 		}
 
 		return None;
+	}
+
+	public static function map<T, E>(list : List<T>, func : Function1<T, E>) : List<E> {
+		var stack = Nil;
+		while(nonEmpty(list)) {
+			stack = prepend(stack, func(head(list)));
+			list = tail(list);
+		}
+		return reverse(stack);
 	}
 
 	public static function append<T>(list : List<T>, item : T) : List<T> {
