@@ -352,6 +352,24 @@ class Lists {
 		return reverse(stack);
 	}
 
+	public static function zip<T1, T2>(list : List<T1>, other : List<T2>) : List<Tuple2<T1, T2>> {
+		var amount = Std.int(Math.min(size(list), size(other)));
+
+		if (amount <= 0) {
+			return Nil;
+		}
+
+		var stack = Nil;
+		for (i in 0...amount) {
+			stack = prepend(stack, tuple2(head(list), head(other)));
+			list = tail(list);
+			other = tail(other);
+		}
+
+		return reverse(stack);
+	}
+
+
 	public static function append<T>(list : List<T>, item : T) : List<T> {
 		return appendAll(list, Cons(item, Nil));
 	}

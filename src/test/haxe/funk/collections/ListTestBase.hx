@@ -985,6 +985,40 @@ class ListTestBase {
 		called.isTrue();
 	}
 
+	// Zip
+
+	@Test
+	public function when_zip__should_not_be_null() : Void {
+		actual.zip(Nil).isNotNull();
+	}
+
+	@Test
+	public function when_zip__should_be_be_size_0() : Void {
+		actual.zip(Nil).size().areEqual(0);
+	}
+
+	@Test
+	public function when_zip__should_be_be_size_4() : Void {
+		actual.zip(other).size().areEqual(otherTotal);
+	}
+
+	@Test
+	public function when_zip__should_calling_get_0_return_tuple2() : Void {
+		actual.zip(other).get(0).areEqual(Some(tuple2(1, 6)));
+	}
+
+	@Test
+	public function when_zip__should_calling_get_3_return_tuple2() : Void {
+		actual.zip(other).get(3).areEqual(Some(tuple2(4, 9)));
+	}
+
+	@Test
+	public function when_zip__should_calling_toString() : Void {
+		actual.zip(other).toString(function(x) {
+			return x.toString();
+		}).areEqual('List((1, 6), (2, 7), (3, 8), (4, 9))');
+	}
+
 	// Init
 
 	@Test
