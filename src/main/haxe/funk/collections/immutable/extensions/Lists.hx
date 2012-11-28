@@ -1,6 +1,7 @@
 package funk.collections.immutable.extensions;
 
 import funk.Funk;
+import funk.collections.Collection;
 import funk.collections.extensions.Collections;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.IteratorsUtil;
@@ -24,6 +25,10 @@ private class ListImpl<T> {
 
 	public function iterator() : Iterator<T> {
 		return new ListImplIterator<T>(_list);
+	}
+
+	public function size() : Int {
+		return Lists.size(_list);
 	}
 }
 
@@ -558,6 +563,10 @@ class Lists {
 		};
 	}
 
+	public static function collection<T>(list : List<T>) : Collection<T> {
+		return new ListImpl(list);
+	}
+
 	public static function iterable<T>(list : List<T>) : Iterable<T> {
 		return new ListImpl(list);
 	}
@@ -570,11 +579,7 @@ class Lists {
 		return switch(list) {
 			case Nil: 'Nil';
 			case Cons(_, _):
-				var mapped : Iterable<String> = Collections.map({
-					iterator: function() {
-						return iterator(list);
-					}
-				}, function(value) {
+				var mapped : Collection<String> = Collections.map(collection(list), function(value) {
 					return Anys.toString(value, func);
 				});
 

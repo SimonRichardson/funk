@@ -13,20 +13,20 @@ class ListCollectionsTest extends CollectionsTestBase {
 
 	@Before
 	public function setup() : Void {
-		alpha = 'abcde'.toList().iterable();
+		alpha = 'abcde'.toList().collection();
 
-		actual = [1, 2, 3, 4, 5].toList().iterable();
+		actual = [1, 2, 3, 4, 5].toList().collection();
 		actualTotal = 5;
 
 		var stack = Nil;
-		stack = Lists.prepend(stack, [1, 2, 3].toList().iterable());
-		stack = Lists.prepend(stack, [4, 5].toList().iterable());
-		stack = Lists.prepend(stack, [6].toList().iterable());
-		stack = Lists.prepend(stack, [7, 8, 9].toList().iterable());
+		stack = Lists.prepend(stack, [1, 2, 3].toList().collection());
+		stack = Lists.prepend(stack, [4, 5].toList().collection());
+		stack = Lists.prepend(stack, [6].toList().collection());
+		stack = Lists.prepend(stack, [7, 8, 9].toList().collection());
 		stack = Lists.reverse(stack);
-		complex = stack.iterable();
+		complex = stack.collection();
 
-		other = [6, 7, 8, 9].toList().iterable();
+		other = [6, 7, 8, 9].toList().collection();
 		otherTotal = 4;
 
 		name = 'Collections';
