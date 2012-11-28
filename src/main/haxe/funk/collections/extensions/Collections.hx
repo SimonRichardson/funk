@@ -35,6 +35,24 @@ class Collections {
 		return counter;
 	}
 
+	public static function dropLeft<T>(iterable : Iterable<T>, amount : Int) : Iterable<T> {
+		if (amount < 0) {
+			Funk.error(Errors.ArgumentError('Amount must be positive'));
+		}
+
+		var iterator = iterable.iterator();
+
+		var stack = [];
+		for (i in 0...amount) {
+			if (!iterator.hasNext()) {
+				return [];
+			}
+			stack.push(iterator.next());
+		}
+
+		return stack;
+	}
+
 	public static function map<T, R>(iterable : Iterable<T>, func : Function1<T, R>) : Iterable<R> {
 		var mapped = [];
 		for(item in iterable.iterator()) {
@@ -84,13 +102,14 @@ class Collections {
 		return value;
 	}
 
-	public static function toArray<T>(iterator : Iterator<T>) : Array<T> {
-		var stack = [];
+	public static function toString<T>(iterable : Iterable<T>, ?func : Function1<T, String>) : String {
+		var mapped : Iterable<String> = map(iterable, function(value) {
+			return Anys.toString(value, func);
+		});
 
-		while(iterator.hasNext()) {
-			stack.push(iterator.next());
-		}
-
-		return stack;
+		return 'Collection(' + foldLeftWithIndex(mapped, '', function(a, b, index) {
+			return (index < 1) ? b : a + ', ' + b;
+		}) + ')';
 	}
 }
+

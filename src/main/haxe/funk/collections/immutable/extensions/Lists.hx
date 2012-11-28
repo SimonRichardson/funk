@@ -68,7 +68,7 @@ class Lists {
 
 	public static function count<T>(list : List<T>, func : Predicate1<T>) : Int {
 		var counter = 0;
-		while(nonEmpty(list)) {
+		while (nonEmpty(list)) {
 			if (func(head(list))) {
 				counter++;
 			}
@@ -77,12 +77,12 @@ class Lists {
 		return counter;
 	}
 
-	public static function drop<T>(list : List<T>, amount : Int) : List<T> {
+	public static function dropLeft<T>(list : List<T>, amount : Int) : List<T> {
 		if (amount < 0) {
 			Funk.error(Errors.ArgumentError('Amount must be positive'));
 		}
 
-		for(i in 0...amount) {
+		for (i in 0...amount) {
 			if (isEmpty(list)) {
 				return Nil;
 			}

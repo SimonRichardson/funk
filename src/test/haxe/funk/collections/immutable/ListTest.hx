@@ -1,6 +1,6 @@
 package funk.collections.immutable;
 
-import funk.collections.ListTestBase;
+import funk.collections.immutable.ListTestBase;
 import funk.collections.immutable.extensions.Lists;
 import funk.collections.immutable.extensions.ListsUtil;
 
@@ -24,6 +24,8 @@ class ListTest extends ListTestBase {
 
 		other = [6, 7, 8, 9].toList();
 		otherTotal = 4;
+
+		name = 'List';
 	}
 
 }
