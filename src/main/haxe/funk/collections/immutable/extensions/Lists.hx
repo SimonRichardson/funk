@@ -10,6 +10,7 @@ import funk.types.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
 import funk.types.Tuple2;
+import funk.types.extensions.Anys;
 
 using funk.collections.immutable.extensions.IteratorsUtil;
 
@@ -450,16 +451,12 @@ class Lists {
 		return switch(list) {
 			case Nil: 'Nil';
 			case Cons(_, _):
-				var mapper : Function1<T, String> = function(value) {
-					return null != func ? func(value) : '' + value;
-				};
-
 				var mapped : Iterable<String> = Collections.map({
 					iterator: function() {
 						return iterator(list);
 					}
 				}, function(value) {
-					return mapper(value);
+					return Anys.toString(value, func);
 				});
 
 				'List(' + Collections.foldLeftWithIndex(mapped, '', function(a, b, index) {
