@@ -21,6 +21,8 @@ class ListTestBase {
 
 	public var actualTotal : Int;
 
+	public var complex : List<List<Int>>;
+
 	public var other : List<Int>;
 
 	public var otherTotal : Int;
@@ -39,6 +41,13 @@ class ListTestBase {
 	@Test
 	public function when_calling_toString__should_return_valid_string() {
 		actual.toString().areEqual('List(1, 2, 3, 4, 5)');
+	}
+
+	@Test
+	public function when_calling_toString_on_a_complex_list__should_return_valid_string() {
+		complex.toString(function (x) {
+			return x.toString();
+		}).areEqual('List(List(1, 2, 3), List(4, 5), List(6), List(7, 8, 9))');
 	}
 
 	// Contains
@@ -405,6 +414,18 @@ class ListTestBase {
 		});
 
 		result.toString().areEqual('List(6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9)');
+	}
+
+	// Flatten
+
+	@Test
+	public function when_flatten__should_flatten_list() : Void {
+		actual.flatten().areEqual(actual);
+	}
+
+	@Test
+	public function when_flatten__should_flatten_sublists() : Void {
+		complex.flatten().toString().areEqual('List(1, 2, 3, 4, 5, 6, 7, 8, 9)');
 	}
 
 	// Filter

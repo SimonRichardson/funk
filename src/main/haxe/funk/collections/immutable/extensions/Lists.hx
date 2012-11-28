@@ -146,6 +146,12 @@ class Lists {
 		return reverse(stack);
 	}
 
+	public static function flatten<T>(list : List<T>) : List<T> {
+		return flatMap(list, function(x) {
+			return ListsUtil.toList(x);
+		});
+	}
+
 	public static function filter<T>(list : List<T>, func : Predicate1<T>) : List<T> {
 		var stack = Nil;
 		var allFiltered = true;
