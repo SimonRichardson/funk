@@ -752,6 +752,73 @@ class ListTestBase {
 		})._2().size().areEqual(3);
 	}
 
+	// Reduce Left
+
+	@Test
+	public function when_reduceLeft__should_return_Option() : Void {
+		actual.reduceLeft(function(a, b) {
+			return a + b;
+		}).areEqual(Some(16));
+	}
+
+	@Test
+	public function when_reduceLeft__should_return_Some() : Void {
+		actual.reduceLeft(function(a, b) {
+			return -1;
+		}).areEqual(Some(-1));
+	}
+
+	@Test
+	public function when_reduceLeft__should_call_method() : Void {
+		var called = false;
+		actual.reduceLeft(function(a, b) {
+			called = true;
+			return -1;
+		});
+		called.isTrue();
+	}
+
+	@Test
+	public function when_reduceLeft__should_return_Option_aabcde() : Void {
+		alpha.reduceLeft(function(a, b) {
+			return a + b;
+		}).areEqual(Some('aabcde'));
+	}
+
+	// Reduce Right
+
+	@Test
+	public function when_reduceRight__should_return_Option() : Void {
+		actual.reduceRight(function(a, b) {
+			return a + b;
+		}).areEqual(Some(20));
+	}
+
+	@Test
+	public function when_reduceRight__should_return_Some() : Void {
+		actual.reduceRight(function(a, b) {
+			return -1;
+		}).areEqual(Some(-1));
+	}
+
+	@Test
+	public function when_reduceRight__should_call_method() : Void {
+		var called = false;
+		actual.reduceRight(function(a, b) {
+			called = true;
+			return -1;
+		});
+		called.isTrue();
+	}
+
+	@Test
+	public function when_reduceRight__should_return_Option_eedcba() : Void {
+		alpha.reduceRight(function(a, b) {
+			return a + b;
+		}).areEqual(Some('eedcba'));
+	}
+
+
 	// Init
 
 	@Test

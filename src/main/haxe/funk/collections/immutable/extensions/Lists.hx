@@ -281,6 +281,25 @@ class Lists {
 		return tuple2(reverse(left), reverse(right));
 	}
 
+	public static function reduceLeft<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
+		var value = head(list);
+		while (nonEmpty(list)) {
+			value = func(value, head(list));
+			list = tail(list);
+		}
+		return Some(value);
+	}
+
+	public static function reduceRight<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
+		list = reverse(list);
+		var value = head(list);
+		while (nonEmpty(list)) {
+			value = func(value, head(list));
+			list = tail(list);
+		}
+		return Some(value);
+	}
+
 	public static function append<T>(list : List<T>, item : T) : List<T> {
 		return appendAll(list, Cons(item, Nil));
 	}
