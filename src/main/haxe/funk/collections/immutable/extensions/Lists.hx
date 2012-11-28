@@ -204,6 +204,18 @@ class Lists {
 		return None;
 	}
 
+	public static function findIndexOf<T>(list : List<T>, func : Predicate1<T>) : Int {
+		var index = 0;
+		while (nonEmpty(list)) {
+			if (func(head(list))) {
+				return index;
+			}
+			index++;
+			list = tail(list);
+		}
+		return -1;
+	}
+
 	public static function foldLeft<T>(list : List<T>, value : T, func : Function2<T, T, T>) : T {
 		while (nonEmpty(list)) {
 			value = func(value, head(list));
@@ -253,6 +265,18 @@ class Lists {
 		}
 
 		return None;
+	}
+
+	public static function indexOf<T>(list : List<T>, value : T) : Int {
+		var index = 0;
+		while (nonEmpty(list)) {
+			if (Anys.equals(head(list), value)) {
+				return index;
+			}
+			index++;
+			list = tail(list);
+		}
+		return -1;
 	}
 
 	public static function map<T, E>(list : List<T>, func : Function1<T, E>) : List<E> {

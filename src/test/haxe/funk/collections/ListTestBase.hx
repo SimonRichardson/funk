@@ -542,6 +542,29 @@ class ListTestBase {
 		}).areEqual(None);
 	}
 
+	// Find Index Of
+
+	@Test
+	public function when_findIndexOf__should_return_1_for_value_2() : Void {
+		actual.findIndexOf(function(x) {
+			return x == 2;
+		}).areEqual(1);
+	}
+
+	@Test
+	public function when_findIndexOf__should_return_2_for_value_3() : Void {
+		actual.findIndexOf(function(x) {
+			return x == 3;
+		}).areEqual(2);
+	}
+
+	@Test
+	public function when_findIndexOf_with_false__should_return_minus_1() : Void {
+		actual.findIndexOf(function(x) {
+			return false;
+		}).areEqual(-1);
+	}
+
 	// Fold Left
 
 	@Test
@@ -636,6 +659,23 @@ class ListTestBase {
 			act++;
 		});
 		act.areEqual(actualTotal);
+	}
+
+	// Index Of
+
+	@Test
+	public function when_indexOf__should_return_1_for_value_2() : Void {
+		actual.indexOf(2).areEqual(1);
+	}
+
+	@Test
+	public function when_indexOf__should_return_2_for_value_3() : Void {
+		actual.indexOf(3).areEqual(2);
+	}
+
+	@Test
+	public function when_indexOf_99__should_return_minus_1() : Void {
+		actual.indexOf(99).areEqual(-1);
 	}
 
 	// Map
