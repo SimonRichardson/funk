@@ -80,15 +80,14 @@ class Lists {
 			Funk.error(Errors.ArgumentError('Amount must be positive'));
 		}
 
-		var stack = list;
 		for(i in 0...amount) {
-			if (isEmpty(stack)) {
+			if (isEmpty(list)) {
 				return Nil;
 			}
-			stack = tail(stack);
+			list = tail(list);
 		}
 
-		return stack;
+		return list;
 	}
 
 	public static function dropRight<T>(list : List<T>, amount : Int) : List<T> {
@@ -123,6 +122,65 @@ class Lists {
 		}
 
 		return Nil;
+	}
+
+	public static function exists<T>(list : List<T>, func : Predicate1<T>) : Bool {
+		while (nonEmpty(list)) {
+			if (func(head(list))) {
+				return true;
+			}
+			list = tail(list);
+		}
+
+		return false;
+	}
+
+	public static function filter<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+		var stack = Nil;
+		var allFiltered = true;
+
+		var p = list;
+		while (nonEmpty(p)) {
+			var h = head(p);
+			
+			p = tail(p);
+
+			if (func(h)) {
+				stack = prepend(stack, h);
+			} else {
+				allFiltered = false;
+			}
+		}
+
+		if (allFiltered) {
+			return list;
+		}
+
+		return reverse(stack);
+	}
+
+	public static function filterNot<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+		var stack = Nil;
+		var allFiltered = true;
+
+		var p = list;
+		while (nonEmpty(p)) {
+			var h = head(p);
+			
+			p = tail(p);
+
+			if (!func(h)) {
+				stack = prepend(stack, h);
+			} else {
+				allFiltered = false;
+			}
+		}
+
+		if (allFiltered) {
+			return list;
+		}
+
+		return reverse(stack);
 	}
 
 	public static function get<T>(list : List<T>, index : Int) : Option<T> {
@@ -310,19 +368,25 @@ class Lists {
 	}
 
 	public static function toString<T>(list : List<T>, ?func : Function1<T, String>) : String {
-		var mapper : Function1<T, String> = function(value) {
-			return null != func ? func(value) : '' + value;
-		};
-		var mapped : Iterable<String> = Collections.map({
-			iterator: function() {
-				return iterator(list);
-			}
-		}, function(value) {
-			return mapper(value);
-		});
-		return 'List(' + Collections.foldLeftWithIndex(mapped, '', function(a, b, index) {
-			return (index < 1) ? b : a + ', ' + b;
-		}) + ')';
+		return switch(list) {
+			case Nil: 'Nil';
+			case Cons(_, _):
+				var mapper : Function1<T, String> = function(value) {
+					return null != func ? func(value) : '' + value;
+				};
+				
+				var mapped : Iterable<String> = Collections.map({
+					iterator: function() {
+						return iterator(list);
+					}
+				}, function(value) {
+					return mapper(value);
+				});
+				
+				'List(' + Collections.foldLeftWithIndex(mapped, '', function(a, b, index) {
+					return (index < 1) ? b : a + ', ' + b;
+				}) + ')';
+		}
 	}
 
 }

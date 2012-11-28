@@ -371,6 +371,131 @@ class ListTestBase {
 		}).size().areEqual(0);
 	}
 
+	// Exists
+
+	@Test
+	public function when_exists__should_return_true_when_calling_exists() : Void {
+		actual.exists(function(x) {
+			return x == 2;
+		}).isTrue();
+	}
+
+	@Test
+	public function when_exists_all_false__should_return_false_when_calling_exists() : Void {
+		actual.exists(function(x) {
+			return false;
+		}).isFalse();
+	}
+
+	@Test
+	public function when_exists_all_true__should_return_true_when_calling_exists() : Void {
+		actual.exists(function(x) {
+			return true;
+		}).isTrue();
+	}
+
+	// Filter
+
+	@Test
+	public function when_filter__should_return_list() : Void {
+		actual.filter(function(x) {
+			return x == 1;
+		}).toString().areEqual('List(1)');
+	}
+
+	@Test
+	public function when_filter__should_return_list_of_size_1() : Void {
+		actual.filter(function(x) {
+			return x == 1;
+		}).size().areEqual(1);
+	}
+
+	@Test
+	public function when_filter__should_return_even_list_of_size_2() : Void {
+		actual.filter(function(x) {
+			return x % 2 == 0;
+		}).size().areEqual(2);
+	}
+
+	@Test
+	public function when_filter__should_return_even_list_toString() : Void {
+		actual.filter(function(x) {
+			return x % 2 == 0;
+		}).toString().areEqual('List(2, 4)');
+	}
+
+	@Test
+	public function when_filter_all__should_return_size_of_5() : Void {
+		actual.filter(function(x) {
+			return true;
+		}).size().areEqual(actualTotal);
+	}
+
+	@Test
+	public function when_filter_all__should_return_toString() : Void {
+		actual.filter(function(x) {
+			return true;
+		}).toString().areEqual('List(1, 2, 3, 4, 5)');
+	}
+
+	@Test
+	public function when_filter_all_false__should_return_size_of_0() : Void {
+		actual.filter(function(x) {
+			return false;
+		}).size().areEqual(0);
+	}
+
+	// Filter Not
+
+	@Test
+	public function when_filterNot__should_return_list() : Void {
+		actual.filterNot(function(x) {
+			return x == 1;
+		}).toString().areEqual('List(2, 3, 4, 5)');
+	}
+
+	@Test
+	public function when_filterNot__should_return_list_of_size_1() : Void {
+		actual.filterNot(function(x) {
+			return x == 1;
+		}).size().areEqual(4);
+	}
+
+	@Test
+	public function when_filterNot_should_return_even_list_of_size_2() : Void {
+		actual.filterNot(function(x) {
+			return x % 2 == 0;
+		}).size().areEqual(3);
+	}
+
+	@Test
+	public function when_filterNot__should_return_even_list_toString() : Void {
+		actual.filterNot(function(x) {
+			return x % 2 == 0;
+		}).toString().areEqual('List(1, 3, 5)');
+	}
+
+	@Test
+	public function when_filterNot_all__should_return_size_of_5() : Void {
+		actual.filterNot(function(x) {
+			return false;
+		}).size().areEqual(actualTotal);
+	}
+
+	@Test
+	public function when_filterNot_all__should_return_toString() : Void {
+		actual.filterNot(function(x) {
+			return false;
+		}).toString().areEqual('List(1, 2, 3, 4, 5)');
+	}
+
+	@Test
+	public function when_filterNot_all_true__should_return_size_of_0() : Void {
+		actual.filterNot(function(x) {
+			return true;
+		}).size().areEqual(0);
+	}
+
 	// Init
 
 	@Test
