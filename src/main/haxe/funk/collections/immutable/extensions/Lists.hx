@@ -340,6 +340,18 @@ class Lists {
 		return stack;
 	}
 
+	public static function takeWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+		var stack = Nil;
+		while (nonEmpty(list)) {
+			var h = head(list);
+			if (func(h)) {
+				stack = prepend(stack, h);
+			}
+			list = tail(list);
+		}
+		return reverse(stack);
+	}
+
 	public static function append<T>(list : List<T>, item : T) : List<T> {
 		return appendAll(list, Cons(item, Nil));
 	}

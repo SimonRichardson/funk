@@ -924,6 +924,67 @@ class ListTestBase {
 		called.isTrue();
 	}
 
+	// Take While
+
+	@Test
+	public function when_takeWhile__should_return_isNotNull() : Void {
+		actual.takeWhile(function(value) {
+			return true;
+		}).isNotNull();
+	}
+
+	@Test
+	public function when_takeWhile__should_return_valid_IList() : Void {
+		actual.takeWhile(function(value) {
+			return true;
+		}).toString().areEqual('List(1, 2, 3, 4, 5)');
+	}
+
+	@Test
+	public function when_takeWhile__should_return_size_4() : Void {
+		actual.takeWhile(function(value) {
+			return true;
+		}).size().areEqual(actualTotal);
+	}
+
+	@Test
+	public function when_takeWhile__should_return_size_0() : Void {
+		actual.takeWhile(function(value) {
+			return false;
+		}).size().areEqual(0);
+	}
+
+	@Test
+	public function when_takeWhile__should_return_nil() : Void {
+		actual.takeWhile(function(value) {
+			return false;
+		}).areEqual(Nil);
+	}
+
+	@Test
+	public function when_takeWhile__should_return_size_2() : Void {
+		actual.takeWhile(function(value) {
+			return value <= 2;
+		}).size().areEqual(2);
+	}
+
+	@Test
+	public function when_takeWhile__should_return_1_2() : Void {
+		actual.takeWhile(function(value) {
+			return value <= 2;
+		}).toString().areEqual('List(1, 2)');
+	}
+
+	@Test
+	public function when_takeWhile__should_call_method() : Void {
+		var called = false;
+		actual.takeWhile(function(value) {
+			called = true;
+			return true;
+		});
+		called.isTrue();
+	}
+
 	// Init
 
 	@Test
