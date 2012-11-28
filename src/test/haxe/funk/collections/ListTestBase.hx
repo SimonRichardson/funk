@@ -818,6 +818,111 @@ class ListTestBase {
 		}).areEqual(Some('edcba'));
 	}
 
+	// Take Left
+
+	@Test
+	public function when_takeLeft_0__should_return_isNotNull() : Void {
+		actual.takeLeft(0).isNotNull();
+	}
+
+	@Test
+	public function when_takeLeft_0___should_return_valid_Nil() : Void {
+		actual.takeLeft(0).toString().areEqual('Nil');
+	}
+
+	@Test
+	public function when_takeLeft_0__should_return_size_0() : Void {
+		actual.takeLeft(0).size().areEqual(0);
+	}
+
+	@Test
+	public function when_takeLeft_1__should_return_size_1() : Void {
+		actual.takeLeft(1).size().areEqual(1);
+	}
+
+	@Test
+	public function when_takeLeft_1__should_return_1_2_3_4() : Void {
+		actual.takeLeft(4).toString().areEqual('List(1, 2, 3, 4)');
+	}
+
+	@Test
+	public function when_takeLeft_10__should_return_size_5() : Void {
+		actual.takeLeft(10).size().areEqual(5);
+	}
+
+	@Test
+	public function when_takeLeft_1__should_return_1() : Void {
+		actual.takeLeft(1).get(0).areEqual(Some(1));
+	}
+
+	@Test
+	public function when_takeLeft_10__should_last_return_5() : Void {
+		actual.takeLeft(10).last().areEqual(Some(5));
+	}
+
+	@Test
+	public function when_takeLeft_minus_1__should_throw_error() : Void {
+		var called = try {
+			actual.takeLeft(-1);
+			false;
+		} catch(error : Dynamic){
+			true;
+		}
+		called.isTrue();
+	}
+
+	// Take Right
+
+	@Test
+	public function when_takeRight_0__should_return_isNotNull() : Void {
+		actual.takeRight(0).isNotNull();
+	}
+
+	@Test
+	public function when_takeRight_0___should_return_valid_Nil() : Void {
+		actual.takeRight(0).areEqual(Nil);
+	}
+
+	@Test
+	public function when_takeRight_0__should_return_size_0() : Void {
+		actual.takeRight(0).size().areEqual(0);
+	}
+
+	@Test
+	public function when_takeRight_1__should_return_size_1() : Void {
+		actual.takeRight(1).size().areEqual(1);
+	}
+
+	@Test
+	public function when_takeRight_4__should_return_size_2_3_4_5() : Void {
+		actual.takeRight(4).toString().areEqual('List(2, 3, 4, 5)');
+	}
+
+	@Test
+	public function when_takeRight_10__should_return_size_5() : Void {
+		actual.takeRight(10).size().areEqual(5);
+	}
+
+	@Test
+	public function when_takeRight_1__should_return_5() : Void {
+		actual.takeRight(1).get(0).areEqual(Some(5));
+	}
+
+	@Test
+	public function when_takeRight_10__should_last_return_5() : Void {
+		actual.takeRight(10).last().areEqual(Some(5));
+	}
+
+	@Test
+	public function when_takeRight_minus_1__should_throw_error() : Void {
+		var called = try {
+			actual.takeRight(-1);
+			false;
+		} catch(error : Dynamic){
+			true;
+		}
+		called.isTrue();
+	}
 
 	// Init
 

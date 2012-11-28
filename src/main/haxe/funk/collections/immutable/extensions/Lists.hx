@@ -302,6 +302,44 @@ class Lists {
 		return Some(value);
 	}
 
+	public static function takeLeft<T>(list : List<T>, amount : Int) : List<T> {
+		if (amount < 0) {
+			Funk.error(Errors.ArgumentError('Amount must be positive'));
+		} else if (amount == 0) {
+			return Nil;
+		} else if (amount > size(list)) {
+			return list;
+		}
+
+		var stack = Nil;
+		for (i in 0...amount) {
+			stack = prepend(stack, head(list));
+			list = tail(list);
+		}
+
+		return reverse(stack);
+	}
+
+	public static function takeRight<T>(list : List<T>, amount : Int) : List<T> {
+		if (amount < 0) {
+			Funk.error(Errors.ArgumentError('Amount must be positive'));
+		} else if (amount == 0) {
+			return Nil;
+		} else if (amount > size(list)) {
+			return list;
+		}
+
+		list = reverse(list);
+
+		var stack = Nil;
+		for (i in 0...amount) {
+			stack = prepend(stack, head(list));
+			list = tail(list);
+		}
+
+		return stack;
+	}
+
 	public static function append<T>(list : List<T>, item : T) : List<T> {
 		return appendAll(list, Cons(item, Nil));
 	}
