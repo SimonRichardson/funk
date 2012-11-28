@@ -6,6 +6,7 @@ import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Predicate2;
 import funk.types.Option;
+import funk.types.extensions.Anys;
 import funk.types.extensions.Options;
 
 using funk.types.extensions.Options;
@@ -122,24 +123,14 @@ class Eithers {
 			case Left(left0):
 				switch (b) {
 					case Left(left1):
-						// Create the function when needed.
-						var eqLeft : Predicate2<T1, T1> = function(a, b) : Bool {
-							return null != funcLeft ? funcLeft(a, b) : a == b;
-						};
-
-						eqLeft(left0, left1);
+						Anys.equals(left0, left1, funcLeft);
 					case Right(_): false;
 				}
 			case Right(right0):
 				switch (b) {
 					case Left(_): false;
 					case Right(right1):
-						// Create the function when needed.
-						var eqRight : Predicate2<T2, T2> = function(a, b) : Bool {
-							return null != funcRight ? funcRight(a, b) : a == b;
-						};
-
-						eqRight(right0, right1);
+						Anys.equals(right0, right1, funcRight);
 				}
 		}
 	}
@@ -151,10 +142,12 @@ class Eithers {
 		}
 	}
 
-	public static function toString<T1, T2>(either : Either<T1, T2>) : String {
+	public static function toString<T1, T2>(	either : Either<T1, T2>,
+												?funcLeft : Function1<T1, String>,
+												?funcRight : Function1<T2, String>) : String {
 		return switch (either) {
-			case Left(value): Std.format('Left($value)');
-			case Right(value): Std.format('Right($value)');
+			case Left(value): Std.format('Left(${Anys.toString(value, funcLeft)})');
+			case Right(value): Std.format('Right(${Anys.toString(value, funcRight)})');
 		}
 	}
 

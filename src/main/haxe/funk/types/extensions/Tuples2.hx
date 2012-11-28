@@ -1,8 +1,10 @@
 package funk.types.extensions;
 
 import funk.Funk;
-import funk.types.Tuple2;
+import funk.types.extensions.Anys;
+import funk.types.Function1;
 import funk.types.Predicate2;
+import funk.types.Tuple2;
 
 class Tuples2 {
 
@@ -33,22 +35,17 @@ class Tuples2 {
 			case tuple2(t1_0, t2_0):
 				switch (b) {
 					case tuple2(t1_1, t2_1):
-						// Create the function when needed.
-						var eq1 : Predicate2<T1, T1> = function(a, b) : Bool {
-							return null != func1 ? func1(a, b) : a == b;
-						};
-						var eq2 : Predicate2<T2, T2> = function(a, b) : Bool {
-							return null != func2 ? func2(a, b) : a == b;
-						};
-
-						eq1(t1_0, t1_1) && eq2(t2_0, t2_1);
+						Anys.equals(t1_0, t1_1, func1) && Anys.equals(t2_0, t2_1, func2);
 				}
 		}
 	}
 
-	public static function toString<T1, T2>(tuple : Tuple2<T1, T2>) : String {
+	public static function toString<T1, T2>(	tuple : Tuple2<T1, T2>,
+												?func0 : Function1<T1, String>,
+												?func1 : Function1<T2, String>
+												) : String {
 		return switch (tuple) {
-			case tuple2(t1, t2): Std.format('($t1, $t2)');
+			case tuple2(t1, t2): Std.format('(${Anys.toString(t1, func0)}, ${Anys.toString(t2, func1)})');
 		}
 	}
 }

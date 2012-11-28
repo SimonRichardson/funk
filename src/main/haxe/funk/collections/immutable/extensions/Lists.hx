@@ -152,7 +152,7 @@ class Lists {
 		var p = list;
 		while (nonEmpty(p)) {
 			var h = head(p);
-			
+
 			p = tail(p);
 
 			if (func(h)) {
@@ -176,7 +176,7 @@ class Lists {
 		var p = list;
 		while (nonEmpty(p)) {
 			var h = head(p);
-			
+
 			p = tail(p);
 
 			if (!func(h)) {
@@ -242,7 +242,7 @@ class Lists {
 			return None;
 		}
 
-		while(nonEmpty(list)) {
+		while (nonEmpty(list)) {
 			if (index == 0) {
 				return headOption(list);
 			}
@@ -256,11 +256,28 @@ class Lists {
 
 	public static function map<T, E>(list : List<T>, func : Function1<T, E>) : List<E> {
 		var stack = Nil;
-		while(nonEmpty(list)) {
+		while (nonEmpty(list)) {
 			stack = prepend(stack, func(head(list)));
 			list = tail(list);
 		}
 		return reverse(stack);
+	}
+
+	public static function partition<T>(list : List<T>, func : Predicate1<T>) : Tuple2<List<T>, List<T>> {
+		var left = Nil;
+		var right = Nil;
+
+		while (nonEmpty(list)) {
+			var h = head(list);
+			if (func(h)) {
+				left = prepend(left, h);
+			} else {
+				right = prepend(right, h);
+			}
+			list = tail(list);
+		}
+
+		return tuple2(reverse(left), reverse(right));
 	}
 
 	public static function append<T>(list : List<T>, item : T) : List<T> {
@@ -436,7 +453,7 @@ class Lists {
 				var mapper : Function1<T, String> = function(value) {
 					return null != func ? func(value) : '' + value;
 				};
-				
+
 				var mapped : Iterable<String> = Collections.map({
 					iterator: function() {
 						return iterator(list);
@@ -444,7 +461,7 @@ class Lists {
 				}, function(value) {
 					return mapper(value);
 				});
-				
+
 				'List(' + Collections.foldLeftWithIndex(mapped, '', function(a, b, index) {
 					return (index < 1) ? b : a + ', ' + b;
 				}) + ')';

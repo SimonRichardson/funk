@@ -683,6 +683,75 @@ class ListTestBase {
 		}).get(0).areEqual(Some(instance));
 	}
 
+	// Partition
+
+	@Test
+	public function when_partition__should_return_isNotNull() : Void {
+		actual.partition(function(value) {
+			return true;
+		}).isNotNull();
+	}
+
+	@Test
+	public function when_partition__should_return_a_Tuple2() : Void {
+		actual.partition(function(value) {
+			return value % 2 == 0;
+		}).toString(function (x) {
+			return x.toString();
+		}, function (x) {
+			return x.toString();
+		}).areEqual('(List(2, 4), List(1, 3, 5))');
+	}
+
+	@Test
+	public function when_partition__should_return_a_ITuple2_and__1_is_List() : Void {
+		actual.partition(function(value) {
+			return true;
+		})._1().toString().areEqual('List(1, 2, 3, 4, 5)');
+	}
+
+	@Test
+	public function when_partition_false__should_return_a_ITuple2_and__2_is_List() : Void {
+		actual.partition(function(value) {
+			return false;
+		})._2().toString().areEqual('List(1, 2, 3, 4, 5)');
+	}
+
+	@Test
+	public function when_partition_false__should_return_a_ITuple2_and__1_is_empty() : Void {
+		actual.partition(function(value) {
+			return false;
+		})._1().isEmpty().isTrue();
+	}
+
+	@Test
+	public function when_partition_false__should_return_a_ITuple2_and__2_is_empty() : Void {
+		actual.partition(function(value) {
+			return true;
+		})._2().isEmpty().isTrue();
+	}
+
+	@Test
+	public function when_partition__should_return_a_ITuple2_and__1_is_IList_of_size_2() : Void {
+		actual.partition(function(value) {
+			return value % 2 == 0;
+		})._1().size().areEqual(2);
+	}
+
+	@Test
+	public function when_partition__should_return_a_ITuple2_and__2_is_Nil() : Void {
+		actual.partition(function(value) {
+			return true;
+		})._2().toString().areEqual('Nil');
+	}
+
+	@Test
+	public function when_partition__should_return_a_ITuple2_and__2_is_List_of_size_3() : Void {
+		actual.partition(function(value) {
+			return value % 2 == 0;
+		})._2().size().areEqual(3);
+	}
+
 	// Init
 
 	@Test

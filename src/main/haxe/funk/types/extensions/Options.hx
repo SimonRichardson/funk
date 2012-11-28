@@ -1,6 +1,7 @@
 package funk.types.extensions;
 
 import funk.Funk;
+import funk.types.extensions.Anys;
 import funk.types.Option;
 import funk.types.Function0;
 import funk.types.Function1;
@@ -128,10 +129,7 @@ class Options {
 	public static function toString<T>(option : Option<T>, ?func : Function1<T, String>) : String {
 		return switch (option) {
 			case Some(value):
-				var str = function() {
-					return null != func ? func(value) : '' + value;
-				}
-				Std.format('Some(${str()})');
+				Std.format('Some(${Anys.toString(value, func)})');
 			case None: 'None';
 		}
 	}
