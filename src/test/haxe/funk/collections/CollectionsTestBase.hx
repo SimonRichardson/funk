@@ -1,5 +1,6 @@
 package funk.collections;
 
+import funk.collections.Collection;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Option;
@@ -15,15 +16,15 @@ using funk.types.extensions.Tuples2;
 
 class CollectionsTestBase {
 
-	public var alpha : Iterable<String>;
+	public var alpha : Collection<String>;
 
-	public var actual : Iterable<Int>;
+	public var actual : Collection<Int>;
 
 	public var actualTotal : Int;
 
-	public var complex : Iterable<Iterable<Int>>;
+	public var complex : Collection<Collection<Int>>;
 
-	public var other : Iterable<Int>;
+	public var other : Collection<Int>;
 
 	public var otherTotal : Int;
 
