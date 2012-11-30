@@ -6,7 +6,7 @@ enum Errors {
 	Abstract;
 	AbstractMethod;
 	ArgumentError(?message : String);
-	IllegalOperationError;
+	IllegalOperationError(?message : String);
 	NoSuchElementError;
 	RangeError;
 	TypeError(?message : String);
@@ -23,7 +23,7 @@ class Funk {
 				'Method is abstract, you must override it';
 			case ArgumentError(msg):
 				msg == null ? 'Arguments supplied are not expected' : msg;
-			case IllegalOperationError:
+			case IllegalOperationError(msg):
 				'Required operation can not be executed';
 			case NoSuchElementError:
 				'No such element exists';
