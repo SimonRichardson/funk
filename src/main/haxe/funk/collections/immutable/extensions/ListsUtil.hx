@@ -45,27 +45,20 @@ class ListsUtil {
 			case TEnum(e):
 				if (e == List) {
 					return cast any;
-				} else {
-					Funk.error(Errors.ArgumentError());
 				}
 			case TObject:
 				if (Std.is(any, Array)) {
 					return arrayToList(cast any);
 				} else if (Std.is(any, String)) {
 					return stringToList(cast any);
-				} else {
-					Funk.error(Errors.ArgumentError());
 				}
 			case TClass(c):
 				if (c == Array) {
 					return arrayToList(cast any);
 				} else if (c == String) {
 					return stringToList(cast any);
-				} else {
-					Funk.error(Errors.ArgumentError());	
 				}
 			default:
-				Funk.error(Errors.ArgumentError());
 		}
 
 		return Nil.append(cast any);

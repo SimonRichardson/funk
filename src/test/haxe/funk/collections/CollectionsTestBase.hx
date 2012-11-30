@@ -7,11 +7,13 @@ import funk.types.Tuple2;
 import funk.types.extensions.Options;
 import funk.types.extensions.Tuples2;
 import massive.munit.Assert;
+import unit.Asserts;
 
 using massive.munit.Assert;
 using funk.collections.extensions.Collections;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
+using unit.Asserts;
 
 class CollectionsTestBase {
 
@@ -159,7 +161,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_tailOption__should_be_Option() : Void {
-		actual.tailOption().areEqual(Some(actual.tail()));
+		actual.tailOption().get().areIterablesEqual(actual.tail());
 	}
 
 	@Test
@@ -169,14 +171,14 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_tailOption__should_be_Some_value_of_2_3_4() : Void {
-		actual.tailOption().areEqual(Some(actual.tail()));
+		actual.tailOption().get().areIterablesEqual(actual.tail());
 	}
 
 	@Test
 	public function when_tailOption__should_be_Some_2_3_4() : Void {
 		actual.tailOption().toString(function(value) {
 			return value.toString();
-		}).areEqual(Std.format('Some($name($name(2, 3, 4, 5))'));
+		}).areEqual(Std.format('Some($name(2, 3, 4, 5))'));
 	}
 
 	// Reverse
@@ -433,7 +435,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_flatten__should_flatten_list() : Void {
-		actual.flatten().areEqual(actual);
+		actual.flatten().areIterablesEqual(actual);
 	}
 
 	@Test
@@ -954,7 +956,12 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_takeRight_0___should_return_valid_Nil() : Void {
-		actual.takeRight(0).areEqual(empty);
+		actual.takeRight(0).areIterablesEqual(empty);
+	}
+
+	@Test
+	public function when_takeRight_0_toString__should_return_valid_empty() : Void {
+		actual.takeRight(0).toString().areEqual(emptyName);
 	}
 
 	@Test
@@ -1032,7 +1039,14 @@ class CollectionsTestBase {
 	public function when_takeWhile__should_return_nil() : Void {
 		actual.takeWhile(function(value) {
 			return false;
-		}).areEqual(empty);
+		}).areIterablesEqual(empty);
+	}
+
+	@Test
+	public function when_takeWhile_toString__should_return_empty_name() : Void {
+		actual.takeWhile(function(value) {
+			return false;
+		}).toString().areEqual(emptyName);
 	}
 
 	@Test

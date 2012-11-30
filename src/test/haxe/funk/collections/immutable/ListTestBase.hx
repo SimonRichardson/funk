@@ -165,7 +165,7 @@ class ListTestBase {
 	public function when_tailOption__should_be_Some_2_3_4() : Void {
 		actual.tailOption().toString(function(value : List<Int>) {
 			return value.toString();
-		}).areEqual(Std.format('Some($name($name(2, 3, 4, 5))'));
+		}).areEqual(Std.format('Some($name(2, 3, 4, 5))'));
 	}
 
 	// Reverse

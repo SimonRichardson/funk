@@ -1,12 +1,14 @@
 package funk.collections.extensions;
 
 import Type;
+import Lambda;
 import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.extensions.Strings;
 
+using Lambda;
 using funk.collections.immutable.extensions.Lists;
 
 class CollectionsUtil {
@@ -23,16 +25,14 @@ class CollectionsUtil {
 	public static function toCollection<T, R>(x : T) : Collection<R> {
 		var valueType : ValueType = Type.typeof(x);
 
-		var size : Int = 0;
+		var size : Int = -1;
 		var iterable : Iterable<R> = null;
 
 		switch (valueType) {
 			case TEnum(e):
 				if (e == List) {
 					return (cast e).collection();
-				} else {
-					Funk.error(Errors.ArgumentError());
-				}
+				} 
 			case TObject:
 				if (Reflect.hasField(x, REFLECT_NAME)) {
 					var reflect = Reflect.field(x, REFLECT_NAME);
@@ -40,8 +40,6 @@ class CollectionsUtil {
 						return cast x;
 					}
 				} 
-
-				Funk.error(Errors.ArgumentError());
 			case TClass(c):
 				if (c == Array) {
 					var array : Array<R> = cast x;
@@ -56,10 +54,20 @@ class CollectionsUtil {
 						}
 					};
 				} else {
-					Funk.error(Errors.ArgumentError());
+					var instanceFields : Array<String> = Type.getInstanceFields(c);
+					if (instanceFields.indexOf('size') >= 0 && instanceFields.indexOf('iterator') >= 0) {
+						// We have a possible match
+						return cast x;
+					}
 				}
+
 			default:
-				Funk.error(Errors.ArgumentError());
+		}
+
+		// If none exist, create it.
+		if (size == -1 && null == iterable) {
+			iterable = cast [x];
+			size = 1;
 		}
 
 		var collection : Collection<R> = {
@@ -73,8 +81,7 @@ class CollectionsUtil {
 
 		Reflect.setField(collection, REFLECT_NAME, {
 			id: NAME,
-			type: valueType,
-			origin: x
+			type: valueType
 		});
 
 		return collection;

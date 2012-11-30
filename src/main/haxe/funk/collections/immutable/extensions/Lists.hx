@@ -87,11 +87,13 @@ class Lists {
 			Funk.error(Errors.ArgumentError('Amount must be positive'));
 		}
 
-		for (i in 0...amount) {
-			if (isEmpty(list)) {
-				return Nil;
-			}
-			list = tail(list);
+		if (amount > 0) {
+			for (i in 0...amount) {
+				if (isEmpty(list)) {
+					return Nil;
+				}
+				list = tail(list);
+			}	
 		}
 
 		return list;

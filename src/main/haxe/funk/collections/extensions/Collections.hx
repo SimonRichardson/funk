@@ -42,17 +42,20 @@ class Collections {
 			Funk.error(Errors.ArgumentError('Amount must be positive'));
 		}
 
-		var iterator = collection.iterator();
+		if (amount > 0) {
+			var iterator = collection.iterator();
 
-		var stack = [];
-		for (i in 0...amount) {
-			if (!iterator.hasNext()) {
-				return CollectionsUtil.toCollection([]);
+			for (i in 0...amount) {
+				if (!iterator.hasNext()) {
+					return CollectionsUtil.toCollection([]);
+				}
+				iterator.next();
 			}
-			stack.push(iterator.next());
-		}
 
-		return CollectionsUtil.toCollection(stack);
+			return CollectionsUtil.toCollection(iterator.toArray());
+		} else {
+			return collection;
+		}
 	}
 
 	public static function dropRight<T>(collection : Collection<T>, amount : Int) : Collection<T> {
@@ -72,19 +75,20 @@ class Collections {
 		var stack = [];
 		for (i in 0...amount) {
 			var h = iterator.next();
-			stack.unshift(h);
+			stack.push(h);
 		}
 
 		return CollectionsUtil.toCollection(stack);
 	}
 
 	public static function dropWhile<T>(collection : Collection<T>, func : Predicate1<T>) : Collection<T> {
-		var stack = [];
-		for (i in collection.iterator()) {
+		var iterator = collection.iterator();
+		for (i in iterator) {
 			if (!func(i)) {
-				return CollectionsUtil.toCollection(stack);
+				var result = iterator.toArray();
+				result.unshift(i);
+				return CollectionsUtil.toCollection(result);
 			}
-			stack.push(i);
 		}
 		return CollectionsUtil.toCollection([]);
 	}
@@ -121,11 +125,11 @@ class Collections {
 
 		for (i in collection.iterator()) {
 			if (func(i)) {
-				stack.unshift(i);
+				stack.push(i);
 			} else {
 				allFiltered = false;
 			}
-			clone.unshift(i);
+			clone.push(i);
 		}
 
 		if (allFiltered) {
@@ -142,11 +146,11 @@ class Collections {
 
 		for (i in collection.iterator()) {
 			if (!func(i)) {
-				stack.unshift(i);
+				stack.push(i);
 			} else {
 				allFiltered = false;
 			}
-			clone.unshift(i);
+			clone.push(i);
 		}
 
 		if (allFiltered) {
@@ -267,9 +271,9 @@ class Collections {
 		var right = [];
 		for (i in collection.iterator()) {
 			if (func(i)) {
-				left.unshift(i);
+				left.push(i);
 			} else {
-				right.unshift(i);
+				right.push(i);
 			}
 		}
 		return tuple2(CollectionsUtil.toCollection(left), CollectionsUtil.toCollection(right));
@@ -334,13 +338,15 @@ class Collections {
 		for (i in 0...amount) {
 			stack.push(iterator.next());
 		}
-		return CollectionsUtil.toCollection(stack);
+		return reverse(CollectionsUtil.toCollection(stack));
 	}
 
 	public static function takeWhile<T>(collection : Collection<T>, func : Predicate1<T>) : Collection<T> {
 		var stack = [];
 		for (i in collection.iterator()) {
-			stack.push(i);
+			if (func(i)) {
+				stack.push(i);
+			}
 		}
 		return CollectionsUtil.toCollection(stack);
 	}
@@ -393,7 +399,7 @@ class Collections {
 
 	public static function prependAll<T>(collection : Collection<T>, items : Collection<T>) : Collection<T> {
 		var stack = toArray(collection);
-		stack = toArray(items).concat(stack);
+		stack = toArray(reverse(items)).concat(stack);
 		return CollectionsUtil.toCollection(stack);
 	}
 
