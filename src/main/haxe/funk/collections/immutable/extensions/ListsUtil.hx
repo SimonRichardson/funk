@@ -6,6 +6,7 @@ import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Function0;
 import funk.types.Option;
+import funk.types.extensions.Strings;
 
 using funk.collections.immutable.extensions.Lists;
 
@@ -33,18 +34,7 @@ class ListsUtil {
 		var stringToList = function(string : String) {
 			var list = Nil;
 
-			// TODO (Simon) : Replace with string iterator.
-			var count = 0;
-			var iterator = {
-				hasNext: function() {
-					return count < string.length;
-				},
-				next: function() {
-					return string.substr(count++, 1);
-				}
-			};
-
-			for (item in iterator) {
+			for (item in Strings.iterator(string)) {
 				list = list.append(cast item);
 			}
 
@@ -55,20 +45,27 @@ class ListsUtil {
 			case TEnum(e):
 				if (e == List) {
 					return cast any;
+				} else {
+					Funk.error(Errors.ArgumentError());
 				}
 			case TObject:
 				if (Std.is(any, Array)) {
 					return arrayToList(cast any);
 				} else if (Std.is(any, String)) {
 					return stringToList(cast any);
+				} else {
+					Funk.error(Errors.ArgumentError());
 				}
 			case TClass(c):
 				if (c == Array) {
 					return arrayToList(cast any);
 				} else if (c == String) {
 					return stringToList(cast any);
+				} else {
+					Funk.error(Errors.ArgumentError());	
 				}
 			default:
+				Funk.error(Errors.ArgumentError());
 		}
 
 		return Nil.append(cast any);

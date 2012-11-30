@@ -1,14 +1,17 @@
 package funk.collections.extensions;
 
+import funk.Funk;
 import funk.collections.Collection;
+import funk.collections.extensions.CollectionsUtil;
 import funk.collections.extensions.IteratorsUtil;
-import funk.types.extensions.Anys;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Function3;
 import funk.types.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
+import funk.types.Tuple2;
+import funk.types.extensions.Anys;
 
 using funk.collections.extensions.IteratorsUtil;
 
@@ -43,10 +46,10 @@ class Collections {
 
 		var stack = [];
 		for (i in 0...amount) {
-			if (!collection.hasNext()) {
-				return [];
+			if (!iterator.hasNext()) {
+				return CollectionsUtil.toCollection([]);
 			}
-			stack.push(collection.next());
+			stack.push(iterator.next());
 		}
 
 		return CollectionsUtil.toCollection(stack);
@@ -72,7 +75,7 @@ class Collections {
 			stack.unshift(h);
 		}
 
-		return stack;
+		return CollectionsUtil.toCollection(stack);
 	}
 
 	public static function dropWhile<T>(collection : Collection<T>, func : Predicate1<T>) : Collection<T> {
@@ -99,14 +102,14 @@ class Collections {
 										func : Function1<T, Collection<T>>
 										) : Collection<T> {
 		var mapped = [];
-		for(item in iterable.iterator()) {
+		for(item in collection.iterator()) {
 			mapped = mapped.concat(func(item).iterator().toArray());
 		}
 		return CollectionsUtil.toCollection(mapped);
 	}
 
 	public static function flatten<T>(collection : Collection<T>) : Collection<T> {
-		return flatMap(list, function(x) {
+		return flatMap(collection, function(x) {
 			return CollectionsUtil.toCollection(x);
 		});
 	}
@@ -257,8 +260,228 @@ class Collections {
 		return CollectionsUtil.toCollection(mapped);
 	}
 
+	public static function partition<T>(	collection : Collection<T>, 
+											func : Predicate1<T>
+											) : Tuple2<Collection<T>, Collection<T>> {
+		var left = [];
+		var right = [];
+		for (i in collection.iterator()) {
+			if (func(i)) {
+				left.unshift(i);
+			} else {
+				right.unshift(i);
+			}
+		}
+		return tuple2(CollectionsUtil.toCollection(left), CollectionsUtil.toCollection(right));
+	}
+
+	public static function reduceLeft<T>(collection : Collection<T>, func : Function2<T, T, T>) : Option<T> {
+		if (size(collection) < 1) {
+			return None;
+		}
+
+		var iterator = collection.iterator();
+		var value = iterator.next();
+		for (i in iterator) {
+			value = func(value, i);
+		}
+		return Some(value);
+	}
+
+	public static function reduceRight<T>(collection : Collection<T>, func : Function2<T, T, T>) : Option<T> {
+		if (size(collection) < 1) {
+			return None;
+		}
+
+		var iterator = collection.iterator().reverse();
+		var value = iterator.next();
+		for (i in iterator) {
+			value = func(value, i);
+		}
+		return Some(value);
+	}
+
+	public static function takeLeft<T>(collection : Collection<T>, amount : Int) : Collection<T> {
+		if (amount < 0) {
+			Funk.error(Errors.ArgumentError('Amount must be positive'));
+		} else if (amount == 0) {
+			return CollectionsUtil.zero();
+		} else if (amount > size(collection)) {
+			return collection;
+		}
+
+		var iterator = collection.iterator();
+
+		var stack = [];
+		for (i in 0...amount) {
+			stack.push(iterator.next());
+		}
+		return CollectionsUtil.toCollection(stack);
+	}
+
+	public static function takeRight<T>(collection : Collection<T>, amount : Int) : Collection<T> {
+		if (amount < 0) {
+			Funk.error(Errors.ArgumentError('Amount must be positive'));
+		} else if (amount == 0) {
+			return CollectionsUtil.zero();
+		} else if (amount > size(collection)) {
+			return collection;
+		}
+
+		var iterator = collection.iterator().reverse();
+
+		var stack = [];
+		for (i in 0...amount) {
+			stack.push(iterator.next());
+		}
+		return CollectionsUtil.toCollection(stack);
+	}
+
+	public static function takeWhile<T>(collection : Collection<T>, func : Predicate1<T>) : Collection<T> {
+		var stack = [];
+		for (i in collection.iterator()) {
+			stack.push(i);
+		}
+		return CollectionsUtil.toCollection(stack);
+	}
+
+	public static function zip<T1, T2>(	collection : Collection<T1>, 
+										other : Collection<T2>
+										) : Collection<Tuple2<T1, T2>> {
+		var amount = Std.int(Math.min(size(collection), size(other)));
+
+		if (amount <= 0) {
+			return CollectionsUtil.zero();
+		}
+
+		var iterator0 = collection.iterator();
+		var iterator1 = other.iterator();
+
+		var stack = [];
+		for (i in 0...amount) {
+			stack.push(tuple2(iterator0.next(), iterator1.next()));
+		}
+
+		return CollectionsUtil.toCollection(stack);
+	}
+
+	public static function append<T>(collection : Collection<T>, item : T) : Collection<T> {
+		var stack = toArray(collection);
+		stack.push(item);
+		return CollectionsUtil.toCollection(stack);
+	}
+
+	public static function appendAll<T>(collection : Collection<T>, items : Collection<T>) : Collection<T> {
+		var stack = toArray(collection);
+		stack = stack.concat(toArray(items));
+		return CollectionsUtil.toCollection(stack);
+	}
+
+	public static function appendIterator<T>(collection : Collection<T>, iterator : Iterator<T>) : Collection<T> {
+		return appendAll(collection, iterator.toCollection());
+	}
+
+	public static function appendIterable<T>(collection : Collection<T>, iterable : Iterable<T>) : Collection<T> {
+		return appendIterator(collection, iterable.iterator());
+	}
+
+	public static function prepend<T>(collection : Collection<T>, item : T) : Collection<T> {
+		var stack = toArray(collection);
+		stack.unshift(item);
+		return CollectionsUtil.toCollection(stack);
+	}
+
+	public static function prependAll<T>(collection : Collection<T>, items : Collection<T>) : Collection<T> {
+		var stack = toArray(collection);
+		stack = toArray(items).concat(stack);
+		return CollectionsUtil.toCollection(stack);
+	}
+
+	public static function prependIterator<T>(collection : Collection<T>, iterator : Iterator<T>) : Collection<T> {
+		return prependAll(collection, iterator.toCollection());
+	}
+
+	public static function prependIterable<T>(list : Collection<T>, iterable : Iterable<T>) : Collection<T> {
+		return prependIterator(list, iterable.iterator());
+	}
+
+	public static function head<T>(collection : Collection<T>) : T {
+		return if (collection.size() < 1) {
+			null;
+		} else {
+			collection.iterator().next();
+		}
+	}
+
+	public static function headOption<T>(collection : Collection<T>) : Option<T> {
+		return if (collection.size() < 1) {
+			None;
+		} else {
+			Some(collection.iterator().next());
+		}
+	}
+
+	public static function tail<T>(collection : Collection<T>) : Collection<T> {
+		return if (collection.size() < 1) {
+			CollectionsUtil.zero();
+		} else {
+			var iterator = collection.iterator();
+			iterator.next();
+			IteratorsUtil.toCollection(iterator);
+		}
+	}
+
+	public static function tailOption<T>(collection : Collection<T>) : Option<Collection<T>> {
+		var t = tail(collection);
+		return if (t.size() < 1) {
+			None;
+		} else {
+			Some(t);
+		}
+	}
+
+	public static function reverse<T>(collection : Collection<T>) : Collection<T> {
+		return IteratorsUtil.toCollection(collection.iterator().reverse());
+	}
+
+	public static function size<T>(collection : Collection<T>) : Int {
+		return collection.size();
+	}
+
+	public static function indices<T>(collection : Collection<T>) : Collection<Int> {
+		var stack = [];
+		var index = 0;
+		for (i in collection.iterator()) {
+			stack.push(index++);
+		}
+		return CollectionsUtil.toCollection(stack);
+	}
+
+	public static function init<T>(collection : Collection<T>) : Collection<T> {
+		return dropRight(collection, 1);
+	}
+
+	public static function last<T>(collection : Collection<T>) : Option<T> {
+		var value = None;
+		for (i in collection.iterator()) {
+			value = Some(i);
+		}
+		return value;
+	}
+
+	public static function zipWithIndex<T>(collection : Collection<T>) : Collection<Tuple2<T, Int>> {
+		var amount = size(collection);
+
+		var stack = [];
+		var index = 0;
+		for (i in collection.iterator()) {
+			stack.push(tuple2(i, index++));
+		}
+		return CollectionsUtil.toCollection(stack);
+	}
+
 	public static function isEmpty<T>(collection : Collection<T>) : Bool {
-		return collection.size() < 1;
+		return size(collection) < 1;
 	}
 
 	public static function nonEmpty<T>(collection : Collection<T> ) : Bool {
@@ -282,13 +505,16 @@ class Collections {
 	}
 
 	public static function toString<T>(collection : Collection<T>, ?func : Function1<T, String>) : String {
-		var mapped : Collection<String> = map(iterable, function(value) {
-			return Anys.toString(value, func);
-		});
-
-		return 'Collection(' + foldLeftWithIndex(mapped, '', function(a, b, index) {
-			return (index < 1) ? b : a + ', ' + b;
-		}) + ')';
+		return if (size(collection) < 1) {
+			'Collection';
+		} else {
+			var mapped : Collection<String> = map(collection, function(value) {
+				return Anys.toString(value, func);
+			});
+			'Collection(' + foldLeftWithIndex(mapped, '', function(a, b, index) {
+				return (index < 1) ? b : a + ', ' + b;
+			}) + ')';
+		}	
 	}
 }
 

@@ -317,6 +317,10 @@ class Lists {
 	}
 
 	public static function reduceLeft<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
+		if (size(list) < 1) {
+			return None;
+		}
+		
 		var value = head(list);
 		list = tail(list);
 		while (nonEmpty(list)) {
@@ -327,6 +331,10 @@ class Lists {
 	}
 
 	public static function reduceRight<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
+		if (size(list) < 1) {
+			return None;
+		}
+
 		list = reverse(list);
 		var value = head(list);
 		list = tail(list);

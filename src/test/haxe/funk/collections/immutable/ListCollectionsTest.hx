@@ -29,7 +29,11 @@ class ListCollectionsTest extends CollectionsTestBase {
 		other = [6, 7, 8, 9].toList().collection();
 		otherTotal = 4;
 
-		name = 'Collections';
+		empty = Nil.collection();
+		emptyTotal = 0;
+
+		name = 'Collection';
+		emptyName = 'Collection';
 	}
 
 }

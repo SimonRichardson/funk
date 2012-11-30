@@ -15,4 +15,8 @@ class IteratorsUtil {
 		}
 		return stack;
 	}
+
+	public static function toCollection<T>(iterator : Iterator<T>) : Collection<T> {
+		return CollectionsUtil.toCollection(toArray(iterator));
+	}
 }

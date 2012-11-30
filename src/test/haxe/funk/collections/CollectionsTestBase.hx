@@ -1,8 +1,7 @@
 package funk.collections;
 
 import funk.collections.Collection;
-import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.Lists;
+import funk.collections.extensions.Collections;
 import funk.types.Option;
 import funk.types.Tuple2;
 import funk.types.extensions.Options;
@@ -10,7 +9,7 @@ import funk.types.extensions.Tuples2;
 import massive.munit.Assert;
 
 using massive.munit.Assert;
-using funk.collections.immutable.extensions.Lists;
+using funk.collections.extensions.Collections;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
 
@@ -28,7 +27,13 @@ class CollectionsTestBase {
 
 	public var otherTotal : Int;
 
+	public var empty : Collection<Int>;
+
+	public var emptyTotal : Int;
+
 	public var name : String;
+
+	public var emptyName : String;
 
 
 	@Test
@@ -37,7 +42,7 @@ class CollectionsTestBase {
 	}
 
 	@Test
-	public function should_be_empty() {
+	public function should_not_be_empty() {
 		actual.isEmpty().isFalse();
 	}
 
@@ -51,6 +56,11 @@ class CollectionsTestBase {
 		complex.toString(function (x) {
 			return x.toString();
 		}).areEqual(Std.format('$name($name(1, 2, 3), $name(4, 5), $name(6), $name(7, 8, 9))'));
+	}
+
+	@Test
+	public function should_be_empty() {
+		empty.isEmpty().isTrue();
 	}
 
 	// Contains
@@ -164,7 +174,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_tailOption__should_be_Some_2_3_4() : Void {
-		actual.tailOption().toString(function(value : List<Int>) {
+		actual.tailOption().toString(function(value) {
 			return value.toString();
 		}).areEqual(Std.format('Some($name($name(2, 3, 4, 5))'));
 	}
@@ -806,7 +816,7 @@ class CollectionsTestBase {
 	public function when_partition__should_return_a_ITuple2_and__2_is_Nil() : Void {
 		actual.partition(function(value) {
 			return true;
-		})._2().toString().areEqual('Nil');
+		})._2().toString().areEqual(emptyName);
 	}
 
 	@Test
@@ -891,7 +901,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_takeLeft_0___should_return_valid_Nil() : Void {
-		actual.takeLeft(0).toString().areEqual('Nil');
+		actual.takeLeft(0).toString().areEqual(emptyName);
 	}
 
 	@Test
@@ -944,7 +954,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_takeRight_0___should_return_valid_Nil() : Void {
-		actual.takeRight(0).areEqual(Nil);
+		actual.takeRight(0).areEqual(empty);
 	}
 
 	@Test
@@ -1022,7 +1032,7 @@ class CollectionsTestBase {
 	public function when_takeWhile__should_return_nil() : Void {
 		actual.takeWhile(function(value) {
 			return false;
-		}).areEqual(Nil);
+		}).areEqual(empty);
 	}
 
 	@Test
@@ -1053,12 +1063,12 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_zip__should_not_be_null() : Void {
-		actual.zip(Nil).isNotNull();
+		actual.zip(empty).isNotNull();
 	}
 
 	@Test
 	public function when_zip__should_be_be_size_0() : Void {
-		actual.zip(Nil).size().areEqual(0);
+		actual.zip(empty).size().areEqual(0);
 	}
 
 	@Test

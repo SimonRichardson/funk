@@ -23,6 +23,12 @@ class CollectionsTest extends CollectionsTestBase {
 
 		other = [6, 7, 8, 9].toCollection();
 		otherTotal = 4;
+
+		empty = CollectionsUtil.zero();
+		emptyTotal = 0;
+
+		name = 'Collection';
+		emptyName = 'Collection';
 	}
 
 }
