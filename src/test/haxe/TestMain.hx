@@ -5,6 +5,8 @@ import massive.munit.client.JUnitReportClient;
 import massive.munit.TestRunner;
 
 import suites.CollectionsSuite;
+import suites.ReactiveSuite;
+import suites.SignalSuite;
 import suites.TypesSuite;
 
 #if js
@@ -34,6 +36,8 @@ class TestMain
         var suites = new Array<Class<massive.munit.TestSuite>>();
 
         suites.push(CollectionsSuite);
+        suites.push(ReactiveSuite);
+        suites.push(SignalSuite);
         suites.push(TypesSuite);
 
         #if MCOVER
