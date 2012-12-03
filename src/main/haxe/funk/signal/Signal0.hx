@@ -5,10 +5,12 @@ import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Function0;
 import funk.types.Option;
+import funk.types.extensions.Functions0;
 import funk.types.extensions.Options;
 import funk.signal.Signal;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.types.extensions.Functions0;
 using funk.types.extensions.Options;
 
 interface ISignal0 implements ISignal {
@@ -42,11 +44,11 @@ class Signal0 extends Signal, implements ISignal0 {
 
 	public function remove(func : Function0<Void>) : Option<Slot0> {
 		var o = _list.find(function(s : Slot0) : Bool {
-			return listenerEquals(s.listener, func);
+			return s.listener.equals(func);
 		});
 
 		_list = _list.filterNot(function(s : Slot0) : Bool {
-			return listenerEquals(s.listener, func);
+			return s.listener.equals(func);
 		});
 
 		return o;
@@ -64,23 +66,6 @@ class Signal0 extends Signal, implements ISignal0 {
       	}
 	}
 
-	private function listenerEquals(func0 : Function0<Void>, func1 : Function0<Void>) : Bool {
-		return if(func0 == func1) {
-			true;
-		}
-		#if js
-		else if(	Reflect.hasField(func0, 'scope') &&
-					Reflect.hasField(func1, 'scope') &&
-					Reflect.field(func0, 'scope') == Reflect.field(func1, 'scope') &&
-					Reflect.field(func0, 'method') == Reflect.field(func1, 'scope')) {
-			true;
-		}
-		#end
-		else {
-			false;
-		}
-	}
-
 	private function registerListener(func : Function0<Void>, once : Bool) : Option<Slot0> {
 
 		if(registrationPossible(func, once)) {
@@ -90,7 +75,7 @@ class Signal0 extends Signal, implements ISignal0 {
 		}
 
 		return _list.find(function(s : Slot0) : Bool {
-			return listenerEquals(s.listener, func);
+			return s.listener.equals(func);
 		});
 	}
 
@@ -100,7 +85,7 @@ class Signal0 extends Signal, implements ISignal0 {
 		}
 
 		var slot = _list.find(function(s : Slot0) : Bool {
-			return listenerEquals(s.listener, func);
+			return s.listener.equals(func);
 		});
 
 		return switch(slot) {
@@ -114,7 +99,7 @@ class Signal0 extends Signal, implements ISignal0 {
 		}
 	}
 
-	override private function get_size() : Int {
+	override public function size() : Int {
 		return _list.size();
 	}
 }

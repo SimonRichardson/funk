@@ -91,4 +91,26 @@ class Functions4 {
 			return func(tuple4(value0, value1, value2, value3));
 		};
 	}
+
+	public static function equals<T1, T2, T3, T4, R>(	func0 : Function4<T1, T2, T3, T4, R>, 
+														func1 : Function4<T1, T2, T3, T4, R>
+														) : Bool {
+		return if (func0 == func1) {
+			true;
+		} else {
+			#if js
+			// This will be wrapped in a bind method.
+			if (Reflect.hasField(func0, 'method') && Reflect.hasField(func1, 'method')) {
+				var field0 = Reflect.field(func0, 'method');
+				var field1 = Reflect.field(func1, 'method');
+
+				// Check to see if we've got any real binding methods.
+				if(field0 == field1 || field0 == func1 || field1 == func0) {
+					true;
+				}
+			}
+			#end
+			false;
+		}
+	}
 }

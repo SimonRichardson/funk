@@ -1,15 +1,14 @@
 package funk.signal;
 
-import funk.errors.IllegalOperationError;
-import funk.errors.RangeError;
-import funk.option.Option;
+import funk.types.Option;
+import funk.types.extensions.Options;
 import funk.signal.Signal0;
-
 import massive.munit.Assert;
-import util.AssertExtensions;
+import unit.Asserts;
 
+using funk.types.extensions.Options;
 using massive.munit.Assert;
-using util.AssertExtensions;
+using unit.Asserts;
 
 class Slot0Test {
 
@@ -53,7 +52,7 @@ class Slot0Test {
 		var listener = function() {};
 		var slot = signal.add(listener).get();
 		slot.execute();
-		signal.size.areEqual(1);
+		signal.size().areEqual(1);
 	}
 
 	@Test
@@ -61,7 +60,7 @@ class Slot0Test {
 		var listener = function() {};
 		var slot = signal.addOnce(listener).get();
 		slot.execute();
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -70,7 +69,7 @@ class Slot0Test {
 		var slot = signal.add(listener).get();
 		slot.remove();
 		slot.remove();
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -78,32 +77,5 @@ class Slot0Test {
 		var listener = function() {};
 		var slot = new Slot0(signal, listener, false);
 		slot.listener.areEqual(listener);
-	}
-
-	@Test
-	public function when_calling_productElement__should_return_same_listener() : Void {
-		var listener = function() {};
-		var slot = new Slot0(signal, listener, false);
-		slot.productElement(0).areEqual(listener);
-	}
-
-	@Test
-	public function when_calling_productElement_with_index_as_1__should_throw_Error() : Void {
-		var listener = function() {};
-		var slot = new Slot0(signal, listener, false);
-		var called = try {
-			slot.productElement(1);
-			false;
-		} catch (error : RangeError) {
-			true;
-		}
-		called.isTrue();
-	}
-
-	@Test
-	public function when_calling_productArity__should_be_1() : Void {
-		var listener = function() {};
-		var slot = new Slot0(signal, listener, false);
-		slot.productArity.areEqual(1);
 	}
 }

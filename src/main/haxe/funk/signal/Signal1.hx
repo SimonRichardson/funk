@@ -5,10 +5,12 @@ import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Function1;
 import funk.types.Option;
+import funk.types.extensions.Functions1;
 import funk.types.extensions.Options;
 import funk.signal.Signal;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.types.extensions.Functions1;
 using funk.types.extensions.Options;
 
 interface ISignal1<T1> implements ISignal {
@@ -42,11 +44,11 @@ class Signal1<T1> extends Signal, implements ISignal1<T1> {
 
 	public function remove(func : Function1<T1, Void>) : Option<Slot1<T1>> {
 		var o = _list.find(function(s : Slot1<T1>) : Bool {
-			return listenerEquals(s.listener, func);
+			return s.listener.equals(func);
 		});
 
 		_list = _list.filterNot(function(s : Slot1<T1>) : Bool {
-			return listenerEquals(s.listener, func);
+			return s.listener.equals(func);
 		});
 
 		return o;
@@ -64,24 +66,6 @@ class Signal1<T1> extends Signal, implements ISignal1<T1> {
       	}
 	}
 
-	private function listenerEquals(	func0 : Function1<T1, Void>,
-										func1 : Function1<T1, Void>) : Bool {
-		return if(func0 == func1) {
-			true;
-		}
-		#if js
-		else if(	Reflect.hasField(func0, 'scope') &&
-					Reflect.hasField(func1, 'scope') &&
-					Reflect.field(func0, 'scope') == Reflect.field(func1, 'scope') &&
-					Reflect.field(func0, 'method') == Reflect.field(func1, 'scope')) {
-			true;
-		}
-		#end
-		else {
-			false;
-		}
-	}
-
 	private function registerListener(	func : Function1<T1, Void>,
 										once : Bool) : Option<Slot1<T1>> {
 
@@ -92,17 +76,17 @@ class Signal1<T1> extends Signal, implements ISignal1<T1> {
 		}
 
 		return _list.find(function(s : Slot1<T1>) : Bool {
-			return listenerEquals(s.listener, func);
+			return s.listener.equals(func);
 		});
 	}
 
 	private function registrationPossible(func : Function1<T1, Void>, once : Bool) : Bool {
-		if(!_list.nonEmpty) {
+		if(!_list.nonEmpty()) {
 			return true;
 		}
 
 		var slot = _list.find(function(s : Slot1<T1>) : Bool {
-			return listenerEquals(s.listener, func);
+			return s.listener.equals(func);
 		});
 
 		return switch(slot) {
@@ -116,7 +100,7 @@ class Signal1<T1> extends Signal, implements ISignal1<T1> {
 		}
 	}
 
-	override private function get_size() : Int {
+	override public function size() : Int {
 		return _list.size();
 	}
 }

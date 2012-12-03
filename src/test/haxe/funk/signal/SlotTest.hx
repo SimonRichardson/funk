@@ -1,13 +1,11 @@
 package funk.signal;
 
-import funk.errors.AbstractMethodError;
 import funk.signal.Signal;
-
 import massive.munit.Assert;
-import util.AssertExtensions;
+import unit.Asserts;
 
 using massive.munit.Assert;
-using util.AssertExtensions;
+using unit.Asserts;
 
 class SlotTest {
 
@@ -26,32 +24,5 @@ class SlotTest {
 	@Test
 	public function when_creating_a_slot__should_not_be_null() : Void {
 		slot.isNotNull();
-	}
-
-	@Test
-	public function when_creating_a_slot__should_productArity_be_minus_1() : Void {
-		slot.productArity.areEqual(-1);
-	}
-
-	@Test
-	public function when_creating_a_slot__should_productPrefix_be_Signal() : Void {
-		slot.productPrefix.areEqual("Slot");
-	}
-
-	@Test
-	public function when_creating_a_slot__should_calling_productElement_throw_error() : Void {
-		var called = try {
-			slot.productElement(0);
-			false;
-		} catch(error : AbstractMethodError) {
-			true;
-		}
-		called.isTrue();
-	}
-
-	@Test
-	public function when_calling_remove__should_productArity_be_minus_1() : Void {
-		slot.remove();
-		slot.productArity.areEqual(-1);
 	}
 }

@@ -5,10 +5,12 @@ import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Function5;
 import funk.types.Option;
+import funk.types.extensions.Functions5;
 import funk.types.extensions.Options;
 import funk.signal.Signal5;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.types.extensions.Functions5;
 using funk.types.extensions.Options;
 
 class PrioritySignal5<T1, T2, T3, T4, T5> extends Signal5<T1, T2, T3, T4, T5> {
@@ -59,7 +61,7 @@ class PrioritySignal5<T1, T2, T3, T4, T5> extends Signal5<T1, T2, T3, T4, T5> {
     	}
 
     	return _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-			return listenerEquals(s.listener, func);
+			return s.listener.equals(func);
 		});
     }
 }
