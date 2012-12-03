@@ -44,11 +44,11 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 
 	public function remove(func : Function2<T1, T2, Void>) : Option<Slot2<T1, T2>> {
 		var o = _list.find(function(s : Slot2<T1, T2>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		_list = _list.filterNot(function(s : Slot2<T1, T2>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return o;
@@ -76,7 +76,7 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		}
 
 		return _list.find(function(s : Slot2<T1, T2>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 	}
 
@@ -86,7 +86,7 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		}
 
 		var slot = _list.find(function(s : Slot2<T1, T2>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return switch(slot) {

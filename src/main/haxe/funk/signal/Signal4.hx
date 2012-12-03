@@ -48,11 +48,11 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
 							) : Option<Slot4<T1, T2, T3, T4>> {
 
 		var o = _list.find(function(s : Slot4<T1, T2, T3, T4>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		_list = _list.filterNot(function(s : Slot4<T1, T2, T3, T4>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return o;
@@ -80,7 +80,7 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
 		}
 
 		return _list.find(function(s : Slot4<T1, T2, T3, T4>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 	}
 
@@ -91,7 +91,7 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
 		}
 
 		var slot = _list.find(function(s : Slot4<T1, T2, T3, T4>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return switch(slot) {

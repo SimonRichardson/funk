@@ -56,7 +56,7 @@ class PrioritySignal2<T1, T2> extends Signal2<T1, T2> {
     	}
 
     	return _list.find(function(s : Slot2<T1, T2>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
     }
 }

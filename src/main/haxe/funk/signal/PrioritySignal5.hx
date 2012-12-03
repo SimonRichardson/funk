@@ -61,7 +61,7 @@ class PrioritySignal5<T1, T2, T3, T4, T5> extends Signal5<T1, T2, T3, T4, T5> {
     	}
 
     	return _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
     }
 }

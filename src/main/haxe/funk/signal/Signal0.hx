@@ -44,11 +44,11 @@ class Signal0 extends Signal, implements ISignal0 {
 
 	public function remove(func : Function0<Void>) : Option<Slot0> {
 		var o = _list.find(function(s : Slot0) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		_list = _list.filterNot(function(s : Slot0) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return o;
@@ -75,7 +75,7 @@ class Signal0 extends Signal, implements ISignal0 {
 		}
 
 		return _list.find(function(s : Slot0) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 	}
 
@@ -85,7 +85,7 @@ class Signal0 extends Signal, implements ISignal0 {
 		}
 
 		var slot = _list.find(function(s : Slot0) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return switch(slot) {

@@ -55,7 +55,7 @@ class PrioritySignal0 extends Signal0 {
     	}
 
     	return _list.find(function(s : Slot0) : Bool {
-			return s.listener.equals(func);
+			return Reflect.compareMethods(s.listener, func);
 		});
     }
 }
