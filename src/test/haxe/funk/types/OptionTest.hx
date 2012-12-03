@@ -242,18 +242,18 @@ class OptionTest {
     }
 
     @Test
-    public function should_calling_each_on_Some_iterate_once() {
+    public function should_calling_foreach_on_Some_iterate_once() {
         var count = 0;
-        Some({}).each(function(v){
+        Some({}).foreach(function(v){
             count++;
         });
         count.areEqual(1);
     }
 
     @Test
-    public function should_calling_each_on_Some_pass_value() {
+    public function should_calling_foreach_on_Some_pass_value() {
         var value = {};
-        Some(value).each(function(v){
+        Some(value).foreach(function(v){
             value.areEqual(v);
         });
     }

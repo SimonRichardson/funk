@@ -6,15 +6,11 @@ import funk.types.Function1;
 class Pulses {
 
 	public static function time<T>(pulse : Pulse<T>) : Float {
-		return switch (pulse) {
-			case Pulse(time, _): time;
-		}
+		return Type.enumParameters(pulse)[0];
 	}
 
 	public static function value<T>(pulse : Pulse<T>) : T {
-		return switch (pulse) {
-			case Pulse(_, value): value;
-		}
+		return Type.enumParameters(pulse)[1];
 	}
 
 	public static function map<T, E>(pulse : Pulse<T>, func : Function1<T, E>) : Pulse<T> {

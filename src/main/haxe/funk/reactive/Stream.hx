@@ -20,8 +20,7 @@ class Stream<T> {
 
     private var _finishedListeners : ISignal0;
 
-	public function new(	propagator : Function1<Pulse<T>, Propagation<T>>,
-							sources : Array<Stream<T>> = null) {
+	public function new(propagator : Function1<Pulse<T>, Propagation<T>>) {
 		_rank = Rank.next();
 		_propagator = propagator;
 		_listeners = [];
@@ -29,13 +28,14 @@ class Stream<T> {
         _weakRef = false;
 
         _finishedListeners = new Signal0();
-
-		if(sources != null && sources.length > 0) {
-			for(source in sources) {
-				source.attachListener(this);
-			}
-		}
 	}
+
+    public function emit(value : T) : Stream<T> {
+        var time = Process.stamp();
+        var pulse = Pulse(time, value);
+
+        return this;
+    }
 
 	private function attachListener(listener : Stream<T>) : Void {
         _listeners.push(listener);
