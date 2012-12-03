@@ -8,27 +8,19 @@ import funk.types.Predicate2;
 class Tuples4 {
 
 	public static function _1<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : T1 {
-		return switch(tuple) {
-			case tuple4(value, _, _, _): value;
-		}
+		return Type.enumParameters(tuple)[0];
 	}
 
 	public static function _2<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : T2 {
-		return switch(tuple) {
-			case tuple4(_, value, _, _): value;
-		}
+		return Type.enumParameters(tuple)[1];
 	}
 
 	public static function _3<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : T3 {
-		return switch(tuple) {
-			case tuple4(_, _, value, _): value;
-		}
+		return Type.enumParameters(tuple)[2];
 	}
 
 	public static function _4<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : T4 {
-		return switch(tuple) {
-			case tuple4(_, _, _, value): value;
-		}
+		return Type.enumParameters(tuple)[3];
 	}
 
 	public static function equals<T1, T2, T3, T4>(	a : Tuple4<T1, T2, T3, T4>,
