@@ -43,6 +43,7 @@ class Streams {
         });
     }
 
+    @:noUsing
 	public static function create<T1, T2>(	pulse: Function1<Pulse<T1>, Propagation<T2>>,
 										    sources: Option<Collection<Stream<T1>>>
 										    ) : Stream<T2> {
@@ -57,7 +58,7 @@ class Streams {
         return stream;
     }
 
-    public function delay<T>(stream : Stream<T>, behaviour : Behaviour<Int>) : Stream<T> {
+    public static function delay<T>(stream : Stream<T>, behaviour : Behaviour<Int>) : Stream<T> {
         var out : Stream<T> = identity(None);
 
         create(function(pulse : Pulse<T>) : Propagation<T> {
@@ -69,7 +70,15 @@ class Streams {
         return out;
     } 
 
-    public function flatMap<T1, T2>(stream : Stream<T1>, func : Function1<T1, Stream<T2>>) : Stream<T2> {
+    public static function emitWithDelay<T>(stream : Stream<T>, value : T, delay : Int) : Stream<T> {
+        Process.start(function() {
+            stream.emit(value);
+        }, delay);
+
+        return stream;
+    }
+
+    public static function flatMap<T1, T2>(stream : Stream<T1>, func : Function1<T1, Stream<T2>>) : Stream<T2> {
         var previous : Option<Stream<T2>> = None;
         var out = identity(None);
 
@@ -88,7 +97,7 @@ class Streams {
         return out;
     }
 
-    public function foreach<T>(stream : Strean<T>, func : Function1<T, Void>) : Stream<T> {
+    public static function foreach<T>(stream : Strean<T>, func : Function1<T, Void>) : Stream<T> {
         create(function(pulse : Pulse<T>) : Propagation<T> {
             func(pulse.value());
 

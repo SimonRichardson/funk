@@ -36,7 +36,7 @@ class TestMain
         var suites = new Array<Class<massive.munit.TestSuite>>();
 
         suites.push(CollectionsSuite);
-        //suites.push(ReactiveSuite);
+        suites.push(ReactiveSuite);
         suites.push(SignalSuite);
         suites.push(TypesSuite);
 

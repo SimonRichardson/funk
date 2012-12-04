@@ -67,7 +67,7 @@ class OptionTest {
 
     @Test
     public function when_foreach_on_None_should_not_iterate_if_called() {
-        None.each(function (v) {
+        None.foreach(function (v) {
             Assert.fail("failed if callled");
         });
     }

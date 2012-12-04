@@ -2,6 +2,10 @@ package funk;
 
 import haxe.PosInfos;
 
+enum Unit {
+	Unit;
+}
+
 enum Errors {
 	Abstract;
 	AbstractMethod;
@@ -39,5 +43,4 @@ class Funk {
 	@:noUsing
 	public static function main() : Void {
 	}
-
 }

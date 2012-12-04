@@ -34,6 +34,39 @@ class Stream<T> {
         var time = Process.stamp();
         var pulse = Pulse(time, value);
 
+        // This will propagate through all listeners
+        var queue = new PriorityQueue<{stream: Stream<T>, pulse: Pulse<T>}>();
+        queue.insert(_rank, {  
+            stream: this, 
+            pulse: pulse
+        });
+
+        while (queue.size() > 0) {
+            var keyValue = queue.pop().value;
+
+            var stream = keyValue.stream;
+            var pulse  = keyValue.pulse;
+
+            switch (stream._propagator(pulse)) {
+                case Propagate(p): {
+                    var weak = true;
+
+                    for (listener in stream._listeners) {
+                        weak = weak && listener.weakRef;
+
+                        var index = listener._rank;
+                        queue.insert(index, {stream: listener, pulse: p});
+                    }
+
+                    if(stream._listeners.length > 0 && weak) {
+                        stream.weakRef = true;
+                    }
+                }
+
+                case Negate:
+            }
+        }
+
         return this;
     }
 
@@ -41,7 +74,6 @@ class Stream<T> {
         _listeners.push(listener);
 
         if(_rank > listener._rank) {
-            var lowest = Rank.last() + 1;
             var listeners : Array<Stream<T>> = [listener];
 
             while(listeners.length > 0) {
@@ -58,11 +90,14 @@ class Stream<T> {
     }
 
     private function detachListener(listener : Stream<T>, ?weakReference : Bool = false): Bool {
+        var removed = false;
+
         var index = _listeners.length;
         while(--index > -1) {
             if(_listeners[index] == listener) {
                 _listeners.splice(index, 1);
-                return true;
+                removed = true;
+                break;
             }
         }
 
@@ -70,7 +105,7 @@ class Stream<T> {
             weakRef = true;
         }
 
-        return false;
+        return removed;
     }
 
 	public function get_weakRef() : Bool {
@@ -101,5 +136,52 @@ private class Rank {
 
     public static function next(): Int {
         return _value++;
+    }
+}
+
+private typedef KeyValue<T> = {
+    key: Int, 
+    value: T
+};
+
+private class PriorityQueue<T> {
+
+    private var _values : Array<KeyValue<T>>;
+
+    public function new() {
+        _values = [];
+    }
+
+    public function insert(index : Int, value : T) : Void {
+        var keyValue = {
+            key: index, 
+            value: value
+        };
+        
+        var added = false;
+        
+        for (i in 0..._values.length) {
+            var val = _values[i];
+
+            if (index > val.key) {
+                added = true;
+
+                _values.insert(i, keyValue);
+                
+                break;
+            }
+        }
+
+        if (!added) {
+            _values.push(keyValue);
+        }
+    }
+  
+    public function pop() : KeyValue<T> {
+        return _values.pop();
+    }
+
+    public function size(): Int {
+        return _values.length;
     }
 }
