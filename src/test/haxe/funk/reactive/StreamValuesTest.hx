@@ -1,13 +1,30 @@
 package funk.reactive;
 
+import funk.collections.Collection;
 import funk.collections.CollectionsTestBase;
+import funk.collections.extensions.Collections;
 import funk.collections.extensions.CollectionsUtil;
 import funk.reactive.StreamValues;
 import funk.signal.Signal1;
+import funk.types.Option;
+import funk.types.Tuple2;
+import funk.types.extensions.Options;
+import funk.types.extensions.Tuples2;
+import massive.munit.Assert;
+import unit.Asserts;
 
+using massive.munit.Assert;
+using funk.collections.extensions.Collections;
 using funk.collections.extensions.CollectionsUtil;
+using funk.types.extensions.Options;
+using funk.types.extensions.Tuples2;
+using unit.Asserts;
 
 class StreamValuesTest extends CollectionsTestBase {
+
+	private var actualSignal : Signal1<Int>;
+
+	private var actualStream : StreamValues<Int>;
 
 	@Before
 	public function setup():Void {
@@ -21,8 +38,8 @@ class StreamValuesTest extends CollectionsTestBase {
 
 		alpha = alphaStream;
 
-		var actualSignal = new Signal1<Int>();
-		var actualStream = new StreamValues(Some(actualSignal));
+		actualSignal = new Signal1<Int>();
+		actualStream = new StreamValues(Some(actualSignal));
 		actualSignal.dispatch(1);
 		actualSignal.dispatch(2);
 		actualSignal.dispatch(3);
@@ -31,6 +48,14 @@ class StreamValuesTest extends CollectionsTestBase {
 
 		actual = actualStream;
 		actualTotal = 5;
+
+		// TODO (Simon) : Swap this out for actual stream values
+		complex = [
+					[1, 2, 3].toCollection(),
+					[4, 5].toCollection(),
+					[6].toCollection(),
+					[7, 8, 9].toCollection()
+					].toCollection();
 
 		var otherSignal = new Signal1<Int>();
 		var otherStream = new StreamValues(Some(otherSignal));
@@ -49,33 +74,24 @@ class StreamValuesTest extends CollectionsTestBase {
 		emptyName = 'Collection';
 	}
 
-	/*
-	@Test
-	override public function when_takeWhile__should_return_nil() : Void {
-		// This isn't required for stream values so we'll test if it's empty
-		actual.takeWhile(function(value : Int) : Bool {
-			return false;
-		}).isEmpty.isTrue();
-	}
-
 	@Test
 	public function when_creating_a_list__should_adding_more_items_add_more_items() : Void {
 		actualSignal.dispatch(5);
-		actualStream.size.areEqual(5);
+		actualStream.size().areEqual(6);
 	}
 
 	@Test
 	public function when_drop__should_adding_more_items_should_not_add_values_to_stream() : Void {
-		var stream = actualStream.drop(1);
+		var stream = actualStream.dropLeft(1);
 		actualSignal.dispatch(5);
-		stream.size.areEqual(3);
+		stream.size().areEqual(4);
 	}
 
 	@Test
 	public function when_dropRight__should_adding_more_items_should_not_add_values_to_stream() : Void {
 		var stream = actualStream.dropRight(1);
 		actualSignal.dispatch(5);
-		stream.size.areEqual(3);
+		stream.size().areEqual(4);
 	}
 
 	@Test
@@ -84,7 +100,7 @@ class StreamValuesTest extends CollectionsTestBase {
 			return value < 2;
 		});
 		actualSignal.dispatch(5);
-		stream.size.areEqual(3);
+		stream.size().areEqual(4);
 	}
 
 	@Test
@@ -93,7 +109,7 @@ class StreamValuesTest extends CollectionsTestBase {
 			return value != 1;
 		});
 		actualSignal.dispatch(5);
-		stream.size.areEqual(3);
+		stream.size().areEqual(4);
 	}
 
 	@Test
@@ -102,16 +118,16 @@ class StreamValuesTest extends CollectionsTestBase {
 			return value == 1;
 		});
 		actualSignal.dispatch(5);
-		stream.size.areEqual(3);
+		stream.size().areEqual(4);
 	}
 
 	@Test
 	public function when_flatMap__should_adding_more_items_should_not_add_values_to_stream() : Void {
 		var stream = actualStream.flatMap(function(value) {
-			return Nil.list().append(value);
+			return [value].toCollection();
 		});
 		actualSignal.dispatch(5);
-		stream.size.areEqual(4);
+		stream.size().areEqual(5);
 	}
 
 	@Test
@@ -120,71 +136,57 @@ class StreamValuesTest extends CollectionsTestBase {
 			return value;
 		});
 		actualSignal.dispatch(5);
-		stream.size.areEqual(4);
+		stream.size().areEqual(5);
 	}
 
 	@Test
 	public function when_prepend__should_adding_more_items_should_not_add_values_to_stream() : Void {
 		var stream = actualStream.prepend(6);
 		actualSignal.dispatch(5);
-		stream.size.areEqual(5);
+		stream.size().areEqual(6);
 	}
 
 	@Test
 	public function when_prependAll__should_adding_more_items_should_not_add_values_to_stream() : Void {
-		var l : IList<Int> = ListUtil.toList([6, 7, 8]);
-		var stream = actualStream.prependAll(l);
+		var stream = actualStream.prependAll([6, 7, 8].toCollection());
 		actualSignal.dispatch(5);
-		stream.size.areEqual(7);
+		stream.size().areEqual(8);
 	}
 
 	@Test
 	public function when_append__should_adding_more_items_should_not_add_values_to_stream() : Void {
 		var stream = actualStream.append(6);
 		actualSignal.dispatch(5);
-		stream.size.areEqual(5);
+		stream.size().areEqual(6);
 	}
 
 	@Test
 	public function when_appendAll__should_adding_more_items_should_not_add_values_to_stream() : Void {
-		var stream = actualStream.appendAll([6, 7, 8].toList());
+		var stream = actualStream.appendAll([6, 7, 8].toCollection());
 		actualSignal.dispatch(5);
-		stream.size.areEqual(7);
+		stream.size().areEqual(8);
 	}
 
 	@Test
 	public function when_take__should_adding_more_items_should_not_add_values_to_stream() : Void {
-		var stream = actualStream.take(1);
+		var stream = actualStream.takeLeft(1);
 		actualSignal.dispatch(5);
-		stream.size.areEqual(1);
+		stream.size().areEqual(1);
 	}
 
 	@Test
 	public function when_takeRight__should_adding_more_items_should_not_add_values_to_stream() : Void {
 		var stream = actualStream.takeRight(1);
 		actualSignal.dispatch(5);
-		stream.size.areEqual(1);
+		stream.size().areEqual(1);
 	}
 
 	@Test
 	public function when_takeWhile__should_adding_more_items_should_not_add_values_to_stream() : Void {
 		var stream = actualStream.takeWhile(function(value) {
-			return value < 2;
+			return value < 1;
 		});
 		actualSignal.dispatch(5);
-		stream.size.areEqual(0);
+		stream.size().areEqual(0);
 	}
-
-	@Test
-	override public function when_take__should_return_list() : Void {
-		var values : StreamValues<Int> = cast actual.take(0);
-		values.toList().areEqual(other);
-	}
-
-	@Test
-	override public function when_takeRight__should_return_list() : Void {
-		var values : StreamValues<Int> = cast actual.takeRight(0);
-		values.toList().areEqual(other);
-	}
-	*/
 }
