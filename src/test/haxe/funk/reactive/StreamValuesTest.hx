@@ -1,69 +1,55 @@
 package funk.reactive;
 
-import funk.collections.ListTestBase;
-import funk.collections.IList;
-import funk.collections.immutable.ListUtil;
-import funk.collections.immutable.Nil;
+import funk.collections.CollectionsTestBase;
+import funk.collections.extensions.CollectionsUtil;
+import funk.reactive.StreamValues;
 import funk.signal.Signal1;
 
-import massive.munit.Assert;
+using funk.collections.extensions.CollectionsUtil;
 
-using funk.collections.immutable.ListUtil;
-using funk.collections.immutable.Nil;
-using massive.munit.Assert;
-
-class StreamValuesTest extends ListTestBase {
-
-	private var actualSignal : Signal1<Int>;
-	private var actualStream : StreamValues<Int>;
+class StreamValuesTest extends CollectionsTestBase {
 
 	@Before
 	public function setup():Void {
-		listClassName = 'StreamValues';
+		var alphaSignal = new Signal1<String>();
+		var alphaStream = new StreamValues(Some(alphaSignal));
+		alphaSignal.dispatch('a');
+		alphaSignal.dispatch('b');
+		alphaSignal.dispatch('c');
+		alphaSignal.dispatch('d');
+		alphaSignal.dispatch('e');
 
-		actualSignal = new Signal1<Int>();
-		actualStream = new StreamValues(actualSignal);
+		alpha = alphaStream;
+
+		var actualSignal = new Signal1<Int>();
+		var actualStream = new StreamValues(Some(actualSignal));
 		actualSignal.dispatch(1);
 		actualSignal.dispatch(2);
 		actualSignal.dispatch(3);
 		actualSignal.dispatch(4);
-		
+		actualSignal.dispatch(5);
+
 		actual = actualStream;
+		actualTotal = 5;
 
-		var expectedSignal = new Signal1<Int>();
-		var expectedStream = new StreamValues(expectedSignal);
-		expectedSignal.dispatch(1);
-		expectedSignal.dispatch(2);
-		expectedSignal.dispatch(3);
-		expectedSignal.dispatch(4);
-		
-		expected = expectedStream;		
+		var otherSignal = new Signal1<Int>();
+		var otherStream = new StreamValues(Some(otherSignal));
+		otherSignal.dispatch(6);
+		otherSignal.dispatch(7);
+		otherSignal.dispatch(8);
+		otherSignal.dispatch(9);
 
-		other = Nil.list();
+		other = otherStream;
+		otherTotal = 4;
 
-		filledList = [1, 2, 3, 4].toList();
+		empty = new StreamValues(None);
+		emptyTotal = 0;
+
+		name = 'Collection';
+		emptyName = 'Collection';
 	}
 
-	@After
-	public function tearDown():Void {
-		actual = null;
-		expected = null;
-		other = null;
-		filledList = null;
-	}
-
-	override public function generateIntList(size : Int) : IList<Int> {
-		var count = 0;
-		var list = size.fill(function() : Int {
-			return count++;
-		});
-		return new StreamValues().prependAll(list);
-	}
-
-	override public function convertToList<T, E>(any : T) : IList<E> {
-		return new StreamValues().prependAll(cast any.toList());
-	}
-
+	/*
 	@Test
 	override public function when_takeWhile__should_return_nil() : Void {
 		// This isn't required for stream values so we'll test if it's empty
@@ -200,4 +186,5 @@ class StreamValuesTest extends ListTestBase {
 		var values : StreamValues<Int> = cast actual.takeRight(0);
 		values.toList().areEqual(other);
 	}
+	*/
 }

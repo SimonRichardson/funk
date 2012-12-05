@@ -4,9 +4,9 @@ import massive.munit.TestSuite;
 
 import funk.reactive.CollectionsTest;
 /*import funk.reactive.StreamTest;
-import funk.reactive.StreamsTest;
+import funk.reactive.StreamsTest;*/
 import funk.reactive.StreamValuesTest;
-
+/*
 import funk.reactive.behaviours.BehaviourSignal0Test;
 import funk.reactive.behaviours.BehaviourSignal1Test;
 import funk.reactive.behaviours.BehaviourSignal2Test;
@@ -23,9 +23,9 @@ class ReactiveSuite extends TestSuite
 
 		add(funk.reactive.CollectionsTest);
 		/*add(funk.reactive.StreamTest);
-		add(funk.reactive.StreamsTest);
+		add(funk.reactive.StreamsTest);*/
 		add(funk.reactive.StreamValuesTest);
-
+		/*
 		add(funk.reactive.behaviours.BehaviourSignal0Test);
 		add(funk.reactive.behaviours.BehaviourSignal1Test);
 		add(funk.reactive.behaviours.BehaviourSignal2Test);
