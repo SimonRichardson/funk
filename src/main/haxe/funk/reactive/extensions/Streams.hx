@@ -40,7 +40,7 @@ class Streams {
             task = Process.stop(task);
             task = Process.start(function() {
                 stream.emit(pulse.value());
-            }, behaviour.value());  
+            }, behaviour.value());
 
             return Negate;
         }, Some(CollectionsUtil.toCollection(stream)));
@@ -62,7 +62,7 @@ class Streams {
 
         sources.foreach(function(collection){
             for(source in collection.iterator()) {
-                stream.attachListener(cast source);
+                source.attachListener(cast stream);
             }
         });
 
@@ -263,8 +263,8 @@ class Streams {
         });
     }
 
-    public static function zipWith<T1, T2, R>(  stream0 : Stream<T1>, 
-                                                stream1 : Stream<T2>, 
+    public static function zipWith<T1, T2, R>(  stream0 : Stream<T1>,
+                                                stream1 : Stream<T2>,
                                                 func : Function2<T1, T2, R>
                                                 ) : Stream<R> {
         var time = -1.0;

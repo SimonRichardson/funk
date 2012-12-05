@@ -60,7 +60,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 		advanceProcessBy(1);
 
-		values.last().get().areEqual(3);
+		values.last().areEqual(Some(3));
 	}
 
 	@Test
@@ -70,7 +70,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 		advanceProcessBy(1);
 
-		values.get(0).get().areEqual(1);
+		values.get(0).areEqual(Some(1));
 	}
 
 	@Test
@@ -80,7 +80,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 		advanceProcessByWithIncrements(1, 2);
 
-		values.get(1).get().areEqual(2);
+		values.get(1).areEqual(Some(2));
 	}
 
 	@Test

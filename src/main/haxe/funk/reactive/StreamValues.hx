@@ -33,7 +33,7 @@ class StreamValues<T> {
         return _list.iterator();
     }
 
-    public function size() : Int { 
+    public function size() : Int {
         return _list.size();
     }
 }
