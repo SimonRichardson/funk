@@ -1,13 +1,13 @@
 package funk.signal;
 
-import funk.errors.IllegalOperationError;
-import funk.option.Option;
-
+import funk.types.Option;
+import funk.types.extensions.Options;
 import massive.munit.Assert;
-import util.AssertExtensions;
+import unit.Asserts;
 
+using funk.types.extensions.Options;
 using massive.munit.Assert;
-using util.AssertExtensions;
+using unit.Asserts;
 
 class Signal1Test {
 
@@ -28,7 +28,8 @@ class Signal1Test {
 
 	@Test
 	public function when_adding_listener__should_return_option() : Void {
-		signal.add(function(value0) {}).isType(IOption);
+		var func = function(value0) {};
+		signal.add(func).isDefined().isTrue();
 	}
 
 	@Test
@@ -41,7 +42,7 @@ class Signal1Test {
 	public function when_adding_listener__should_size_be_1() : Void {
 		var listener = function(value0) {};
 		signal.add(listener);
-		signal.size.areEqual(1);
+		signal.size().areEqual(1);
 	}
 
 	@Test
@@ -49,14 +50,14 @@ class Signal1Test {
 		var listener = function(value0) {};
 		signal.add(listener);
 		signal.add(listener);
-		signal.size.areEqual(1);
+		signal.size().areEqual(1);
 	}
 
 	@Test
 	public function when_adding_different_listener__should_size_be_2() : Void {
 		signal.add(function(value0) {});
 		signal.add(function(value0) {});
-		signal.size.areEqual(2);
+		signal.size().areEqual(2);
 	}
 
 	@Test
@@ -64,7 +65,7 @@ class Signal1Test {
 		signal.add(function(value0) {});
 		signal.add(function(value0) {});
 		signal.dispatch(1);
-		signal.size.areEqual(2);
+		signal.size().areEqual(2);
 	}
 
 	@Test
@@ -77,7 +78,7 @@ class Signal1Test {
 	public function when_adding_once_listener__should_size_be_1() : Void {
 		var listener = function(value0) {};
 		signal.addOnce(listener);
-		signal.size.areEqual(1);
+		signal.size().areEqual(1);
 	}
 
 	@Test
@@ -85,14 +86,14 @@ class Signal1Test {
 		var listener = function(value0) {};
 		signal.addOnce(listener);
 		signal.addOnce(listener);
-		signal.size.areEqual(1);
+		signal.size().areEqual(1);
 	}
 
 	@Test
 	public function when_adding_once_different_listener__should_size_be_2() : Void {
 		signal.addOnce(function(value0) {});
 		signal.addOnce(function(value0) {});
-		signal.size.areEqual(2);
+		signal.size().areEqual(2);
 	}
 
 	@Test
@@ -100,7 +101,7 @@ class Signal1Test {
 		signal.addOnce(function(value0) {});
 		signal.addOnce(function(value0) {});
 		signal.dispatch(1);
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -108,7 +109,7 @@ class Signal1Test {
 		signal.add(function(value0) {});
 		signal.addOnce(function(value0) {});
 		signal.dispatch(1);
-		signal.size.areEqual(1);
+		signal.size().areEqual(1);
 	}
 
 	@Test
@@ -116,7 +117,7 @@ class Signal1Test {
 		signal.add(function(value0) {});
 		signal.addOnce(function(value0) {});
 		signal.dispatch(1);
-		signal.size.areEqual(1);
+		signal.size().areEqual(1);
 	}
 
 	@Test
@@ -124,7 +125,7 @@ class Signal1Test {
 		var listener = function(value0) {};
 		signal.add(listener);
 		signal.remove(listener);
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -133,7 +134,7 @@ class Signal1Test {
 		signal.add(listener);
 		signal.add(listener);
 		signal.remove(listener);
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -141,7 +142,7 @@ class Signal1Test {
 		var listener = function(value0) {};
 		signal.addOnce(listener);
 		signal.remove(listener);
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -150,7 +151,7 @@ class Signal1Test {
 		signal.addOnce(listener);
 		signal.addOnce(listener);
 		signal.remove(listener);
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -158,7 +159,7 @@ class Signal1Test {
 		signal.add(function(value0) {});
 		signal.add(function(value0) {});
 		signal.removeAll();
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -166,7 +167,7 @@ class Signal1Test {
 		signal.addOnce(function(value0) {});
 		signal.addOnce(function(value0) {});
 		signal.removeAll();
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -175,7 +176,7 @@ class Signal1Test {
 		signal.addOnce(function(value0) {});
 		signal.add(function(value0) {});
 		signal.removeAll();
-		signal.size.areEqual(0);
+		signal.size().areEqual(0);
 	}
 
 	@Test
@@ -186,21 +187,9 @@ class Signal1Test {
 		var called = try {
 			signal.addOnce(listener);
 			false;
-		} catch(error : IllegalOperationError) {
+		} catch(error : Dynamic) {
 			true;
 		}
 		called.isTrue();
-	}
-
-	@Test
-	public function when_calling_productElement__should_return_same_slot() : Void {
-		var listener = function(value0) {};
-		var slot = signal.add(listener);
-		signal.productElement(0).areEqual(slot.get());
-	}
-
-	@Test
-	public function when_calling_productPrefix__should_return_signalName() : Void {
-		signal.productPrefix.areEqual(signalName);
 	}
 }

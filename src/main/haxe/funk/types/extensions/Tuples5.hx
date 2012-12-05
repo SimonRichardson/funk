@@ -8,33 +8,23 @@ import funk.types.Predicate2;
 class Tuples5 {
 
 	public static function _1<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T1 {
-		return switch(tuple) {
-			case tuple5(value, _, _, _, _): value;
-		}
+		return Type.enumParameters(tuple)[0];
 	}
 
 	public static function _2<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T2 {
-		return switch(tuple) {
-			case tuple5(_, value, _, _, _): value;
-		}
+		return Type.enumParameters(tuple)[1];
 	}
 
 	public static function _3<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T3 {
-		return switch(tuple) {
-			case tuple5(_, _, value, _, _): value;
-		}
+		return Type.enumParameters(tuple)[2];
 	}
 
 	public static function _4<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T4 {
-		return switch(tuple) {
-			case tuple5(_, _, _, value, _): value;
-		}
+		return Type.enumParameters(tuple)[3];
 	}
 
 	public static function _5<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T5 {
-		return switch(tuple) {
-			case tuple5(_, _, _, _, value): value;
-		}
+		return Type.enumParameters(tuple)[4];
 	}
 
 	public static function equals<T1, T2, T3, T4, T5>(	a : Tuple5<T1, T2, T3, T4, T5>,

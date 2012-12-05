@@ -8,9 +8,7 @@ import funk.types.Predicate2;
 class Tuples1 {
 
 	public static function _1<T1>(tuple : Tuple1<T1>) : T1 {
-		return switch(tuple) {
-			case tuple1(value): value;
-		}
+		return Type.enumParameters(tuple)[0];
 	}
 
 	public static function equals<T1>(a : Tuple1<T1>, b : Tuple1<T1>, ?func : Predicate2<T1, T1>) : Bool {

@@ -1,13 +1,14 @@
 package funk.signal;
 
-import funk.signal.Signal0;
 import funk.signal.PrioritySignal0;
-
+import funk.types.Option;
+import funk.types.extensions.Options;
 import massive.munit.Assert;
-import util.AssertExtensions;
+import unit.Asserts;
 
+using funk.types.extensions.Options;
 using massive.munit.Assert;
-using util.AssertExtensions;
+using unit.Asserts;
 
 class PrioritySignal0Test extends Signal0Test {
 
@@ -143,7 +144,7 @@ class PrioritySignal0Test extends Signal0Test {
 	public function when_adding_with_priority__should_size_be_1() : Void {
 		prioritySignal.addWithPriority(function(){
 		});
-		prioritySignal.size.areEqual(1);
+		prioritySignal.size().areEqual(1);
 	}
 
 	@Test
@@ -151,14 +152,14 @@ class PrioritySignal0Test extends Signal0Test {
 		prioritySignal.addWithPriority(function(){
 		});
 		prioritySignal.dispatch();
-		prioritySignal.size.areEqual(1);
+		prioritySignal.size().areEqual(1);
 	}
 
 	@Test
 	public function when_adding_once_with_priority__should_size_be_1() : Void {
 		prioritySignal.addOnceWithPriority(function(){
 		});
-		prioritySignal.size.areEqual(1);
+		prioritySignal.size().areEqual(1);
 	}
 
 	@Test
@@ -166,7 +167,7 @@ class PrioritySignal0Test extends Signal0Test {
 		prioritySignal.addOnceWithPriority(function(){
 		});
 		prioritySignal.dispatch();
-		prioritySignal.size.areEqual(0);
+		prioritySignal.size().areEqual(0);
 	}
 
 	@Test

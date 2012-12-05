@@ -5,10 +5,12 @@ import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Function4;
 import funk.types.Option;
+import funk.types.extensions.Functions4;
 import funk.types.extensions.Options;
 import funk.signal.Signal;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.types.extensions.Functions4;
 using funk.types.extensions.Options;
 
 interface ISignal4<T1, T2, T3, T4> implements ISignal {
@@ -46,11 +48,11 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
 							) : Option<Slot4<T1, T2, T3, T4>> {
 
 		var o = _list.find(function(s : Slot4<T1, T2, T3, T4>) : Bool {
-			return listenerEquals(s.listener, func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		_list = _list.filterNot(function(s : Slot4<T1, T2, T3, T4>) : Bool {
-			return listenerEquals(s.listener, func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return o;
@@ -68,24 +70,6 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
       	}
 	}
 
-	private function listenerEquals(	func0 : Function4<T1, T2, T3, T4, Void>,
-										func1 : Function4<T1, T2, T3, T4, Void>) : Bool {
-		return if(func0 == func1) {
-			true;
-		}
-		#if js
-		else if(	Reflect.hasField(func0, 'scope') &&
-					Reflect.hasField(func1, 'scope') &&
-					Reflect.field(func0, 'scope') == Reflect.field(func1, 'scope') &&
-					Reflect.field(func0, 'method') == Reflect.field(func1, 'scope')) {
-			true;
-		}
-		#end
-		else {
-			false;
-		}
-	}
-
 	private function registerListener(	func : Function4<T1, T2, T3, T4, Void>,
 										once : Bool) : Option<Slot4<T1, T2, T3, T4>> {
 
@@ -96,7 +80,7 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
 		}
 
 		return _list.find(function(s : Slot4<T1, T2, T3, T4>) : Bool {
-			return listenerEquals(s.listener, func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 	}
 
@@ -107,7 +91,7 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
 		}
 
 		var slot = _list.find(function(s : Slot4<T1, T2, T3, T4>) : Bool {
-			return listenerEquals(s.listener, func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return switch(slot) {
@@ -121,7 +105,7 @@ class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4
 		}
 	}
 
-	override private function get_size() : Int {
+	override public function size() : Int {
 		return _list.size();
 	}
 }

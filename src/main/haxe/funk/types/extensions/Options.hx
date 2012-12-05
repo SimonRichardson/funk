@@ -48,7 +48,7 @@ class Options {
 		}
 	}
 
-	public static function each<T>(option : Option<T>, func : Function1<T, Void>) : Void {
+	public static function foreach<T>(option : Option<T>, func : Function1<T, Void>) : Void {
 		switch (option) {
 			case Some(value): func(get(option));
 			case None:

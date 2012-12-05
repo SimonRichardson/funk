@@ -1,6 +1,16 @@
 package funk.reactive;
 
 import funk.types.Function1;
+import funk.types.Option;
+import funk.reactive.Propagation;
+import funk.reactive.Pulse;
+import funk.reactive.extensions.Pulses;
+import funk.reactive.extensions.Streams;
+import funk.collections.extensions.CollectionsUtil;
+
+using funk.reactive.extensions.Pulses;
+using funk.reactive.extensions.Streams;
+using funk.collections.extensions.CollectionsUtil;
 
 class Behaviour<T> {
 
@@ -22,7 +32,7 @@ class Behaviour<T> {
 				case Negate:
 			}
 			return prop;
-		}, [stream.steps()]);
+		}, Some([stream.steps()].toCollection()));
 	}
 
 	public function stream() : Stream<T> {

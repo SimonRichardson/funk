@@ -5,10 +5,12 @@ import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Function2;
 import funk.types.Option;
+import funk.types.extensions.Functions2;
 import funk.types.extensions.Options;
 import funk.signal.Signal;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.types.extensions.Functions2;
 using funk.types.extensions.Options;
 
 interface ISignal2<T1, T2> implements ISignal {
@@ -42,11 +44,11 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 
 	public function remove(func : Function2<T1, T2, Void>) : Option<Slot2<T1, T2>> {
 		var o = _list.find(function(s : Slot2<T1, T2>) : Bool {
-			return listenerEquals(s.listener, func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		_list = _list.filterNot(function(s : Slot2<T1, T2>) : Bool {
-			return listenerEquals(s.listener, func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return o;
@@ -64,24 +66,6 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
       	}
 	}
 
-	private function listenerEquals(	func0 : Function2<T1, T2, Void>,
-										func1 : Function2<T1, T2, Void>) : Bool {
-		return if(func0 == func1) {
-			true;
-		}
-		#if js
-		else if(	Reflect.hasField(func0, 'scope') &&
-					Reflect.hasField(func1, 'scope') &&
-					Reflect.field(func0, 'scope') == Reflect.field(func1, 'scope') &&
-					Reflect.field(func0, 'method') == Reflect.field(func1, 'scope')) {
-			true;
-		}
-		#end
-		else {
-			false;
-		}
-	}
-
 	private function registerListener(	func : Function2<T1, T2, Void>,
 										once : Bool) : Option<Slot2<T1, T2>> {
 
@@ -92,7 +76,7 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		}
 
 		return _list.find(function(s : Slot2<T1, T2>) : Bool {
-			return listenerEquals(s.listener, func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 	}
 
@@ -102,7 +86,7 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		}
 
 		var slot = _list.find(function(s : Slot2<T1, T2>) : Bool {
-			return listenerEquals(s.listener, func);
+			return Reflect.compareMethods(s.listener, func);
 		});
 
 		return switch(slot) {
@@ -116,7 +100,7 @@ class Signal2<T1, T2> extends Signal, implements ISignal2<T1, T2> {
 		}
 	}
 
-	override private function get_size() : Int {
+	override public function size() : Int {
 		return _list.size();
 	}
 }
