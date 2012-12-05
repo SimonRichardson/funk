@@ -1,15 +1,25 @@
 package funk.reactive.extensions;
 
 import funk.collections.Collection;
+import funk.collections.extensions.CollectionsUtil;
 import funk.Funk;
 import funk.reactive.Process;
 import funk.reactive.Pulse;
 import funk.reactive.Propagation;
 import funk.reactive.Stream;
+import funk.reactive.extensions.Pulses;
+import funk.reactive.extensions.Streams;
+import funk.signal.Signal1;
+import funk.types.Function0;
 import funk.types.Function1;
+import funk.types.Function2;
 import funk.types.Option;
+import funk.types.Tuple2;
 import funk.types.extensions.Options;
 
+using funk.collections.extensions.CollectionsUtil;
+using funk.reactive.extensions.Pulses;
+using funk.reactive.extensions.Streams;
 using funk.types.extensions.Options;
 
 class Streams {
@@ -32,7 +42,8 @@ class Streams {
                 stream.emit(pulse.value());
             }, behaviour.value());  
 
-        }, CollectionsUtil.toCollection(stream));
+            return Negate;
+        }, Some(CollectionsUtil.toCollection(stream)));
 
         return out;
     }
@@ -49,9 +60,9 @@ class Streams {
 										    ) : Stream<T2> {
         var stream = new Stream<T2>(cast pulse);
 
-        sources.each(function(collection){
+        sources.foreach(function(collection){
             for(source in collection.iterator()) {
-                stream.attachListener(source);
+                stream.attachListener(cast source);
             }
         });
 
@@ -65,7 +76,7 @@ class Streams {
             out.emitWithDelay(pulse.value(), behaviour.value());
 
             return Negate;
-        }, CollectionsUtil.toCollection(stream));
+        }, Some(CollectionsUtil.toCollection(stream)));
 
         return out;
     } 
@@ -83,26 +94,26 @@ class Streams {
         var out = identity(None);
 
         create(function(pulse : Pulse<T1>) : Propagation<T2> {
-            switch(previous) {
-                case Some(_): previous.detachListener(out);
-                case None:
-            }
-
-            previous = func(pulse.value());
-            previous.attachListener(out);
-
+            previous.foreach(function(s) {
+                s.detachListener(out);
+            });
+            previous = func(pulse.value()).toOption();
+            previous.foreach(function(s) {
+                s.attachListener(out);
+            });
+            
             return Negate;
-        }, Some(stream));
+        }, Some(CollectionsUtil.toCollection(stream)));
 
         return out;
     }
 
-    public static function foreach<T>(stream : Strean<T>, func : Function1<T, Void>) : Stream<T> {
+    public static function foreach<T>(stream : Stream<T>, func : Function1<T, Void>) : Stream<T> {
         create(function(pulse : Pulse<T>) : Propagation<T> {
             func(pulse.value());
 
             return Negate;
-        }, Some(CollectionsUtil.toCollection(this)));
+        }, Some(CollectionsUtil.toCollection(stream)));
 
         return stream;
     }
@@ -114,16 +125,16 @@ class Streams {
     }
 
     public static function map<T1, T2>(stream : Stream<T1>, func : Function1<T1, T2>) : Stream<T2> {
-        return create(function(pulse : Pulse<T>) : Propagation<E> {
+        return create(function(pulse : Pulse<T1>) : Propagation<T2> {
             return Propagate(pulse.map(func));
-        }, Some(CollectionsUtil.toCollection(stream));
+        }, Some(CollectionsUtil.toCollection(stream)));
     }
 
     public static function merge<T>(streams : Collection<Stream<T>>) : Stream<T> {
         return if(streams.size() == 0) {
             zero();
         } else {
-            identity(streams);
+            identity(Some(streams));
         };
     }   
 
@@ -172,7 +183,7 @@ class Streams {
         return mapStream;
     }
 
-    public static function shift<T>(value : Int) : Stream<T> {
+    public static function shift<T>(stream : Stream<T>, value : Int) : Stream<T> {
         var queue : Array<T> = [];
 
         return create(function(pulse : Pulse<T>) : Propagation<T> {
@@ -189,7 +200,7 @@ class Streams {
     public static function startsWith<T>(stream : Stream<T>, value : T) : Behaviour<T> {
         return new Behaviour(stream, value, function(pulse : Pulse<T>) : Propagation<T> {
             return Propagate(pulse);
-        }, Some(CollectionsUtil.toCollection(stream)));
+        });
     }
 
     public static function steps<T>(stream : Stream<T>) : Stream<T> {
@@ -231,17 +242,17 @@ class Streams {
     }
 
     public static function values<T>(stream : Stream<T>) : Collection<T> {
-        var signal = new Signal1();
-        var stream = new StreamValues(signal);
-        foreach(function(value : T) {
+        var signal = new Signal1<T>();
+        var collection = new StreamValues<T>(Some(signal));
+        foreach(stream, function(value : T) : Void {
             signal.dispatch(value);
         });
-        return stream;
+        return collection;
     }
 
     public static function zero<T>() : Stream<T> {
         return create(function(pulse : Pulse<T>) : Propagation<T> {
-                Funk.error(Errors.IllegalOperationError("Received a value that wasn't expected " + pulse.value));
+                Funk.error(Errors.IllegalOperationError("Received a value that wasn't expected " + pulse.value()));
                 return Negate;
             }, None);
     }
@@ -261,15 +272,15 @@ class Streams {
 
         create(function(pulse : Pulse<T1>) : Propagation<T1> {
             time = pulse.time();
-            value = pulse.value();
+            value = pulse.value().toOption();
 
             return Negate;
         }, Some(CollectionsUtil.toCollection(stream0)));
 
         return create(function(pulse : Pulse<T2>) : Propagation<R> {
             return if (time == pulse.time()) {
-                Propagate(pulse.withValue(func(value, pulse.value())));
-            } else  {
+                Propagate(pulse.withValue(func(value.get(), pulse.value())));
+            } else {
                 Negate;
             }
         }, Some(CollectionsUtil.toCollection(stream1)));

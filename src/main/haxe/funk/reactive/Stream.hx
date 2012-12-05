@@ -4,6 +4,7 @@ import funk.reactive.Pulse;
 import funk.reactive.Propagation;
 import funk.reactive.Stream;
 import funk.signal.Signal0;
+import funk.types.Function0;
 import funk.types.Function1;
 
 class Stream<T> {
@@ -29,6 +30,44 @@ class Stream<T> {
 
         _finishedListeners = new Signal0();
 	}
+
+    public function attachListener(listener : Stream<T>) : Void {
+        _listeners.push(listener);
+
+        if(_rank > listener._rank) {
+            var listeners : Array<Stream<T>> = [listener];
+
+            while(listeners.length > 0) {
+                var item = listeners.shift();
+
+                item._rank = Rank.next();
+
+                var itemListeners = item._listeners;
+                if(itemListeners.length > 0) {
+                    listeners = listeners.concat(itemListeners);
+                }
+            }
+        }
+    }
+
+    public function detachListener(listener : Stream<T>, ?weakReference : Bool = false): Bool {
+        var removed = false;
+
+        var index = _listeners.length;
+        while(--index > -1) {
+            if(_listeners[index] == listener) {
+                _listeners.splice(index, 1);
+                removed = true;
+                break;
+            }
+        }
+
+        if(weakReference && _listeners.length == 0) {
+            weakRef = true;
+        }
+
+        return removed;
+    }
 
     public function emit(value : T) : Stream<T> {
         var time = Process.stamp();
@@ -70,42 +109,17 @@ class Stream<T> {
         return this;
     }
 
-	private function attachListener(listener : Stream<T>) : Void {
-        _listeners.push(listener);
-
-        if(_rank > listener._rank) {
-            var listeners : Array<Stream<T>> = [listener];
-
-            while(listeners.length > 0) {
-                var item = listeners.shift();
-
-                item._rank = Rank.next();
-
-                var itemListeners = item._listeners;
-                if(itemListeners.length > 0) {
-                    listeners = listeners.concat(itemListeners);
-                }
-            }
-        }
+    public function finish() : Void {
+        weakRef = true;
+        // TODO : We should prevent it from coming back.
     }
 
-    private function detachListener(listener : Stream<T>, ?weakReference : Bool = false): Bool {
-        var removed = false;
-
-        var index = _listeners.length;
-        while(--index > -1) {
-            if(_listeners[index] == listener) {
-                _listeners.splice(index, 1);
-                removed = true;
-                break;
-            }
+    public function whenFinishedDo(func : Function0<Void>) : Void {
+        if(_weakRef) {
+            func();
+        } else {
+            _finishedListeners.add(func);
         }
-
-        if(weakReference && _listeners.length == 0) {
-            weakRef = true;
-        }
-
-        return removed;
     }
 
 	public function get_weakRef() : Bool {

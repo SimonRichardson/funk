@@ -13,11 +13,11 @@ class Pulses {
 		return Type.enumParameters(pulse)[1];
 	}
 
-	public static function map<T, E>(pulse : Pulse<T>, func : Function1<T, E>) : Pulse<T> {
+	public static function map<T, E>(pulse : Pulse<T>, func : Function1<T, E>) : Pulse<E> {
 		return withValue(pulse, func(value(pulse)));
 	}
 
-	public static function withValue<T, E>(pulse : Pulse<T>, value : E) : Pulse<T> {
-		return Pulse(time(pulse), func);
+	public static function withValue<T, E>(pulse : Pulse<T>, value : E) : Pulse<E> {
+		return Pulse(time(pulse), value);
 	}
 }

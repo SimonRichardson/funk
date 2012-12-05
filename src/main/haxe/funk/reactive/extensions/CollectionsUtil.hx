@@ -2,12 +2,13 @@ package funk.reactive.extensions;
 
 import funk.collections.Collection;
 import funk.Funk;
-import funk.option.Option;
+import funk.types.Function0;
+import funk.types.Option;
 import funk.reactive.Behaviour;
 import funk.reactive.Process;
 import funk.reactive.Stream;
 
-class Collections {
+class CollectionsUtil {
 
 	public static function toStream<T>(collection: Collection<T>, time: Behaviour<Int>) : Stream<T> {
 		var startTime = -1.0;
@@ -19,7 +20,7 @@ class Collections {
 
 		var task : Option<Task> = None;
 		var pulser : Function0<Void> = null;
-		var stream : Stream<T> = Streams.identity();
+		var stream : Stream<T> = Streams.identity(None);
 
 		var iterator = collection.iterator();
 
@@ -32,7 +33,7 @@ class Collections {
 				startTime = nowTime;
 			}
 
-			var delta = time.value;
+			var delta = time.value();
 			var endTime = startTime + accumulation + delta;
 			var timeToWait = endTime - nowTime;
 

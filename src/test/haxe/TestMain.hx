@@ -5,7 +5,7 @@ import massive.munit.client.JUnitReportClient;
 import massive.munit.TestRunner;
 
 import suites.CollectionsSuite;
-//import suites.ReactiveSuite;
+import suites.ReactiveSuite;
 import suites.SignalSuite;
 import suites.TypesSuite;
 

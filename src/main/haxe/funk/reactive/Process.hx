@@ -1,8 +1,8 @@
 package funk.reactive;
 
 import funk.Funk;
-import funk.option.Option;
 import funk.types.Function0;
+import funk.types.Option;
 import haxe.PosInfos;
 
 #if neko

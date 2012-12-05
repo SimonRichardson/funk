@@ -1,10 +1,14 @@
 package funk.reactive;
 
 import funk.Funk;
-import funk.option.Option;
+import funk.types.Function0;
+import funk.types.Function1;
+import funk.types.Option;
+import funk.types.extensions.Options;
 import funk.reactive.Process;
-
 import massive.munit.Assert;
+
+using funk.types.extensions.Options;
 
 private typedef ProcessTypeDef = {
 	var start : Function0<Void> -> Float -> Option<Task>;
