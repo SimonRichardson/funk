@@ -1,11 +1,14 @@
 package funk.reactive;
 
+import funk.reactive.Stream;
+import funk.reactive.extensions.Behaviours;
+import funk.reactive.extensions.Streams;
 import massive.munit.Assert;
-import util.AssertExtensions;
-import massive.munit.util.Timer;
+import unit.Asserts;
 
+using funk.reactive.extensions.Streams;
 using massive.munit.Assert;
-using util.AssertExtensions;
+using unit.Asserts;
 
 class StreamsTest extends ProcessAsyncBase {
 
@@ -34,6 +37,6 @@ class StreamsTest extends ProcessAsyncBase {
 
 		advanceProcessByWithIncrements(1, 4);
 
-		randoms.size.areEqual(4);
+		randoms.size().areEqual(4);
 	}
 }

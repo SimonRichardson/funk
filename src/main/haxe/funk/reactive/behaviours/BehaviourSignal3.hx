@@ -12,7 +12,7 @@ class BehaviourSignal3 {
 
 	public static function signal<T1, T2, T3>( signal: Signal3<T1, T2, T3>
                                                ) : Behaviour<Tuple3<T1, T2, T3>> {
-        var behaviour = new Behaviour<Tuple3<T1, T2, T3>>( Streams.identity(),
+        var behaviour = new Behaviour<Tuple3<T1, T2, T3>>( Streams.identity(None),
         						      					    tuple3(null, null, null),
         							     				    Propagations.identity());
 

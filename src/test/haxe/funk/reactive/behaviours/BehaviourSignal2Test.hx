@@ -1,22 +1,27 @@
 package funk.reactive.behaviours;
 
-import massive.munit.Assert;
-import util.AssertExtensions;
-
+import funk.Funk;
+import funk.collections.Collection;
+import funk.collections.extensions.Collections;
 import funk.reactive.behaviours.BehaviourSignal2;
+import funk.reactive.extensions.Behaviours;
 import funk.signal.Signal2;
-import funk.tuple.Tuple2;
+import funk.types.Tuple2;
+import funk.types.extensions.Tuples2;
+import massive.munit.Assert;
+import unit.Asserts;
 
 using massive.munit.Assert;
-using util.AssertExtensions;
-
+using unit.Asserts;
+using funk.collections.extensions.Collections;
 using funk.reactive.behaviours.BehaviourSignal2;
-using funk.tuple.Tuple2;
+using funk.reactive.extensions.Behaviours;
+using funk.types.extensions.Tuples2;
 
 class BehaviourSignal2Test {
 
 	private var signal : Signal2<Int, Int>;
-	private var actual : StreamValues<ITuple2<Int, Int>>;
+	private var actual : Collection<Tuple2<Int, Int>>;
 
 	@Before
 	public function setup() : Void {
@@ -36,14 +41,14 @@ class BehaviourSignal2Test {
 
 	@Test
 	public function when_creating_a_new_stream__should_be_size_0() : Void {
-		actual.size.areEqual(0);
+		actual.size().areEqual(0);
 	}
 
 	@Test
 	public function when_creating_a_new_stream__should_emit_new_values() : Void {
 		signal.dispatch(1, 2);
 
-		actual.valuesEqualsIterable([tuple2(1, 2).toInstance()]);
+		actual.areIterablesEqual([tuple2(1, 2)]);
 	}
 
 	@Test
@@ -51,7 +56,7 @@ class BehaviourSignal2Test {
 		signal.dispatch(1, 2);
 		signal.dispatch(3, 4);
 
-		actual.size.areEqual(2);
+		actual.size().areEqual(2);
 	}
 
 	@Test
@@ -59,6 +64,6 @@ class BehaviourSignal2Test {
 		signal.dispatch(1, 2);
 		signal.dispatch(3, 4);
 
-		actual.valuesEqualsIterable([tuple2(1, 2).toInstance(), tuple2(3, 4).toInstance()]);
+		actual.areIterablesEqual([tuple2(1, 2), tuple2(3, 4)]);
 	}
 }

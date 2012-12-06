@@ -22,18 +22,18 @@ class Behaviours {
 		return Streams.identity(None).startsWith(value);
 	}
 
-	public function emit<T>(stream : Stream<T>, value : T) : Void {
-		stream.emit(value);
+	public static function emit<T>(behaviour : Behaviour<T>, value : T) : Void {
+		behaviour.stream().emit(value);
 	}
 
 	public static function lift<T, R>(behaviour : Behaviour<T>, func : Function1<T, R>) : Behaviour<R> {
 		return behaviour.stream().map(func).startsWith(func(behaviour.value()));
 	}
 
-	public function map<T, R>(	behaviour : Behaviour<T>, 
-								stream : Stream<T>, 
-								mapper : Behaviour<Function1<T, R>>
-								) : Behaviour<R> {
+	public static function map<T, R>(	behaviour : Behaviour<T>, 
+										stream : Stream<T>, 
+										mapper : Behaviour<Function1<T, R>>
+										) : Behaviour<R> {
 		return stream.map(function(x) {
 			return mapper.value()(x);
 		}).startsWith(mapper.value()(behaviour.value()));
@@ -43,11 +43,11 @@ class Behaviours {
 		return Streams.timer(behaviour).startsWith(Process.stamp());
 	}
 
-	public function values<T>(behaviour : Behaviour<T>) : Collection<T> {
+	public static  function values<T>(behaviour : Behaviour<T>) : Collection<T> {
 		return behaviour.stream().values();
 	}
 
-	public function zip<T1, T2>(behaviour : Behaviour<T1>, that : Behaviour<T2>) : Behaviour<Tuple2<T1, T2>> {
+	public static function zip<T1, T2>(behaviour : Behaviour<T1>, that : Behaviour<T2>) : Behaviour<Tuple2<T1, T2>> {
 		return zipWith(behaviour, that, function(a, b) {
 			return tuple2(a, b);
 		});
@@ -69,10 +69,10 @@ class Behaviours {
 		return stream.startsWith(mapToValue());
 	}
 
-	public function zipWith<T, E1, E2>(	behaviour : Behaviour<T>, 
-										that : Behaviour<E1>, 
-										func : Function2<T, E1, E2>
-										) : Behaviour<E2> {
+	public static function zipWith<T, E1, E2>(	behaviour : Behaviour<T>, 
+												that : Behaviour<E1>, 
+												func : Function2<T, E1, E2>
+												) : Behaviour<E2> {
 		var stream = Streams.create(function(pulse : Pulse<E1>) : Propagation<E2> {
 			var result = func(behaviour.value(), that.value());
 			return Propagate(pulse.withValue(result));

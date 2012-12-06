@@ -1,11 +1,21 @@
 package funk.reactive;
 
+import funk.collections.Collection;
+import funk.collections.extensions.Collections;
+import funk.reactive.extensions.Behaviours;
+import funk.reactive.extensions.Streams;
+import funk.types.Option;
+import funk.types.Tuple2;
+import funk.types.extensions.Tuples2;
 import massive.munit.Assert;
-import util.AssertExtensions;
-import massive.munit.util.Timer;
+import unit.Asserts;
 
+using funk.collections.extensions.Collections;
+using funk.reactive.extensions.Streams;
+using funk.reactive.extensions.Behaviours;
+using funk.types.extensions.Tuples2;
 using massive.munit.Assert;
-using util.AssertExtensions;
+using unit.Asserts;
 
 class StreamTest extends ProcessAsyncBase {
 
@@ -15,7 +25,7 @@ class StreamTest extends ProcessAsyncBase {
 	override public function setup() {
 		super.setup();
 
-		stream = Streams.identity();
+		stream = Streams.identity(None);
 	}
 
 	@After
@@ -29,12 +39,11 @@ class StreamTest extends ProcessAsyncBase {
 	public function when_creating_a_stream__should_calling_foreach_equal_7() : Void {
 		var counter = 0;
 
-		var eventStream = stream.forEach(function(v) {
+		var eventStream = stream.foreach(function(v) {
 			counter++;
 		});
 
-		var iter : Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
-    	for(item in iter) {
+    	for(item in [1, 2, 3, 4, 5, 6, 7]) {
         	stream.emit(item);
     	}
 
@@ -45,12 +54,11 @@ class StreamTest extends ProcessAsyncBase {
 	public function when_creating_a_stream__should_calling_values() : Void {
 		var values = stream.values();
 
-        var iter: Iterable<Int> = [1, 2, 3, 4, 5];
-        for(item in iter) {
+        for(item in [1, 2, 3, 4, 5]) {
         	stream.emit(item);
         }
 
-        values.valuesEqualsIterable([1, 2, 3, 4, 5]);
+        values.areIterablesEqual([1, 2, 3, 4, 5]);
 	}
 
 	@Test
@@ -62,13 +70,13 @@ class StreamTest extends ProcessAsyncBase {
         	stream.emit(index);
         }
 
-        values.valuesEqualsIterable([3, 3, 3]);
+        values.areIterablesEqual([3, 3, 3]);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_stream_be_empty() : Void {
 		var values = stream.values();
-		values.size.areEqual(0);
+		values.size().areEqual(0);
 	}
 
 	@Test
@@ -77,7 +85,7 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = stream.values();
 		stream.emit(value);
-		values.last.get().areEqual(value);
+		values.last().areEqual(Some(value));
 	}
 
 	@Test
@@ -86,7 +94,7 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = stream.values();
 		stream.emit(value);
-		values.last.get().areEqual(value);
+		values.last().areEqual(Some(value));
 	}
 
 	@Test
@@ -95,12 +103,12 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = stream.values();
 		stream.emit(value);
-		values.last.get().areEqual(value);
+		values.last().areEqual(Some(value));
 	}
 
 	@Test
 	public function when_creating_stream_with_true__should_return_value_of_true() : Void {
-		var result : Bool = stream.startsWith(true).value;
+		var result : Bool = stream.startsWith(true).value();
 		result.isTrue();
 	}
 
@@ -112,19 +120,18 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = mapped.values();
 
-		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
-        for(item in iter) {
+        for(item in [1, 2, 3, 4, 5, 6, 7]) {
         	stream.emit(item);
         }
 
-        values.valuesEqualsIterable([2, 4, 6, 8, 10, 12, 14]);
+        values.areIterablesEqual([2, 4, 6, 8, 10, 12, 14]);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_flatMap_with_3_streams_emit_first_stream_with_123() : Void {
-		var stream0 = Streams.identity();
-		var stream1 = Streams.identity();
-		var stream2 = Streams.identity();
+		var stream0 = Streams.identity(None);
+		var stream1 = Streams.identity(None);
+		var stream2 = Streams.identity(None);
 
 		var bound = stream.flatMap(function(x) {
 			return switch(x) {
@@ -139,14 +146,14 @@ class StreamTest extends ProcessAsyncBase {
 		stream.emit(0);
 		stream0.emit(123);
 
-		values.last.get().areEqual(123);
+		values.last().areEqual(Some(123));
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_flatMap_with_3_streams_emit_third_stream_with_789() : Void {
-		var stream0 = Streams.identity();
-		var stream1 = Streams.identity();
-		var stream2 = Streams.identity();
+		var stream0 = Streams.identity(None);
+		var stream1 = Streams.identity(None);
+		var stream2 = Streams.identity(None);
 
 		var bound = stream.flatMap(function(x) {
 			return switch(x) {
@@ -161,14 +168,14 @@ class StreamTest extends ProcessAsyncBase {
 		stream.emit(2);
 		stream2.emit(789);
 
-		values.last.get().areEqual(789);
+		values.last().areEqual(Some(789));
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_flatMap_with_3_streams_emit_on_stream_but_not_on_mapped() : Void {
-		var stream0 = Streams.identity();
-		var stream1 = Streams.identity();
-		var stream2 = Streams.identity();
+		var stream0 = Streams.identity(None);
+		var stream1 = Streams.identity(None);
+		var stream2 = Streams.identity(None);
 
 		var bound = stream.flatMap(function(x) {
 			return switch(x) {
@@ -182,23 +189,22 @@ class StreamTest extends ProcessAsyncBase {
 
 		stream.emit(0);
 
-		values.size.areEqual(0);
+		values.size().areEqual(0);
 	}
 
 	@Test
 	public function when_creating_a_stream__should_calling_zip_two_streams_together() : Void {
 		var zipped = stream.zip(stream).map(function(tuple) {
-			return tuple._1 * tuple._2;
+			return tuple._1() * tuple._2();
 		});
 
 		var values = zipped.values();
 
-		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
-        for(item in iter) {
+        for(item in [1, 2, 3, 4, 5, 6, 7]) {
         	stream.emit(item);
         }
 
-        values.valuesEqualsIterable([1, 4, 9, 16, 25, 36, 49]);
+        values.areIterablesEqual([1, 4, 9, 16, 25, 36, 49]);
 	}
 
 	@Test
@@ -207,12 +213,11 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = shifted.values();
 
-		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
-        for(item in iter) {
+        for(item in [1, 2, 3, 4, 5, 6, 7]) {
         	stream.emit(item);
         }
 
-        values.valuesEqualsIterable([1, 2, 3, 4, 5]);
+        values.areIterablesEqual([1, 2, 3, 4, 5]);
 	}
 
 	@Test
@@ -221,12 +226,11 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = shifted.values();
 
-		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
-        for(item in iter) {
+        for(item in [1, 2, 3, 4, 5, 6, 7]) {
         	stream.emit(item);
         }
 
-        values.size.areEqual(5);
+        values.size().areEqual(5);
 	}
 
 	@Test
@@ -235,12 +239,11 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = shifted.values();
 
-		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
-        for(item in iter) {
+        for(item in [1, 2, 3, 4, 5, 6, 7]) {
         	stream.emit(item);
         }
 
-        values.valuesEqualsIterable([1, 2]);
+        values.areIterablesEqual([1, 2]);
 	}
 
 	@Test
@@ -249,12 +252,11 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = shifted.values();
 
-		var iter: Iterable<Int> = [1, 2, 3, 4, 5, 6, 7];
-        for(item in iter) {
+        for(item in [1, 2, 3, 4, 5, 6, 7]) {
         	stream.emit(item);
         }
 
-        values.size.areEqual(2);
+        values.size().areEqual(2);
 	}
 
 	@Test
@@ -267,7 +269,7 @@ class StreamTest extends ProcessAsyncBase {
 
 		advanceProcessBy(1, false);
 
-		calmed.valuesEqualsIterable([]);
+		calmed.areIterablesEqual([]);
 	}
 
 	@Test
@@ -280,7 +282,7 @@ class StreamTest extends ProcessAsyncBase {
 
 		advanceProcessBy(2, false);
 
-		calmed.valuesEqualsIterable([3]);
+		calmed.areIterablesEqual([3]);
 	}
 
 	@Test
@@ -299,7 +301,7 @@ class StreamTest extends ProcessAsyncBase {
 
 		advanceProcessBy(2, false);
 
-		calmed.valuesEqualsIterable([3, 7]);
+		calmed.areIterablesEqual([3, 7]);
 	}
 
 	@Test
@@ -316,7 +318,7 @@ class StreamTest extends ProcessAsyncBase {
 			stream.emitWithDelay(i, 2);
 		}
 
-		calmed.valuesEqualsIterable([3]);
+		calmed.areIterablesEqual([3]);
 	}
 
 	@Test
@@ -336,6 +338,6 @@ class StreamTest extends ProcessAsyncBase {
 
 		advanceProcessBy(2, false);
 
-		calmed.valuesEqualsIterable([3, 4, 5, 6, 7]);
+		calmed.areIterablesEqual([3, 4, 5, 6, 7]);
 	}
 }

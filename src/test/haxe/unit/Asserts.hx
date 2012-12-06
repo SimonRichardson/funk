@@ -22,8 +22,18 @@ class Asserts {
 			var value0 = a.next();
 			var value1 = b.next();
 
-			if (value0 != value1) {
-				result = false;
+			switch (Type.typeof(value0)) {
+				case TEnum(e): 
+					if (!Type.enumEq(value0, value1)) {
+						result = false;
+					}
+				default: 
+					if (value0 != value1) {
+						result = false;
+					}
+			}
+
+			if (!result) {
 				break;
 			}
 		}
