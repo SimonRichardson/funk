@@ -3,10 +3,13 @@ package funk.reactive.behaviours;
 import funk.Funk;
 import funk.reactive.Behaviour;
 import funk.reactive.Propagation;
+import funk.reactive.extensions.Behaviours;
 import funk.reactive.extensions.Propagations;
 import funk.reactive.extensions.Streams;
 import funk.signal.Signal3;
 import funk.types.Tuple3;
+
+using funk.reactive.extensions.Behaviours;
 
 class BehaviourSignal3 {
 

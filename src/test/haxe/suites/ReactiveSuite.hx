@@ -10,9 +10,9 @@ import funk.reactive.StreamValuesTest;
 import funk.reactive.behaviours.BehaviourSignal0Test;
 import funk.reactive.behaviours.BehaviourSignal1Test;
 import funk.reactive.behaviours.BehaviourSignal2Test;
-/*import funk.reactive.behaviours.BehaviourSignal3Test;
+import funk.reactive.behaviours.BehaviourSignal3Test;
 import funk.reactive.behaviours.BehaviourSignal4Test;
-import funk.reactive.behaviours.BehaviourSignal5Test;*/
+import funk.reactive.behaviours.BehaviourSignal5Test;
 
 class ReactiveSuite extends TestSuite
 {
@@ -29,8 +29,8 @@ class ReactiveSuite extends TestSuite
 		add(funk.reactive.behaviours.BehaviourSignal0Test);
 		add(funk.reactive.behaviours.BehaviourSignal1Test);
 		add(funk.reactive.behaviours.BehaviourSignal2Test);
-		/*add(funk.reactive.behaviours.BehaviourSignal3Test);
+		add(funk.reactive.behaviours.BehaviourSignal3Test);
 		add(funk.reactive.behaviours.BehaviourSignal4Test);
-		add(funk.reactive.behaviours.BehaviourSignal5Test);*/
+		add(funk.reactive.behaviours.BehaviourSignal5Test);
 	}
 }

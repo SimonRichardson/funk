@@ -37,14 +37,14 @@ class StreamBool {
 		var value = false;
 
 		Streams.create(function(pulse : Pulse<Bool>) : Propagation<Bool> {
-			time = pulse.time;
-			value = pulse.value;
+			time = pulse.time();
+			value = pulse.value();
 
 			return Negate;
 		}, Some([stream].toCollection()));
 
 		return Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
-			return if(value && (time == pulse.time)) {
+			return if(value && (time == pulse.time())) {
 				Propagate(pulse);
 			} else {
 				Negate;
@@ -59,8 +59,8 @@ class StreamBool {
 		var value = false;
 
 		Streams.create(function(pulse : Pulse<Bool>) : Propagation<Bool> {
-			time = pulse.time;
-			value = pulse.value;
+			time = pulse.time();
+			value = pulse.value();
 
 			return Negate;
 		}, Some([stream].toCollection()));
@@ -79,8 +79,6 @@ class StreamBool {
 				} else {
 					Negate;
 				}
-			}, Some([elseBlock].toCollection()))]);
-
+			}, Some([elseBlock].toCollection()))].toCollection());
 	}
-
 }
