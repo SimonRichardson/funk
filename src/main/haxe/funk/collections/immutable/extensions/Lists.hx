@@ -4,7 +4,6 @@ import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.extensions.Collections;
 import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.IteratorsUtil;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Option;
@@ -12,8 +11,9 @@ import funk.types.Predicate1;
 import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.extensions.Anys;
+import funk.types.extensions.Iterators;
 
-using funk.collections.immutable.extensions.IteratorsUtil;
+using funk.types.extensions.Iterators;
 
 private class ListImpl<T> {
 

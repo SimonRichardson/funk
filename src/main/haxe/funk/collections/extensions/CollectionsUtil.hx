@@ -26,14 +26,14 @@ class CollectionsUtil {
 		var size : Int = -1;
 		var iterable : Iterable<R> = null;
 
-		var valueType : ValueType = Type.typeof(x);
-
+		// Because array is the likely option to a collection, let's optimise this to as much as possible
 		if (Std.is(x, Array)) {
 			var array : Array<R> = cast x;
 			size = array.length;
 			iterable = array;
 		} else {
-			switch (valueType) {
+			// Now do the switch over the value type.
+			switch (Type.typeof(x)) {
 				case TEnum(e):
 					if (e == List) {
 						return (cast e).collection();
@@ -84,8 +84,7 @@ class CollectionsUtil {
 		};
 
 		Reflect.setField(collection, REFLECT_NAME, {
-			id: NAME,
-			type: valueType
+			id: NAME
 		});
 
 		return collection;
