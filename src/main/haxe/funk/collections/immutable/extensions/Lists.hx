@@ -19,8 +19,27 @@ private class ListImpl<T> {
 
 	private var _list : List<T>;
 
+	private var _knownSize : Bool;
+
+	private var _size : Int;
+
 	public function new(list : List<T>) {
 		_list = list;
+
+		_size = 0;
+		_knownSize = false;
+	}
+
+	public function productArity() : Int {
+		return size();
+	}
+
+	public function productPrefix() : String {
+		return size() > 0 ? 'List' : 'Nil';
+	}
+
+	public function productElement(index : Int) : T {
+		return Lists.get(_list, index);
 	}
 
 	public function iterator() : Iterator<T> {
@@ -28,7 +47,14 @@ private class ListImpl<T> {
 	}
 
 	public function size() : Int {
-		return Lists.size(_list);
+		if (_knownSize) {
+			return _size;
+		}
+
+		_size = Lists.size(_list);
+		_knownSize = true;
+
+		return _size;
 	}
 }
 
@@ -93,7 +119,7 @@ class Lists {
 					return Nil;
 				}
 				list = tail(list);
-			}	
+			}
 		}
 
 		return list;
@@ -322,7 +348,7 @@ class Lists {
 		if (size(list) < 1) {
 			return None;
 		}
-		
+
 		var value = head(list);
 		list = tail(list);
 		while (nonEmpty(list)) {
