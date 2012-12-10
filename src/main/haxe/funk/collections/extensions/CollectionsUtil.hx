@@ -23,51 +23,55 @@ class CollectionsUtil {
 	}
 
 	public static function toCollection<T, R>(x : T) : Collection<R> {
-		var valueType : ValueType = Type.typeof(x);
-
 		var size : Int = -1;
 		var iterable : Iterable<R> = null;
 
-		switch (valueType) {
-			case TEnum(e):
-				if (e == List) {
-					return (cast e).collection();
-				} 
-			case TObject:
-				if (Reflect.hasField(x, REFLECT_NAME)) {
-					var reflect = Reflect.field(x, REFLECT_NAME);
-					if (Reflect.field(reflect, 'id') == NAME) {
-						return cast x;
+		var valueType : ValueType = Type.typeof(x);
+
+		if (Std.is(x, Array)) {
+			var array : Array<R> = cast x;
+			size = array.length;
+			iterable = array;
+		} else {
+			switch (valueType) {
+				case TEnum(e):
+					if (e == List) {
+						return (cast e).collection();
 					}
-				} 
-			case TClass(c):
-				if (c == Array) {
-					var array : Array<R> = cast x;
-					size = array.length;
-					iterable = array;
-				} else if (c == String) {
-					var string : String = cast x;
-					size = string.length;
-					iterable = {
-						iterator: function() {
-							return cast Strings.iterator(string);
+
+				case TObject:
+					if (Reflect.hasField(x, REFLECT_NAME)) {
+						var reflect = Reflect.field(x, REFLECT_NAME);
+						if (Reflect.field(reflect, 'id') == NAME) {
+							return cast x;
 						}
-					};
-				} else {
-					var instanceFields : Array<String> = Type.getInstanceFields(c);
-					if (instanceFields.indexOf('size') >= 0 && instanceFields.indexOf('iterator') >= 0) {
-						// We have a possible match
-						return cast x;
 					}
-				}
 
-			default:
-		}
+				case TClass(c):
+					if (c == String) {
+						var string : String = cast x;
+						size = string.length;
+						iterable = {
+							iterator: function() {
+								return cast Strings.iterator(string);
+							}
+						};
+					} else {
+						var instanceFields : Array<String> = Type.getInstanceFields(c);
+						if (instanceFields.indexOf('size') >= 0 && instanceFields.indexOf('iterator') >= 0) {
+							// We have a possible match
+							return cast x;
+						}
+					}
 
-		// If none exist, create it.
-		if (size == -1 && null == iterable) {
-			iterable = cast [x];
-			size = 1;
+				default:
+			}
+
+			// If none exist, create it.
+			if (size == -1 && null == iterable) {
+				iterable = cast [x];
+				size = 1;
+			}
 		}
 
 		var collection : Collection<R> = {

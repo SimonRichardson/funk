@@ -1,6 +1,9 @@
-package funk.collections.extensions;
+package funk.types.extensions;
 
-class IteratorsUtil {
+import funk.collections.Collection;
+import funk.collections.extensions.CollectionsUtil;
+
+class Iterators {
 
 	public static function reverse<T>(iterator : Iterator<T>) : Iterator<T> {
 		var stack = toArray(iterator);
@@ -19,4 +22,5 @@ class IteratorsUtil {
 	public static function toCollection<T>(iterator : Iterator<T>) : Collection<T> {
 		return CollectionsUtil.toCollection(toArray(iterator));
 	}
+
 }

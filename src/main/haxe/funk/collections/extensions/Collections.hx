@@ -3,7 +3,6 @@ package funk.collections.extensions;
 import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.extensions.CollectionsUtil;
-import funk.collections.extensions.IteratorsUtil;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Function3;
@@ -12,8 +11,9 @@ import funk.types.Predicate1;
 import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.extensions.Anys;
+import funk.types.extensions.Iterators;
 
-using funk.collections.extensions.IteratorsUtil;
+using funk.types.extensions.Iterators;
 
 class Collections {
 
@@ -264,7 +264,7 @@ class Collections {
 		return CollectionsUtil.toCollection(mapped);
 	}
 
-	public static function partition<T>(	collection : Collection<T>, 
+	public static function partition<T>(	collection : Collection<T>,
 											func : Predicate1<T>
 											) : Tuple2<Collection<T>, Collection<T>> {
 		var left = [];
@@ -351,7 +351,7 @@ class Collections {
 		return CollectionsUtil.toCollection(stack);
 	}
 
-	public static function zip<T1, T2>(	collection : Collection<T1>, 
+	public static function zip<T1, T2>(	collection : Collection<T1>,
 										other : Collection<T2>
 										) : Collection<Tuple2<T1, T2>> {
 		var amount = Std.int(Math.min(size(collection), size(other)));
@@ -433,7 +433,7 @@ class Collections {
 		} else {
 			var iterator = collection.iterator();
 			iterator.next();
-			IteratorsUtil.toCollection(iterator);
+			Iterators.toCollection(iterator);
 		}
 	}
 
@@ -447,7 +447,7 @@ class Collections {
 	}
 
 	public static function reverse<T>(collection : Collection<T>) : Collection<T> {
-		return IteratorsUtil.toCollection(collection.iterator().reverse());
+		return Iterators.toCollection(collection.iterator().reverse());
 	}
 
 	public static function size<T>(collection : Collection<T>) : Int {
@@ -520,7 +520,7 @@ class Collections {
 			'Collection(' + foldLeftWithIndex(mapped, '', function(a, b, index) {
 				return (index < 1) ? b : a + ', ' + b;
 			}) + ')';
-		}	
+		}
 	}
 }
 
