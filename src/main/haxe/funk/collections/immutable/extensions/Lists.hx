@@ -38,7 +38,7 @@ private class ListImpl<T> {
 		return size() > 0 ? 'List' : 'Nil';
 	}
 
-	public function productElement(index : Int) : T {
+	public function productElement(index : Int) : Option<T> {
 		return Lists.get(_list, index);
 	}
 
