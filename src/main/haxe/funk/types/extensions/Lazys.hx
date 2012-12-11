@@ -11,7 +11,8 @@ class Lazys {
 
 	public static function apply<T>(lax : Lazy<T>, scope : Dynamic, ?args : Array<Dynamic>) : T {
 		return switch (lax) {
-			case lazy(func): Reflect.callMethod(scope, func, args.toOption().getOrElse(function() {
+			case lazy(func):
+				Reflect.callMethod(scope, func, args.toOption().getOrElse(function() {
 					return [];
 				}));
 		}
