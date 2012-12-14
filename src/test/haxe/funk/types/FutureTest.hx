@@ -274,10 +274,14 @@ class FutureTest {
 	public function when_adding_progress_after_resolve__should_not_call_progress() : Void {
 		var called : Bool = false;
 		future.progress(function(value){
-			called = true;
 		});
 		deferred.resolve(1);
-		deferred.progress(1.0);
-		called.isFalse();
+
+		try {
+			deferred.progress(1.0);
+		} catch (error : Dynamic) {
+			called = true;
+		}
+		called.isTrue();
 	}
 }

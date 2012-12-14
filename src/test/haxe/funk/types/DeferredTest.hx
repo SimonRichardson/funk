@@ -57,17 +57,16 @@ class DeferredTest {
 	}
 
 	@Test
-	public function when_calling_values_with_last_after_resolve_twice__should_be_size_1() : Void {
+	public function when_calling_values_with_last_after_resolve_twice__should_throw_an_error() : Void {
 		deferred.resolve(1);
-		deferred.resolve(2);
-		deferred.values().size().areEqual(1);
-	}
 
-	@Test
-	public function when_calling_values_with_last_after_resolve_twice__should_be_1() : Void {
-		deferred.resolve(1);
-		deferred.resolve(2);
-		deferred.values().last().get().areEqual(1);
+		var called = false;
+		try {
+			deferred.resolve(2);
+		} catch (error : Dynamic) {
+			called = true;
+		}
+		called.isTrue();
 	}
 
 	@Test
@@ -147,8 +146,15 @@ class DeferredTest {
 	}
 
 	@Test
-	public function when_calling_progress_after_resolve__should_not_throw_an_error() : Void {
+	public function when_calling_progress_after_resolve__should_throw_an_error() : Void {
 		deferred.resolve(1);
-		deferred.progress(1.0);
+
+		var called = false;
+		try {
+			deferred.progress(1.0);
+		} catch (error : Dynamic) {
+			called = true;
+		}
+		called.isTrue();
 	}
 }

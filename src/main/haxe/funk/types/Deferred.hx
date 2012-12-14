@@ -77,8 +77,10 @@ class Deferred<T> {
 					case Pending:
 						_progressStream.emit(value);
 					default:
+						throw Errors.IllegalOperationError('Invalid state');
 				}
 			case None:
+				throw Errors.IllegalOperationError('Invalid value');
 		}
 	}
 
@@ -89,10 +91,10 @@ class Deferred<T> {
 					case Pending:
 						_stateStream.emit(Resolved(Some(value)));
 					default:
-						// TODO (Simon) : Throw an error?
+						throw Errors.IllegalOperationError('Invalid state');
 				}
 			case None:
-				// TODO (Simon) : Throw an error?
+				throw Errors.IllegalOperationError('Invalid value');
 		}
 	}
 
@@ -103,10 +105,10 @@ class Deferred<T> {
 					case Pending:
 						_stateStream.emit(Rejected(error));
 					default:
-						// TODO (Simon) : Throw an error?
+						throw Errors.IllegalOperationError('Invalid state');
 				}
 			case None:
-				// TODO (Simon) : Throw an error?
+				throw Errors.IllegalOperationError('Invalid value');
 		}
 	}
 
