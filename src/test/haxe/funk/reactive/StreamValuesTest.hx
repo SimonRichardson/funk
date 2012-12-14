@@ -5,7 +5,7 @@ import funk.collections.CollectionsTestBase;
 import funk.collections.extensions.Collections;
 import funk.collections.extensions.CollectionsUtil;
 import funk.reactive.StreamValues;
-import funk.signal.Signal1;
+import funk.signals.Signal1;
 import funk.types.Option;
 import funk.types.Tuple2;
 import funk.types.extensions.Options;

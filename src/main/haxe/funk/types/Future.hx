@@ -1,14 +1,7 @@
 package funk.types;
 
 import funk.Funk;
-import funk.reactive.Stream;
-import funk.signal.Signal1;
 import funk.types.Either;
-import funk.types.Option;
-import funk.types.extensions.Options;
-
-using funk.types.Either;
-using funk.types.extensions.Options;
 
 typedef Future<T> = {
 

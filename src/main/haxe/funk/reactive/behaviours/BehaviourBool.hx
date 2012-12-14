@@ -7,7 +7,7 @@ import funk.reactive.extensions.Behaviours;
 import funk.reactive.extensions.Propagations;
 import funk.reactive.extensions.Streams;
 import funk.reactive.streams.StreamBool;
-import funk.signal.Signal0;
+import funk.signals.Signal0;
 import funk.types.Tuple1;
 
 using funk.reactive.extensions.Streams;

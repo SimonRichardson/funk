@@ -5,11 +5,11 @@ import funk.collections.immutable.extensions.Lists;
 import funk.reactive.Pulse;
 import funk.reactive.Propagation;
 import funk.reactive.Stream;
-import funk.signal.Signal0;
+import funk.signals.Signal0;
 import funk.types.Function1;
 import funk.types.Option;
 import funk.types.extensions.Options;
-import funk.signal.Signal1;
+import funk.signals.Signal1;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Options;

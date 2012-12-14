@@ -5,7 +5,7 @@ import funk.collections.Collection;
 import funk.collections.extensions.Collections;
 import funk.reactive.behaviours.BehaviourSignal4;
 import funk.reactive.extensions.Behaviours;
-import funk.signal.Signal4;
+import funk.signals.Signal4;
 import funk.types.Tuple4;
 import funk.types.extensions.Tuples4;
 import massive.munit.Assert;

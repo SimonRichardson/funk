@@ -3,7 +3,7 @@ package funk.reactive;
 import funk.reactive.Pulse;
 import funk.reactive.Propagation;
 import funk.reactive.Stream;
-import funk.signal.Signal0;
+import funk.signals.Signal0;
 import funk.types.Function0;
 import funk.types.Function1;
 
@@ -75,8 +75,8 @@ class Stream<T> {
 
         // This will propagate through all listeners
         var queue = new PriorityQueue<{stream: Stream<T>, pulse: Pulse<T>}>();
-        queue.insert(_rank, {  
-            stream: this, 
+        queue.insert(_rank, {
+            stream: this,
             pulse: pulse
         });
 
@@ -154,7 +154,7 @@ private class Rank {
 }
 
 private typedef KeyValue<T> = {
-    key: Int, 
+    key: Int,
     value: T
 };
 
@@ -168,12 +168,12 @@ private class PriorityQueue<T> {
 
     public function insert(index : Int, value : T) : Void {
         var keyValue = {
-            key: index, 
+            key: index,
             value: value
         };
-        
+
         var added = false;
-        
+
         for (i in 0..._values.length) {
             var val = _values[i];
 
@@ -181,7 +181,7 @@ private class PriorityQueue<T> {
                 added = true;
 
                 _values.insert(i, keyValue);
-                
+
                 break;
             }
         }
@@ -190,7 +190,7 @@ private class PriorityQueue<T> {
             _values.push(keyValue);
         }
     }
-  
+
     public function pop() : KeyValue<T> {
         return _values.pop();
     }

@@ -9,7 +9,7 @@ import funk.reactive.Propagation;
 import funk.reactive.Stream;
 import funk.reactive.extensions.Pulses;
 import funk.reactive.extensions.Streams;
-import funk.signal.Signal1;
+import funk.signals.Signal1;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function2;
@@ -36,7 +36,7 @@ class Streams {
 
         var task : Option<Task> = None;
         create(function(pulse : Pulse<T>) : Propagation<T> {
-            
+
             task = Process.stop(task);
             task = Process.start(function() {
                 stream.emit(pulse.value());
@@ -79,7 +79,7 @@ class Streams {
         }, Some(CollectionsUtil.toCollection(stream)));
 
         return out;
-    } 
+    }
 
     public static function emitWithDelay<T>(stream : Stream<T>, value : T, delay : Int) : Stream<T> {
         Process.start(function() {
@@ -101,7 +101,7 @@ class Streams {
             previous.foreach(function(s) {
                 s.attachListener(out);
             });
-            
+
             return Negate;
         }, Some(CollectionsUtil.toCollection(stream)));
 
@@ -136,7 +136,7 @@ class Streams {
         } else {
             identity(Some(streams));
         };
-    }   
+    }
 
     public static function once<T>(value : T) : Stream<T> {
         var sent = false;
