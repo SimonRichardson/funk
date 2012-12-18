@@ -6,6 +6,7 @@ import funk.types.EitherTest;
 import funk.types.OptionTest;
 import funk.types.Function0Test;
 import funk.types.Function1Test;
+import funk.types.LazyTest;
 import funk.types.Predicate0Test;
 import funk.types.Predicate1Test;
 import funk.types.Predicate2Test;
@@ -31,6 +32,8 @@ class TypesSuite extends TestSuite
 
 		add(funk.types.Function0Test);
 		add(funk.types.Function1Test);
+
+		add(funk.types.LazyTest);
 
 		add(funk.types.Predicate0Test);
 		add(funk.types.Predicate1Test);

@@ -33,17 +33,4 @@ class Functions0 {
 			return func();
 		};
 	}
-
-	public static function lazy<R>(func : Function0<R>) : Function0<R> {
-		var value : Option<R> = None;
-
-		return function() {	
-			return switch(value) {
-				case Some(value): value;
-				case None:
-					value = Some(func());
-					value.get();
-			};
-		};
-	}
 }

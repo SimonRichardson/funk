@@ -39,12 +39,12 @@ class Functions1 {
 	public static function tuple<T1, R>(func : Function1<T1, R>) : Function1<Tuple1<T1>, R> {
 		return function(tuple) {
 			return func(tuple._1());
-		}
+		};
 	}
 
 	public static function untuple<T1, R>(func : Function1<Tuple1<T1>, R>) : Function1<T1, R> {
 		return function(value0) {
 			return func(tuple1(value0));
-		}
+		};
 	}
 }

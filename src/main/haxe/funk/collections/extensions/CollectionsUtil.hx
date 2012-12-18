@@ -83,6 +83,7 @@ class CollectionsUtil {
 			}
 		};
 
+		// TODO (Simon) : If this is going to be just id, then flatten it.
 		Reflect.setField(collection, REFLECT_NAME, {
 			id: NAME
 		});
