@@ -9,6 +9,7 @@
 -lib hamcrest
 --js-modern
 -D test
+-D parallel
 
 # Neko
 --next
@@ -20,6 +21,7 @@
 -lib munit
 -lib hamcrest
 -D test
+-D parallel
 
 # as3
 --next
@@ -32,7 +34,8 @@
 -lib munit
 -lib hamcrest
 -D test
+-D parallel
 
 --next
--cmd haxelib run munit test -coverage -nogen
-#-cmd haxelib run munit test -nogen -as3
+#-cmd haxelib run munit test -coverage -nogen
+-cmd haxelib run munit test -nogen

@@ -37,7 +37,6 @@ class CollectionsTestBase {
 
 	public var emptyName : String;
 
-
 	@Test
 	public function should_be_non_empty() {
 		actual.nonEmpty().isTrue();

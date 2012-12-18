@@ -1,9 +1,13 @@
 package funk.collections;
 
 import funk.collections.CollectionsTestBase;
+import funk.collections.extensions.Collections;
 import funk.collections.extensions.CollectionsUtil;
+import massive.munit.Assert;
 
+using funk.collections.extensions.Collections;
 using funk.collections.extensions.CollectionsUtil;
+using massive.munit.Assert;
 
 class CollectionsTest extends CollectionsTestBase {
 
@@ -30,5 +34,4 @@ class CollectionsTest extends CollectionsTestBase {
 		name = 'Collection';
 		emptyName = 'Collection';
 	}
-
 }
