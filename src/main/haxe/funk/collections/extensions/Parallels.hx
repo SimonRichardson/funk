@@ -28,7 +28,7 @@ using funk.types.extensions.Iterators;
 class Parallels {
 
 	
-	private static var MAX_ITERATIONS : Int = 99999;
+	private static var MAX_ITERATIONS : Int = 9999;
 
 	public static function foldLeft<T>(collection : Collection<T>, value : T, func : Function2<T, T, T>) : Future<T> {
 		
@@ -38,60 +38,44 @@ class Parallels {
 		#if (cpp || neko)
 
 		// We aim to be parallel, but we don't guarantee it!
-		if (collection.size() < MAX_ITERATIONS) {
+		var size = collection.size();
+		if (size < MAX_ITERATIONS) {
 			deferred.resolve(Collections.foldLeft(collection, value, func));
 		} else {
-
-			var buckets = generate(collection);
-			var bucketTotal = buckets.length;
-		
-			// Have a slot ready for each thread.
-			var slots = new Array<{result : T}>();
-			
-			// Make a master thread to see when things have finished		
-			var master = Thread.create(function () {
-				var shouldStop = false;
-				while (!shouldStop) {
-					// Sleep so we don't max out the cpu
-					Sys.sleep(0.001);
-
-					// Now finish
-					var total = 0;
-					for (item in slots) {
-						if (item == null) {
-							break;
-						}
-						total++;
-					}
-
-					if (total == bucketTotal) {
-						var result = slots[0].result;
-						for(i in 1...slots.length) {
-							result = func(result, slots[i].result);
-						}
-
-						deferred.resolve(result);	
-
-						shouldStop = true;
-					}
-				}
-			});
-			
 			// Go through and fold as much as possible
-			for (i in 0...bucketTotal) {
-				Thread.create(function () {
-					// Actual folding here.
-					var init = i == 0;
+			var total = Math.ceil(Math.log(size / 2));
+			var length = Math.ceil(size / total);
 
-					var result = init ? value : buckets[i][0];
-					
-					for(j in (init ? 0 : 1)...buckets[i].length) {
-						result = func(result, buckets[i][j]);
+			var results = [];
+
+			var actual = 0;
+			var expected = total * (total + 1) / 2;
+
+			var iterator = collection.iterator();
+			for (index in 1...total + 1) {
+				var items = gather(iterator, length);
+
+				Thread.create(function () {
+
+					var result = index == 1 ? value : items.shift();
+					// Actual folding here.
+					for (item in items) {
+						result = func(result, item);
 					}
 
-					slots[i] = {
-						result: result
-					};
+					results[index - 1] = result;
+
+					actual += index;
+
+					if (actual == expected) {
+						result = results.shift();
+
+						for (item in results) {
+							result = func(result, item);
+						}
+
+						deferred.resolve(result);
+					}
 				});
 			}
 		}
@@ -104,22 +88,16 @@ class Parallels {
 		return future;
 	}
 
-	private static function generate<T>(collection : Collection<T>) : Array<Array<T>> {
-		var pointer = 0;
-		var result = new Array<Array<T>>();
-		result[pointer] = [];
-
-		// Note (Simon) : It would be good to remove this, as I'm pretty sure that it would be better with pointer/ref
-		var counter = 0;
-		for(item in collection.iterator()){
-			result[pointer].push(item);
-			
-			if (++counter == MAX_ITERATIONS) {
-				result[++pointer] = [];
-				counter = 0;
+	private inline static function gather<T>(iterator : Iterator<T>, size : Int) : Array<T> {
+		var result = [];
+		var index = 0;
+		while (iterator.hasNext()) {
+			if (index < size) {
+				result[index++] = iterator.next();
+			} else if (index >= size) {
+				break;
 			}
 		}
-
 		return result;
 	}
 }

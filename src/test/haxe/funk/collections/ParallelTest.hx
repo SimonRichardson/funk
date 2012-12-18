@@ -18,7 +18,7 @@ class ParallelTest {
 	@Before
 	public function setup () {
 		var a = [];
-		for (i in 0...999999) {
+		for (i in 0...99999) {
 			a.push(i + 0.0);
 		}
 		actual = a.toCollection();
@@ -35,8 +35,8 @@ class ParallelTest {
 			future.then(function (value) {
 				result = value;
 			});
-			result.areEqual(499998500001.0);
-		}, 4000), 3900);
+			result.areEqual(4999850001.0);
+		}, 400), 390);
 	}
 
 	@AsyncTest
@@ -50,8 +50,8 @@ class ParallelTest {
 			future.then(function (value) {
 				result = value;
 			});
-			result.areEqual(499998500002.0);
-		}, 4000), 3900);
+			result.areEqual(4999850002.0);
+		}, 400), 390);
 	}
 
 	@AsyncTest
@@ -66,16 +66,6 @@ class ParallelTest {
 				result = value;
 			});
 			result.areEqual(0.0);
-		}, 4000), 3900);
-	}
-
-	@Test
-	public function doit() : Void {
-		var t = Date.now().getTime();
-		actual.foldLeft(1.0, function (a, b) {
-			return a + b;
-		}).then(function (v) {
-			trace(Date.now().getTime() - t);
-		});
+		}, 400), 390);
 	}
 }
