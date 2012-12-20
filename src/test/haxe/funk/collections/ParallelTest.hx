@@ -18,12 +18,18 @@ class ParallelTest {
 
 	private var actual : Collection<Float>;
 
-	@Before
+	private static inline var TOTAL : Int = 99999;
+
+	private static inline var MIN_TIMEOUT : Int = 490;
+
+	private static inline var MAX_TIMEOUT : Int = 500;
+
+	@BeforeClass
 	public function setup () {
 		var a = [];
-		for (i in 1...99999) {
-			a.push(i + 0.0);
-		}
+		for (i in 0...TOTAL) {
+			a.push(i + 1.0);
+		}	
 		actual = a.toCollection();
 	}
 
@@ -35,28 +41,30 @@ class ParallelTest {
 			return true;
 		});
 
-		Timer.delay(asyncFactory.createHandler(this, function () {
-			var result = -1.0;
-			future.then(function (value) {
-				result = value;
-			});
-			result.areEqual(actual.size());
-		}, 400), 390);
-	}
+		var result = -1.0;
+		future.then(function (value) {
+			result = value;
+		});
 
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.areEqual(TOTAL);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+	
 	@AsyncTest
 	public function when_count__should_count_should_return_0(asyncFactory : AsyncFactory) : Void {
 		var future = actual.count(function (a) {
 			return false;
 		});
 
+		var result = -1.0;
+		future.then(function (value) {
+			result = value;
+		});
+
 		Timer.delay(asyncFactory.createHandler(this, function () {
-			var result = -1.0;
-			future.then(function (value) {
-				result = value;
-			});
 			result.areEqual(0);
-		}, 400), 390);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
 	@AsyncTest
@@ -65,45 +73,48 @@ class ParallelTest {
 			return a % 2 == 0.0;
 		});
 
+		var result = -1.0;
+		future.then(function (value) {
+			result = value;
+		});
+
 		Timer.delay(asyncFactory.createHandler(this, function () {
-			var result = -1.0;
-			future.then(function (value) {
-				result = value;
-			});
-			result.areEqual(Math.floor(actual.size() / 2));
-		}, 400), 390);
+			result.areEqual(Math.floor(TOTAL / 2));
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
 	// Fold Left
 
 	@AsyncTest
-	public function when_foldLeft__should_foldLeft_should_return_4999850001(asyncFactory : AsyncFactory) : Void {
+	public function when_foldLeft__should_foldLeft_should_return_4999950000(asyncFactory : AsyncFactory) : Void {
 		var future = actual.foldLeft(0.0, function (a, b) {
 			return a + b;
 		});
 
-		Timer.delay(asyncFactory.createHandler(this, function () {
-			var result = -1.0;
-			future.then(function (value) {
-				result = value;
-			});
-			result.areEqual(4999850001.0);
-		}, 400), 390);
+		var result = -1.0;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {			
+			result.areEqual(4999950000.0);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
 	@AsyncTest
-	public function when_foldLeft__should_foldLeft_should_return_4999850002(asyncFactory : AsyncFactory) : Void {
+	public function when_foldLeft__should_foldLeft_should_return_4999950001(asyncFactory : AsyncFactory) : Void {
 		var future = actual.foldLeft(1.0, function (a, b) {
 			return a + b;
 		});
 		
+		var result = -1.0;
+		future.then(function (value) {
+			result = value;
+		});
+
 		Timer.delay(asyncFactory.createHandler(this, function () {
-			var result = -1.0;
-			future.then(function (value) {
-				result = value;
-			});
-			result.areEqual(4999850002.0);
-		}, 400), 390);
+			result.areEqual(4999950001.0);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
 	@AsyncTest
@@ -112,20 +123,20 @@ class ParallelTest {
 			return 0.0;
 		});
 		
+		var result = -1.0;
+		future.then(function (value) {
+			result = value;
+		});	
+
 		Timer.delay(asyncFactory.createHandler(this, function () {
-			var result = -1.0;
-			future.then(function (value) {
-				result = value;
-			});
 			result.areEqual(0.0);
-		}, 400), 390);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
 	// Foreach
 
 	@AsyncTest
 	public function when_foreach__should_count_should_be_called_99999(asyncFactory : AsyncFactory) : Void {
-		// TODO (Simon) : Make this atomic.
 		var result = 0;
 		actual.foreach(function (a) {
 			result++;
@@ -133,6 +144,6 @@ class ParallelTest {
 
 		Timer.delay(asyncFactory.createHandler(this, function () {
 			result.areEqual(actual.size());
-		}, 400), 390);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 }

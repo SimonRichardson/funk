@@ -75,7 +75,7 @@ class Parallels {
 		}
 		#else
 		// Just reference the collections non-parallel one for unsupported targets.
-		Collections.count(collection, func);
+		deferred.resolve(Collections.count(collection, func));
 		#end
 
 		return future;
