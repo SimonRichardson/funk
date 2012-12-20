@@ -279,6 +279,60 @@ class Parallels {
 		#end
 	}
 
+	public static function map<T, R>(collection : Collection<T>, func : Function1<T, R>) : Future<Collection<R>> {
+		// We aim to be parallel, but we don't guarantee it!
+
+		var deferred = new Deferred<Collection<R>>();
+		var future = deferred.future();
+
+		#if (cpp || neko)
+		var size = collection.size();
+		if (size < MAX_ITERATIONS) {
+			deferred.resolve(Collections.map(collection, func));
+		} else {
+			var tuple = threadPoolSize(size);
+
+			var total = tuple._1();
+			var length = tuple._2();
+
+			var results = new AtomicArray<R>();
+
+			var actual = new AtomicInteger();
+			var expected = total * (total + 1) / 2;
+
+			// Go through and fold as much as possible
+
+			var iterator = collection.iterator();
+			for (index in 1...total + 1) {
+				var items = gather(iterator, length);
+
+				Thread.create(function () {
+					var threadResult = [];
+
+					for (item in items) {
+						threadResult.push(func(item));
+					}
+
+					actual.add(index);
+					results.addAll(threadResult);
+
+					if (actual.get() == expected) {
+						var threadArray = results.getAll();
+						var threadCollection = CollectionsUtil.toCollection(threadArray);
+
+						deferred.resolve(threadCollection);
+					}
+				});
+			}
+		}
+		#else
+		// Just reference the collections non-parallel one for unsupported targets.
+		deferred.resolve(Collections.map(collection, func));
+		#end
+
+		return future;
+	}
+
 	private inline static function threadPoolSize(size : Int) : Tuple2<Int, Int> {
 		var total = Math.ceil(Math.log(size / 2));
 		return tuple2(total, Math.ceil(size / total));

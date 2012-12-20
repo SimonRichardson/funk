@@ -4,6 +4,8 @@ import funk.collections.CollectionsTestBase;
 import funk.collections.extensions.Collections;
 import funk.collections.extensions.CollectionsUtil;
 import funk.collections.extensions.Parallels;
+import funk.types.Option;
+import funk.types.extensions.Options;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
@@ -12,6 +14,7 @@ import massive.munit.util.Timer;
 using funk.collections.extensions.CollectionsUtil;
 using funk.collections.extensions.Parallels;
 using funk.collections.extensions.Collections;
+using funk.types.extensions.Options;
 using massive.munit.Assert;
 
 class ParallelTest {
@@ -244,6 +247,56 @@ class ParallelTest {
 
 		Timer.delay(asyncFactory.createHandler(this, function () {
 			result.areEqual(actual.size());
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	// Map
+
+	@AsyncTest
+	public function when_map__should_map_should_return_99999(asyncFactory : AsyncFactory) : Void {
+		var future = actual.map(function (a) {
+			return true;
+		});
+
+		var result = null;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.size().areEqual(TOTAL);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_map__should_map_get_0_return_float(asyncFactory : AsyncFactory) : Void {
+		var future = actual.map(function (a) {
+			return a + 1.1;
+		});
+
+		var result = null;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.get(0).areEqual(Some(2.1));
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_map__should_map_get_0_return_some_float(asyncFactory : AsyncFactory) : Void {
+		var future = actual.map(function (a) {
+			return Some(a + 1.1);
+		});
+
+		var result = null;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.get(0).get().areEqual(Some(2.1));
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 }
