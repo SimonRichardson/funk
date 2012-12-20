@@ -29,7 +29,7 @@ class ParallelTest {
 		var a = [];
 		for (i in 0...TOTAL) {
 			a.push(i + 1.0);
-		}	
+		}
 		actual = a.toCollection();
 	}
 
@@ -50,7 +50,7 @@ class ParallelTest {
 			result.areEqual(TOTAL);
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
-	
+
 	@AsyncTest
 	public function when_count__should_count_should_return_0(asyncFactory : AsyncFactory) : Void {
 		var future = actual.count(function (a) {
@@ -83,6 +83,106 @@ class ParallelTest {
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
+	// Filter
+
+	@AsyncTest
+	public function when_filter__should_filter_should_return_99999(asyncFactory : AsyncFactory) : Void {
+		var future = actual.filter(function (a) {
+			return true;
+		});
+
+		var result = null;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.size().areEqual(TOTAL);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_filter__should_filter_should_return_0(asyncFactory : AsyncFactory) : Void {
+		var future = actual.filter(function (a) {
+			return false;
+		});
+
+		var result = null;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.size().areEqual(0);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_filter__should_filter_should_return_half_of_actual_size(asyncFactory : AsyncFactory) : Void {
+		var future = actual.filter(function (a) {
+			return a % 2 == 0.0;
+		});
+
+		var result = null;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.size().areEqual(Math.floor(TOTAL / 2));
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	// Filter Not
+
+	@AsyncTest
+	public function when_filterNot__should_filterNot_should_return_99999(asyncFactory : AsyncFactory) : Void {
+		var future = actual.filterNot(function (a) {
+			return false;
+		});
+
+		var result = null;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.size().areEqual(TOTAL);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_filterNot__should_filterNot_should_return_0(asyncFactory : AsyncFactory) : Void {
+		var future = actual.filterNot(function (a) {
+			return true;
+		});
+
+		var result = null;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.size().areEqual(0);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_filterNot__should_filterNot_should_return_half_of_actual_size(asyncFactory : AsyncFactory) : Void {
+		var future = actual.filterNot(function (a) {
+			return a % 2 != 0.0;
+		});
+
+		var result = null;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.size().areEqual(Math.floor(TOTAL / 2));
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
 	// Fold Left
 
 	@AsyncTest
@@ -96,7 +196,7 @@ class ParallelTest {
 			result = value;
 		});
 
-		Timer.delay(asyncFactory.createHandler(this, function () {			
+		Timer.delay(asyncFactory.createHandler(this, function () {
 			result.areEqual(4999950000.0);
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
@@ -106,7 +206,7 @@ class ParallelTest {
 		var future = actual.foldLeft(1.0, function (a, b) {
 			return a + b;
 		});
-		
+
 		var result = -1.0;
 		future.then(function (value) {
 			result = value;
@@ -122,11 +222,11 @@ class ParallelTest {
 		var future = actual.foldLeft(0.0, function (a, b) {
 			return 0.0;
 		});
-		
+
 		var result = -1.0;
 		future.then(function (value) {
 			result = value;
-		});	
+		});
 
 		Timer.delay(asyncFactory.createHandler(this, function () {
 			result.areEqual(0.0);

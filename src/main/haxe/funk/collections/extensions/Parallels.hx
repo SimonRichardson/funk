@@ -31,7 +31,7 @@ import cpp.vm.Thread;
 
 class Parallels {
 
-	
+
 	private static var MAX_ITERATIONS : Int = 9999;
 
 	public static function count<T>(collection : Collection<T>, func : Predicate1<T>) : Future<Int> {
@@ -66,7 +66,7 @@ class Parallels {
 					counter.add(threadCount);
 
 					actual.add(index);
-					
+
 					if (actual.get() == expected) {
 						deferred.resolve(counter.get());
 					}
@@ -76,6 +76,118 @@ class Parallels {
 		#else
 		// Just reference the collections non-parallel one for unsupported targets.
 		deferred.resolve(Collections.count(collection, func));
+		#end
+
+		return future;
+	}
+
+	public static function filter<T>(collection : Collection<T>, func : Predicate1<T>) : Future<Collection<T>> {
+		// We aim to be parallel, but we don't guarantee it!
+
+		var deferred = new Deferred<Collection<T>>();
+		var future = deferred.future();
+
+		#if (cpp || neko)
+		var size = collection.size();
+		if (size < MAX_ITERATIONS) {
+			deferred.resolve(Collections.filter(collection, func));
+		} else {
+			var tuple = threadPoolSize(size);
+
+			var total = tuple._1();
+			var length = tuple._2();
+
+			var results = new AtomicArray<T>();
+
+			var actual = new AtomicInteger();
+			var expected = total * (total + 1) / 2;
+
+			// Go through and fold as much as possible
+
+			var iterator = collection.iterator();
+			for (index in 1...total + 1) {
+				var items = gather(iterator, length);
+
+				Thread.create(function () {
+					var threadResult = [];
+
+					for (item in items) {
+						if (func(item)) {
+							threadResult.push(item);
+						}
+					}
+
+					actual.add(index);
+					results.addAll(threadResult);
+
+					if (actual.get() == expected) {
+						var threadArray = results.getAll();
+						var threadCollection = CollectionsUtil.toCollection(threadArray);
+
+						deferred.resolve(threadCollection);
+					}
+				});
+			}
+		}
+		#else
+		// Just reference the collections non-parallel one for unsupported targets.
+		deferred.resolve(Collections.filter(collection, func));
+		#end
+
+		return future;
+	}
+
+	public static function filterNot<T>(collection : Collection<T>, func : Predicate1<T>) : Future<Collection<T>> {
+		// We aim to be parallel, but we don't guarantee it!
+
+		var deferred = new Deferred<Collection<T>>();
+		var future = deferred.future();
+
+		#if (cpp || neko)
+		var size = collection.size();
+		if (size < MAX_ITERATIONS) {
+			deferred.resolve(Collections.filterNot(collection, func));
+		} else {
+			var tuple = threadPoolSize(size);
+
+			var total = tuple._1();
+			var length = tuple._2();
+
+			var results = new AtomicArray<T>();
+
+			var actual = new AtomicInteger();
+			var expected = total * (total + 1) / 2;
+
+			// Go through and fold as much as possible
+
+			var iterator = collection.iterator();
+			for (index in 1...total + 1) {
+				var items = gather(iterator, length);
+
+				Thread.create(function () {
+					var threadResult = [];
+
+					for (item in items) {
+						if (!func(item)) {
+							threadResult.push(item);
+						}
+					}
+
+					actual.add(index);
+					results.addAll(threadResult);
+
+					if (actual.get() == expected) {
+						var threadArray = results.getAll();
+						var threadCollection = CollectionsUtil.toCollection(threadArray);
+
+						deferred.resolve(threadCollection);
+					}
+				});
+			}
+		}
+		#else
+		// Just reference the collections non-parallel one for unsupported targets.
+		deferred.resolve(Collections.filterNot(collection, func));
 		#end
 
 		return future;
@@ -96,7 +208,7 @@ class Parallels {
 
 			var total = tuple._1();
 			var length = tuple._2();
-			
+
 			var results = new AtomicArray<T>();
 
 			var actual = new AtomicInteger();
@@ -122,7 +234,7 @@ class Parallels {
 
 						threadValue = threadArray.shift();
 						threadCollection = CollectionsUtil.toCollection(threadArray);
-						
+
 						threadResult = Collections.foldLeft(threadCollection, threadValue, func);
 
 						deferred.resolve(threadResult);
@@ -130,7 +242,7 @@ class Parallels {
 				});
 			}
 		}
-		#else 
+		#else
 		// Just reference the collections non-parallel one for unsupported targets.
 		deferred.resolve(Collections.foldLeft(collection, value, func));
 		#end
@@ -170,7 +282,7 @@ class Parallels {
 	private inline static function threadPoolSize(size : Int) : Tuple2<Int, Int> {
 		var total = Math.ceil(Math.log(size / 2));
 		return tuple2(total, Math.ceil(size / total));
-	} 
+	}
 
 	private inline static function gather<T>(iterator : Iterator<T>, size : Int) : Array<T> {
 		var result = [];
@@ -252,7 +364,7 @@ private class AtomicArray<T> {
 		_mutex.acquire();
 		var result = _value;
 		_mutex.release();
-		return result;	
+		return result;
 	}
 }
 #end
