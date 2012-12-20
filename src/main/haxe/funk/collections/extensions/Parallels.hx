@@ -194,60 +194,7 @@ class Parallels {
 	}
 
 	public static function foldLeft<T>(collection : Collection<T>, value : T, func : Function2<T, T, T>) : Future<T> {
-		// We aim to be parallel, but we don't guarantee it!
-
-		var deferred = new Deferred<T>();
-		var future = deferred.future();
-
-		#if (cpp || neko)
-		var size = collection.size();
-		if (size < MAX_ITERATIONS) {
-			deferred.resolve(Collections.foldLeft(collection, value, func));
-		} else {
-			var tuple = threadPoolSize(size);
-
-			var total = tuple._1();
-			var length = tuple._2();
-
-			var results = new AtomicArray<T>();
-
-			var actual = new AtomicInteger();
-			var expected = total * (total + 1) / 2;
-
-			// Go through and fold as much as possible
-
-			var iterator = collection.iterator();
-			for (index in 1...total + 1) {
-				var items = gather(iterator, length);
-
-				Thread.create(function () {
-					var threadValue = index == 1 ? value : items.shift();
-
-					var threadCollection = CollectionsUtil.toCollection(items);
-					var threadResult = Collections.foldLeft(threadCollection, threadValue, func);
-
-					actual.add(index);
-					results.addAt(threadResult, index - 1);
-
-					if (actual.get() == expected) {
-						var threadArray = results.getAll();
-
-						threadValue = threadArray.shift();
-						threadCollection = CollectionsUtil.toCollection(threadArray);
-
-						threadResult = Collections.foldLeft(threadCollection, threadValue, func);
-
-						deferred.resolve(threadResult);
-					}
-				});
-			}
-		}
-		#else
-		// Just reference the collections non-parallel one for unsupported targets.
-		deferred.resolve(Collections.foldLeft(collection, value, func));
-		#end
-
-		return future;
+		return reducerLeft(collection, func, true, value);
 	}
 
 	public static function foreach<T>(collection : Collection<T>, func : Function1<T, Void>) : Void {
@@ -333,6 +280,10 @@ class Parallels {
 		return future;
 	}
 
+	public static function reduceLeft<T>(collection : Collection<T>, func : Function2<T, T, T>) : Future<T> {
+		return reducerLeft(collection, func, false);
+	}
+
 	private inline static function threadPoolSize(size : Int) : Tuple2<Int, Int> {
 		var total = Math.ceil(Math.log(size / 2));
 		return tuple2(total, Math.ceil(size / total));
@@ -349,6 +300,71 @@ class Parallels {
 			}
 		}
 		return result;
+	}
+
+	private static function reducerLeft<T>(	collection : Collection<T>,
+											func : Function2<T, T, T>,
+											useValue : Bool,
+											?value : T = null
+											) : Future<T> {
+		// We aim to be parallel, but we don't guarantee it!
+
+		var deferred = new Deferred<T>();
+		var future = deferred.future();
+
+		#if (cpp || neko)
+		var size = collection.size();
+		if (size < MAX_ITERATIONS) {
+			deferred.resolve(Collections.foldLeft(collection, value, func));
+		} else {
+			var tuple = threadPoolSize(size);
+
+			var total = tuple._1();
+			var length = tuple._2();
+
+			var results = new AtomicArray<T>();
+
+			var actual = new AtomicInteger();
+			var expected = total * (total + 1) / 2;
+
+			// Go through and fold as much as possible
+
+			var iterator = collection.iterator();
+			for (index in 1...total + 1) {
+				var items = gather(iterator, length);
+
+				Thread.create(function () {
+					var threadValue = if (useValue) {
+						index == 1 ? value : items.shift();
+					} else {
+						items.shift();
+					}
+
+					var threadCollection = CollectionsUtil.toCollection(items);
+					var threadResult = Collections.foldLeft(threadCollection, threadValue, func);
+
+					actual.add(index);
+					results.addAt(threadResult, index - 1);
+
+					if (actual.get() == expected) {
+						var threadArray = results.getAll();
+
+						threadValue = threadArray.shift();
+						threadCollection = CollectionsUtil.toCollection(threadArray);
+
+						threadResult = Collections.foldLeft(threadCollection, threadValue, func);
+
+						deferred.resolve(threadResult);
+					}
+				});
+			}
+		}
+		#else
+		// Just reference the collections non-parallel one for unsupported targets.
+		deferred.resolve(Collections.foldLeft(collection, value, func));
+		#end
+
+		return future;
 	}
 }
 

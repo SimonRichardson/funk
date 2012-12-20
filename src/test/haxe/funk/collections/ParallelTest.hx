@@ -299,4 +299,38 @@ class ParallelTest {
 			result.get(0).get().areEqual(Some(2.1));
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
+
+	// Reduce Left
+
+	@AsyncTest
+	public function when_reduceLeft__should_reduceLeft_should_return_4999950000(asyncFactory : AsyncFactory) : Void {
+		var future = actual.reduceLeft(function (a, b) {
+			return a + b;
+		});
+
+		var result = -1.0;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.areEqual(4999950000.0);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_reduceLeft__should_call_reduceLeft(asyncFactory : AsyncFactory) : Void {
+		var future = actual.reduceLeft(function (a, b) {
+			return 0.0;
+		});
+
+		var result = -1.0;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.areEqual(0.0);
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
 }
