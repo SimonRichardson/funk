@@ -1,5 +1,4 @@
 # js
-
 -js bin/js_test.js
 -main TestMain
 -cp src/main/haxe
@@ -36,6 +35,18 @@
 -D test
 -D parallel
 
+# cpp
 --next
--cmd haxelib run munit test -coverage -nogen
-#-cmd haxelib run munit test -nogen
+-cpp bin/cpp
+-main TestMain
+-cp src/main/haxe
+-cp src/test/haxe
+-debug
+-lib munit
+-lib hamcrest
+-D test
+-D parallel
+
+--next
+#-cmd haxelib run munit test -coverage -nogen
+-cmd haxelib run munit test -nogen

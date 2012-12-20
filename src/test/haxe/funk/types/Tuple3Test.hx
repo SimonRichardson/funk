@@ -67,21 +67,21 @@ class Tuple3Test {
 	public function when_calling_equals_with_optional_equality__should_be_false() : Void {
 		tuple3(Some(1), Some('a'), Some(3)).equals(tuple3(Some(1), Some('a'), Some(3)), function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_second_equality__should_be_false() : Void {
 		tuple3(Some(1), Some('a'), Some(3)).equals(tuple3(Some(1), Some('a'), Some(3)), null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_third_equality__should_be_false() : Void {
 		tuple3(Some(1), Some('a'), Some(3)).equals(tuple3(Some(1), Some('a'), Some(3)), null, null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test

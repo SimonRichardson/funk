@@ -66,14 +66,14 @@ class Tuple2Test {
 	public function when_calling_equals_with_optional_equality__should_be_false() : Void {
 		tuple2(Some(1), Some('a')).equals(tuple2(Some(1), Some('a')), function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_second_equality__should_be_false() : Void {
 		tuple2(Some(1), Some('a')).equals(tuple2(Some(1), Some('a')), null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test

@@ -77,28 +77,28 @@ class Tuple4Test {
 	public function when_calling_equals_with_optional_equality__should_be_false() : Void {
 		tuple4(Some(1), Some('a'), Some(3), Some('b')).equals(tuple4(Some(1), Some('a'), Some(3), Some('b')), function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_second_equality__should_be_false() : Void {
 		tuple4(Some(1), Some('a'), Some(3), Some('b')).equals(tuple4(Some(1), Some('a'), Some(3), Some('b')), null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_third_equality__should_be_false() : Void {
 		tuple4(Some(1), Some('a'), Some(3), Some('b')).equals(tuple4(Some(1), Some('a'), Some(3), Some('b')), null, null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_fourth_equality__should_be_false() : Void {
 		tuple4(Some(1), Some('a'), Some(3), Some('b')).equals(tuple4(Some(1), Some('a'), Some(3), Some('b')), null, null, null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test

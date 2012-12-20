@@ -87,35 +87,35 @@ class Tuple5Test {
 	public function when_calling_equals_with_optional_equality__should_be_false() : Void {
 		tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)).equals(tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)), function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_second_equality__should_be_false() : Void {
 		tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)).equals(tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)), null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_third_equality__should_be_false() : Void {
 		tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)).equals(tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)), null, null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_fourth_equality__should_be_false() : Void {
 		tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)).equals(tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)), null, null, null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
 	public function when_calling_equals_with_optional_fifth_equality__should_be_false() : Void {
 		tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)).equals(tuple5(Some(1), Some('a'), Some(3), Some('b'), Some(5)), null, null, null, null, function(a, b) {
 			return a.get() == b.get();
-		}).isFalse();
+		}).isTrue();
 	}
 
 	@Test
