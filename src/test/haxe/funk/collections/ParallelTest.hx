@@ -194,13 +194,13 @@ class ParallelTest {
 			return a + b;
 		});
 
-		var result = -1.0;
+		var result = None;
 		future.then(function (value) {
 			result = value;
 		});
 
 		Timer.delay(asyncFactory.createHandler(this, function () {
-			result.areEqual(4999950000.0);
+			result.areEqual(Some(4999950000.0));
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
@@ -210,13 +210,13 @@ class ParallelTest {
 			return a + b;
 		});
 
-		var result = -1.0;
+		var result = None;
 		future.then(function (value) {
 			result = value;
 		});
 
 		Timer.delay(asyncFactory.createHandler(this, function () {
-			result.areEqual(4999950001.0);
+			result.areEqual(Some(4999950001.0));
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
@@ -226,13 +226,13 @@ class ParallelTest {
 			return 0.0;
 		});
 
-		var result = -1.0;
+		var result = None;
 		future.then(function (value) {
 			result = value;
 		});
 
 		Timer.delay(asyncFactory.createHandler(this, function () {
-			result.areEqual(0.0);
+			result.areEqual(Some(0.0));
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
@@ -308,13 +308,13 @@ class ParallelTest {
 			return a + b;
 		});
 
-		var result = -1.0;
+		var result = None;
 		future.then(function (value) {
 			result = value;
 		});
 
 		Timer.delay(asyncFactory.createHandler(this, function () {
-			result.areEqual(4999950000.0);
+			result.areEqual(Some(4999950000.0));
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
@@ -324,13 +324,13 @@ class ParallelTest {
 			return 0.0;
 		});
 
-		var result = -1.0;
+		var result = None;
 		future.then(function (value) {
 			result = value;
 		});
 
 		Timer.delay(asyncFactory.createHandler(this, function () {
-			result.areEqual(0.0);
+			result.areEqual(Some(0.0));
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 }

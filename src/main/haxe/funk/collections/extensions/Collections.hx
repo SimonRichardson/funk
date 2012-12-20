@@ -180,39 +180,39 @@ class Collections {
 		return -1;
 	}
 
-	public static function foldLeft<T>(collection : Collection<T>, value : T, func : Function2<T, T, T>) : T {
+	public static function foldLeft<T>(collection : Collection<T>, value : T, func : Function2<T, T, T>) : Option<T> {
 		for(item in collection.iterator()) {
 			value = func(value, item);
 		}
-		return value;
+		return Some(value);
 	}
 
 	public static function foldLeftWithIndex<T>(	collection : Collection<T>,
 													value : T, func : Function3<T, T, Int, T>
-													) : T {
+													) : Option<T> {
 		var index = 0;
 		for(item in collection.iterator()) {
 			value = func(value, item, index++);
 		}
-		return value;
+		return Some(value);
 	}
 
-	public static function foldRight<T>(collection : Collection<T>, value : T, func : Function2<T, T, T>) : T {
+	public static function foldRight<T>(collection : Collection<T>, value : T, func : Function2<T, T, T>) : Option<T> {
 		for(item in collection.iterator().reverse()) {
 			value = func(value, item);
 		}
-		return value;
+		return Some(value);
 	}
 
 	public static function foldRightWithIndex<T>(	collection : Collection<T>,
 													value : T,
 													func : Function3<T, T, Int, T>
-													) : T {
+													) : Option<T> {
 		var index = 0;
 		for(item in collection.iterator().reverse()) {
 			value = func(value, item, index++);
 		}
-		return value;
+		return Some(value);
 	}
 
 	public static function forall<T>(collection : Collection<T>, func : Predicate1<T>) : Bool {

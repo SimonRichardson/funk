@@ -15,10 +15,12 @@ import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.extensions.Anys;
 import funk.types.extensions.Iterators;
+import funk.types.extensions.Options;
 import funk.types.extensions.Tuples2;
 
 using funk.collections.extensions.Collections;
 using funk.types.extensions.Iterators;
+using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
 
 #if neko
@@ -193,8 +195,62 @@ class Parallels {
 		return future;
 	}
 
-	public static function foldLeft<T>(collection : Collection<T>, value : T, func : Function2<T, T, T>) : Future<T> {
-		return reducerLeft(collection, func, true, value);
+	public static function foldLeft<T>(	collection : Collection<T>,
+										value : T,
+										func : Function2<T, T, T>
+										) : Future<Option<T>> {
+		var deferred = new Deferred<Option<T>>();
+		var future = deferred.future();
+
+		#if (cpp || neko)
+		var size = collection.size();
+		if (size < MAX_ITERATIONS) {
+			deferred.resolve(Collections.foldLeft(collection, value, func));
+		} else {
+			var tuple = threadPoolSize(size);
+
+			var total = tuple._1();
+			var length = tuple._2();
+
+			var results = new AtomicArray<T>();
+
+			var actual = new AtomicInteger();
+			var expected = total * (total + 1) / 2;
+
+			// Go through and fold as much as possible
+
+			var iterator = collection.iterator();
+			for (index in 1...total + 1) {
+				var items = gather(iterator, length);
+
+				Thread.create(function () {
+					var threadValue = index == 1 ? value : items.shift();
+
+					var threadCollection = CollectionsUtil.toCollection(items);
+					var threadResult = Collections.foldLeft(threadCollection, threadValue, func);
+
+					actual.add(index);
+					results.addAt(threadResult.get(), index - 1);
+
+					if (actual.get() == expected) {
+						var threadArray = results.getAll();
+
+						threadValue = threadArray.shift();
+						threadCollection = CollectionsUtil.toCollection(threadArray);
+
+						threadResult = Collections.foldLeft(threadCollection, threadValue, func);
+
+						deferred.resolve(threadResult);
+					}
+				});
+			}
+		}
+		#else
+		// Just reference the collections non-parallel one for unsupported targets.
+		deferred.resolve(Collections.foldLeft(collection, value, func));
+		#end
+
+		return future;
 	}
 
 	public static function foreach<T>(collection : Collection<T>, func : Function1<T, Void>) : Void {
@@ -280,42 +336,14 @@ class Parallels {
 		return future;
 	}
 
-	public static function reduceLeft<T>(collection : Collection<T>, func : Function2<T, T, T>) : Future<T> {
-		return reducerLeft(collection, func, false);
-	}
-
-	private inline static function threadPoolSize(size : Int) : Tuple2<Int, Int> {
-		var total = Math.ceil(Math.log(size / 2));
-		return tuple2(total, Math.ceil(size / total));
-	}
-
-	private inline static function gather<T>(iterator : Iterator<T>, size : Int) : Array<T> {
-		var result = [];
-		var index = 0;
-		while (iterator.hasNext()) {
-			if (index < size) {
-				result[index++] = iterator.next();
-			} else if (index >= size) {
-				break;
-			}
-		}
-		return result;
-	}
-
-	private static function reducerLeft<T>(	collection : Collection<T>,
-											func : Function2<T, T, T>,
-											useValue : Bool,
-											?value : T = null
-											) : Future<T> {
-		// We aim to be parallel, but we don't guarantee it!
-
-		var deferred = new Deferred<T>();
+	public static function reduceLeft<T>(collection : Collection<T>, func : Function2<T, T, T>) : Future<Option<T>> {
+		var deferred = new Deferred<Option<T>>();
 		var future = deferred.future();
 
 		#if (cpp || neko)
 		var size = collection.size();
 		if (size < MAX_ITERATIONS) {
-			deferred.resolve(Collections.foldLeft(collection, value, func));
+			deferred.resolve(Collections.reduceLeft(collection, func));
 		} else {
 			var tuple = threadPoolSize(size);
 
@@ -334,25 +362,18 @@ class Parallels {
 				var items = gather(iterator, length);
 
 				Thread.create(function () {
-					var threadValue = if (useValue) {
-						index == 1 ? value : items.shift();
-					} else {
-						items.shift();
-					}
-
 					var threadCollection = CollectionsUtil.toCollection(items);
-					var threadResult = Collections.foldLeft(threadCollection, threadValue, func);
+					var threadResult = Collections.reduceLeft(threadCollection, func);
 
 					actual.add(index);
-					results.addAt(threadResult, index - 1);
+					results.addAt(threadResult.get(), index - 1);
 
 					if (actual.get() == expected) {
 						var threadArray = results.getAll();
 
-						threadValue = threadArray.shift();
 						threadCollection = CollectionsUtil.toCollection(threadArray);
 
-						threadResult = Collections.foldLeft(threadCollection, threadValue, func);
+						threadResult = Collections.reduceLeft(threadCollection, func);
 
 						deferred.resolve(threadResult);
 					}
@@ -361,10 +382,28 @@ class Parallels {
 		}
 		#else
 		// Just reference the collections non-parallel one for unsupported targets.
-		deferred.resolve(Collections.foldLeft(collection, value, func));
+		deferred.resolve(Collections.reduceLeft(collection, func));
 		#end
 
 		return future;
+	}
+
+	private inline static function threadPoolSize(size : Int) : Tuple2<Int, Int> {
+		var total = Math.ceil(Math.log(size / 2));
+		return tuple2(total, Math.ceil(size / total));
+	}
+
+	private inline static function gather<T>(iterator : Iterator<T>, size : Int) : Array<T> {
+		var result = [];
+		var index = 0;
+		while (iterator.hasNext()) {
+			if (index < size) {
+				result[index++] = iterator.next();
+			} else if (index >= size) {
+				break;
+			}
+		}
+		return result;
 	}
 }
 
