@@ -61,6 +61,23 @@ class Promises {
         return future;
     }
 
+    public static function map<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
+        var deferred = new Deferred<T2>();
+        var future = deferred.promise();
+
+        promise.when(function (either : Either<Errors, T>) {
+            switch (either) {
+                case Left(e): deferred.reject(e);
+                case Right(value): deferred.resolve(func(value));
+            }
+        });
+        promise.progress(function (value : Float) {
+            deferred.progress(value);
+        });
+
+        return future;
+    }
+
     public static function zip<T1, T2>(promise0 : Promise<T1>, promise1 : Promise<T2>) : Promise<Tuple2<T1, T2>> {
         return lift(function (a, b) {
             return tuple2(a, b);
