@@ -253,6 +253,64 @@ class Parallels {
 		return future;
 	}
 
+	public static function foldRight<T>(	collection : Collection<T>,
+											value : T,
+											func : Function2<T, T, T>
+											) : Future<Option<T>> {
+		var deferred = new Deferred<Option<T>>();
+		var future = deferred.future();
+
+		#if (cpp || neko)
+		var size = collection.size();
+		if (size < MAX_ITERATIONS) {
+			deferred.resolve(Collections.foldRight(collection, value, func));
+		} else {
+			var tuple = threadPoolSize(size);
+
+			var total = tuple._1();
+			var length = tuple._2();
+
+			var results = new AtomicArray<T>();
+
+			var actual = new AtomicInteger();
+			var expected = total * (total + 1) / 2;
+
+			// Go through and fold as much as possible
+
+			var iterator = collection.iterator();
+			for (index in 1...total + 1) {
+				var items = gather(iterator, length);
+
+				Thread.create(function () {
+					var threadValue = index == 1 ? value : items.shift();
+
+					var threadCollection = CollectionsUtil.toCollection(items);
+					var threadResult = Collections.foldRight(threadCollection, threadValue, func);
+
+					actual.add(index);
+					results.addAt(threadResult.get(), index - 1);
+
+					if (actual.get() == expected) {
+						var threadArray = results.getAll();
+
+						threadValue = threadArray.shift();
+						threadCollection = CollectionsUtil.toCollection(threadArray);
+
+						threadResult = Collections.foldRight(threadCollection, threadValue, func);
+
+						deferred.resolve(threadResult);
+					}
+				});
+			}
+		}
+		#else
+		// Just reference the collections non-parallel one for unsupported targets.
+		deferred.resolve(Collections.foldRight(collection, value, func));
+		#end
+
+		return future;
+	}
+
 	public static function foreach<T>(collection : Collection<T>, func : Function1<T, Void>) : Void {
 		// We aim to be parallel, but we don't guarantee it!
 
@@ -383,6 +441,58 @@ class Parallels {
 		#else
 		// Just reference the collections non-parallel one for unsupported targets.
 		deferred.resolve(Collections.reduceLeft(collection, func));
+		#end
+
+		return future;
+	}
+
+	public static function reduceRight<T>(collection : Collection<T>, func : Function2<T, T, T>) : Future<Option<T>> {
+		var deferred = new Deferred<Option<T>>();
+		var future = deferred.future();
+
+		#if (cpp || neko)
+		var size = collection.size();
+		if (size < MAX_ITERATIONS) {
+			deferred.resolve(Collections.reduceRight(collection, func));
+		} else {
+			var tuple = threadPoolSize(size);
+
+			var total = tuple._1();
+			var length = tuple._2();
+
+			var results = new AtomicArray<T>();
+
+			var actual = new AtomicInteger();
+			var expected = total * (total + 1) / 2;
+
+			// Go through and fold as much as possible
+
+			var iterator = collection.iterator();
+			for (index in 1...total + 1) {
+				var items = gather(iterator, length);
+
+				Thread.create(function () {
+					var threadCollection = CollectionsUtil.toCollection(items);
+					var threadResult = Collections.reduceRight(threadCollection, func);
+
+					actual.add(index);
+					results.addAt(threadResult.get(), index - 1);
+
+					if (actual.get() == expected) {
+						var threadArray = results.getAll();
+
+						threadCollection = CollectionsUtil.toCollection(threadArray);
+
+						threadResult = Collections.reduceRight(threadCollection, func);
+
+						deferred.resolve(threadResult);
+					}
+				});
+			}
+		}
+		#else
+		// Just reference the collections non-parallel one for unsupported targets.
+		deferred.resolve(Collections.reduceRight(collection, func));
 		#end
 
 		return future;

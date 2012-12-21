@@ -236,6 +236,56 @@ class ParallelTest {
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
+	// Fold Left
+
+	@AsyncTest
+	public function when_foldRight__should_foldRight_should_return_4999950000(asyncFactory : AsyncFactory) : Void {
+		var future = actual.foldRight(0.0, function (a, b) {
+			return a + b;
+		});
+
+		var result = None;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.areEqual(Some(4999950000.0));
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_foldRight__should_foldLeft_should_return_4999950001(asyncFactory : AsyncFactory) : Void {
+		var future = actual.foldRight(1.0, function (a, b) {
+			return a + b;
+		});
+
+		var result = None;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.areEqual(Some(4999950001.0));
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_foldRight__should_call_foldRight(asyncFactory : AsyncFactory) : Void {
+		var future = actual.foldRight(0.0, function (a, b) {
+			return 0.0;
+		});
+
+		var result = None;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.areEqual(Some(0.0));
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
 	// Foreach
 
 	@AsyncTest
@@ -321,6 +371,40 @@ class ParallelTest {
 	@AsyncTest
 	public function when_reduceLeft__should_call_reduceLeft(asyncFactory : AsyncFactory) : Void {
 		var future = actual.reduceLeft(function (a, b) {
+			return 0.0;
+		});
+
+		var result = None;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.areEqual(Some(0.0));
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	// Reduce Right
+
+	@AsyncTest
+	public function when_reduceRight__should_reduceRight_should_return_4999950000(asyncFactory : AsyncFactory) : Void {
+		var future = actual.reduceRight(function (a, b) {
+			return a + b;
+		});
+
+		var result = None;
+		future.then(function (value) {
+			result = value;
+		});
+
+		Timer.delay(asyncFactory.createHandler(this, function () {
+			result.areEqual(Some(4999950000.0));
+		}, MAX_TIMEOUT), MIN_TIMEOUT);
+	}
+
+	@AsyncTest
+	public function when_reduceRight__should_call_reduceRight(asyncFactory : AsyncFactory) : Void {
+		var future = actual.reduceRight(function (a, b) {
 			return 0.0;
 		});
 
