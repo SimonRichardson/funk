@@ -12,8 +12,10 @@ import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.extensions.Anys;
 import funk.types.extensions.Iterators;
+import funk.types.extensions.Options;
 
 using funk.types.extensions.Iterators;
+using funk.types.extensions.Options;
 
 class Collections {
 
@@ -519,7 +521,7 @@ class Collections {
 			});
 			'Collection(' + foldLeftWithIndex(mapped, '', function(a, b, index) {
 				return (index < 1) ? b : a + ', ' + b;
-			}) + ')';
+			}).get() + ')';
 		}
 	}
 }

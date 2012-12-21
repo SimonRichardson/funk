@@ -12,8 +12,10 @@ import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.extensions.Anys;
 import funk.types.extensions.Iterators;
+import funk.types.extensions.Options;
 
 using funk.types.extensions.Iterators;
+using funk.types.extensions.Options;
 
 private class ListImpl<T> {
 
@@ -255,21 +257,21 @@ class Lists {
 		return -1;
 	}
 
-	public static function foldLeft<T>(list : List<T>, value : T, func : Function2<T, T, T>) : T {
+	public static function foldLeft<T>(list : List<T>, value : T, func : Function2<T, T, T>) : Option<T> {
 		while (nonEmpty(list)) {
 			value = func(value, head(list));
 			list = tail(list);
 		}
-		return value;
+		return Some(value);
 	}
 
-	public static function foldRight<T>(list : List<T>, value : T, func : Function2<T, T, T>) : T {
+	public static function foldRight<T>(list : List<T>, value : T, func : Function2<T, T, T>) : Option<T> {
 		list = reverse(list);
 		while (nonEmpty(list)) {
 			value = func(value, head(list));
 			list = tail(list);
 		}
-		return value;
+		return Some(value);
 	}
 
 	public static function forall<T>(list : List<T>, func : Predicate1<T>) : Bool {
@@ -621,7 +623,7 @@ class Lists {
 
 				'List(' + Collections.foldLeftWithIndex(mapped, '', function(a, b, index) {
 					return (index < 1) ? b : a + ', ' + b;
-				}) + ')';
+				}).get() + ')';
 		}
 	}
 

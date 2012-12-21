@@ -49,4 +49,4 @@
 
 --next
 #-cmd haxelib run munit test -coverage -nogen
--cmd haxelib run munit test -nogen -cpp
+-cmd haxelib run munit test -nogen

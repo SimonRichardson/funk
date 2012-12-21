@@ -594,28 +594,28 @@ class ListTestBase {
 	public function when_foldLeft__should_foldLeft_should_return_10() : Void {
 		actual.foldLeft(0, function (a, b) {
 			return a + b;
-		}).areEqual(15);
+		}).areEqual(Some(15));
 	}
 
 	@Test
 	public function when_foldLeft__should_foldLeft_should_return_11() : Void {
 		actual.foldLeft(1, function (a, b) {
 			return a + b;
-		}).areEqual(16);
+		}).areEqual(Some(16));
 	}
 
 	@Test
 	public function when_foldLeft__should_call_foldLeft() : Void {
 		actual.foldLeft(0, function(x, y) {
 			return 0;
-		}).areEqual(0);
+		}).areEqual(Some(0));
 	}
 
 	@Test
 	public function when_foldLeft__should_foldLeft_should_return_abcde() : Void {
 		alpha.foldLeft('', function (a, b) {
 			return a + b;
-		}).areEqual('abcde');
+		}).areEqual(Some('abcde'));
 	}
 
 	// Fold Right
@@ -624,28 +624,28 @@ class ListTestBase {
 	public function when_foldRight__should_foldRight_should_return_10() : Void {
 		actual.foldRight(0, function (a, b) {
 			return a + b;
-		}).areEqual(15);
+		}).areEqual(Some(15));
 	}
 
 	@Test
 	public function when_foldRight__should_foldRight_should_return_11() : Void {
 		actual.foldRight(1, function (a, b) {
 			return a + b;
-		}).areEqual(16);
+		}).areEqual(Some(16));
 	}
 
 	@Test
 	public function when_foldRight__should_call_foldRight() : Void {
 		actual.foldRight(0, function(x, y) {
 			return 0;
-		}).areEqual(0);
+		}).areEqual(Some(0));
 	}
 
 	@Test
 	public function when_foldRight__should_foldRight_should_return_abcde() : Void {
 		alpha.foldRight('', function (a, b) {
 			return a + b;
-		}).areEqual('edcba');
+		}).areEqual(Some('edcba'));
 	}
 
 	// For All
