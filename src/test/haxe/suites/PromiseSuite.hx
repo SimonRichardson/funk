@@ -3,9 +3,9 @@ package suites;
 import massive.munit.TestSuite;
 
 import funk.types.DeferredTest;
-import funk.types.FutureTest;
+import funk.types.PromiseTest;
 
-class FutureSuite extends TestSuite
+class PromiseSuite extends TestSuite
 {
 
 	public function new()
@@ -13,6 +13,6 @@ class FutureSuite extends TestSuite
 		super();
 
 		add(funk.types.DeferredTest);
-		add(funk.types.FutureTest);
+		add(funk.types.PromiseTest);
 	}
 }

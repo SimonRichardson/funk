@@ -40,12 +40,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_count__should_count_should_return_99999(asyncFactory : AsyncFactory) : Void {
-		var future = actual.count(function (a) {
+		var promise = actual.count(function (a) {
 			return true;
 		});
 
 		var result = -1.0;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -56,12 +56,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_count__should_count_should_return_0(asyncFactory : AsyncFactory) : Void {
-		var future = actual.count(function (a) {
+		var promise = actual.count(function (a) {
 			return false;
 		});
 
 		var result = -1.0;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -72,12 +72,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_count__should_count_should_return_half_of_actual_size(asyncFactory : AsyncFactory) : Void {
-		var future = actual.count(function (a) {
+		var promise = actual.count(function (a) {
 			return a % 2 == 0.0;
 		});
 
 		var result = -1.0;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -90,12 +90,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_filter__should_filter_should_return_99999(asyncFactory : AsyncFactory) : Void {
-		var future = actual.filter(function (a) {
+		var promise = actual.filter(function (a) {
 			return true;
 		});
 
 		var result = null;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -106,12 +106,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_filter__should_filter_should_return_0(asyncFactory : AsyncFactory) : Void {
-		var future = actual.filter(function (a) {
+		var promise = actual.filter(function (a) {
 			return false;
 		});
 
 		var result = null;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -122,12 +122,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_filter__should_filter_should_return_half_of_actual_size(asyncFactory : AsyncFactory) : Void {
-		var future = actual.filter(function (a) {
+		var promise = actual.filter(function (a) {
 			return a % 2 == 0.0;
 		});
 
 		var result = null;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -140,12 +140,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_filterNot__should_filterNot_should_return_99999(asyncFactory : AsyncFactory) : Void {
-		var future = actual.filterNot(function (a) {
+		var promise = actual.filterNot(function (a) {
 			return false;
 		});
 
 		var result = null;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -156,12 +156,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_filterNot__should_filterNot_should_return_0(asyncFactory : AsyncFactory) : Void {
-		var future = actual.filterNot(function (a) {
+		var promise = actual.filterNot(function (a) {
 			return true;
 		});
 
 		var result = null;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -172,12 +172,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_filterNot__should_filterNot_should_return_half_of_actual_size(asyncFactory : AsyncFactory) : Void {
-		var future = actual.filterNot(function (a) {
+		var promise = actual.filterNot(function (a) {
 			return a % 2 != 0.0;
 		});
 
 		var result = null;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -190,12 +190,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_foldLeft__should_foldLeft_should_return_4999950000(asyncFactory : AsyncFactory) : Void {
-		var future = actual.foldLeft(0.0, function (a, b) {
+		var promise = actual.foldLeft(0.0, function (a, b) {
 			return a + b;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -206,12 +206,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_foldLeft__should_foldLeft_should_return_4999950001(asyncFactory : AsyncFactory) : Void {
-		var future = actual.foldLeft(1.0, function (a, b) {
+		var promise = actual.foldLeft(1.0, function (a, b) {
 			return a + b;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -222,12 +222,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_foldLeft__should_call_foldLeft(asyncFactory : AsyncFactory) : Void {
-		var future = actual.foldLeft(0.0, function (a, b) {
+		var promise = actual.foldLeft(0.0, function (a, b) {
 			return 0.0;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -240,12 +240,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_foldRight__should_foldRight_should_return_4999950000(asyncFactory : AsyncFactory) : Void {
-		var future = actual.foldRight(0.0, function (a, b) {
+		var promise = actual.foldRight(0.0, function (a, b) {
 			return a + b;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -256,12 +256,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_foldRight__should_foldLeft_should_return_4999950001(asyncFactory : AsyncFactory) : Void {
-		var future = actual.foldRight(1.0, function (a, b) {
+		var promise = actual.foldRight(1.0, function (a, b) {
 			return a + b;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -272,12 +272,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_foldRight__should_call_foldRight(asyncFactory : AsyncFactory) : Void {
-		var future = actual.foldRight(0.0, function (a, b) {
+		var promise = actual.foldRight(0.0, function (a, b) {
 			return 0.0;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -304,12 +304,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_map__should_map_should_return_99999(asyncFactory : AsyncFactory) : Void {
-		var future = actual.map(function (a) {
+		var promise = actual.map(function (a) {
 			return true;
 		});
 
 		var result = null;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -320,12 +320,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_map__should_map_get_0_return_float(asyncFactory : AsyncFactory) : Void {
-		var future = actual.map(function (a) {
+		var promise = actual.map(function (a) {
 			return a + 1.1;
 		});
 
 		var result = null;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -336,12 +336,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_map__should_map_get_0_return_some_float(asyncFactory : AsyncFactory) : Void {
-		var future = actual.map(function (a) {
+		var promise = actual.map(function (a) {
 			return Some(a + 1.1);
 		});
 
 		var result = null;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -354,12 +354,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_reduceLeft__should_reduceLeft_should_return_4999950000(asyncFactory : AsyncFactory) : Void {
-		var future = actual.reduceLeft(function (a, b) {
+		var promise = actual.reduceLeft(function (a, b) {
 			return a + b;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -370,12 +370,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_reduceLeft__should_call_reduceLeft(asyncFactory : AsyncFactory) : Void {
-		var future = actual.reduceLeft(function (a, b) {
+		var promise = actual.reduceLeft(function (a, b) {
 			return 0.0;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -388,12 +388,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_reduceRight__should_reduceRight_should_return_4999950000(asyncFactory : AsyncFactory) : Void {
-		var future = actual.reduceRight(function (a, b) {
+		var promise = actual.reduceRight(function (a, b) {
 			return a + b;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 
@@ -404,12 +404,12 @@ class ParallelTest {
 
 	@AsyncTest
 	public function when_reduceRight__should_call_reduceRight(asyncFactory : AsyncFactory) : Void {
-		var future = actual.reduceRight(function (a, b) {
+		var promise = actual.reduceRight(function (a, b) {
 			return 0.0;
 		});
 
 		var result = None;
-		future.then(function (value) {
+		promise.then(function (value) {
 			result = value;
 		});
 

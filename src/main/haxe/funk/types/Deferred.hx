@@ -10,6 +10,7 @@ import funk.signals.Signal1;
 import funk.types.Either;
 import funk.types.Option;
 import funk.types.extensions.Options;
+import funk.types.Promise;
 
 using funk.collections.extensions.Collections;
 using funk.reactive.extensions.Streams;
@@ -116,8 +117,8 @@ class Deferred<T> {
 		_stateStream.emit(Aborted);
 	}
 
-	public function future() : Future<T> {
-		return new FutureImpl<T>(_stateStream, _progressStream, _values.last());
+	public function promise() : Promise<T> {
+		return new PromiseImpl<T>(_stateStream, _progressStream, _values.last());
 	}
 
 	public function values() : Collection<T> {
@@ -134,7 +135,7 @@ class Deferred<T> {
 	}
 }
 
-private class FutureImpl<T> {
+private class PromiseImpl<T> {
 
 	private var _state : State<T>;
 
@@ -185,7 +186,7 @@ private class FutureImpl<T> {
 		});
 	}
 
-	public function then(func : Function1<T, Void>) : Future<T> {
+	public function then(func : Function1<T, Void>) : Promise<T> {
 		switch(_state){
 			case Pending:
 				_then.add(func);
@@ -196,7 +197,7 @@ private class FutureImpl<T> {
 		return this;
 	}
 
-	public function but(func : Function1<Errors, Void>) : Future<T> {
+	public function but(func : Function1<Errors, Void>) : Promise<T> {
 		switch(_state){
 			case Pending:
 				_but.add(func);
@@ -207,7 +208,7 @@ private class FutureImpl<T> {
 		return this;
 	}
 
-	public function when(func : Function1<Either<Errors, T>, Void>) : Future<T> {
+	public function when(func : Function1<Either<Errors, T>, Void>) : Promise<T> {
 		switch(_state){
 			case Pending:
 				_when.add(func);
@@ -220,7 +221,7 @@ private class FutureImpl<T> {
 		return this;
 	}
 
-	public function progress(func : Function1<Float, Void>) : Future<T> {
+	public function progress(func : Function1<Float, Void>) : Promise<T> {
 		_progress.add(func);
 		return this;
 	}

@@ -8,7 +8,7 @@ import funk.types.Deferred;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Function3;
-import funk.types.Future;
+import funk.types.Promise;
 import funk.types.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
@@ -36,11 +36,11 @@ class Parallels {
 
 	private static var MAX_ITERATIONS : Int = 9999;
 
-	public static function count<T>(collection : Collection<T>, func : Predicate1<T>) : Future<Int> {
+	public static function count<T>(collection : Collection<T>, func : Predicate1<T>) : Promise<Int> {
 		// We aim to be parallel, but we don't guarantee it!
 
 		var deferred = new Deferred<Int>();
-		var future = deferred.future();
+		var promise = deferred.promise();
 
 		#if (cpp || neko)
 		var size = collection.size();
@@ -80,14 +80,14 @@ class Parallels {
 		deferred.resolve(Collections.count(collection, func));
 		#end
 
-		return future;
+		return promise;
 	}
 
-	public static function filter<T>(collection : Collection<T>, func : Predicate1<T>) : Future<Collection<T>> {
+	public static function filter<T>(collection : Collection<T>, func : Predicate1<T>) : Promise<Collection<T>> {
 		// We aim to be parallel, but we don't guarantee it!
 
 		var deferred = new Deferred<Collection<T>>();
-		var future = deferred.future();
+		var promise = deferred.promise();
 
 		#if (cpp || neko)
 		var size = collection.size();
@@ -136,14 +136,14 @@ class Parallels {
 		deferred.resolve(Collections.filter(collection, func));
 		#end
 
-		return future;
+		return promise;
 	}
 
-	public static function filterNot<T>(collection : Collection<T>, func : Predicate1<T>) : Future<Collection<T>> {
+	public static function filterNot<T>(collection : Collection<T>, func : Predicate1<T>) : Promise<Collection<T>> {
 		// We aim to be parallel, but we don't guarantee it!
 
 		var deferred = new Deferred<Collection<T>>();
-		var future = deferred.future();
+		var promise = deferred.promise();
 
 		#if (cpp || neko)
 		var size = collection.size();
@@ -192,15 +192,15 @@ class Parallels {
 		deferred.resolve(Collections.filterNot(collection, func));
 		#end
 
-		return future;
+		return promise;
 	}
 
 	public static function foldLeft<T>(	collection : Collection<T>,
 										value : T,
 										func : Function2<T, T, T>
-										) : Future<Option<T>> {
+										) : Promise<Option<T>> {
 		var deferred = new Deferred<Option<T>>();
-		var future = deferred.future();
+		var promise = deferred.promise();
 
 		#if (cpp || neko)
 		var size = collection.size();
@@ -250,15 +250,15 @@ class Parallels {
 		deferred.resolve(Collections.foldLeft(collection, value, func));
 		#end
 
-		return future;
+		return promise;
 	}
 
 	public static function foldRight<T>(	collection : Collection<T>,
 											value : T,
 											func : Function2<T, T, T>
-											) : Future<Option<T>> {
+											) : Promise<Option<T>> {
 		var deferred = new Deferred<Option<T>>();
-		var future = deferred.future();
+		var promise = deferred.promise();
 
 		#if (cpp || neko)
 		var size = collection.size();
@@ -308,7 +308,7 @@ class Parallels {
 		deferred.resolve(Collections.foldRight(collection, value, func));
 		#end
 
-		return future;
+		return promise;
 	}
 
 	public static function foreach<T>(collection : Collection<T>, func : Function1<T, Void>) : Void {
@@ -340,11 +340,11 @@ class Parallels {
 		#end
 	}
 
-	public static function map<T, R>(collection : Collection<T>, func : Function1<T, R>) : Future<Collection<R>> {
+	public static function map<T, R>(collection : Collection<T>, func : Function1<T, R>) : Promise<Collection<R>> {
 		// We aim to be parallel, but we don't guarantee it!
 
 		var deferred = new Deferred<Collection<R>>();
-		var future = deferred.future();
+		var promise = deferred.promise();
 
 		#if (cpp || neko)
 		var size = collection.size();
@@ -391,12 +391,12 @@ class Parallels {
 		deferred.resolve(Collections.map(collection, func));
 		#end
 
-		return future;
+		return promise;
 	}
 
-	public static function reduceLeft<T>(collection : Collection<T>, func : Function2<T, T, T>) : Future<Option<T>> {
+	public static function reduceLeft<T>(collection : Collection<T>, func : Function2<T, T, T>) : Promise<Option<T>> {
 		var deferred = new Deferred<Option<T>>();
-		var future = deferred.future();
+		var promise = deferred.promise();
 
 		#if (cpp || neko)
 		var size = collection.size();
@@ -443,12 +443,12 @@ class Parallels {
 		deferred.resolve(Collections.reduceLeft(collection, func));
 		#end
 
-		return future;
+		return promise;
 	}
 
-	public static function reduceRight<T>(collection : Collection<T>, func : Function2<T, T, T>) : Future<Option<T>> {
+	public static function reduceRight<T>(collection : Collection<T>, func : Function2<T, T, T>) : Promise<Option<T>> {
 		var deferred = new Deferred<Option<T>>();
-		var future = deferred.future();
+		var promise = deferred.promise();
 
 		#if (cpp || neko)
 		var size = collection.size();
@@ -495,7 +495,7 @@ class Parallels {
 		deferred.resolve(Collections.reduceRight(collection, func));
 		#end
 
-		return future;
+		return promise;
 	}
 
 	private inline static function threadPoolSize(size : Int) : Tuple2<Int, Int> {

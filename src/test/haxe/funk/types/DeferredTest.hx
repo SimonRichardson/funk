@@ -5,7 +5,7 @@ import funk.collections.Collection;
 import funk.collections.extensions.Collections;
 import funk.collections.extensions.CollectionsUtil;
 import funk.types.Deferred;
-import funk.types.Future;
+import funk.types.Promise;
 import funk.types.Either;
 import funk.types.Option;
 import funk.types.extensions.Eithers;
@@ -136,8 +136,8 @@ class DeferredTest {
 	}
 
 	@Test
-	public function when_asking_for_a_future__should_create_a_valid_future() : Void {
-		deferred.future().isNotNull();
+	public function when_asking_for_a_future__should_create_a_valid_promise() : Void {
+		deferred.promise().isNotNull();
 	}
 
 	@Test
