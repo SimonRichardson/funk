@@ -35,6 +35,33 @@ class Promises {
         return future;
     }
 
+    public static function flatMap<T1, T2>(promise : Promise<T1>, func : Function1<T1, Promise<T2>>) : Promise<T2> {
+        var deferred = new Deferred<T2>();
+        var future = deferred.promise();
+
+        promise.when(function (either : Either<Errors, T1>) {
+            switch (either) {
+                case Left(e): deferred.reject(e);
+                case Right(value):
+                    var p = func(value);
+                    p.when(function (either : Either<Errors, T2>) {
+                        switch (either) {
+                            case Left(e): deferred.reject(e);
+                            case Right(v): deferred.resolve(v);
+                        }
+                    });
+                    p.progress(function (value : Float) {
+                        deferred.progress(0.5 + value * 0.5);
+                    });
+            }
+        });
+        promise.progress(function (value : Float) {
+            deferred.progress(value * 0.5);
+        });
+
+        return future;
+    }
+
     public static function flatten<T>(promise : Promise<Promise<T>>) : Promise<T> {
         var deferred = new Deferred<T>();
         var future = deferred.promise();
