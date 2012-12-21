@@ -30,7 +30,7 @@ class Functions3 {
 		};
 	}
 
-	public static function compose<T1, T2, T3, C, R>(	from : Function1<C, R>, 
+	public static function compose<T1, T2, T3, C, R>(	from : Function1<C, R>,
 														to : Function3<T1, T2, T3, C>
 														) : Function3<T1, T2, T3, R> {
 		return function(value0 : T1, value1 : T2, value2 : T3) {
@@ -50,7 +50,7 @@ class Functions3 {
 		return function(value0 : T1) {
 			return function(value1 : T2) {
 				return function(value2 : T3) {
-					return func(value0, value1, value2);	
+					return func(value0, value1, value2);
 				};
 			};
 		};
@@ -62,14 +62,14 @@ class Functions3 {
 		};
 	}
 
-	public static function tuple<T1, T2, T3, R>(	func : Function3<T1, T2, T3, R>
+	public static function untuple<T1, T2, T3, R>(	func : Function3<T1, T2, T3, R>
 													) : Function1<Tuple3<T1, T2, T3>, R> {
 		return function(tuple) {
 			return func(tuple._1(), tuple._2(), tuple._3());
 		};
 	}
 
-	public static function untuple<T1, T2, T3, R>(func : Function1<Tuple3<T1, T2, T3>, R>) : Function3<T1, T2, T3, R> {
+	public static function tuple<T1, T2, T3, R>(func : Function1<Tuple3<T1, T2, T3>, R>) : Function3<T1, T2, T3, R> {
 		return function(value0, value1, value2) {
 			return func(tuple3(value0, value1, value2));
 		};

@@ -30,7 +30,7 @@ class Functions2 {
 		};
 	}
 
-	public static function compose<T1, T2, C, R>(	from : Function1<C, R>, 
+	public static function compose<T1, T2, C, R>(	from : Function1<C, R>,
 													to : Function2<T1, T2, C>
 													) : Function2<T1, T2, R> {
 		return function(value0 : T1, value1 : T2) {
@@ -60,13 +60,13 @@ class Functions2 {
 		};
 	}
 
-	public static function tuple<T1, T2, R>(func : Function2<T1, T2, R>) : Function1<Tuple2<T1, T2>, R> {
+	public static function untuple<T1, T2, R>(func : Function2<T1, T2, R>) : Function1<Tuple2<T1, T2>, R> {
 		return function(tuple) {
 			return func(tuple._1(), tuple._2());
 		};
 	}
 
-	public static function untuple<T1, T2, R>(func : Function1<Tuple2<T1, T2>, R>) : Function2<T1, T2, R> {
+	public static function tuple<T1, T2, R>(func : Function1<Tuple2<T1, T2>, R>) : Function2<T1, T2, R> {
 		return function(value0, value1) {
 			return func(tuple2(value0, value1));
 		};

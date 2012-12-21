@@ -11,6 +11,9 @@ import funk.types.Predicate1;
 import funk.types.Predicate5;
 import funk.types.Promise;
 import funk.types.Tuple2;
+import funk.types.extensions.Options;
+
+using funk.types.extensions.Options;
 
 class Promises {
 
@@ -22,7 +25,7 @@ class Promises {
             if (func(value)) {
                 deferred.resolve(value);
             } else {
-                deferred.reject(Errors.Error());
+                deferred.reject(Errors.Error(''));
             }
         });
         promise.but(function (e : Errors) {
@@ -66,7 +69,7 @@ class Promises {
         var deferred = new Deferred<T>();
         var future = deferred.promise();
 
-        promise.when(function (either : Either<Errors, T>) {
+        promise.when(function (either : Either<Errors, Promise<T>>) {
             switch (either) {
                 case Left(e): deferred.reject(e);
                 case Right(p):
@@ -86,36 +89,6 @@ class Promises {
         });
 
         return future;
-    }
-
-    public static function map<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
-        var deferred = new Deferred<T2>();
-        var future = deferred.promise();
-
-        promise.when(function (either : Either<Errors, T>) {
-            switch (either) {
-                case Left(e): deferred.reject(e);
-                case Right(value): deferred.resolve(func(value));
-            }
-        });
-        promise.progress(function (value : Float) {
-            deferred.progress(value);
-        });
-
-        return future;
-    }
-
-    public static function zip<T1, T2>(promise0 : Promise<T1>, promise1 : Promise<T2>) : Promise<Tuple2<T1, T2>> {
-        return lift(function (a, b) {
-            return tuple2(a, b);
-        })(promise0, promise1);
-    }
-
-    public static function zipWith<T1, T2>( promise0 : Promise<T1>,
-                                            promise1 : Promise<T2>,
-                                            func : Function2<T1, T2, R>
-                                            ) : Promise<Tuple2<T1, T2>> {
-        return lift(func)(promise0, promise1);
     }
 
     public static function lift<T1, T2, R>( func : Function2<T1, T2, R>
@@ -156,7 +129,36 @@ class Promises {
             });
 
             return promise;
-        }
+        };
     }
 
+    public static function map<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
+        var deferred = new Deferred<T2>();
+        var future = deferred.promise();
+
+        promise.when(function (either : Either<Errors, T1>) {
+            switch (either) {
+                case Left(e): deferred.reject(e);
+                case Right(value): deferred.resolve(func(value));
+            }
+        });
+        promise.progress(function (value : Float) {
+            deferred.progress(value);
+        });
+
+        return future;
+    }
+
+    public static function zip<T1, T2>(promise0 : Promise<T1>, promise1 : Promise<T2>) : Promise<Tuple2<T1, T2>> {
+        return lift(function (a, b) {
+            return tuple2(a, b);
+        })(promise0, promise1);
+    }
+
+    public static function zipWith<T1, T2, R>(  promise0 : Promise<T1>,
+                                                promise1 : Promise<T2>,
+                                                func : Function2<T1, T2, R>
+                                                ) : Promise<R> {
+        return lift(func)(promise0, promise1);
+    }
 }

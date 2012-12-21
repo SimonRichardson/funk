@@ -69,7 +69,7 @@ class Function1Test {
 		var a = function(value) {
 			return function () {
 				called = true;
-				return value;	
+				return value;
 			}
 		}.uncurry();
 		called.isTrue();
@@ -80,7 +80,7 @@ class Function1Test {
 	public function when_calling_tuple__should_call_function() : Void {
 		var a = function(value) {
 			return value;
-		}.tuple()(tuple1(true));
+		}.untuple()(tuple1(true));
 		a.isTrue();
 	}
 
@@ -88,7 +88,7 @@ class Function1Test {
 	public function when_calling_untuple__should_call_function() : Void {
 		var a = function(t : Tuple1<Bool>) {
 			return t;
-		}.untuple()(true);
+		}.tuple()(true);
 		a.areEqual(tuple1(true));
 	}
 }
