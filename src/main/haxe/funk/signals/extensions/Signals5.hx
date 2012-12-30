@@ -51,7 +51,8 @@ class Signals5 {
     }
 
     public static function flatMap<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(    signal : Signal5<T1, T2, T3, T4, T5>,
-                                                                                func : Function5<T1, T2, T3, T4, T5, Signal5<T6, T7, T8, T9, T10>>
+                                                                                func : Function5<T1, T2, T3, T4, T5,
+                                                                                                    Signal5<T6, T7, T8, T9, T10>>
                                                                                 ) : Signal5<T6, T7, T8, T9, T10> {
         var result = new Signal5<T6, T7, T8, T9, T10>();
 
