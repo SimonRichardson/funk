@@ -10,8 +10,6 @@ import js.w3c.level3.Events;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.KeyboardEvent;
-#else
-throw "Unsupported platform";
 #end
 
 enum KeyboardEventType {
@@ -21,6 +19,7 @@ enum KeyboardEventType {
 
 class KeyboardEvents {
 
+    #if (js || flash9)
     public static function keyDown(target : EventDispatcher) : Stream<KeyboardEvent> {
         return Events.event(target, KeyboardEventTypes.toString(KeyDown));
     }
@@ -28,18 +27,17 @@ class KeyboardEvents {
     public static function keyUp(target : EventDispatcher) : Stream<KeyboardEvent> {
         return Events.event(target, KeyboardEventTypes.toString(KeyUp));
     }
+    #end
 }
 
 class KeyboardEventTypes {
 
     public static function toString(type : KeyboardEventType) : String {
-        #if js
-            return Std.string(type).toLowerCase();
-        #elseif flash9
+        #if flash9
             var reg = new EReg("([^\\A])([A-Z])", "g");
             return reg.replace(Std.string(type), '$1_$2').toUpperCase();
         #else
-            return Std.string(type);
+            return Std.string(type).toLowerCase();
         #end
     }
 }

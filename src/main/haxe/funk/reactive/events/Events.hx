@@ -11,12 +11,11 @@ typedef EventDispatcher = EventTarget;
 #elseif flash9
 import flash.events.Event;
 import flash.events.EventDispatcher;
-#else
-throw "Unsupported platform";
 #end
 
 class Events {
 
+    #if (js || flash9)
     public static function event<T : Event>(    target : EventDispatcher,
                                                 type : String,
                                                 ?useCapture : Bool = false
@@ -35,4 +34,5 @@ class Events {
 
         return stream;
     }
+    #end
 }

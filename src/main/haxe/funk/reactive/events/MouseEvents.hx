@@ -10,8 +10,6 @@ import js.w3c.level3.Events;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
-#else
-throw "Unsupported platform";
 #end
 
 enum MouseEventType {
@@ -24,6 +22,7 @@ enum MouseEventType {
 
 class MouseEvents {
 
+    #if (js || flash9)
     public static function mouseDown(target : EventDispatcher) : Stream<MouseEvent> {
         return Events.event(target, MouseEventTypes.toString(MouseDown));
     }
@@ -43,18 +42,17 @@ class MouseEvents {
     public static function mouseUp(target : EventDispatcher) : Stream<MouseEvent> {
         return Events.event(target, MouseEventTypes.toString(MouseUp));
     }
+    #end
 }
 
 class MouseEventTypes {
 
     public static function toString(type : MouseEventType) : String {
-        #if js
-            return Std.string(type).toLowerCase();
-        #elseif flash9
+        #if flash9
             var reg = new EReg("([^\\A])([A-Z])", "g");
             return reg.replace(Std.string(type), '$1_$2').toUpperCase();
         #else
-            return Std.string(type);
+            return Std.string(type).toLowerCase();
         #end
     }
 }
