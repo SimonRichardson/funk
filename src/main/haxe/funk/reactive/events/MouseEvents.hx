@@ -16,6 +16,8 @@ throw "Unsupported platform";
 
 enum MouseEventType {
     MouseDown;
+    MouseOver;
+    MouseOut;
     MouseMove;
     MouseUp;
 }
@@ -24,6 +26,14 @@ class MouseEvents {
 
     public static function mouseDown(target : EventDispatcher) : Stream<MouseEvent> {
         return Events.event(target, MouseEventTypes.toString(MouseDown));
+    }
+
+    public static function mouseOver(target : EventDispatcher) : Stream<MouseEvent> {
+        return Events.event(target, MouseEventTypes.toString(MouseOver));
+    }
+
+    public static function mouseOut(target : EventDispatcher) : Stream<MouseEvent> {
+        return Events.event(target, MouseEventTypes.toString(MouseOut));
     }
 
     public static function mouseMove(target : EventDispatcher) : Stream<MouseEvent> {
