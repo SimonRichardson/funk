@@ -150,8 +150,7 @@ class Streams {
             }
         }, None);
 
-        // NOTE (Simon) : This will break for concurrent systems
-        stream.emitWithDelay(value, 1);
+        stream.emit(value);
 
         return stream;
     }
