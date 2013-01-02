@@ -41,10 +41,7 @@ class Wildcards {
         return a - b;
     }
 
-    public static function multiply_( wildcard : Wildcard,
-                                                                            a : Dynamic,
-                                                                            b : Dynamic
-                                                                            ) : Dynamic {
+    public static function multiply_( wildcard : Wildcard, a : Dynamic, b : Dynamic) : Dynamic {
         return a * b;
     }
 
@@ -60,24 +57,15 @@ class Wildcards {
         return a < b;
     }
 
-    public static function lessEqual_(    wildcard : Wildcard,
-                                                                                a : Dynamic,
-                                                                                b : Dynamic
-                                                                                ) : Bool {
+    public static function lessEqual_(wildcard : Wildcard, a : Dynamic, b : Dynamic) : Bool {
         return a <= b;
     }
 
-    public static function greaterThan_(  wildcard : Wildcard,
-                                                                                a : Dynamic,
-                                                                                b : Dynamic
-                                                                                ) : Bool {
+    public static function greaterThan_(  wildcard : Wildcard, a : Dynamic, b : Dynamic) : Bool {
         return a > b;
     }
 
-    public static function greaterEqual_( wildcard : Wildcard,
-                                                                                a : Dynamic,
-                                                                                b : Dynamic
-                                                                                ) : Bool {
+    public static function greaterEqual_( wildcard : Wildcard, a : Dynamic, b : Dynamic) : Bool {
         return a >= b;
     }
 
