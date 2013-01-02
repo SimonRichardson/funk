@@ -33,52 +33,52 @@ class Wildcards {
         return toString(wildcard, x).toUpperCase();
     }
 
-    public static function plus_<T1 : (Int, Float), T2 : (Int, Float)>(wildcard : Wildcard, a : T1, b : T2) : Float {
-        return cast(a) + cast(b);
+    public static function plus_(wildcard : Wildcard, a : Dynamic, b : Dynamic) : Dynamic {
+        return a + b;
     }
 
-    public static function minus_<T1 : (Int, Float), T2 : (Int, Float)>(wildcard : Wildcard, a : T1, b : T2) : Float {
-        return cast(a) - cast(b);
+    public static function minus_(wildcard : Wildcard, a : Dynamic, b : Dynamic) : Dynamic {
+        return a - b;
     }
 
-    public static function multiply_<T1 : (Int, Float), T2 : (Int, Float)>( wildcard : Wildcard,
-                                                                            a : T1,
-                                                                            b : T2
-                                                                            ) : Float {
-        return cast(a) * cast(b);
+    public static function multiply_( wildcard : Wildcard,
+                                                                            a : Dynamic,
+                                                                            b : Dynamic
+                                                                            ) : Dynamic {
+        return a * b;
     }
 
-    public static function divide_<T1 : (Int, Float), T2 : (Int, Float)>(wildcard : Wildcard, a : T1, b : T2) : Float {
-        return cast(a) / cast(b);
+    public static function divide_(wildcard : Wildcard, a : Dynamic, b : Dynamic) : Dynamic {
+        return a / b;
     }
 
-    public static function modulo_<T1 : (Int, Float), T2 : (Int, Float)>(wildcard : Wildcard, a : T1, b : T2) : Float {
-        return cast(a) % cast(b);
+    public static function modulo_(wildcard : Wildcard, a : Dynamic, b : Dynamic) : Dynamic {
+        return a % b;
     }
 
-    public static function lessThan_<T1 : (Int, Float), T2 : (Int, Float)>(wildcard : Wildcard, a : T1, b : T2) : Bool {
-        return cast(a) < cast(b);
+    public static function lessThan_(wildcard : Wildcard, a : Dynamic, b : Dynamic) : Bool {
+        return a < b;
     }
 
-    public static function lessEqual_<T1 : (Int, Float), T2 : (Int, Float)>(    wildcard : Wildcard,
-                                                                                a : T1,
-                                                                                b : T2
+    public static function lessEqual_(    wildcard : Wildcard,
+                                                                                a : Dynamic,
+                                                                                b : Dynamic
                                                                                 ) : Bool {
-        return cast(a) <= cast(b);
+        return a <= b;
     }
 
-    public static function greaterThan_<T1 : (Int, Float), T2 : (Int, Float)>(  wildcard : Wildcard,
-                                                                                a : T1,
-                                                                                b : T2
+    public static function greaterThan_(  wildcard : Wildcard,
+                                                                                a : Dynamic,
+                                                                                b : Dynamic
                                                                                 ) : Bool {
-        return cast(a) > cast(b);
+        return a > b;
     }
 
-    public static function greaterEqual_<T1 : (Int, Float), T2 : (Int, Float)>( wildcard : Wildcard,
-                                                                                a : T1,
-                                                                                b : T2
+    public static function greaterEqual_( wildcard : Wildcard,
+                                                                                a : Dynamic,
+                                                                                b : Dynamic
                                                                                 ) : Bool {
-        return cast(a) >= cast(b);
+        return a >= b;
     }
 
     public static function equal_<T1, T2>(wildcard : Wildcard, a : T1, b : T2) : Bool {

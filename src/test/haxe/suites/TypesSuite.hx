@@ -18,6 +18,7 @@ import funk.types.Tuple2Test;
 import funk.types.Tuple3Test;
 import funk.types.Tuple4Test;
 import funk.types.Tuple5Test;
+import funk.types.WildcardTest;
 
 class TypesSuite extends TestSuite
 {
@@ -47,5 +48,7 @@ class TypesSuite extends TestSuite
 		add(funk.types.Tuple3Test);
 		add(funk.types.Tuple4Test);
 		add(funk.types.Tuple5Test);
+
+		add(funk.types.WildcardTest);
 	}
 }
