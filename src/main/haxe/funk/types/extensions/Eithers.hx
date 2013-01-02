@@ -1,6 +1,7 @@
 package funk.types.extensions;
 
 import funk.Funk;
+import funk.types.Attempt;
 import funk.types.Either;
 import funk.types.Function0;
 import funk.types.Function1;
@@ -55,13 +56,13 @@ class Eithers {
 	public static function flattenLeft<T1, T2>(either : Either<Either<T1, T2>, T2>) : Either<T1, T2> {
 		return switch(either) {
 			case Left(value): value;
-			case Right(_): Funk.error(Errors.IllegalOperationError());
+			case Right(_): Funk.error(IllegalOperationError());
 		}
 	}
 
 	public static function flattenRight<T1, T2>(either : Either<T1, Either<T1, T2>>) : Either<T1, T2> {
 		return switch(either) {
-			case Left(_): Funk.error(Errors.IllegalOperationError());
+			case Left(_): Funk.error(IllegalOperationError());
 			case Right(value): value;
 		}
 	}
@@ -79,13 +80,13 @@ class Eithers {
 	public static function foldLeft<T1, T2, T3>(either : Either<T1, T2>, func : Function1<T1, T3>) : T3 {
 		return switch(either) {
 			case Left(value): func(value);
-			case Right(value): Funk.error(Errors.IllegalOperationError());
+			case Right(value): Funk.error(IllegalOperationError());
 		}
 	}
 
 	public static function foldRight<T1, T2, T3>(either : Either<T1, T2>, func : Function1<T2, T3>) : T3 {
 		return switch(either) {
-			case Left(value): Funk.error(Errors.IllegalOperationError());
+			case Left(value): Funk.error(IllegalOperationError());
 			case Right(value): func(value);
 		}
 	}
@@ -103,13 +104,13 @@ class Eithers {
 	public static function mapLeft<T1, T2, T3>(either : Either<T1, T2>, func : Function1<T1, T3>) : Either<T3, T2> {
 		return switch(either) {
 			case Left(value): Left(func(value));
-			case Right(value): Funk.error(Errors.IllegalOperationError());
+			case Right(value): Funk.error(IllegalOperationError());
 		}
 	}
 
 	public static function mapRight<T1, T2, T3>(either : Either<T1, T2>, func : Function1<T2, T3>) : Either<T1, T3> {
 		return switch(either) {
-			case Left(value): Funk.error(Errors.IllegalOperationError());
+			case Left(value): Funk.error(IllegalOperationError());
 			case Right(value): Right(func(value));
 		}
 	}
@@ -132,6 +133,13 @@ class Eithers {
 					case Right(right1):
 						Anys.equals(right0, right1, funcRight);
 				}
+		}
+	}
+
+	public static function toAttempt<T1, T2>(either : Either<T1, T2>) : Attempt<T2> {
+		return switch(either) {
+			case Left(_): Failure(Error("Attempt failure"));
+			case Right(value): Success(value);
 		}
 	}
 

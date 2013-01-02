@@ -7,7 +7,7 @@ import funk.reactive.Stream;
 import funk.reactive.StreamValues;
 import funk.reactive.extensions.Streams;
 import funk.signals.Signal1;
-import funk.types.Either;
+import funk.types.Attempt;
 import funk.types.Option;
 import funk.types.extensions.Options;
 import funk.types.Promise;
@@ -42,19 +42,19 @@ class Deferred<T> {
 		_stateStream.emit(Pending);
 	}
 
-	public function attempt() : Either<Errors, T> {
+	public function attempt() : Attempt<T> {
 		return switch(_values.last()) {
 			case Some(state):
 				switch(state) {
 					case Resolved(option):
-						Right(option.get());
+						Success(option.get());
 					case Rejected(error):
-						Left(error);
+						Failure(error);
 					default:
-						Left(Errors.NoSuchElementError);
+						Failure(Errors.NoSuchElementError);
 				}
 			case None:
-				Left(Errors.NoSuchElementError);
+				Failure(Errors.NoSuchElementError);
 		}
 	}
 

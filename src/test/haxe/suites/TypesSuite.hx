@@ -27,6 +27,7 @@ class TypesSuite extends TestSuite
 	{
 		super();
 
+		add(funk.types.AttemptTest);
 		add(funk.types.EitherTest);
 
 		add(funk.types.OptionTest);

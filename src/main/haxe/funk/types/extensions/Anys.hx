@@ -24,7 +24,7 @@ class Anys {
 		return func(value0, value1);
 	}
 
-	public static function toString<T>(value : T, func : Function1<T, String>) : String {
+	public static function toString<T>(value : T, ?func : Function1<T, String>) : String {
 		return null != func ? func(value) : Std.string(value);
 	}
 }

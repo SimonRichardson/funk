@@ -4,18 +4,19 @@ import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.extensions.Collections;
 import funk.collections.extensions.CollectionsUtil;
+import funk.types.Attempt;
 import funk.types.Deferred;
 import funk.types.Promise;
 import funk.types.Either;
 import funk.types.Option;
-import funk.types.extensions.Eithers;
+import funk.types.extensions.Attempts;
 import funk.types.extensions.Options;
 import massive.munit.Assert;
 import unit.Asserts;
 
 using funk.collections.extensions.Collections;
 using funk.collections.extensions.CollectionsUtil;
-using funk.types.extensions.Eithers;
+using funk.types.extensions.Attempts;
 using funk.types.extensions.Options;
 using massive.munit.Assert;
 using unit.Asserts;
@@ -76,30 +77,30 @@ class DeferredTest {
 
 	@Test
 	public function when_calling_attempt__should_return_either() : Void {
-		deferred.attempt().areEqual(Left(Errors.NoSuchElementError));
+		deferred.attempt().areEqual(Failure(Errors.NoSuchElementError));
 	}
 
 	@Test
-	public function when_calling_attempt__should_return_left() : Void {
-		deferred.attempt().isLeft().isTrue();
+	public function when_calling_attempt__should_return_failure() : Void {
+		deferred.attempt().isFailure().isTrue();
 	}
 
 	@Test
-	public function when_calling_attempt__should_return_left_after_abort() : Void {
+	public function when_calling_attempt__should_return_failure_after_abort() : Void {
 		deferred.abort();
-		deferred.attempt().isLeft().isTrue();
+		deferred.attempt().isFailure().isTrue();
 	}
 
 	@Test
-	public function when_calling_attempt__should_return_left_after_reject() : Void {
+	public function when_calling_attempt__should_return_failure_after_reject() : Void {
 		deferred.reject(Errors.Error('Rejected'));
-		deferred.attempt().isLeft().isTrue();
+		deferred.attempt().isFailure().isTrue();
 	}
 
 	@Test
-	public function when_calling_attempt__should_return_right_after_resolve() : Void {
+	public function when_calling_attempt__should_return_success_after_resolve() : Void {
 		deferred.resolve(1);
-		deferred.attempt().isRight().isTrue();
+		deferred.attempt().isSuccessful().isTrue();
 	}
 
 	@Test

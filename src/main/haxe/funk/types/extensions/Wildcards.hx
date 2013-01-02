@@ -26,7 +26,7 @@ class Wildcards {
     }
 
     public static function toString<T>(wildcard : Wildcard, x : T) : String {
-        return Std.string(x);
+        return Anys.toString(x);
     }
 
     public static function toUpperCase<T>(wildcard : Wildcard, x : T) : String {
