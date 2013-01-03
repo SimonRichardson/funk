@@ -11,7 +11,10 @@ import funk.types.Promise;
 import funk.types.Option;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.net.http.extensions.HttpHeaders;
+using funk.net.http.extensions.HttpStatusCodes;
 using funk.net.http.extensions.UriRequests;
+using funk.net.http.extensions.Uris;
 using funk.reactive.extensions.Streams;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
@@ -52,7 +55,7 @@ class Http {
             _deferred.resolve(data);
         };
         _loader.onError = function (error : String) {
-            _deferred.reject(HttpError(Std.format("$error for url ${_request.uri()}"));
+            _deferred.reject(HttpError(Std.format("$error for url ${_request.uri()}")));
         };
     }
 

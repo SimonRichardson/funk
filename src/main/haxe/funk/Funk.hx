@@ -34,7 +34,7 @@ class Funk {
 				msg;
 			case Error(msg):
 				msg;
-			case Http(msg):
+			case HttpError(msg):
 				msg;
 			case IllegalOperationError(msg):
 				'Required operation can not be executed';

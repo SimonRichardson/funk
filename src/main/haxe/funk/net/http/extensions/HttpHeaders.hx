@@ -3,27 +3,28 @@ package funk.net.http.extensions;
 import funk.types.Option;
 import funk.types.Tuple2;
 import funk.types.extensions.Strings;
-import funk.types.extensions.Tuples2;
 
+using funk.types.extensions.Options;
+using funk.types.extensions.Tuples2;
 
 class HttpHeaders {
 
-    public static function isHttpRequest(code : HttpHeader) : Bool {
-        return switch(code) {
+    public static function isHttpRequest(value : HttpHeader) : Bool {
+        return switch(value) {
             case HttpRequest(_): true;
             default: false;
         }
     }
 
-    public static function isHttpResponse(code : HttpHeader) : Bool {
-        return switch(code) {
+    public static function isHttpResponse(value : HttpHeader) : Bool {
+        return switch(value) {
             case HttpResponse(_): true;
             default: false;
         }
     }
 
     public static function toHttpVersion(value : HttpHeader) : HttpVersion {
-        return switch(code) {
+        return switch(value) {
             case HttpRequest(request):
                 switch(request) {
                     case Accept(_): Http("1.1");
@@ -97,7 +98,7 @@ class HttpHeaders {
     }
 
     public static function toTuple(value : HttpHeader) : Tuple2<String, String> {
-        function getName(name) {
+        function getName(name : String) : String {
             var index = name.indexOf("(");
             return Strings.camelCaseToDashes(name.substr(0, index <= 0 ? name.length : index));
         }
@@ -180,7 +181,7 @@ class HttpHeaders {
                 }
         }
 
-        return tuple2(name.getOrElse(Strings.zero), argument.getOrElse(Strings.zero));
+        return tuple2(name.getOrElse(Strings.identity), argument.getOrElse(Strings.identity));
     }
 
     public static function toString(value : HttpHeader) : String {
