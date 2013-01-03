@@ -19,15 +19,6 @@ class HttpMethods {
     }
 
     public static function toString(value : HttpMethod) : String {
-        return switch (value) {
-            case Connect: "CONNECT";
-            case Delete: "DELETE";
-            case Get: "GET";
-            case Head: "HEAD";
-            case Options: "OPTIONS";
-            case Post: "POST";
-            case Put: "PUT";
-            case Trace: "TRACE";
-        }
+        return Std.string(value).toUpperCase();
     }
 }
