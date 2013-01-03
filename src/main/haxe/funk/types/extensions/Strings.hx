@@ -4,6 +4,10 @@ import funk.Funk;
 
 class Strings {
 
+	public static function identity() : String {
+		return "";
+	}
+
 	public static function dashesToCamelCase(value : String, ?capitaliseFirst : Bool = false) : String {
 		var regexp = new EReg("-([a-z])", "g");
 		var result = regexp.customReplace(value, function (pattern) {

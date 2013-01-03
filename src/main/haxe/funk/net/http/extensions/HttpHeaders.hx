@@ -1,6 +1,10 @@
 package funk.net.http.extensions;
 
+import funk.types.Option;
+import funk.types.Tuple2;
 import funk.types.extensions.Strings;
+import funk.types.extensions.Tuples2;
+
 
 class HttpHeaders {
 
@@ -92,18 +96,95 @@ class HttpHeaders {
         }
     }
 
-    public static function toString(value : HttpHeader) : String {
+    public static function toTuple(value : HttpHeader) : Tuple2<String, String> {
         function getName(name) {
             var index = name.indexOf("(");
             return Strings.camelCaseToDashes(name.substr(0, index <= 0 ? name.length : index));
         }
 
-        return switch (value) {
-            case HttpRequest(request):
-                getName(Std.string(request));
+        var name : Option<String> = None;
+        var argument : Option<String> = None;
 
+        switch (value) {
+            case HttpRequest(request):
+                name = Some(getName(Std.string(request)));
+
+                switch (request) {
+                    case Accept(v): Some(v);
+                    case AcceptCharset(v): Some(v);
+                    case AcceptEncoding(v): Some(v);
+                    case AcceptLanguage(v): Some(v);
+                    case AcceptDatetime(v): Some(Std.string(v));
+                    case Authorization(v): Some(v);
+                    case Cookie(v): Some(v);
+                    case ContentLength(v): Some(Std.string(v));
+                    case ContentMD5(v): Some(v);
+                    case ContentType(v): Some(v);
+                    case DateTime(v): Some(Std.string(v));
+                    case Expect(v): Some(v);
+                    case From(v): Some(v);
+                    case Host(v): Some(v);
+                    case IfMatch(v): Some(v);
+                    case IfModifiedSince(v): Some(Std.string(v));
+                    case IfNoneMatch(v): Some(v);
+                    case IfRange(v): Some(v);
+                    case IfUnmodifiedSince(v): Some(Std.string(v));
+                    case MaxForwards(v): Some(Std.string(v));
+                    case Pragma(v): Some(v);
+                    case ProxyAuthorization(v): Some(v);
+                    case Range(v): Some(v);
+                    case Referer(v): Some(v);
+                    case TE(v): Some(v);
+                    case Upgrade(v): Some(v);
+                    case UserAgent(v): Some(v);
+                    case Via(v): Some(v);
+                    case Warning(v): Some(v);
+                }
             case HttpResponse(response):
-                getName(Std.string(response));
+                name = Some(getName(Std.string(response)));
+
+                switch(response) {
+                    case AccessControlAllowOrigin(v): Some(v);
+                    case AcceptRanges(v): Some(v);
+                    case Age(v): Some(Std.string(v));
+                    case Allow(v): Some(v);
+                    case CacheControl(v): Some(v);
+                    case Connection(v): Some(v);
+                    case ContentEncoding(v): Some(v);
+                    case ContentLanguage(v): Some(v);
+                    case ContentLength(v): Some(Std.string(v));
+                    case ContentLocation(v): Some(v);
+                    case ContentMD5(v): Some(v);
+                    case ContentRange(v): Some(v);
+                    case ContentType(v): Some(v);
+                    case DateTime(v): Some(Std.string(v));
+                    case ETag(v): Some(v);
+                    case Expires(v): Some(Std.string(v));
+                    case LastModified(v): Some(Std.string(v));
+                    case Link(v): Some(v);
+                    case Location(v): Some(v);
+                    case P3P(v): Some(v);
+                    case Pragma(v): Some(v);
+                    case ProxyAuthenticate(v): Some(v);
+                    case Refresh(v): Some(v);
+                    case RetryAfter(v): Some(Std.string(v));
+                    case Server(v): Some(v);
+                    case SetCookie(v): Some(v);
+                    case StrictTransportSecurity(v): Some(v);
+                    case Trailer(v): Some(v);
+                    case TransferEncoding(v): Some(v);
+                    case Vary(v): Some(v);
+                    case Via(v): Some(v);
+                    case Warning(v): Some(v);
+                    case WWWAuthenticate(v): Some(v);
+                }
         }
+
+        return tuple2(name.getOrElse(Strings.zero), argument.getOrElse(Strings.zero));
+    }
+
+    public static function toString(value : HttpHeader) : String {
+        var tuple = toTuple(value);
+        return Std.format("${tuple._1()}: ${tuple._2()}");
     }
 }
