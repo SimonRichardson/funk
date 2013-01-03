@@ -12,6 +12,7 @@ enum Errors {
 	ArgumentError(?message : String);
 	BindingError(message : String);
 	Error(message : String);
+	HttpError(message : String);
 	IllegalOperationError(?message : String);
 	NoSuchElementError;
 	RangeError;
@@ -32,6 +33,8 @@ class Funk {
 			case BindingError(msg):
 				msg;
 			case Error(msg):
+				msg;
+			case Http(msg):
 				msg;
 			case IllegalOperationError(msg):
 				'Required operation can not be executed';
