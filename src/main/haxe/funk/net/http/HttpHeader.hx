@@ -1,5 +1,12 @@
 package funk.net.http;
 
+import funk.collections.immutable.List;
+import funk.types.Tuple2;
+
+typedef RawHttpHeader = Tuple2<String, String>;
+
+typedef RawHttpHeaders = List<RawHttpHeaders>;
+
 enum HttpHeader {
     Request(request : HttpRequestHeader);
     Response(response : HttpResponseHeader);

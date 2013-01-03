@@ -77,7 +77,8 @@ class Module implements IModule {
         }
     }
 
-    private function bind(type: Class<Dynamic>): Binding<Dynamic> {
+    @:final
+    public function bind(type: Class<Dynamic>): Binding<Dynamic> {
         if(binds(type)) {
             Funk.error(BindingError(Std.format("$type is already bound.")));
         }
