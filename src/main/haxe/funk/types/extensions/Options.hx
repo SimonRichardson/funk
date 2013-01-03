@@ -43,14 +43,14 @@ class Options {
 
 	public static function filter<T>(option : Option<T>, func : Function1<T, Bool>) : Option<T> {
 		return switch (option) {
-			case Some(value): func(get(option)) ? Some(value) : None;
+			case Some(value): func(value) ? Some(value) : None;
 			case None: None;
 		}
 	}
 
 	public static function foreach<T>(option : Option<T>, func : Function1<T, Void>) : Void {
 		switch (option) {
-			case Some(value): func(get(option));
+			case Some(value): func(value);
 			case None:
 		}
 	}
@@ -64,14 +64,14 @@ class Options {
 
 	public static function map<T1, T2>(option : Option<T1>, func : Function1<T1, T2>) : Option<T2> {
 		return switch (option) {
-			case Some(value): Some(func(get(option)));
+			case Some(value): Some(func(value));
 			case None: None;
 		}
 	}
 
 	public static function flatMap<T1, T2>(option : Option<T1>, func : Function1<T1, Option<T2>>) : Option<T2> {
 		return switch (option) {
-			case Some(value): func(get(option));
+			case Some(value): func(value);
 			case None: None;
 		}
 	}

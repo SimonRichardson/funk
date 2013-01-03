@@ -1,5 +1,8 @@
 package funk.net.http;
 
+import funk.collections.immutable.List;
+
 enum UriRequest {
-    UriRequest(uri : String);
+    Request(uri : String);
+    RequestWithHeaders(uri : String, headers : List<HttpHeader>);
 }

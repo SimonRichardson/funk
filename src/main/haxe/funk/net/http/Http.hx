@@ -1,6 +1,8 @@
 package funk.net.http;
 
 import funk.Funk;
+import funk.collections.immutable.List;
+import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
 import funk.net.http.UriRequest;
 import funk.reactive.Stream;
@@ -8,9 +10,11 @@ import funk.types.Deferred;
 import funk.types.Promise;
 import funk.types.Option;
 
+using funk.collections.immutable.extensions.Lists;
 using funk.net.http.extensions.UriRequests;
 using funk.reactive.extensions.Streams;
 using funk.types.extensions.Options;
+using funk.types.extensions.Tuples2;
 
 private typedef Loader = haxe.Http;
 
@@ -30,6 +34,14 @@ class Http {
         _loader = new Loader(request.uri());
         _deferred = new Deferred();
 
+        // Convert the possible headers into an option and then loop over it.
+        request.headers().foreach(function (list) {
+            return list.foreach(function(request : HttpHeader) {
+                var tuple = request.toTuple();
+                _loader.setHeader(tuple._1(), tuple._2());
+            });
+        });
+
         _statusStream = Streams.identity(None);
         _statusStream.emit(None);
 
@@ -48,7 +60,7 @@ class Http {
         var request = switch (method) {
             case Get: false;
             case Post: true;
-            default: Funk.error(IllegalOperationError("HttpMethod not supported"));
+            default: Funk.error(IllegalOperationError("${Std.string(method)} not supported"));
         }
 
         try {
@@ -58,5 +70,9 @@ class Http {
         }
 
         return _deferred.promise();
+    }
+
+    public function status() : Stream<Option<HttpStatusCode>> {
+        return _statusStream;
     }
 }
