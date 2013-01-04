@@ -6,9 +6,10 @@
 -debug
 -lib munit
 -lib hamcrest
+-lib xirsys_stdjs
 --js-modern
 -D test
--D parallel
+#-D parallel
 
 # Neko
 --next
@@ -20,7 +21,7 @@
 -lib munit
 -lib hamcrest
 -D test
--D parallel
+#-D parallel
 
 # as3
 --next
@@ -33,20 +34,20 @@
 -lib munit
 -lib hamcrest
 -D test
--D parallel
+#-D parallel
 
 # cpp
---next
--cpp bin/cpp
--main TestMain
--cp src/main/haxe
--cp src/test/haxe
--debug
--lib munit
--lib hamcrest
--D test
--D parallel
+#--next
+#-cpp bin/cpp
+#-main TestMain
+#-cp src/main/haxe
+#-cp src/test/haxe
+#-debug
+#-lib munit
+#-lib hamcrest
+#-D test
+#-D parallel
 
 --next
-#-cmd haxelib run munit test -coverage -nogen
--cmd haxelib run munit test -nogen
+-cmd haxelib run munit test -coverage -nogen -js
+#-cmd haxelib run munit test -nogen
