@@ -31,7 +31,7 @@ class Stream<T> {
         _finishedListeners = new Signal0();
 	}
 
-    public function attachListener(listener : Stream<T>) : Void {
+    public function attach(listener : Stream<T>) : Void {
         _listeners.push(listener);
 
         if(_rank > listener._rank) {
@@ -50,7 +50,7 @@ class Stream<T> {
         }
     }
 
-    public function detachListener(listener : Stream<T>, ?weakReference : Bool = false): Bool {
+    public function detach(listener : Stream<T>, ?weakReference : Bool = false): Bool {
         var removed = false;
 
         var index = _listeners.length;

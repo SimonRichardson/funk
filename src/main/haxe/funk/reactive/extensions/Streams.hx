@@ -62,7 +62,7 @@ class Streams {
 
         sources.foreach(function(collection){
             for(source in collection.iterator()) {
-                source.attachListener(cast stream);
+                source.attach(cast stream);
             }
         });
 
@@ -99,7 +99,7 @@ class Streams {
             });
             previous = func(pulse.value()).toOption();
             previous.foreach(function(s) {
-                s.attachListener(out);
+                s.attach(out);
             });
 
             return Negate;
