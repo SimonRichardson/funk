@@ -61,7 +61,8 @@ class LocalActor<T> {
 	}
 }
 
-var l0 = new LocalActor();
-var l1 = new LocalActor();
-
-l0.send("Hello", l1);
+var sys = new Actor();
+var l0 = sys.actor(function (a) {
+	return a;
+});
+sys.send(l0, "Hello");
