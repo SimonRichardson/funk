@@ -29,14 +29,14 @@ class Uris {
                     case Some(v1):
                         switch(parts.port) {
                             case Some(v2):
-                                switch(port.path) {
+                                switch(parts.path) {
                                     case Some(v3):
                                         Some(Std.format("$v0://$v1:$v2/$v3"));
                                     case None:
                                         Some(Std.format("$v0://$v1:$v2"));
                                 }
                             case None:
-                                switch(port.path) {
+                                switch(parts.path) {
                                     case Some(v3):
                                         Some(Std.format("$v0://$v1/$v3"));
                                     case None:
@@ -51,14 +51,14 @@ class Uris {
                     case Some(v1):
                         switch(parts.port) {
                             case Some(v2):
-                                switch(port.path) {
+                                switch(parts.path) {
                                     case Some(v3):
                                         Some(Std.format("$v1:$v2/$v3"));
                                     case None:
                                         Some(Std.format("$v1:$v2"));
                                 }
                             case None:
-                                switch(port.path) {
+                                switch(parts.path) {
                                     case Some(v3):
                                         Some(Std.format("$v1/$v3"));
                                     case None:
@@ -130,6 +130,7 @@ class Uris {
     public static function parameters(request : UriRequest) : List<Tuple2<String, Option<String>>> {
         var list = Nil;
 
+        // TODO (Simon) : This seems weak
         var opt = match(uri(request), 10);
         opt.foreach(function(raw) {
             var each = raw.split("&");

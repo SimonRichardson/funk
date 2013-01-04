@@ -121,6 +121,10 @@ class Deferred<T> {
 		return new PromiseImpl<T>(_stateStream, _progressStream, _values.last());
 	}
 
+	public function states() : Collection<State<T>> {
+		return _values;
+	}
+
 	public function values() : Collection<T> {
 		return cast _values.map(function(state) {
 			return switch(state){
