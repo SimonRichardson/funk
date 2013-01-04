@@ -63,6 +63,7 @@ class Http {
         var request = switch (method) {
             case Get: false;
             case Post: true;
+            // TODO (Simon) : Work out other methods.
             default: Funk.error(IllegalOperationError("${Std.string(method)} not supported"));
         }
 

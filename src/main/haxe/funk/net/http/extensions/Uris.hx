@@ -15,6 +15,62 @@ class Uris {
         return Type.enumParameters(request)[0];
     }
 
+    public static function url(request : UriRequest) : Option<String> {
+        var parts = {
+            protocol: protocol(request),
+            host: host(request),
+            port: port(request),
+            path: path(request)
+        };
+
+        return switch(parts.protocol) {
+            case Some(v0):
+                switch(parts.host) {
+                    case Some(v1):
+                        switch(parts.port) {
+                            case Some(v2):
+                                switch(port.path) {
+                                    case Some(v3):
+                                        Some(Std.format("$v0://$v1:$v2/$v3"));
+                                    case None:
+                                        Some(Std.format("$v0://$v1:$v2"));
+                                }
+                            case None:
+                                switch(port.path) {
+                                    case Some(v3):
+                                        Some(Std.format("$v0://$v1/$v3"));
+                                    case None:
+                                        Some(Std.format("$v0://$v1"));
+                                }
+                        }
+                    case None:
+                        None;
+                }
+            case None:
+                switch(parts.host) {
+                    case Some(v1):
+                        switch(parts.port) {
+                            case Some(v2):
+                                switch(port.path) {
+                                    case Some(v3):
+                                        Some(Std.format("$v1:$v2/$v3"));
+                                    case None:
+                                        Some(Std.format("$v1:$v2"));
+                                }
+                            case None:
+                                switch(port.path) {
+                                    case Some(v3):
+                                        Some(Std.format("$v1/$v3"));
+                                    case None:
+                                        Some(Std.format("$v1"));
+                                }
+                        }
+                    case None:
+                        None;
+                }
+        }
+    }
+
     public static function protocol(request : UriRequest) : Option<String> {
         return match(uri(request), 1);
     }
