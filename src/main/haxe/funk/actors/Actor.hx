@@ -1,68 +1,80 @@
 package funk.actors;
 
-enum State {
-	Pending;
-	Running;
-	Failed;
-	Aborted;
-}
+import funk.collections.immutable.List;
+import funk.actors.Actor;
+import funk.actors.Reference;
+import funk.actors.Message;
+import funk.types.Deferred;
+import funk.types.Option;
+import funk.types.Promise;
 
-enum Message<T> {
-	Message(data : T);
-}
+using funk.collections.immutable.extensions.Lists;
 
-enum ActorAddress {
-	Address(address : String);
-}
+class Actor<T> {
 
-class ActorAddresses {
+	private var _address : String;
 
-	public static function address(value : ActorAddress) : Option<String> {
-		return Type.getEnumParameters(value)[0].toOption();
-	}
-
-	public static function safe(value : ActorAddress) : ActorAddress {
-		var uid = Math.floor(Math.random() + Date.now().getTime()).toString();
-		return Address(switch(address(value)) {
-			case Some(val): Std.format("$uid@$val");
-			case None: uid;
-		});
-	}
-}
-
-
-typedef ActorAddress = {
-	function address() : Option<String>;
-}
-
-typedef Actor = {>ActorAddress
-
-	function actor() : Actor;
-
-	function send<T1, T2>(data : T1) : Promise<T2>;
-}
-
-class LocalActor<T> {
+	private var _recipients : List<Actor<T>>;
 
 	public function new() {
+		_recipients = Nil.prepend(this);
 
+		_address = generateAddress();
 	}
 
-	public function address() : Option<String> {
-		return None;
+	public function actor() : Actor<T> {
+		var actor = new Actor();
+		_recipients = _recipients.prepend(actor);
+		return actor;
 	}
 
-	public function belongsTo(parent : Actor) : Actor {
-		return parent.attach(this);
+	public function address() : String {
+		return _address;
 	}
 
-	public function send(message : Message) : Promise<T> {
+	public function recipients() : List<Actor<T>> {
+		return _recipients;
+	}
 
+	public function send(message : T) : Reference<T> {
+		return new Reference(this, message, function(	actor : Option<Actor<T>>, 
+														message : Option<Message<T>>
+														) : Promise<Message<T>> {
+			var deferred = new Deferred();
+			var promise = deferred.promise();
+
+			switch(actor) {
+				case Some(act): 
+					switch (message) {
+						case Some(msg):
+							_recipients = _recipients.prepend(act);
+
+							// Note (Simon) : If this was a web actor, then this wouldn't complete
+							// until after the content has finished.
+							deferred.resolve(msg);
+						case None:
+							deferred.reject(ActorError("No message supplied"));
+					}
+				case None: 
+					deferred.reject(ActorError("No actor supplied"));
+			}
+
+			return promise;
+		});
+	}
+
+	private function generateAddress() : String {
+		var buffer = "";
+		var total = 6;
+
+		for(i in 0...total) {
+			buffer += Math.floor(Math.random() * 255);
+
+			if (i < total - 1) {
+				buffer += ".";
+			}
+		}
+
+		return buffer;
 	}
 }
-
-var sys = new Actor();
-var l0 = sys.actor(function (a) {
-	return a;
-});
-sys.send(l0, "Hello");

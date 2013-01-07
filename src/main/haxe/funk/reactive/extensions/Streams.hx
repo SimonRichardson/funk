@@ -95,7 +95,7 @@ class Streams {
 
         create(function(pulse : Pulse<T1>) : Propagation<T2> {
             previous.foreach(function(s) {
-                s.detachListener(out);
+                s.detach(out);
             });
             previous = func(pulse.value()).toOption();
             previous.foreach(function(s) {
