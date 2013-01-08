@@ -132,6 +132,19 @@ class Promises {
         };
     }
 
+    public static function pipe<T>(promise : Promise<T>, deferred : Deferred<T>) : Promise<T> {
+        promise.progress(function(value) {
+            deferred.progress(value);
+        });
+        promise.when(function(either) {
+            switch (either) {
+                case Left(error): deferred.reject(error);
+                case Right(value): deferred.resolve(value);
+            }
+        });
+        return promise;
+    }
+
     public static function map<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
         var deferred = new Deferred<T2>();
         var future = deferred.promise();

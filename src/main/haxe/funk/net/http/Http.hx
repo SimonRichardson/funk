@@ -41,18 +41,22 @@ class Http {
     public function new(request : UriRequest) {
         _request = request;
 
-        _loader = new Loader(request.url().getOrElse(function () {
+        /*_loader = new Loader(request.url().getOrElse(function () {
             return "";
-        }));
+        }));*/
+        _loader = new Loader(request.uri());
         _deferred = new Deferred();
         _states = _deferred.states();
 
+        /*
         request.parameters().foreach(function (tuple : Tuple2<String, Option<String>>) {
+            trace(tuple);
             _loader.setParameter(tuple._1(), switch (tuple._2()) {
                 case Some(value): value;
                 case None: "";
             });
         });
+        */
 
         // Convert the possible headers into an option and then loop over it.
         request.headers().foreach(function (list) {
@@ -66,7 +70,12 @@ class Http {
         _statusStream.emit(None);
 
         _loader.onStatus = function (status : Int) {
-            _statusStream.emit(status.toHttpStatusCode().toOption());
+            if (status == 0) {
+                // http://en.wikipedia.org/wiki/Same_origin_policy
+                _deferred.reject(HttpError(Std.format("SecurityError: 'Same Origin Policy' at '${_request.uri()}'")));
+            } else {
+                _statusStream.emit(status.toHttpStatusCode().toOption());
+            }
         };
         _loader.onData = function (data : String) {
             if (_states.contains(Aborted).not()) {

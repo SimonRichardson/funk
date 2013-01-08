@@ -1,4 +1,4 @@
-package funk.actors;
+package funk.actors.types;
 
 import funk.collections.immutable.List;
 import funk.actors.Actor;
@@ -13,7 +13,7 @@ using funk.collections.immutable.extensions.Lists;
 using funk.actors.extensions.Messages;
 using funk.types.extensions.Promises;
 
-class Proxy<T1, T2> extends Actor<T1, T2> {
+class ProxyActor<T1, T2> extends Actor<T1, T2> {
 
 	private var _children : List<Actor<T1, T2>>;
 

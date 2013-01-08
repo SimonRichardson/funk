@@ -10,6 +10,8 @@ import funk.types.Option;
 import funk.types.Promise;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.actors.extensions.Messages;
+using funk.types.extensions.Promises;
 
 class Actor<T1, T2> {
 
@@ -57,9 +59,7 @@ class Actor<T1, T2> {
 						case Some(msg):
 							_recipients = _recipients.prepend(act);
 
-							// Note (Simon) : If this was a web actor, then this wouldn't complete
-							// until after the content has finished.
-							deferred.resolve(cast msg);
+							act.recieve(msg).pipe(deferred);
 						case None:
 							deferred.reject(ActorError("No message supplied"));
 					}
@@ -69,6 +69,17 @@ class Actor<T1, T2> {
 
 			return promise;
 		});
+	}
+
+	private function recieve(message : Message<T1>) : Promise<Message<T2>> {
+		var deferred = new Deferred();
+		var promise = deferred.promise();
+
+		deferred.resolve(message.map(function (message) {
+			return cast message;
+		}));
+
+		return promise;
 	}
 
 	private function generateAddress() : String {

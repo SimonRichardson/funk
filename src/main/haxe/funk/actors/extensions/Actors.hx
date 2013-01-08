@@ -2,6 +2,8 @@ package funk.actors.extensions;
 
 import funk.actors.Actor;
 
+using funk.collections.immutable.extensions.Lists;
+
 class Actors {
 
     public static function commutes<T1, T2>(a : Actor<T1, T2>, b : Actor<T1, T2>) : Bool {
