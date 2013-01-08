@@ -13,9 +13,9 @@ using funk.collections.immutable.extensions.Lists;
 using funk.actors.extensions.Messages;
 using funk.types.extensions.Promises;
 
-class Proxy<T> extends Actor<T> {
+class Proxy<T1, T2> extends Actor<T1, T2> {
 
-	private var _children : List<Actor<T>>;
+	private var _children : List<Actor<T1, T2>>;
 
 	public function new() {
 		super();
@@ -23,27 +23,27 @@ class Proxy<T> extends Actor<T> {
 		_children = Nil;
 	}
 
-	override public function actor() : Actor<T> {
+	override public function actor() : Actor<T1, T2> {
 		var actor = new ProxySubActors(address());
 		_children = _children.prepend(actor);
 		return actor;
 	}
 
-	override public function send(message : T) : Reference<T> {
-		return new Reference(this, message, function(	actor : Option<Actor<T>>, 
-														message : Option<Message<T>>
-														) : Promise<Message<T>> {
+	override public function send(message : T1) : Reference<T1, T2> {
+		return new Reference(this, message, function(	actor : Option<Actor<T1, T2>>,
+														message : Option<Message<T1>>
+														) : Promise<Message<T2>> {
 			var deferred = new Deferred();
 			var promise = deferred.promise();
 
 			switch(actor) {
-				case Some(act): 
+				case Some(act):
 					switch (message) {
 						case Some(msg):
 							_recipients = _recipients.prepend(act);
 
 							var promises = None;
-							_children.foreach(function (actor : Actor<T>) {
+							_children.foreach(function (actor : Actor<T1, T2>) {
 								// We need to some how call a resolve on each one.
 								var childPromise = actor.send(msg.body());
 								switch(promises) {
@@ -52,7 +52,7 @@ class Proxy<T> extends Actor<T> {
 									case None:
 										//promises = Some(childPromise);
 								}
-							});					
+							});
 
 							switch(promises) {
 								case Some(value):
@@ -67,11 +67,11 @@ class Proxy<T> extends Actor<T> {
 									});
 								case None:
 							}
-							
+
 						case None:
 							deferred.reject(ActorError("No message supplied"));
 					}
-				case None: 
+				case None:
 					deferred.reject(ActorError("No actor supplied"));
 			}
 
@@ -80,7 +80,7 @@ class Proxy<T> extends Actor<T> {
 	}
 }
 
-private class ProxySubActors<T> extends Actor<T> {
+private class ProxySubActors<T1, T2> extends Actor<T1, T2> {
 
 	public function new(address : String) {
 		super();

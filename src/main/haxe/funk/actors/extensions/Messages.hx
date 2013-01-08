@@ -11,7 +11,7 @@ using funk.types.extensions.Options;
 class Messages {
 
 	public static function sender<T>(message : Message<T>) : Option<String> {
-		return headers(message).find(function (header : Header) { 
+		return headers(message).find(function (header : Header) {
 			return switch(header) {
 				case Origin(_): true;
 				default: false;
