@@ -113,7 +113,7 @@ class Uris {
             case Some(path):
                 switch(match(uri(request), 9)) {
                     case Some(file):
-                        Some(Std.format("$path/$file"));
+                        Some(Std.format("$path$file"));
                     case None:
                         Some(path);
                 }
@@ -152,6 +152,8 @@ class Uris {
     private static function match(uri : String, index : Int) : Option<String> {
         var regexp = new EReg("(?:([^\\:]*)\\:\\/\\/)?(?:([^\\:\\@]*)(?:\\:([^\\@]*))?\\@)?(?:([^\\/\\:]*)\\.(?=[^\\.\\/\\:]*\\.[^\\.\\/\\:]*))?([^\\.\\/\\:]*)(?:\\.([^\\/\\.\\:]*))?(?:\\:([0-9]*))?(\\/[^\\?#]*(?=.*?\\/)\\/)?([^\\?#]*)?(?:\\?([^#]*))?(?:#(.*))?", "");
         regexp.match(uri);
-        return regexp.matched(index).toOption();
+        return regexp.matched(index).toOption().flatMap(function (value) {
+            return (value == "") ? None : Some(value);
+        });
     }
 }
