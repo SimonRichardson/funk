@@ -151,7 +151,7 @@ private class PromiseImpl<T> {
 
 	private var _but : Signal1<Errors>;
 
-	private var _when : Signal1<Either<Errors, T>>;
+	private var _when : Signal1<Attempt<T>>;
 
 	private var _progress : Signal1<Float>;
 
@@ -160,7 +160,7 @@ private class PromiseImpl<T> {
 							state : Option<State<T>>) {
 		_then = new Signal1<T>();
 		_but = new Signal1<Errors>();
-		_when = new Signal1<Either<Errors, T>>();
+		_when = new Signal1<Attempt<T>>();
 		_progress = new Signal1<Float>();
 
 		_state = state.get();
@@ -174,12 +174,12 @@ private class PromiseImpl<T> {
 					var v = option.get();
 
 					_then.dispatch(v);
-					_when.dispatch(Right(v));
+					_when.dispatch(Success(v));
 				case Rejected(error):
 					_but.dispatch(error);
-					_when.dispatch(Left(error));
+					_when.dispatch(Failure(error));
 				case Aborted:
-					_when.dispatch(Left(Errors.NoSuchElementError));
+					_when.dispatch(Failure(Errors.NoSuchElementError));
 				default:
 			}
 		});
@@ -212,14 +212,14 @@ private class PromiseImpl<T> {
 		return this;
 	}
 
-	public function when(func : Function1<Either<Errors, T>, Void>) : Promise<T> {
+	public function when(func : Function1<Attempt<T>, Void>) : Promise<T> {
 		switch(_state){
 			case Pending:
 				_when.add(func);
 			case Resolved(option):
-				func(Right(option.get()));
+				func(Success(option.get()));
 			case Rejected(value):
-				func(Left(value));
+				func(Failure(value));
 			default:
 		}
 		return this;

@@ -4,18 +4,16 @@ import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.extensions.Collections;
 import funk.collections.extensions.CollectionsUtil;
+import funk.types.Attempt;
 import funk.types.Deferred;
-import funk.types.Either;
 import funk.types.Promise;
 import funk.types.Option;
-import funk.types.extensions.Eithers;
-import funk.types.extensions.Options;
 import massive.munit.Assert;
 import unit.Asserts;
 
 using funk.collections.extensions.Collections;
 using funk.collections.extensions.CollectionsUtil;
-using funk.types.extensions.Eithers;
+using funk.types.extensions.Attempts;
 using funk.types.extensions.Options;
 using massive.munit.Assert;
 using unit.Asserts;
@@ -204,7 +202,7 @@ class PromiseTest {
 		var actual : Int = 1;
 		var expected : Int = -1;
 		promise.when(function(value){
-			expected = value.right().get();
+			expected = value.success().get();
 		});
 		deferred.resolve(actual);
 		expected.areEqual(actual);
@@ -215,7 +213,7 @@ class PromiseTest {
 		var actual = Errors.Error('');
 		var expected = null;
 		promise.when(function(value){
-			expected = value.left().get();
+			expected = value.failure().get();
 		});
 		deferred.reject(actual);
 		expected.areEqual(actual);
@@ -227,7 +225,7 @@ class PromiseTest {
 		var expected = null;
 		deferred.reject(actual);
 		promise.when(function(value){
-			expected = value.left().get();
+			expected = value.failure().get();
 		});
 		expected.areEqual(actual);
 	}
@@ -238,7 +236,7 @@ class PromiseTest {
 		var expected : Int = -1;
 		deferred.resolve(actual);
 		promise.when(function(value){
-			expected = value.right().get();
+			expected = value.success().get();
 		});
 		expected.areEqual(actual);
 	}
@@ -249,10 +247,10 @@ class PromiseTest {
 		var expected1 : Int = -1;
 
 		promise.when(function(value){
-			expected0 = value.right().get();
+			expected0 = value.success().get();
 		});
 		promise.when(function(value){
-			expected1 = value.right().get();
+			expected1 = value.success().get();
 		});
 
 		deferred.resolve(1);

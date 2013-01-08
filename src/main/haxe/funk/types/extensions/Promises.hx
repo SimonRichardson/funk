@@ -1,8 +1,8 @@
 package funk.types.extensions;
 
 import funk.Funk;
+import funk.types.Attempt;
 import funk.types.Deferred;
-import funk.types.Either;
 import funk.types.Function0;
 import funk.types.Function2;
 import funk.types.Function5;
@@ -42,15 +42,15 @@ class Promises {
         var deferred = new Deferred<T2>();
         var future = deferred.promise();
 
-        promise.when(function (either : Either<Errors, T1>) {
-            switch (either) {
-                case Left(e): deferred.reject(e);
-                case Right(value):
+        promise.when(function (attempt : Attempt<T1>) {
+            switch (attempt) {
+                case Failure(e): deferred.reject(e);
+                case Success(value):
                     var p = func(value);
-                    p.when(function (either : Either<Errors, T2>) {
-                        switch (either) {
-                            case Left(e): deferred.reject(e);
-                            case Right(v): deferred.resolve(v);
+                    p.when(function (attempt : Attempt<T2>) {
+                        switch (attempt) {
+                            case Failure(e): deferred.reject(e);
+                            case Success(v): deferred.resolve(v);
                         }
                     });
                     p.progress(function (value : Float) {
@@ -69,19 +69,11 @@ class Promises {
         var deferred = new Deferred<T>();
         var future = deferred.promise();
 
-        promise.when(function (either : Either<Errors, Promise<T>>) {
-            switch (either) {
-                case Left(e): deferred.reject(e);
-                case Right(p):
-                    p.when(function (either : Either<Errors, T>) {
-                        switch (either) {
-                            case Left(e): deferred.reject(e);
-                            case Right(v): deferred.resolve(v);
-                        }
-                    });
-                    p.progress(function (value : Float) {
-                        deferred.progress(value);
-                    });
+        promise.when(function (attempt : Attempt<Promise<T>>) {
+            switch (attempt) {
+                case Failure(e): deferred.reject(e);
+                case Success(p):
+                    pipe(p, deferred);
             }
         });
         promise.progress(function (value : Float) {
@@ -107,22 +99,22 @@ class Promises {
             };
 
             var progress = 0.0;
-            a.when(function (either : Either<Errors, T1>) {
+            a.when(function (attempt : Attempt<T1>) {
                 deferred.progress(progress + 0.5);
 
-                switch (either) {
-                    case Left(e): deferred.reject(e);
-                    case Right(v): value0 = Some(v);
+                switch (attempt) {
+                    case Failure(e): deferred.reject(e);
+                    case Success(v): value0 = Some(v);
                 }
 
                 check();
             });
-            b.when(function (either : Either<Errors, T2>) {
+            b.when(function (attempt : Attempt<T2>) {
                 deferred.progress(progress + 0.5);
 
-                switch (either) {
-                    case Left(e): deferred.reject(e);
-                    case Right(v): value1 = Some(v);
+                switch (attempt) {
+                    case Failure(e): deferred.reject(e);
+                    case Success(v): value1 = Some(v);
                 }
 
                 check();
@@ -136,10 +128,10 @@ class Promises {
         promise.progress(function(value) {
             deferred.progress(value);
         });
-        promise.when(function(either) {
-            switch (either) {
-                case Left(error): deferred.reject(error);
-                case Right(value): deferred.resolve(value);
+        promise.when(function(attempt) {
+            switch (attempt) {
+                case Failure(error): deferred.reject(error);
+                case Success(value): deferred.resolve(value);
             }
         });
         return promise;
@@ -149,10 +141,10 @@ class Promises {
         var deferred = new Deferred<T2>();
         var future = deferred.promise();
 
-        promise.when(function (either : Either<Errors, T1>) {
-            switch (either) {
-                case Left(e): deferred.reject(e);
-                case Right(value): deferred.resolve(func(value));
+        promise.when(function (attempt : Attempt<T1>) {
+            switch (attempt) {
+                case Failure(error): deferred.reject(error);
+                case Success(value): deferred.resolve(func(value));
             }
         });
         promise.progress(function (value : Float) {

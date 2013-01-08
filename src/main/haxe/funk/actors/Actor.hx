@@ -71,6 +71,7 @@ class Actor<T1, T2> {
 		});
 	}
 
+	@:overridable
 	private function recieve(message : Message<T1>) : Promise<Message<T2>> {
 		var deferred = new Deferred();
 		var promise = deferred.promise();
