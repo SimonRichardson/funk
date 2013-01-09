@@ -46,6 +46,20 @@ class Actor<T1, T2> {
 		return _recipients;
 	}
 
+	public function belongsTo(actor : Actor<T1, T2>) : Void {
+		_recipients = _recipients.prepend(actor);
+	}
+
+	public function start() : Actor<T1, T2> {
+		_status = Running;
+		return this;
+	}
+
+	public function stop() : Actor<T1, T2> {
+		_status = Stopped;
+		return this;
+	}
+
 	public function send(message : T1) : Reference<T1, T2> {
 		return switch (_status) {
 			case Running:
@@ -78,14 +92,19 @@ class Actor<T1, T2> {
 
 	@:overridable
 	private function recieve(message : Message<T1>) : Promise<Message<T2>> {
-		var deferred = new Deferred();
-		var promise = deferred.promise();
+		return switch (_status) {
+			case Running:
+				var deferred = new Deferred();
+				var promise = deferred.promise();
 
-		deferred.resolve(message.map(function (message) {
-			return cast message;
-		}));
+				deferred.resolve(message.map(function (message) {
+					return cast message;
+				}));
 
-		return promise;
+				return promise;
+			default:
+				Funk.error(ActorError("Actor is not running"));
+		}
 	}
 
 	private function generateAddress() : String {
