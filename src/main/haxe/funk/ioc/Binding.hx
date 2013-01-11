@@ -1,6 +1,11 @@
 package funk.ioc;
 
 import funk.Funk;
+import funk.types.Option;
+import funk.types.Provider;
+
+using funk.types.extensions.Bools;
+using funk.types.extensions.Reflects;
 
 enum BindingType<T> {
     To(type : Class<T>);
@@ -13,7 +18,7 @@ class Binding<T> {
 
     private var _module : Module;
 
-    private var _bind : Class<T>;
+    private var _boundTo : Option<Class<T>>;
 
     private var _bindingType : BindingType<T>;
 
@@ -23,12 +28,20 @@ class Binding<T> {
 
     private var _value : T;
 
-    public function new(module : Module, bind : Class<T>) {
+    public function new(module : Module, boundTo : Option<Class<T>>) {
+        if (null == module) {
+            Funk.error(ArgumentError());
+        }
+
         _module = module;
-        _bind = bind;
+        _boundTo = boundTo;
 
         _singletonScope = false;
         _evaluated = false;
+    }
+
+    public function boundTo() : Option<Class<T>> {
+        return _boundTo;
     }
 
     public function to(type : Class<T>) : Scope {
@@ -36,6 +49,7 @@ class Binding<T> {
             Funk.error(ArgumentError());
         }
 
+        _evaluated = false;
         _bindingType = To(type);
         return this;
     }
@@ -45,15 +59,17 @@ class Binding<T> {
             Funk.error(ArgumentError());
         }
 
+        _evaluated = false;
         _bindingType = Instance(instance);
         return this;
     }
 
     public function toProvider(provider : Class<T>) : Scope {
-        if (null == provider) {
+        if (null == provider || Reflects.hasInstanceMethod(provider, 'get').not()) {
             Funk.error(ArgumentError());
         }
 
+        _evaluated = false;
         _bindingType = Provider(provider);
         return this;
     }
@@ -87,7 +103,12 @@ class Binding<T> {
             case Instance(instance): instance;
             case Provider(provider):
                 switch (_module.getInstance(provider)) {
-                    case Some(v): v.get();
+                    case Some(v): 
+                        if (Reflects.hasMethod(v, 'get')) {
+                            v.get();    
+                        } else {
+                            Funk.error(BindingError("Invalid Provider"));
+                        }
                     case None:
                         Funk.error(BindingError("Provider not found in module."));
                 }

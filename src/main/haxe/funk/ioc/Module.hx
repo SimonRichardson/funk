@@ -16,11 +16,14 @@ interface IModule {
     function getInstance(type: Class<Dynamic>): Dynamic;
 
     function binds(type: Class<Dynamic>): Bool;
+
+    function dispose() : Void;
 }
 
 class Module implements IModule {
 
     private var _map: List<Tuple2<Class<Dynamic>, Binding<Dynamic>>>;
+
     private var _initialized: Bool;
 
     public function new() {
@@ -29,13 +32,13 @@ class Module implements IModule {
     }
 
     @:final
-    public function initialize(): Void {
+    public function initialize() : Void {
         configure();
         _initialized = true;
     }
 
     @:abstract
-    public function configure(): Void {
+    public function configure() : Void {
     }
 
     @:final
@@ -67,9 +70,12 @@ class Module implements IModule {
     }
 
     @:final
-    public function binds(type: Class<Dynamic>): Bool {
+    public function binds(type: Class<Dynamic>) : Bool {
         var binding = _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
-            return Std.is(tuple._1(), tuple._2());
+            return switch(tuple._2().boundTo()) {
+                case Some(bounding): tuple._1() == bounding;
+                case None: false;
+            };
         });
         return switch(binding) {
             case None: false;
@@ -78,15 +84,22 @@ class Module implements IModule {
     }
 
     @:final
-    public function bind(type: Class<Dynamic>): Binding<Dynamic> {
+    public function bind(type: Class<Dynamic>) : Binding<Dynamic> {
         if(binds(type)) {
             Funk.error(BindingError(Std.format("$type is already bound.")));
         }
 
-        var binding = new Binding(this, type);
+        var binding = new Binding(this, Some(type));
+        binding.to(type);
 
         _map = _map.prepend(tuple2(type, binding));
 
         return binding;
+    }
+
+    @:final
+    public function dispose() : Void {
+        _map = Nil;
+        _initialized = false;
     }
 }

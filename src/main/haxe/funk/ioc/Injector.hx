@@ -21,10 +21,22 @@ class Injector {
 
     private static var _currentScope : Option<IModule> = None;
 
+    @:noUsing
     public static function initialize(module : IModule) : IModule {
         module.initialize();
 
         _modules = _modules.prepend(module);
+
+        return module;
+    }
+
+    @:noUsing
+    public static function dispose(module : IModule) : IModule {
+        module.dispose();
+
+        _modules = _modules.filter(function (mod : IModule) {
+            return mod == module;
+        });
 
         return module;
     }
