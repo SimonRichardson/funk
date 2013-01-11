@@ -8,6 +8,7 @@ import funk.types.Tuple2;
 using Lambda;
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Options;
+using funk.types.extensions.Strings;
 
 class Uris {
 
@@ -137,7 +138,7 @@ class Uris {
             each.iter(function(value) {
                 var parts = value.split("=");
                 var l = parts[0];
-                var r = parts.length == 1 ? None : Some(parts[1]);
+                var r = parts.length < 1 || parts[1] == null || parts[1].isEmptyOrBlank() ? None : Some(parts[1]);
                 list = list.prepend(tuple2(l, r));
             });
         });

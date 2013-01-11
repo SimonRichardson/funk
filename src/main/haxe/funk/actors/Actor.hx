@@ -101,7 +101,7 @@ class Actor<T1, T2> {
 					return cast message;
 				}));
 
-				return promise;
+				promise;
 			default:
 				Funk.error(ActorError("Actor is not running"));
 		}

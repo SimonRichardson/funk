@@ -4,6 +4,22 @@ import funk.Funk;
 
 class Strings {
 
+	public static function isEmpty(value : String) : Bool {
+		return value == null || value.length < 1;
+	}
+
+	public static function isNonEmpty(value : String) : Bool {
+		return !isEmpty(value);
+	}
+
+	public static function isEmptyOrBlank(value : String) : Bool {
+		return isEmpty(StringTools.trim(value));
+	}
+
+	public static function isNonEmptyOrBlank(value : String) : Bool {
+		return isNonEmpty(StringTools.trim(value));
+	}
+
 	public static function identity() : String {
 		return "";
 	}
