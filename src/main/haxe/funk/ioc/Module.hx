@@ -2,6 +2,7 @@ package funk.ioc;
 
 import funk.Funk;
 import funk.collections.immutable.List;
+import funk.ioc.Binding;
 import funk.types.Option;
 import funk.types.Tuple2;
 
@@ -47,14 +48,10 @@ class Module implements IModule {
             Funk.error(BindingError("Modules have to be created using \"Injector.initialize(new Module())\"."));
         }
 
-        var binding = _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
-            return Std.is(tuple._1(), tuple._2());
-        });
-
         try {
             Injector.pushScope(this);
 
-            var instance = switch(binding) {
+            var instance = switch(find(type)) {
                 case None: Type.createInstance(type, []);
                 case Some(tuple): tuple._2().getInstance();
             }
@@ -71,12 +68,7 @@ class Module implements IModule {
 
     @:final
     public function binds(type: Class<Dynamic>) : Bool {
-        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
-            return switch(tuple._2().boundTo()) {
-                case Some(bounding): type == bounding;
-                case None: false;
-            };
-        }).toBool();
+        return find(type).toBool();
     }
 
     @:final
@@ -91,6 +83,16 @@ class Module implements IModule {
         _map = _map.prepend(tuple2(type, binding));
 
         return binding;
+    }
+
+    @:final
+    public function find(type : Class<Dynamic>) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic>>> {
+        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
+            return switch (tuple._2().boundTo()) {
+                case Some(bounding): type == bounding;
+                case None: false;
+            };
+        });
     }
 
     @:final
