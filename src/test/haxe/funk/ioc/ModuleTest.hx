@@ -18,7 +18,7 @@ class ModuleTest {
 	}
 
 	@After
-	public function tearDown() { 
+	public function tearDown() {
 		Injector.dispose(module);
 	}
 
@@ -80,4 +80,15 @@ class ModuleTest {
 		called.isTrue();
 	}
 
+	@Test
+	public function when_adding_a_bindable_should_calling_binds_be_true() {
+		module.bind(String);
+		module.binds(String).isTrue();
+	}
+
+	@Test
+	public function when_adding_a_bindable_should_calling_another_binds_be_false() {
+		module.bind(String);
+		module.binds(Float).isFalse();
+	}
 }

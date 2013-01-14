@@ -126,6 +126,13 @@ class Options {
 		}
 	}
 
+	public static function toBool<T>(option : Option<T>) : Bool {
+		return switch (option) {
+			case Some(_): true;
+			case None: false;
+		}
+	}
+
 	public static function toString<T>(option : Option<T>, ?func : Function1<T, String>) : String {
 		return switch (option) {
 			case Some(value):

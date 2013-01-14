@@ -71,16 +71,12 @@ class Module implements IModule {
 
     @:final
     public function binds(type: Class<Dynamic>) : Bool {
-        var binding = _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
+        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
             return switch(tuple._2().boundTo()) {
-                case Some(bounding): tuple._1() == bounding;
+                case Some(bounding): type == bounding;
                 case None: false;
             };
-        });
-        return switch(binding) {
-            case None: false;
-            case Some(tuple): true;
-        }
+        }).toBool();
     }
 
     @:final
