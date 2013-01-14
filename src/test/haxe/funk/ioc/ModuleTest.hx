@@ -91,4 +91,17 @@ class ModuleTest {
 		module.bind(String);
 		module.binds(Float).isFalse();
 	}
+
+	@Test
+	public function when_creating_new_module_calling_bind_then_getInstance_should_return_valid_option() {
+		module.bind(String);
+		module.getInstance(String).areEqual(Some(""));
+	}
+
+	@Test
+	public function when_adding_multiple_bindables_should_calling_another_binds_be_false() {
+		module.bind(String);
+		module.bind(Float);
+		module.binds(Int).isFalse();
+	}
 }
