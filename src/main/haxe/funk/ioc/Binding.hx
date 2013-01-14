@@ -10,7 +10,7 @@ using funk.types.extensions.Reflects;
 enum BindingType<T> {
     To(type : Class<T>);
     Instance(instance : T);
-    Provider(provider : funk.types.Provider<T>);
+    Provider(provider : Class<Provider<T>>);
 }
 
 @:final
@@ -64,7 +64,7 @@ class Binding<T> {
         return this;
     }
 
-    public function toProvider(provider : funk.types.Provider<T>) : Scope {
+    public function toProvider(provider : Class<Provider<T>>) : Scope {
         if (null == provider) {
             Funk.error(ArgumentError());
         }
@@ -102,7 +102,7 @@ class Binding<T> {
                 }
             case Instance(instance): instance;
             case Provider(provider):
-                switch (_module.getInstance(Type.getClass(provider))) {
+                switch (_module.getInstance(provider)) {
                     case Some(v):
                         if (Reflects.hasMethod(v, 'get')) {
                             v.get();

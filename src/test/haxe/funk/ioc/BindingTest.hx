@@ -133,7 +133,7 @@ class BindingTest {
 	@Test
 	public function binding_with_toProvider_should_return_a_scope() {
 		var binding = new Binding(new Module(), None);
-		binding.toProvider(new MockProvider()).areEqual(binding);
+		binding.toProvider(MockProvider).areEqual(binding);
 	}
 
 	@Test
@@ -141,14 +141,14 @@ class BindingTest {
 		MockProvider.instance = new MockObject();
 
 		var binding = new Binding(module, None);
-		binding.toProvider(new MockProvider());
+		binding.toProvider(MockProvider);
 		Assert.areEqual(binding.getInstance(), MockProvider.instance);
 	}
 
 	@Test
 	public function binding_with_toProvider_and_calling_getInstance_asSingleton_should_return_provided_object() {
 		var binding = new Binding(module, None);
-		binding.toProvider(new MockProvider()).asSingleton();
+		binding.toProvider(MockProvider).asSingleton();
 
 		MockProvider.instance = new MockObject();
 
@@ -162,14 +162,14 @@ class BindingTest {
 }
 
 @:keep
-class MockProvider<T> {
+class MockProvider {
 
 	public static var instance : MockObject;
 
 	public function new() {
 	}
 
-	public function get() : T {
+	public function get() : MockObject {
 		return cast MockProvider.instance;
 	}
 }
