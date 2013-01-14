@@ -131,64 +131,53 @@ class BindingTest {
 	}
 
 	@Test
-	public function binding_with_toProvider_with_invalid_provider_should_throw_Error() {
-		var binding = new Binding(new Module(), None);
-
-		var called = try {
-			binding.toProvider(InvalidMockProvider);
-			false;
-		} catch (error : Dynamic) {
-			true;
-		}
-
-		called.isTrue();
-	}
-
-	@Test
 	public function binding_with_toProvider_should_return_a_scope() {
 		var binding = new Binding(new Module(), None);
-		binding.toProvider(MockProvider).areEqual(binding);
+		binding.toProvider(new MockProvider()).areEqual(binding);
 	}
 
 	@Test
 	public function binding_with_toProvider_and_calling_getInstance_should_return_provided_object() {
-		MockProvider.instance = Date.now();
+		MockProvider.instance = new MockObject();
 
 		var binding = new Binding(module, None);
-		binding.toProvider(MockProvider);
-		binding.getInstance().areEqual(MockProvider.instance);
+		binding.toProvider(new MockProvider());
+		Assert.areEqual(binding.getInstance(), MockProvider.instance);
 	}
 
 	@Test
 	public function binding_with_toProvider_and_calling_getInstance_asSingleton_should_return_provided_object() {
 		var binding = new Binding(module, None);
-		binding.toProvider(MockProvider).asSingleton();
+		binding.toProvider(new MockProvider()).asSingleton();
 
-		MockProvider.instance = Date.now();
+		MockProvider.instance = new MockObject();
 
-		var instance = binding.getInstance();
+		var instance : MockObject = binding.getInstance();
 
-		MockProvider.instance = Date.now();
+		MockProvider.instance = new MockObject();
 
 		binding.getInstance().areEqual(instance);
 	}
 
 }
 
-class InvalidMockProvider {
-	public function new() {
-
-	}
-}
-
+@:keep
 class MockProvider<T> {
 
-	public static var instance : Dynamic;
+	public static var instance : MockObject;
 
 	public function new() {
 	}
 
 	public function get() : T {
-		return MockProvider.instance;
+		return cast MockProvider.instance;
+	}
+}
+
+@:keep
+class MockObject {
+
+	public function new() {
+
 	}
 }

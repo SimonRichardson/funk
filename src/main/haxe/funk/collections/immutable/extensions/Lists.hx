@@ -498,23 +498,35 @@ class Lists {
 	}
 
 	public static function headOption<T>(list : List<T>) : Option<T> {
-		return switch(list) {
-			case Nil: None;
-			case Cons(head, _): Some(head);
+		return if (null == list) {
+			None;
+		} else {
+			switch(list) {
+				case Nil: None;
+				case Cons(head, _): Some(head);
+			}
 		}
 	}
 
 	public static function tail<T>(list : List<T>) : List<T> {
-		return switch(list) {
-			case Nil: null;
-			case Cons(_, tail): tail;
+		return if (null == list) {
+			null;
+		} else {
+			switch(list) {
+				case Nil: null;
+				case Cons(_, tail): tail;
+			}
 		}
 	}
 
 	public static function tailOption<T>(list : List<T>) : Option<List<T>> {
-		return switch(list) {
-			case Nil: None;
-			case Cons(_, tail): Some(tail);
+		return if (null == list) {
+			None;
+		} else {
+			switch(list) {
+				case Nil: None;
+				case Cons(_, tail): Some(tail);
+			}
 		}
 	}
 

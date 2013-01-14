@@ -12,11 +12,11 @@ using funk.types.extensions.Tuples2;
 
 interface IModule {
 
-    function initialize(): Void;
+    function initialize() : Void;
 
-    function getInstance(type: Class<Dynamic>): Dynamic;
+    function getInstance(type : Class<Dynamic>) : Dynamic;
 
-    function binds(type: Class<Dynamic>): Bool;
+    function binds(type : Class<Dynamic>): Bool;
 
     function dispose() : Void;
 }
@@ -43,7 +43,7 @@ class Module implements IModule {
     }
 
     @:final
-    public function getInstance(type: Class<Dynamic>)  : Option<Dynamic> {
+    public function getInstance(type: Class<Dynamic>) : Option<Dynamic> {
         if(!_initialized) {
             Funk.error(BindingError("Modules have to be created using \"Injector.add(new Module())\"."));
         }

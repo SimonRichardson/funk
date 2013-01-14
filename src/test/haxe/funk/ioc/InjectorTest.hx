@@ -49,8 +49,7 @@ class InjectorTest {
     @Test
     public function calling_pop_scope_should_set_current_scope_to_None() {
         Injector.popScope();
-        trace(Injector.currentScope());
-        //Injector.currentScope().areEqual(None);
+        Injector.currentScope().areEqual(None);
     }
 }
 
