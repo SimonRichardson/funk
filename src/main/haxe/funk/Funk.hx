@@ -15,6 +15,7 @@ enum Errors {
 	Error(message : String);
 	HttpError(message : String);
 	IllegalOperationError(?message : String);
+	InjectorError(message : String);
 	NoSuchElementError;
 	RangeError;
 	TypeError(?message : String);
@@ -41,6 +42,8 @@ class Funk {
 				msg;
 			case IllegalOperationError(msg):
 				'Required operation can not be executed';
+			case InjectorError(msg):
+				msg;
 			case NoSuchElementError:
 				'No such element exists';
 			case RangeError:

@@ -1,5 +1,6 @@
 package funk.ioc;
 
+import funk.ioc.Injector;
 import funk.types.Option;
 import massive.munit.Assert;
 import unit.Asserts;
@@ -14,12 +15,14 @@ class ModuleTest {
 	@Before
 	public function setup() {
 		module = new Module();
-		Injector.initialize(module);
+
+		Injector.initialize();
+		Injector.add(module);
 	}
 
 	@After
 	public function tearDown() {
-		Injector.dispose(module);
+		Injector.remove(module);
 	}
 
 	@Test

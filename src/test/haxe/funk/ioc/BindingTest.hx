@@ -1,5 +1,6 @@
 package funk.ioc;
 
+import funk.ioc.Injector;
 import massive.munit.Assert;
 import unit.Asserts;
 
@@ -14,12 +15,14 @@ class BindingTest {
 	@Before
 	public function setup() {
 		module = new Module();
-		Injector.initialize(module);
+
+		Injector.initialize();
+		Injector.add(module);
 	}
 
 	@After
-	public function tearDown() { 
-		Injector.dispose(module);
+	public function tearDown() {
+		Injector.remove(module);
 	}
 
 	@Test
@@ -36,7 +39,7 @@ class BindingTest {
 		} catch (error : Dynamic) {
 			true;
 		}
-		
+
 		called.isTrue();
 	}
 
@@ -68,10 +71,10 @@ class BindingTest {
 	}
 
 	@Test
-	public function binding_with_to_and_calling_getInstance_asSingleton_should_return_provided_object() {		
+	public function binding_with_to_and_calling_getInstance_asSingleton_should_return_provided_object() {
 		var binding = new Binding(module, None);
 		binding.to(Array).asSingleton();
-		
+
 		var instance = binding.getInstance();
 		binding.getInstance().areEqual(instance);
 	}
@@ -105,10 +108,10 @@ class BindingTest {
 	}
 
 	@Test
-	public function binding_with_toInstance_and_calling_getInstance_asSingleton_should_return_provided_object() {		
+	public function binding_with_toInstance_and_calling_getInstance_asSingleton_should_return_provided_object() {
 		var binding = new Binding(module, None);
 		binding.toInstance(Date.now()).asSingleton();
-		
+
 		var instance = binding.getInstance();
 		binding.getInstance().areEqual(instance);
 	}
@@ -157,10 +160,10 @@ class BindingTest {
 	}
 
 	@Test
-	public function binding_with_toProvider_and_calling_getInstance_asSingleton_should_return_provided_object() {		
+	public function binding_with_toProvider_and_calling_getInstance_asSingleton_should_return_provided_object() {
 		var binding = new Binding(module, None);
 		binding.toProvider(MockProvider).asSingleton();
-		
+
 		MockProvider.instance = Date.now();
 
 		var instance = binding.getInstance();
@@ -174,7 +177,7 @@ class BindingTest {
 
 class InvalidMockProvider {
 	public function new() {
-		
+
 	}
 }
 

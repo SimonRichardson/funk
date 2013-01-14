@@ -45,7 +45,7 @@ class Module implements IModule {
     @:final
     public function getInstance(type: Class<Dynamic>)  : Option<Dynamic> {
         if(!_initialized) {
-            Funk.error(BindingError("Modules have to be created using \"Injector.initialize(new Module())\"."));
+            Funk.error(BindingError("Modules have to be created using \"Injector.add(new Module())\"."));
         }
 
         try {
