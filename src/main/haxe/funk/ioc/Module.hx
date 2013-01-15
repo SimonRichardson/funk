@@ -8,6 +8,7 @@ import funk.types.Tuple2;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Options;
+using funk.types.extensions.Reflects;
 using funk.types.extensions.Tuples2;
 
 interface IModule {
@@ -52,7 +53,7 @@ class Module implements IModule {
             Injector.pushScope(this);
 
             var instance = switch(find(type)) {
-                case None: Type.createInstance(type, []);
+                case None: Reflects.createEmptyInstance(type);
                 case Some(tuple): tuple._2().getInstance();
             }
 

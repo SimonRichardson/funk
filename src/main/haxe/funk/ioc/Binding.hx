@@ -75,17 +75,17 @@ class Binding<T> {
     }
 
     public function getInstance() : T {
-        if(_singletonScope) {
+        return if(_singletonScope) {
             if(_evaluated) {
-                return _value;
+                _value;
+            } else {
+                _value = solve();
+                _evaluated = true;
+
+                _value;
             }
-
-            _value = solve();
-            _evaluated = true;
-
-            return _value;
         } else {
-            return solve();
+            solve();
         }
     }
 
@@ -98,7 +98,7 @@ class Binding<T> {
             case To(type):
                 switch (_module.getInstance(type)) {
                     case Some(v): v;
-                    case None: Type.createInstance(type, []);
+                    case None: Reflects.createEmptyInstance(type);
                 }
             case Instance(instance): instance;
             case Provider(provider):
