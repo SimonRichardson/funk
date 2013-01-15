@@ -36,8 +36,8 @@ class Binding<T> {
         _module = module;
         _boundTo = boundTo;
 
-        _singletonScope = false;
         _evaluated = false;
+        _singletonScope = false;
     }
 
     public function boundTo() : Option<Class<T>> {
@@ -76,14 +76,13 @@ class Binding<T> {
 
     public function getInstance() : T {
         return if(_singletonScope) {
-            if(_evaluated) {
-                _value;
-            } else {
+            if(!_evaluated) {
                 _value = solve();
                 _evaluated = true;
-
-                _value;
             }
+
+            // Passes back the instance.
+            _value;
         } else {
             solve();
         }
@@ -98,7 +97,14 @@ class Binding<T> {
             case To(type):
                 switch (_module.getInstance(type)) {
                     case Some(v): v;
-                    case None: Reflects.createEmptyInstance(type);
+                    case None: 
+                        // Try and bind to the original type, else bind to the type.
+                        switch(_boundTo){
+                            case Some(v): Reflects.createEmptyInstance(v);
+                            case None: Reflects.createEmptyInstance(type);
+                            default: 
+                                Funk.error(BindingError("Invalid To Bind"));
+                        }
                 }
             case Instance(instance): instance;
             case Provider(provider):
@@ -112,6 +118,8 @@ class Binding<T> {
                     case None:
                         Funk.error(BindingError("Provider not found in module."));
                 }
+            default: 
+                Funk.error(BindingError("Invalid Bind"));
         }
     }
 }

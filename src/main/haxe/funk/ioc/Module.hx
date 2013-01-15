@@ -89,10 +89,7 @@ class Module implements IModule {
     @:final
     private function find(type : Class<Dynamic>) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic>>> {
         return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
-            return switch (tuple._2().boundTo()) {
-                case Some(bounding): type == bounding;
-                case None: false;
-            };
+            return (tuple._1() == type);
         });
     }
 
