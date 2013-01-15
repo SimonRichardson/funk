@@ -1,6 +1,5 @@
 package funk.actors;
 
-import funk.actors.types.UrlActor;
 import funk.types.Either;
 import funk.types.Option;
 import massive.munit.Assert;
