@@ -21,6 +21,10 @@ class Tuples1 {
 		}
 	}
 
+	public static function toArray<T1>(tuple : Tuple1<T1>) : Array<Dynamic> {
+		return Type.enumParameters(tuple);
+	}
+
 	public static function toString<T1>(tuple : Tuple1<T1>, ?func0 : Function1<T1, String>) : String {
 		return switch (tuple) {
 			case tuple1(t1): Std.format('(${Anys.toString(t1, func0)})');

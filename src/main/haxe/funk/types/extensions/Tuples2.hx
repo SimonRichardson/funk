@@ -36,6 +36,10 @@ class Tuples2 {
 		}
 	}
 
+	public static function toArray<T1, T2>(tuple : Tuple2<T1, T2>) : Array<Dynamic> {
+		return Type.enumParameters(tuple);
+	}
+
 	public static function toString<T1, T2>(	tuple : Tuple2<T1, T2>,
 												?func0 : Function1<T1, String>,
 												?func1 : Function1<T2, String>
