@@ -33,6 +33,13 @@ class InjectorTest {
     }
 
     @Test
+    public function calling_add_then_remove_with_new_module_return_same_instance() {
+        var instance = new Module();
+        Injector.add(instance);
+        Injector.remove(instance).areEqual(instance);
+    }
+
+    @Test
     public function calling_add_with_new_module_calls_configure() {
         var instance = new MockModule();
         Injector.add(instance);
@@ -78,9 +85,64 @@ class InjectorTest {
         Injector.popScope();
         Injector.currentScope().areEqual(Some(instance));
     }
+
+    @Test
+    public function calling_scopeOf_with_no_prepared_modules_returns_none() {
+        Injector.scopeOf(String).areEqual(None);
+    }
+
+    @Test
+    public function calling_scopeOf_with_prepared_modules_returns_instance() {
+        var instance = new MockModule();
+        Injector.add(instance);
+        Injector.scopeOf(String).areEqual(Some(instance));
+    }
+
+    @Test
+    public function calling_scopeOf_with_prepared_modules_returns_error_if_binding_same_object() {
+        var instance = new MockModule();
+        Injector.add(instance);
+        Injector.add(new MockModule());
+
+        var called = try {
+            Injector.scopeOf(String).areEqual(Some(instance));
+            false;
+        } catch (error : Dynamic) {
+            true;
+        }
+    }
+
+    @Test
+    public function calling_moduleOf_with_no_prepared_modules_return_none() {
+        Injector.moduleOf(String).areEqual(None);
+    }
+
+    @Test
+    public function calling_moduleOf_with_invalid_prepared_modules_should_return_None() {
+        var instance = new MockModule();
+        Injector.add(instance);
+        Injector.moduleOf(String).areEqual(None);
+    }
+
+    @Test
+    public function calling_moduleOf_with_prepared_modules_should_return_same_object() {
+        var instance = new MockModule();
+        Injector.add(instance);
+        Injector.moduleOf(MockModule).areEqual(Some(instance));
+    }
+
+    @Test
+    public function calling_moduleOf_with_two_prepared_modules_should_return_same_object() {
+        var instance = new MockModule();
+        Injector.add(new MockModule());
+        Injector.add(instance);
+        Injector.moduleOf(MockModule);
+        Injector.moduleOf(MockModule).areEqual(Some(instance));
+    }
 }
 
-class MockModule extends Module {
+@:keep
+private class MockModule extends Module {
 
     public var configuredCalled : Bool;
 
@@ -92,5 +154,7 @@ class MockModule extends Module {
 
     override public function configure() {
         configuredCalled = true;
+
+        bind(String).toInstance("Hello");
     }
 }

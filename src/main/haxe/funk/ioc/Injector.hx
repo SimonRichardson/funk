@@ -110,7 +110,7 @@ class Injector {
         }
 
         var binding = _map.find(function(tuple : Tuple2<Class<Dynamic>, IModule>) : Bool {
-            return Std.is(tuple._1(), tuple._2());
+            return tuple._1() == type;
         });
 
         var possibleResult : Option<IModule> = switch(binding) {

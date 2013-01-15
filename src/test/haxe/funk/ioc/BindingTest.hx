@@ -162,7 +162,7 @@ class BindingTest {
 }
 
 @:keep
-class MockProvider {
+private class MockProvider {
 
 	public static var instance : MockObject;
 
@@ -175,7 +175,7 @@ class MockProvider {
 }
 
 @:keep
-class MockObject {
+private class MockObject {
 
 	public function new() {
 
