@@ -1,6 +1,7 @@
 package funk.types.extensions;
 
 import funk.Funk;
+import funk.collections.immutable.List;
 import funk.types.Attempt;
 import funk.types.Deferred;
 import funk.types.Function0;
@@ -13,9 +14,42 @@ import funk.types.Promise;
 import funk.types.Tuple2;
 import funk.types.extensions.Options;
 
+using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Options;
 
 class Promises {
+
+    public static function awaitAll<T>(list : List<Promise<T>>) : Promise<List<T>> {
+        var deferred = new Deferred();
+        var promise = deferred.promise();
+
+        var result = Nil;
+
+        var index = 0;
+        var size = list.size();
+        while (list.nonEmpty()){
+            var future = list.head();
+
+            future.then(function (value : T) {
+                result = result.prepend(value);
+
+                if (result.size() == size) {
+                    deferred.resolve(result);
+                }
+            });
+            future.but(function (e : Errors) {
+                deferred.reject(e);
+            });
+            future.progress(function (value : Float) {
+                deferred.progress((index / size) * value);
+            });
+
+            list = list.tail();
+            index++;
+        }
+
+        return promise;
+    }
 
     public static function filter<T>(promise : Promise<T>, func : Predicate1<T>) : Promise<T> {
         var deferred = new Deferred<T>();
