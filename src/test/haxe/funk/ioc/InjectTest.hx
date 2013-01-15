@@ -35,8 +35,72 @@ class InjectTest {
         var instance1 : Option<MockObject> = module.getInstance(MockObject);
         var instance2 : Option<MockObject> = module.getInstance(MockObject);
         var instance3 : Option<MockObject> = module.getInstance(MockObject);
-        
+
         MockSingleton.instances.areEqual(1);
+    }
+
+    @Test
+    public function when_creating_an_object_by_interface_should_not_be_null() {
+        var instance : Option<MockObject> = module.getInstance(MockObject);
+        instance.get().byInterface.isNotNull();
+    }
+
+    @Test
+    public function when_creating_an_object_by_interface_should_return_correct_object() {
+        var instance : Option<MockObject> = module.getInstance(MockObject);
+        Std.is(instance.get().byInterface, IAnotherObject).isTrue();
+    }
+
+    @Test
+    public function with_null_passed_as_first_param_should_throw_error() {
+        var instance : Option<MockObject> = module.getInstance(MockObject);
+
+        var called = try {
+            Inject.withIn(null, MockModule);
+            false;
+        } catch (error : Dynamic) {
+            true;
+        }
+
+        called.isTrue();
+    }
+
+    @Test
+    public function with_null_passed_as_first_param_for_inject_should_throw_error() {
+         var called = try {
+            Inject.as(null);
+            false;
+        } catch (error : Dynamic) {
+            true;
+        }
+
+        called.isTrue();
+    }
+
+    @Test
+    public function with_null_passed_as_second_param_should_throw_error() {
+        var instance : Option<MockObject> = module.getInstance(MockObject);
+
+        var called = try {
+            Inject.withIn(IAnotherObject, null);
+            false;
+        } catch (error : Dynamic) {
+            true;
+        }
+
+        called.isTrue();
+    }
+
+    @Test
+    public function when_inject_withIn_should_not_be_null() {
+        var instance : Option<MockObject> = module.getInstance(MockObject);
+        Inject.withIn(IAnotherObject, MockModule).get().isNotNull();
+    }
+
+    @Test
+    public function when_inject_withIn_should_be_instance_of_correct_object() {
+        var instance : Option<MockObject> = module.getInstance(MockObject);
+        Std.is(Inject.withIn(IAnotherObject, MockModule).get(), IAnotherObject).isTrue();
     }
 }
 
@@ -49,6 +113,7 @@ private class MockModule extends Module {
 
     override public function configure() {
         bind(String).toInstance("Hello");
+        bind(IAnotherObject).to(AnotherObject);
         bind(MockSingleton).asSingleton();
     }
 }
@@ -60,9 +125,12 @@ private class MockObject {
 
     public var bySingleton : MockSingleton;
 
+    public var byInterface : IAnotherObject;
+
     public function new() {
         byInstance = Inject.as(String).get();
         bySingleton = Inject.as(MockSingleton).get();
+        byInterface = Inject.as(IAnotherObject).get();
     }
 }
 
@@ -73,5 +141,18 @@ private class MockSingleton {
 
     public function new() {
         instances++;
+    }
+}
+
+@:keep
+private interface IAnotherObject {
+
+}
+
+@:keep
+private class AnotherObject implements IAnotherObject {
+
+    public function new() {
+
     }
 }
