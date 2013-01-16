@@ -11,6 +11,7 @@ import funk.types.Deferred;
 import funk.types.Promise;
 import funk.types.Option;
 import funk.types.Tuple2;
+import haxe.Http;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.collections.extensions.Collections;
@@ -24,13 +25,11 @@ using funk.types.extensions.Bools;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
 
-private typedef Loader = haxe.Http;
-
-class Http {
+class UriLoader {
 
     private var _request : UriRequest;
 
-    private var _loader : Loader;
+    private var _loader : Http;
 
     private var _deferred : Deferred<String>;
 
@@ -41,10 +40,7 @@ class Http {
     public function new(request : UriRequest) {
         _request = request;
 
-        /*_loader = new Loader(request.url().getOrElse(function () {
-            return "";
-        }));*/
-        _loader = new Loader(request.uri());
+        _loader = new Http(request.uri());
         _deferred = new Deferred();
         _states = _deferred.states();
 

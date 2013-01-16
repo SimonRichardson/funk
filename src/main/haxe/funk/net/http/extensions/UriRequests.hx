@@ -3,6 +3,7 @@ package funk.net.http.extensions;
 import funk.collections.immutable.List;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
+import funk.net.http.UriLoader;
 import funk.net.http.UriRequest;
 import funk.types.Option;
 import funk.types.Promise;
@@ -29,42 +30,42 @@ class UriRequests {
     }
 
     public static function connect(request : UriRequest) : Promise<String> {
-        var http = new Http(request);
+        var http = new UriLoader(request);
         return http.start(Connect);
     }
 
     public static function delete(request : UriRequest) : Promise<String> {
-        var http = new Http(request);
+        var http = new UriLoader(request);
         return http.start(Delete);
     }
 
     public static function get(request : UriRequest) : Promise<String> {
-        var http = new Http(request);
+        var http = new UriLoader(request);
         return http.start(Get);
     }
 
     public static function head(request : UriRequest) : Promise<String> {
-        var http = new Http(request);
+        var http = new UriLoader(request);
         return http.start(Head);
     }
 
     public static function options(request : UriRequest) : Promise<String> {
-        var http = new Http(request);
+        var http = new UriLoader(request);
         return http.start(Options);
     }
 
     public static function post(request : UriRequest) : Promise<String> {
-        var http = new Http(request);
+        var http = new UriLoader(request);
         return http.start(Post);
     }
 
     public static function put(request : UriRequest) : Promise<String> {
-        var http = new Http(request);
+        var http = new UriLoader(request);
         return http.start(Put);
     }
 
     public static function trace(request : UriRequest) : Promise<String> {
-        var http = new Http(request);
+        var http = new UriLoader(request);
         return http.start(Trace);
     }
 }

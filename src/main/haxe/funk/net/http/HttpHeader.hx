@@ -5,7 +5,7 @@ import funk.types.Tuple2;
 
 typedef RawHttpHeader = Tuple2<String, String>;
 
-typedef RawHttpHeaders = List<RawHttpHeaders>;
+typedef RawHttpHeaders = List<RawHttpHeader>;
 
 enum HttpHeader {
     HttpRequest(request : HttpRequestHeader);
