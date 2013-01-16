@@ -29,43 +29,13 @@ class UriRequests {
         return RequestWithHeaders(value, headers);
     }
 
-    public static function connect(request : UriRequest) : Promise<String> {
-        var http = new UriLoader(request);
-        return http.start(Connect);
-    }
-
-    public static function delete(request : UriRequest) : Promise<String> {
-        var http = new UriLoader(request);
-        return http.start(Delete);
-    }
-
     public static function get(request : UriRequest) : Promise<String> {
         var http = new UriLoader(request);
         return http.start(Get);
     }
 
-    public static function head(request : UriRequest) : Promise<String> {
-        var http = new UriLoader(request);
-        return http.start(Head);
-    }
-
-    public static function options(request : UriRequest) : Promise<String> {
-        var http = new UriLoader(request);
-        return http.start(Options);
-    }
-
     public static function post(request : UriRequest) : Promise<String> {
         var http = new UriLoader(request);
         return http.start(Post);
-    }
-
-    public static function put(request : UriRequest) : Promise<String> {
-        var http = new UriLoader(request);
-        return http.start(Put);
-    }
-
-    public static function trace(request : UriRequest) : Promise<String> {
-        var http = new UriLoader(request);
-        return http.start(Trace);
     }
 }

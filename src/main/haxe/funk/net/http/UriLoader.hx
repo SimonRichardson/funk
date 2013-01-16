@@ -3,8 +3,6 @@ package funk.net.http;
 import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.immutable.List;
-import funk.net.http.HttpHeader;
-import funk.net.http.HttpMethod;
 import funk.net.http.UriRequest;
 import funk.reactive.Stream;
 import funk.types.Deferred;
@@ -16,7 +14,6 @@ import haxe.Http;
 using funk.collections.immutable.extensions.Lists;
 using funk.collections.extensions.Collections;
 using funk.net.http.extensions.HttpHeaders;
-using funk.net.http.extensions.HttpStatusCodes;
 using funk.net.http.extensions.UriRequests;
 using funk.net.http.extensions.Uris;
 using funk.reactive.extensions.Streams;
@@ -44,15 +41,12 @@ class UriLoader {
         _deferred = new Deferred();
         _states = _deferred.states();
 
-        /*
         request.parameters().foreach(function (tuple : Tuple2<String, Option<String>>) {
-            trace(tuple);
             _loader.setParameter(tuple._1(), switch (tuple._2()) {
                 case Some(value): value;
                 case None: "";
             });
         });
-        */
 
         // Convert the possible headers into an option and then loop over it.
         request.headers().foreach(function (list) {
@@ -70,7 +64,7 @@ class UriLoader {
                 // http://en.wikipedia.org/wiki/Same_origin_policy
                 _deferred.reject(HttpError(Std.format("SecurityError: 'Same Origin Policy' at '${_request.uri()}'")));
             } else {
-                _statusStream.emit(status.toHttpStatusCode().toOption());
+                _statusStream.emit(None);//status.toHttpStatusCode().toOption());
             }
         };
         _loader.onData = function (data : String) {
@@ -95,7 +89,7 @@ class UriLoader {
             case Post: true;
             // TODO (Simon) : Work out other methods.
             default: Funk.error(IllegalOperationError("${Std.string(method)} not supported"));
-        }
+        };
 
         try {
             _loader.request(request);
