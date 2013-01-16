@@ -24,7 +24,7 @@ class UrlActor<T1 : String, T2 : String> extends Actor<T1, T2> {
 		var deferred = new Deferred();
 		var promise = deferred.promise();
 
-		//message.body().fromUri().get().pipe(deferred);
+		message.body().fromUri().get().pipe(deferred);
 
 		return cast promise;
 	}
