@@ -41,83 +41,108 @@ class HttpStatusCodes {
     }
 
     public static function toHttpStatusCode(code : Int) : HttpStatusCode {
-        return if (code == 100) { HttpInformational(Continue); }
-        else if (code == 101) { HttpInformational(SwitchingProtocols); }
-        else if (code == 102) { HttpInformational(Processing); }
-        else if (code == 200) { HttpSuccess(OK); }
-        else if (code == 201) { HttpSuccess(Created); }
-        else if (code == 202) { HttpSuccess(Accepted); }
-        else if (code == 203) { HttpSuccess(NonAuthoritativeInformation); }
-        else if (code == 204) { HttpSuccess(NoContent); }
-        else if (code == 205) { HttpSuccess(ResetContent); }
-        else if (code == 206) { HttpSuccess(PartialContent); }
-        else if (code == 207) { HttpSuccess(MultiStatus); }
-        else if (code == 208) { HttpSuccess(AlreadyReported); }
-        else if (code == 226) { HttpSuccess(IMUsed); }
-        else if (code == 230) { HttpSuccess(AuthenticationSuccessful); }
-        else if (code == 300) { HttpRedirection(MultipleChoices); }
-        else if (code == 301) { HttpRedirection(MovedPermanently); }
-        else if (code == 302) { HttpRedirection(Found); }
-        else if (code == 303) { HttpRedirection(SeeOther); }
-        else if (code == 304) { HttpRedirection(NotModified); }
-        else if (code == 305) { HttpRedirection(UseProxy); }
-        else if (code == 306) { HttpRedirection(SwitchProxy); }
-        else if (code == 307) { HttpRedirection(TemporaryRedirect); }
-        else if (code == 308) { HttpRedirection(PermanentRedirect); }
-        else if (code == 400) { HttpClientError(BadRequest); }
-        else if (code == 401) { HttpClientError(Unauthorized); }
-        else if (code == 402) { HttpClientError(PaymentRequired); }
-        else if (code == 403) { HttpClientError(Forbidden); }
-        else if (code == 404) { HttpClientError(NotFound); }
-        else if (code == 405) { HttpClientError(MethodNotAllowed); }
-        else if (code == 406) { HttpClientError(NotAcceptable); }
-        else if (code == 407) { HttpClientError(ProxyAuthenticationRequired); }
-        else if (code == 408) { HttpClientError(RequestTimeout); }
-        else if (code == 409) { HttpClientError(Conflict); }
-        else if (code == 410) { HttpClientError(Gone); }
-        else if (code == 411) { HttpClientError(LengthRequired); }
-        else if (code == 412) { HttpClientError(PreconditionFailed); }
-        else if (code == 413) { HttpClientError(RequestEntityTooLarge); }
-        else if (code == 414) { HttpClientError(RequestUriTooLong); }
-        else if (code == 415) { HttpClientError(UnsupportedMediaType); }
-        else if (code == 416) { HttpClientError(RequestedRangeNotSatisfiable); }
-        else if (code == 417) { HttpClientError(ExpectationFailed); }
-        else if (code == 418) { HttpClientError(ImATeapot); }
-        else if (code == 420) { HttpClientError(EnhanceYourCalm); }
-        else if (code == 421) { HttpClientError(TooManyConnections); }
-        else if (code == 422) { HttpClientError(UnprocessableEntity); }
-        else if (code == 423) { HttpClientError(Locked); }
-        else if (code == 424) { HttpClientError(Failure); }
-        else if (code == 425) { HttpClientError(UnorderedCollection); }
-        else if (code == 426) { HttpClientError(UpgradeRequired); }
-        else if (code == 428) { HttpClientError(PreconditionRequired); }
-        else if (code == 429) { HttpClientError(TooManyRequests); }
-        else if (code == 431) { HttpClientError(RequestHeaderFieldsTooLarge); }
-        else if (code == 444) { HttpClientError(NoResponse); }
-        else if (code == 449) { HttpClientError(RetryWith); }
-        else if (code == 450) { HttpClientError(BlockedByWindowsParentalControls); }
-        else if (code == 451) { HttpClientError(Redirect); }
-        else if (code == 494) { HttpClientError(RequestHeaderTooLarget); }
-        else if (code == 495) { HttpClientError(CertError); }
-        else if (code == 496) { HttpClientError(NoCert); }
-        else if (code == 497) { HttpClientError(HttpToHttps); }
-        else if (code == 499) { HttpClientError(ClientClosedRequest); }
-        else if (code == 500) { HttpServerError(InternalServerError); }
-        else if (code == 501) { HttpServerError(NotImplemented); }
-        else if (code == 502) { HttpServerError(BadGateway); }
-        else if (code == 503) { HttpServerError(ServiceUnavailable); }
-        else if (code == 504) { HttpServerError(GatewayTimeout); }
-        else if (code == 505) { HttpServerError(HTTPVersionNotSupported); }
-        else if (code == 506) { HttpServerError(VariantAlsoNegotiates); }
-        else if (code == 507) { HttpServerError(InsufficientStorage); }
-        else if (code == 508) { HttpServerError(LoopDetected); }
-        else if (code == 509) { HttpServerError(BandwidthLimitExceeded); }
-        else if (code == 510) { HttpServerError(NotExtended); }
-        else if (code == 511) { HttpServerError(NetworkAuthenticationRequired); }
-        else if (code == 531) { HttpServerError(AccessDenied); }
-        else if (code == 598) { HttpServerError(NetworkReadTimeoutError); }
-        else if (code == 599) { HttpServerError(NetworkConnectTimeoutError); }
-        else { HttpUnknown(code); }
+        // Note (Simon) : This has to be this way so we pass full coverage (I'd rather use a switch tbh)
+        return if (code >= 100 && code <= 199) {
+            
+            if (code == 100) { HttpInformational(Continue); }
+            else if (code == 101) { HttpInformational(SwitchingProtocols); }
+            else if (code == 102) { HttpInformational(Processing); }
+            else { HttpUnknown(code); }
+
+        } else if (code >= 200 && code <= 299) {
+            
+            if (code == 200) { HttpSuccess(OK); }
+            else if (code == 201) { HttpSuccess(Created); }
+            else if (code == 202) { HttpSuccess(Accepted); }
+            else if (code == 203) { HttpSuccess(NonAuthoritativeInformation); }
+            else if (code == 204) { HttpSuccess(NoContent); }
+            else if (code == 205) { HttpSuccess(ResetContent); }
+            else if (code == 206) { HttpSuccess(PartialContent); }
+            else if (code == 207) { HttpSuccess(MultiStatus); }
+            else if (code == 208) { HttpSuccess(AlreadyReported); }
+            else if (code == 226) { HttpSuccess(IMUsed); }
+            else if (code == 230) { HttpSuccess(AuthenticationSuccessful); }
+            else { HttpUnknown(code); }
+
+        } else if (code >= 300 && code <= 399) {
+            
+            if (code == 300) { HttpRedirection(MultipleChoices); }
+            else if (code == 301) { HttpRedirection(MovedPermanently); }
+            else if (code == 302) { HttpRedirection(Found); }
+            else if (code == 303) { HttpRedirection(SeeOther); }
+            else if (code == 304) { HttpRedirection(NotModified); }
+            else if (code == 305) { HttpRedirection(UseProxy); }
+            else if (code == 306) { HttpRedirection(SwitchProxy); }
+            else if (code == 307) { HttpRedirection(TemporaryRedirect); }
+            else if (code == 308) { HttpRedirection(PermanentRedirect); }
+            else { HttpUnknown(code); }
+
+        } else if (code >= 400 && code <= 499) {
+
+            if (code == 400) { HttpClientError(BadRequest); }
+            else if (code == 401) { HttpClientError(Unauthorized); }
+            else if (code == 402) { HttpClientError(PaymentRequired); }
+            else if (code == 403) { HttpClientError(Forbidden); }
+            else if (code == 404) { HttpClientError(NotFound); }
+            else if (code == 405) { HttpClientError(MethodNotAllowed); }
+            else if (code == 406) { HttpClientError(NotAcceptable); }
+            else if (code == 407) { HttpClientError(ProxyAuthenticationRequired); }
+            else if (code == 408) { HttpClientError(RequestTimeout); }
+            else if (code == 409) { HttpClientError(Conflict); }
+            else if (code == 410) { HttpClientError(Gone); }
+            else if (code == 411) { HttpClientError(LengthRequired); }
+            else if (code == 412) { HttpClientError(PreconditionFailed); }
+            else if (code == 413) { HttpClientError(RequestEntityTooLarge); }
+            else if (code == 414) { HttpClientError(RequestUriTooLong); }
+            else if (code == 415) { HttpClientError(UnsupportedMediaType); }
+            else if (code == 416) { HttpClientError(RequestedRangeNotSatisfiable); }
+            else if (code == 417) { HttpClientError(ExpectationFailed); }
+            else if (code == 418) { HttpClientError(ImATeapot); }
+            else if (code == 420) { HttpClientError(EnhanceYourCalm); }
+            else if (code == 421) { HttpClientError(TooManyConnections); }
+            else if (code == 422) { HttpClientError(UnprocessableEntity); }
+            else if (code == 423) { HttpClientError(Locked); }
+            else if (code == 424) { HttpClientError(Failure); }
+            else if (code == 425) { HttpClientError(UnorderedCollection); }
+            else if (code == 426) { HttpClientError(UpgradeRequired); }
+            else if (code == 428) { HttpClientError(PreconditionRequired); }
+            else if (code == 429) { HttpClientError(TooManyRequests); }
+            else if (code == 431) { HttpClientError(RequestHeaderFieldsTooLarge); }
+            else if (code == 444) { HttpClientError(NoResponse); }
+            else if (code == 449) { HttpClientError(RetryWith); }
+            else if (code == 450) { HttpClientError(BlockedByWindowsParentalControls); }
+            else if (code == 451) { HttpClientError(Redirect); }
+            else if (code == 494) { HttpClientError(RequestHeaderTooLarget); }
+            else if (code == 495) { HttpClientError(CertError); }
+            else if (code == 496) { HttpClientError(NoCert); }
+            else if (code == 497) { HttpClientError(HttpToHttps); }
+            else if (code == 499) { HttpClientError(ClientClosedRequest); }
+            else { HttpUnknown(code); }
+
+        } else if (code >= 500 && code <= 599)  {
+
+            if (code == 500) { HttpServerError(InternalServerError); }
+            else if (code == 501) { HttpServerError(NotImplemented); }
+            else if (code == 502) { HttpServerError(BadGateway); }
+            else if (code == 503) { HttpServerError(ServiceUnavailable); }
+            else if (code == 504) { HttpServerError(GatewayTimeout); }
+            else if (code == 505) { HttpServerError(HTTPVersionNotSupported); }
+            else if (code == 506) { HttpServerError(VariantAlsoNegotiates); }
+            else if (code == 507) { HttpServerError(InsufficientStorage); }
+            else if (code == 508) { HttpServerError(LoopDetected); }
+            else if (code == 509) { HttpServerError(BandwidthLimitExceeded); }
+            else if (code == 510) { HttpServerError(NotExtended); }
+            else if (code == 511) { HttpServerError(NetworkAuthenticationRequired); }
+            else if (code == 531) { HttpServerError(AccessDenied); }
+            else if (code == 598) { HttpServerError(NetworkReadTimeoutError); }
+            else if (code == 599) { HttpServerError(NetworkConnectTimeoutError); }
+            else { HttpUnknown(code); }
+
+        } else {
+
+            HttpUnknown(code);
+
+        }
     }
 
     public static function toStatusCode(code : HttpStatusCode) : Int {
