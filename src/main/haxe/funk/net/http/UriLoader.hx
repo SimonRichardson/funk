@@ -14,6 +14,7 @@ import haxe.Http;
 using funk.collections.immutable.extensions.Lists;
 using funk.collections.extensions.Collections;
 using funk.net.http.extensions.HttpHeaders;
+using funk.net.http.extensions.HttpStatusCodes;
 using funk.net.http.extensions.UriRequests;
 using funk.net.http.extensions.Uris;
 using funk.reactive.extensions.Streams;
@@ -64,7 +65,7 @@ class UriLoader {
                 // http://en.wikipedia.org/wiki/Same_origin_policy
                 _deferred.reject(HttpError(Std.format("SecurityError: 'Same Origin Policy' at '${_request.uri()}'")));
             } else {
-                _statusStream.emit(None);//status.toHttpStatusCode().toOption());
+                _statusStream.emit(status.toHttpStatusCode().toOption());
             }
         };
         _loader.onData = function (data : String) {

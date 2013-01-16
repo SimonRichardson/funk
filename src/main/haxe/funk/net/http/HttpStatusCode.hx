@@ -1,6 +1,7 @@
 package funk.net.http;
 
 enum HttpStatusCode {
+    HttpUnknown(code : Int);
     HttpInformational(code : HttpInformational);
     HttpSuccess(code : HttpSuccess);
     HttpRedirection(code : HttpRedirection);
