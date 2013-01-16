@@ -42,31 +42,14 @@ class ProxyActor<T1, T2> extends Actor<T1, T2> {
 						case Some(msg):
 							_recipients = _recipients.prepend(act);
 
-							var promises = None;
+							var promises = Nil;
 							_children.foreach(function (actor : Actor<T1, T2>) {
-								// We need to some how call a resolve on each one.
-								var childPromise = actor.send(msg.body());
-								switch(promises) {
-									case Some(value):
-										//promises = Some(value.zip(childPromise));
-									case None:
-										//promises = Some(childPromise);
-								}
+								// Note (Simon) : send to itself so it goes through correctly
+								var promise  = actor.send(msg.body()).to(Some(actor));
+								promises = promises.prepend(promise);
 							});
 
-							switch(promises) {
-								case Some(value):
-									value.when(function (either) {
-										switch(either) {
-											case Left(error):
-												deferred.reject(error);
-											case Right(value):
-												// TODO (Simon) : Work out how to flatten a tuple (N) completely.
-												// deferred.resolve(value);
-										}
-									});
-								case None:
-							}
+							promises.awaitAll().pipe(deferred);
 
 						case None:
 							deferred.reject(ActorError("No message supplied"));
@@ -75,7 +58,8 @@ class ProxyActor<T1, T2> extends Actor<T1, T2> {
 					deferred.reject(ActorError("No actor supplied"));
 			}
 
-			return promise;
+			// Note (Simon) : This is probably wrong, as we're sending a message and getting a list back.
+			return cast promise;
 		});
 	}
 }
