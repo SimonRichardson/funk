@@ -6,3 +6,13 @@
 -cp ../src/test/haxe
 -debug
 -D test
+
+--next
+-swf ../bin/Example02.swf
+-swf-version 9
+-main Example02
+-cp main/flash
+-cp ../src/main/haxe
+-cp ../src/test/haxe
+-debug
+-D test
