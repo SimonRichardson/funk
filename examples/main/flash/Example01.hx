@@ -11,14 +11,14 @@ import funk.types.Wildcard;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Tuples2;
-using Example01.WildcardDisplay;
+using Example01.SpriteWildcards;
 
 class Example01 extends Sprite {
 
 	public function new() {
 		super();
 
-		// Create a list of 4 sprite instances.
+		// Create a list of 6 sprite instances.
 		var sprites = ListsUtil.fill(6)(Pass.instanceOf(Sprite));
 		// Map the sprites to their graphics object and apply a
 		// function on each of them.
@@ -53,7 +53,7 @@ class Example01 extends Sprite {
 	}
 }
 
-class WildcardDisplay {
+class SpriteWildcards {
 
 	public static function addChild(wildcard : Wildcard, parent : Sprite) : Function1<Sprite, Void> {
 		return function(sprite : Sprite) {
