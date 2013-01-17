@@ -5,6 +5,7 @@ import funk.collections.extensions.Collections;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Function0;
+import funk.types.Function1;
 import funk.types.Option;
 import funk.types.extensions.Strings;
 
@@ -12,12 +13,14 @@ using funk.collections.immutable.extensions.Lists;
 
 class ListsUtil {
 
-	public static function fill<T>(amount : Int, func : Function0<T>) : List<T> {
-		var list = Nil;
-		while(--amount > -1) {
-			list = list.prepend(func());
-		}
-		return list.reverse();
+	public static function fill<T>(amount : Int) : Function1<Void -> T, List<T>> {
+		return function (func : Void -> T) : List<T> {
+			var list = Nil;
+			while(--amount > -1) {
+				list = list.prepend(func());
+			}
+			return list.reverse();
+		};
 	}
 
 	public static function toList<T1, T2>(any : T1) : List<T2> {
