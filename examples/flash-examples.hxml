@@ -1,0 +1,32 @@
+-cmd rm -fd ../bin/flash
+-cmd mkdir ../bin/flash
+
+--next
+-swf ../bin/flash/Example01.swf
+-swf-version 9
+-main Example01
+-cp main/flash
+-cp ../src/main/haxe
+-cp ../src/test/haxe
+-debug
+-D test
+
+--next
+-swf ../bin/flash/Example02.swf
+-swf-version 9
+-main Example02
+-cp main/flash
+-cp ../src/main/haxe
+-cp ../src/test/haxe
+-debug
+-D test
+
+--next
+-swf ../bin/flash/Example03.swf
+-swf-version 9
+-main Example03
+-cp main/flash
+-cp ../src/main/haxe
+-cp ../src/test/haxe
+-debug
+-D test
