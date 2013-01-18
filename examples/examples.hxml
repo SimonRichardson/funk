@@ -50,3 +50,15 @@
 -debug
 -D test
 --dead-code-elimination
+
+--next
+-js ../bin/Example03.js
+-main Example03
+-cp main/js
+-cp ../src/main/haxe
+-cp ../src/test/haxe
+-lib xirsys_stdjs
+--js-modern
+-debug
+-D test
+--dead-code-elimination

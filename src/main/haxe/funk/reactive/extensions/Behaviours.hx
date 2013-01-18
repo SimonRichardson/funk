@@ -30,8 +30,8 @@ class Behaviours {
 		return behaviour.stream().map(func).startsWith(func(behaviour.value()));
 	}
 
-	public static function map<T, R>(	behaviour : Behaviour<T>, 
-										stream : Stream<T>, 
+	public static function map<T, R>(	behaviour : Behaviour<T>,
+										stream : Stream<T>,
 										mapper : Behaviour<Function1<T, R>>
 										) : Behaviour<R> {
 		return stream.map(function(x) {
@@ -69,8 +69,8 @@ class Behaviours {
 		return stream.startsWith(mapToValue());
 	}
 
-	public static function zipWith<T, E1, E2>(	behaviour : Behaviour<T>, 
-												that : Behaviour<E1>, 
+	public static function zipWith<T, E1, E2>(	behaviour : Behaviour<T>,
+												that : Behaviour<E1>,
 												func : Function2<T, E1, E2>
 												) : Behaviour<E2> {
 		var stream = Streams.create(function(pulse : Pulse<E1>) : Propagation<E2> {
@@ -79,5 +79,5 @@ class Behaviours {
 		}, Some([behaviour, that].toCollection()));
 
 		return stream.startsWith(func(behaviour.value(), that.value()));
-	}	
+	}
 }

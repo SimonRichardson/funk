@@ -34,8 +34,8 @@ class KeyboardEventTypes {
 
     public static function toString(type : KeyboardEventType) : String {
         #if flash9
-            var reg = new EReg("([^\\A])([A-Z])", "g");
-            return reg.replace(Std.string(type), '$1_$2').toUpperCase();
+            var type = Std.string(type);
+            return type.substr(0, 1).toLowerCase() + type.substr(1);
         #else
             return Std.string(type).toLowerCase();
         #end

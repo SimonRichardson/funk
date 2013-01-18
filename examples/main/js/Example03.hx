@@ -5,14 +5,17 @@ import funk.collections.immutable.extensions.ListsUtil;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
+import funk.reactive.events.Events;
 import CommonJS;
 import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.reactive.events.MouseEvents;
+using funk.reactive.extensions.Streams;
 using funk.types.extensions.Tuples2;
-using Example01.HtmlWildcards;
+using Example03.HtmlEventWildcards;
 
-class Example01 {
+class Example03 {
 
     public function new() {
         // Create a list of 6 elements instances.
@@ -45,6 +48,12 @@ class Example01 {
 
         // Add all elements to the dom
         elements.foreach(_.addElement(getBody()));
+
+        // Attach a mouse down event to all the sprites.
+        elements.foreach(_.mouseDown(function (event) {
+            var left = Std.parseInt(event.target.style.left);
+            event.target.style.left = left + 10 + "px";
+        }));
     }
 
     public function getBody() : HTMLElement {
@@ -52,7 +61,7 @@ class Example01 {
     }
 
     public static function main() {
-        new Example01();
+        new Example03();
     }
 }
 
@@ -77,7 +86,7 @@ class HtmlDivElement {
     }
 }
 
-class HtmlWildcards {
+class HtmlEventWildcards {
 
     public static function addElement(  wildcard : Wildcard,
                                         parent : HTMLElement
@@ -93,4 +102,11 @@ class HtmlWildcards {
         };
     }
 
+    public static function mouseDown(   wildcard : Wildcard,
+                                        func : Function1<Event, Void>
+                                        ) : Function1<HtmlDivElement, Void> {
+        return function(element : HtmlDivElement) {
+            element.htmlElement().mouseDown().foreach(func);
+        };
+    }
 }

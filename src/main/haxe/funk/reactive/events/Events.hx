@@ -6,7 +6,7 @@ import funk.reactive.extensions.Streams;
 import funk.types.Function1;
 
 #if js
-import js.w3c.level3.Events;
+import UserAgentContext;
 typedef EventDispatcher = EventTarget;
 #elseif flash9
 import flash.events.Event;
