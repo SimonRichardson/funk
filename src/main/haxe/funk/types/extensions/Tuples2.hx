@@ -9,15 +9,11 @@ import funk.types.Tuple2;
 class Tuples2 {
 
 	public static function _1<T1, T2>(tuple : Tuple2<T1, T2>) : T1 {
-		return switch(tuple){
-			case tuple2(value, _): value;
-		};
+		return Type.enumParameters(tuple)[0];
 	}
 
 	public static function _2<T1, T2>(tuple : Tuple2<T1, T2>) : T2 {
-		return switch(tuple){
-			case tuple2(_, value): value;
-		};
+		return Type.enumParameters(tuple)[1];
 	}
 
 	public static function swap<T1, T2>(tuple : Tuple2<T1, T2>) : Tuple2<T2, T1> {
