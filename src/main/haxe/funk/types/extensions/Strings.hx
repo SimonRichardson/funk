@@ -47,6 +47,16 @@ class Strings {
 		return regexp.replace(value, "$1-");
 	}
 
+	public static function camelCaseToLowerCase(value : String, ?separator : String = "_") : String {
+		var reg = new EReg("([^\\A])([A-Z])", "g");
+        return reg.replace(value, "$1${separator}$2").toLowerCase();
+	}
+
+	public static function camelCaseToUpperCase(value : String, ?separator : String = "_") : String {
+		var reg = new EReg("([^\\A])([A-Z])", "g");
+        return reg.replace(value, "$1${separator}$2").toUpperCase();
+	}
+
 	public static function iterator(value : String) : Iterator<String> {
 		var index = 0;
 		return {

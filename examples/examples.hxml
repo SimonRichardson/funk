@@ -18,6 +18,16 @@
 -D test
 
 --next
+-swf ../bin/Example03.swf
+-swf-version 9
+-main Example03
+-cp main/flash
+-cp ../src/main/haxe
+-cp ../src/test/haxe
+-debug
+-D test
+
+--next
 -js ../bin/Example01.js
 -main Example01
 -cp main/js
