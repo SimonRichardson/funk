@@ -15,3 +15,18 @@
 
 --next
 -cmd echo "<html lang='en-GB'>\n<head>\n<title>Example01</title>\n</head>\n<body>\n<canvas width='400' height='400'/>\n<script type='text/javascript' src='Example01.js'></script>\n</body>\n</html>" >> ../bin/canvas/Example01.html
+
+--next
+-js ../bin/canvas/Example02.js
+-main Example02
+-cp main/canvas
+-cp ../src/main/haxe
+-cp ../src/test/haxe
+-lib xirsys_stdjs
+--js-modern
+-debug
+-D test
+--dead-code-elimination
+
+--next
+-cmd echo "<html lang='en-GB'>\n<head>\n<title>Example02</title>\n</head>\n<body>\n<canvas width='400' height='400'/>\n<script type='text/javascript' src='Example02.js'></script>\n</body>\n</html>" >> ../bin/canvas/Example02.html

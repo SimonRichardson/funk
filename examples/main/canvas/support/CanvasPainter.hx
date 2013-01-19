@@ -1,0 +1,7 @@
+package support;
+
+class CanvasPainter {
+
+
+
+}
