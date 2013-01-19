@@ -1,4 +1,4 @@
--cmd rm -fd ../bin/flash
+-cmd rm -rfd ../bin/flash
 -cmd mkdir ../bin/flash
 
 --next

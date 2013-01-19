@@ -1,3 +1,4 @@
+-cmd rm -rfd ../bin/canvas
 -cmd mkdir ../bin/canvas
 
 --next

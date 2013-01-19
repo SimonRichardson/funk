@@ -21,8 +21,8 @@ class Example01 {
         // Map the layers to their styles object and apply a
         // function on each of them.
         layers.map(_.context()).foreach(function(c) {
-            c.fillStyle("#ffff00");
-            c.fillRect(0, 0, 150, 75);
+            c.fillStyle("#00ffff");
+            c.fillRect(0, 0, 20, 20);
         });
 
         // Combine the Layers objects with their index, resulting
@@ -45,7 +45,7 @@ class Example01 {
     }
 
     public function getCanvas() : HTMLCanvasElement {
-        return CommonJS.getHtmlDocument().body.canvas;
+        return CommonJS.getHtmlDocument().body.getElementsByTagName('canvas')[0];
     }
 
     public static function main() {
@@ -107,15 +107,15 @@ class CanvasContext2D {
     }
 
     public function fillStyle(color : String) : Void {
-        _commands = _commands.prepend(FillStyle(color));
+        _commands = _commands.append(FillStyle(color));
     }
 
     public function fillRect(x : Float, y : Float, width : Float, height : Float) : Void {
-        _commands = _commands.prepend(FillRect(x, y, width, height));
+        _commands = _commands.append(FillRect(x, y, width, height));
     }
 
     public function moveTo(x : Float, y : Float) : Void {
-        _commands = _commands.prepend(MoveTo(x, y));
+        _commands = _commands.append(MoveTo(x, y));
     }
 }
 
@@ -134,23 +134,26 @@ class HtmlWildcards {
 
         return function(layer : Layer) {
 
-            context.moveTo(layer.x, layer.y);
+            context.save();
+            context.translate(layer.x, layer.y);
 
             var commands = layer.context().commands();
             commands.foreach(function (command) {
                 switch(command) {
                     case FillStyle(color):
-                        context.fillStyle(color);
+                        context.fillStyle = color;
                     case FillRect(x, y, width, height):
                         context.fillRect(x, y, width, height);
                     case MoveTo(x, y):
                         context.moveTo(x, y);
                 }
             });
+
+            context.restore();
         };
     }
 
-    public static function context(wildcard : Wildcard) : Function1<Layer, CSSStyleDeclaration> {
+    public static function context(wildcard : Wildcard) : Function1<Layer, CanvasContext2D> {
         return function(layer : Layer) {
             return layer.context();
         };

@@ -1,4 +1,4 @@
--cmd rm -fd ../bin/dom
+-cmd rm -rfd ../bin/dom
 -cmd mkdir ../bin/dom
 
 --next
