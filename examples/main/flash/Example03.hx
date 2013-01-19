@@ -14,7 +14,7 @@ using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Tuples2;
 using funk.reactive.events.MouseEvents;
 using funk.reactive.extensions.Streams;
-using Example03.SpriteEventWildcards;
+using support.SpriteWildcards;
 
 class Example03 extends Sprite {
 
@@ -58,28 +58,5 @@ class Example03 extends Sprite {
     public static function main() {
         var example = new Example03();
         flash.Lib.current.addChild(example);
-    }
-}
-
-class SpriteEventWildcards {
-
-    public static function addChild(wildcard : Wildcard, parent : Sprite) : Function1<Sprite, Void> {
-        return function(sprite : Sprite) {
-            parent.addChild(sprite);
-        };
-    }
-
-    public static function graphics(wildcard : Wildcard) : Function1<Sprite, Graphics> {
-        return function(sprite : Sprite) {
-            return sprite.graphics;
-        };
-    }
-
-    public static function mouseDown(   wildcard : Wildcard,
-                                        func : Function1<MouseEvent, Void>
-                                        ) : Function1<Sprite, Void> {
-        return function(sprite : Sprite) {
-            sprite.mouseDown().foreach(func);
-        };
     }
 }

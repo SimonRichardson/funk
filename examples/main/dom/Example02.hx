@@ -7,12 +7,13 @@ import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
+import support.HtmlDivElement;
 import CommonJS;
 import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Tuples2;
-using Example02.HtmlWildcards;
+using support.HtmlWildcards;
 
 class Example02 {
 
@@ -52,37 +53,3 @@ class Example02 {
         new Example02();
     }
 }
-
-class HtmlDivElement {
-
-    private var element : HTMLElement;
-
-    public function new() {
-        element = CommonJS.newElement(type());
-    }
-
-    public function htmlElement() : HTMLElement {
-        return element;
-    }
-
-    public function style() : CSSStyleDeclaration {
-        return element.style;
-    }
-
-    public function type() : String {
-        return "div";
-    }
-}
-
-class HtmlWildcards {
-
-    public static function addElement(  wildcard : Wildcard,
-                                        parent : HTMLElement
-                                        ) : Function1<HtmlDivElement, Void> {
-        return function(element : HtmlDivElement) {
-            trace(element.htmlElement());
-            parent.appendChild(element.htmlElement());
-        };
-    }
-}
-

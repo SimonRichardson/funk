@@ -5,12 +5,13 @@ import funk.collections.immutable.extensions.ListsUtil;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
+import support.HtmlDivElement;
 import CommonJS;
 import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Tuples2;
-using Example01.HtmlWildcards;
+using support.HtmlWildcards;
 
 class Example01 {
 
@@ -54,43 +55,4 @@ class Example01 {
     public static function main() {
         new Example01();
     }
-}
-
-class HtmlDivElement {
-
-    private var element : HTMLElement;
-
-    public function new() {
-        element = CommonJS.newElement(type());
-    }
-
-    public function htmlElement() : HTMLElement {
-        return element;
-    }
-
-    public function style() : CSSStyleDeclaration {
-        return element.style;
-    }
-
-    public function type() : String {
-        return "div";
-    }
-}
-
-class HtmlWildcards {
-
-    public static function addElement(  wildcard : Wildcard,
-                                        parent : HTMLElement
-                                        ) : Function1<HtmlDivElement, Void> {
-        return function(element : HtmlDivElement) {
-            parent.appendChild(element.htmlElement());
-        };
-    }
-
-    public static function styles(wildcard : Wildcard) : Function1<HtmlDivElement, CSSStyleDeclaration> {
-        return function(element : HtmlDivElement) {
-            return element.style();
-        };
-    }
-
 }
