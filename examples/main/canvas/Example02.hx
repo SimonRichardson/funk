@@ -6,6 +6,7 @@ import funk.collections.immutable.extensions.Range;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
+import support.CanvasPainter;
 import support.Layer;
 import support.CanvasContext;
 import CommonJS;
@@ -18,6 +19,8 @@ using support.HtmlWildcards;
 class Example02 {
 
     public function new() {
+        CanvasPainter.init(getCanvas());
+
         Range.until(0, 4).foreach(function(i) {
             var layer = new Layer();
 

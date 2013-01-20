@@ -26,14 +26,10 @@ class CanvasPainter {
         RenderEvents.enterFrame().foreach(function (event : Event) {
             if (_paint) {
                 _rectangles.foreach(function (rectangle : Rectangle) : Void {
-                    context.save();
-
                     switch (rectangle) {
                         case Rectangle(x, y, width, height):
                             context.clearRect(x, y, width, height);
                     }
-
-                    context.restore();
                 });
 
                 _commands.foreach(function (commands : List<CanvasCommands>) : Void {
