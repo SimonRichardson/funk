@@ -2,15 +2,11 @@ package support;
 
 import funk.collections.immutable.List;
 import CommonJS;
+import funk.reactive.events.RenderEvents;
 import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
-
-enum CanvasCommands {
-    FillStyle(color : String);
-    FillRect(x : Float, y : Float, width : Float, height : Float);
-    MoveTo(x : Float, y : Float);
-}
+using funk.reactive.extensions.Streams;
 
 class CanvasContext {
 
@@ -32,21 +28,17 @@ class CanvasContext {
             return;
         }
 
-        _context.save();
-        _context.translate(_layer.x, _layer.y);
+        // Make sure we translate to the correct position.
+        _commands = _commands.prepend(Translate(_layer.x, _layer.y));
 
-        _commands.foreach(function (command) {
-            switch(command) {
-                case FillStyle(color):
-                    _context.fillStyle = color;
-                case FillRect(x, y, width, height):
-                    _context.fillRect(x, y, width, height);
-                case MoveTo(x, y):
-                    _context.moveTo(x, y);
-            }
-        });
+        CanvasPainter.paint(_commands);
+    }
 
-        _context.restore();
+    public function clear() : Void {
+        _commands = Nil.prepend(Clear(_layer.x, _layer.y, _layer.width, _layer.height));
+
+        _layer.width = 0;
+        _layer.height = 0;
     }
 
     public function fillStyle(color : String) : Void {
