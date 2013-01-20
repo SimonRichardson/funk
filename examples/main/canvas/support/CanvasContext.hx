@@ -29,9 +29,14 @@ class CanvasContext {
         }
 
         // Make sure we translate to the correct position.
-        _commands = _commands.prepend(Translate(_layer.x, _layer.y));
+        var list = switch (_commands.head()) {
+            case Translate(_, _): _commands.tail();
+            default: _commands;
+        };
 
-        CanvasPainter.paint(_commands);
+        _commands = list.prepend(Translate(Math.round(_layer.x), Math.round(_layer.y)));
+
+        CanvasPainter.paint(_layer.previousRectangle(), _commands);
     }
 
     public function clear() : Void {

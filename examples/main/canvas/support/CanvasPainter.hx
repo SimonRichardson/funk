@@ -12,16 +12,30 @@ class CanvasPainter {
 
     private static var _paint : Bool;
 
+    private static var _rectangles : List<Rectangle>;
+
     private static var _commands : List<List<CanvasCommands>>;
 
     public static function init(canvas : HTMLCanvasElement) {
         _paint = false;
         _commands = Nil;
+        _rectangles = Nil;
 
-        var context = canvas.getContext("2d");
+        var context : CanvasRenderingContext2D = canvas.getContext("2d");
 
-        RenderEvents.enterFrame(null).foreach(function (event : Event) {
+        RenderEvents.enterFrame().foreach(function (event : Event) {
             if (_paint) {
+                _rectangles.foreach(function (rectangle : Rectangle) : Void {
+                    context.save();
+
+                    switch (rectangle) {
+                        case Rectangle(x, y, width, height):
+                            context.clearRect(x, y, width, height);
+                    }
+
+                    context.restore();
+                });
+
                 _commands.foreach(function (commands : List<CanvasCommands>) : Void {
                     context.save();
 
@@ -42,12 +56,16 @@ class CanvasPainter {
 
                     context.restore();
                 });
+
+                _rectangles = Nil;
+                _commands = Nil;
             }
         });
     }
 
-    public static function paint(commands : List<CanvasCommands>) {
+    public static function paint(rectangle : Rectangle, commands : List<CanvasCommands>) {
+        _rectangles = _rectangles.prepend(rectangle);
         _commands = _commands.prepend(commands);
-        _paint = _commands.nonEmpty();
+        _paint = _commands.nonEmpty() && _commands.nonEmpty();
     }
 }

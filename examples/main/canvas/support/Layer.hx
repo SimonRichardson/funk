@@ -9,13 +9,9 @@ class Layer {
 
     private var _parent : HTMLCanvasElement;
 
-    private var _x : Float;
+    private var _bounds : Bounds;
 
-    private var _y : Float;
-
-    private var _width : Float;
-
-    private var _height : Float;
+    private var _previousBounds : Bounds;
 
     public var parent(get_parent, set_parent) : HTMLCanvasElement;
 
@@ -29,15 +25,25 @@ class Layer {
 
     public function new() {
         _context = new CanvasContext(this);
+        _bounds = new Bounds();
+        _previousBounds = new Bounds();
         _parent = null;
-        _x = 0;
-        _y = 0;
-        _width = 0;
-        _height = 0;
     }
 
     public function context() : CanvasContext {
         return _context;
+    }
+
+    public function rectangle() : Rectangle {
+        return _bounds.toRectangle();
+    }
+
+    public function previousRectangle() : Rectangle {
+        return _previousBounds.toRectangle();
+    }
+
+    private function render() : Void {
+        _context.render();
     }
 
     private function get_parent() : HTMLCanvasElement {
@@ -50,50 +56,54 @@ class Layer {
     }
 
     private function get_x() : Float {
-        return _x;
+        return _bounds.x;
     }
 
     private function set_x(value : Float) : Float {
-        if (_x != value) {
-            _x = value;
-            _context.render();
+        if (_bounds.x != value) {
+            _previousBounds.copy(_bounds);
+            _bounds.x = value;
+            render();
         }
-        return _x;
+        return _bounds.x;
     }
 
     private function get_y() : Float {
-        return _y;
+        return _bounds.y;
     }
 
     private function set_y(value : Float) : Float {
-        if (_y != value) {
-            _y = value;
-            _context.render();
+        if (_bounds.y != value) {
+            _previousBounds.copy(_bounds);
+            _bounds.y = value;
+            render();
         }
-        return _y;
+        return _bounds.y;
     }
 
     private function get_width() : Float {
-        return _width;
+        return _bounds.width;
     }
 
     private function set_width(value : Float) : Float {
-        if (_width != value) {
-            _width = value;
-            _context.render();
+        if (_bounds.width != value) {
+            _previousBounds.copy(_bounds);
+            _bounds.width = value;
+            render();
         }
-        return _width;
+        return _bounds.width;
     }
 
     private function get_height() : Float {
-        return _height;
+        return _bounds.height;
     }
 
     private function set_height(value : Float) : Float {
-        if (_height != value) {
-            _height = value;
-            _context.render();
+        if (_bounds.height != value) {
+            _previousBounds.copy(_bounds);
+            _bounds.height = value;
+            render();
         }
-        return _height;
+        return _bounds.height;
     }
 }

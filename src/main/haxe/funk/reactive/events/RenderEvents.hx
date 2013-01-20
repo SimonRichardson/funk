@@ -32,11 +32,11 @@ class RenderEvents {
         return Events.event(stage, RenderEventTypes.toString(Render));
     }
     #elseif (js)
-    public static function enterFrame(target : EventDispatcher) : Stream<Event> {
+    public static function enterFrame() : Stream<Event> {
         return customEvent(RenderEventTypes.toString(EnterFrame));
     }
 
-    public static function render(target : EventDispatcher) : Stream<Event> {
+    public static function render() : Stream<Event> {
         return customEvent(RenderEventTypes.toString(Render));
     }
 
