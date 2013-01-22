@@ -7,6 +7,7 @@ import massive.munit.TestRunner;
 import suites.ActorsSuite;
 import suites.CollectionsSuite;
 import suites.IocSuite;
+import suites.LoggingSuite;
 import suites.NetSuite;
 import suites.PromiseSuite;
 import suites.ReactiveSuite;
@@ -42,6 +43,7 @@ class TestMain
         suites.push(ActorsSuite);
         suites.push(CollectionsSuite);
         suites.push(IocSuite);
+        suites.push(LoggingSuite);
         suites.push(NetSuite);
         suites.push(PromiseSuite);
         suites.push(ReactiveSuite);

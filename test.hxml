@@ -1,4 +1,10 @@
+-cmd echo "Building Test Suite:"
+
 # js
+--next 
+-cmd echo "\t[Javascript]"
+
+--next
 -js bin/js_test.js
 -main TestMain
 -cp src/main/haxe
@@ -12,6 +18,9 @@
 #-D parallel
 
 # Neko
+--next 
+-cmd echo "\t[Neko]"
+
 --next
 -neko bin/neko_test.n
 -main TestMain
@@ -24,6 +33,9 @@
 #-D parallel
 
 # as3
+--next 
+-cmd echo "\t[Actionscript]"
+
 --next
 -swf bin/as3_test.swf
 -swf-version 9
@@ -36,18 +48,14 @@
 -D test
 #-D parallel
 
-# cpp
-#--next
-#-cpp bin/cpp
-#-main TestMain
-#-cp src/main/haxe
-#-cp src/test/haxe
-#-debug
-#-lib munit
-#-lib hamcrest
-#-D test
-#-D parallel
+--next
+-cmd echo "\nRunning Code Coverage:\n\t[Javascript]\n\t[Actionscript]"
 
 --next
--cmd haxelib run munit test -coverage -nogen -js
-#-cmd haxelib run munit test -nogen
+-cmd haxelib run munit test -coverage -nogen -js -as3
+
+--next
+-cmd echo "\nRunning Tests:\n\t[Neko]"
+
+--next
+-cmd haxelib run munit test -nogen -neko

@@ -1,0 +1,14 @@
+-cmd echo "Compiling funk examples"
+
+# This installs the latest xirsys_std and installs it locally.
+--next
+-cmd curl -L -o xirsys_stdjs.zip https://github.com/SimonRichardson/stdjs/raw/master/xirsys_stdjs.zip | haxelib remove xirsys_stdjs | haxelib test xirsys_stdjs.zip
+
+--next
+-cmd haxe canvas-examples.hxml
+
+--next
+-cmd haxe dom-examples.hxml
+
+--next
+-cmd haxe flash-examples.hxml

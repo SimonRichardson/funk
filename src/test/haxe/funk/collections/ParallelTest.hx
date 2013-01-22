@@ -31,7 +31,7 @@ class ParallelTest {
 	public function setup () {
 		var a = [];
 		for (i in 0...TOTAL) {
-			a.push(i + 1.0);
+			a[i] = i + 1.0;
 		}
 		actual = a.toCollection();
 	}
@@ -236,7 +236,7 @@ class ParallelTest {
 		}, MAX_TIMEOUT), MIN_TIMEOUT);
 	}
 
-	// Fold Left
+	// Fold Right
 
 	@AsyncTest
 	public function when_foldRight__should_foldRight_should_return_4999950000(asyncFactory : AsyncFactory) : Void {
@@ -255,7 +255,7 @@ class ParallelTest {
 	}
 
 	@AsyncTest
-	public function when_foldRight__should_foldLeft_should_return_4999950001(asyncFactory : AsyncFactory) : Void {
+	public function when_foldRight__should_foldRight_should_return_4999950001(asyncFactory : AsyncFactory) : Void {
 		var promise = actual.foldRight(1.0, function (a, b) {
 			return a + b;
 		});
