@@ -8,6 +8,7 @@
 *.js.map
 *.n
 *.swf
+*.zip
 *.log
 *_test.*
 .temp

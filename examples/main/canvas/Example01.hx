@@ -5,6 +5,7 @@ import funk.collections.immutable.extensions.ListsUtil;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
+import support.CanvasPainter;
 import support.Layer;
 import CommonJS;
 import UserAgentContext;
@@ -16,6 +17,8 @@ using support.HtmlWildcards;
 class Example01 {
 
     public function new() {
+        CanvasPainter.init(getCanvas());
+
         // Create a list of 6 layers instances.
         var layers = ListsUtil.fill(6)(Pass.instanceOf(Layer));
 
