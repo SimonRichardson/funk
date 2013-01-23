@@ -36,6 +36,10 @@ class Tuples2 {
 		}
 	}
 
+	public static function zip<T1, T2>(tuple : Tuple2<T1, T2>) : String {
+		return Std.format('${Std.string(_1(tuple))}${Std.string(_2(tuple))}');
+	}
+
 	public static function toArray<T1, T2>(tuple : Tuple2<T1, T2>) : Array<Dynamic> {
 		return Type.enumParameters(tuple);
 	}

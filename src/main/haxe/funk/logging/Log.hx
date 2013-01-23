@@ -1,5 +1,6 @@
 package funk.logging;
 
+import funk.logging.LogLevel;
 import funk.reactive.Stream;
 
 enum Category {
@@ -11,17 +12,17 @@ enum Category {
 
 class Log {
 
-	private static var defaultLogger : Logger;
+	private static var defaultLogger : Logger<Dynamic>;
 
-	public static function init() { 
+	public static function init() {
 		defaultLogger = new Logger(Default);
 	}
 
-	public static function streamIn() : Stream<Dynamic> {
+	public static function streamIn() : Stream<LogLevel<Dynamic>> {
 		return defaultLogger.streamIn();
 	}
 
-	public static function streamOut() : Stream<Dynamic> {
+	public static function streamOut() : Stream<Message<Dynamic>> {
 		return defaultLogger.streamOut();
 	}
 }
