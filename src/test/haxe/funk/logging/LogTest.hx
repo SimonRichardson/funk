@@ -1,11 +1,14 @@
 package funk.logging;
 
+import funk.logging.LogLevel;
 import funk.reactive.Stream;
+import funk.types.Tuple2;
 
 using funk.logging.extensions.Logs;
 using funk.logging.extensions.LogLevels;
 using funk.logging.extensions.Messages;
 using funk.reactive.extensions.Streams;
+using funk.types.extensions.Tuples2;
 using massive.munit.Assert;
 using unit.Asserts;
 
@@ -41,7 +44,8 @@ class LogTest {
 		var actual = "";
 
 		Log.streamOut().foreach(function (value) {
-			actual = value.logLevel().value().zip();
+			var tuple : Tuple2<String, String> = value.logLevel().value();
+			actual = tuple.zip();
 		});
 
 		"Hello".debugWithValue(", world!");
