@@ -1,10 +1,12 @@
 package funk.logging;
 
+import funk.logging.Log;
+
 enum LogLevel<T> {
-    Trace(value : T);
-    Debug(value : T);
-    Info(value : T);
-    Warn(value : T);
-    Error(value : T);
-    Fatal(value : T);
+    Trace(value : LogValue<T>);
+    Debug(value : LogValue<T>);
+    Info(value : LogValue<T>);
+    Warn(value : LogValue<T>);
+    Error(value : LogValue<T>);
+    Fatal(value : LogValue<T>);
 }

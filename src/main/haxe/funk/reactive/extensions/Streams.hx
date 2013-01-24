@@ -14,9 +14,11 @@ import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Option;
+import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.extensions.Options;
 
+using funk.collections.extensions.Collections;
 using funk.collections.extensions.CollectionsUtil;
 using funk.reactive.extensions.Pulses;
 using funk.reactive.extensions.Streams;
@@ -61,9 +63,12 @@ class Streams {
         var stream = new Stream<T2>(cast pulse);
 
         sources.foreach(function(collection){
-            for(source in collection.iterator()) {
-                source.attach(cast stream);
-            }
+            collection.foreach(function (source : Stream<T1>) {
+                switch(source.toOption()) {
+                    case Some(val): val.attach(cast stream);
+                    case None: 
+                }
+            });
         });
 
         return stream;
@@ -262,12 +267,29 @@ class Streams {
         });
     }
 
+    public static function zipAny<T1, T2>(stream0 : Stream<T1>, stream1 : Stream<T2>) : Stream<Tuple2<T1, T2>> {
+        return zipWith(stream0, stream1, function (a, b) {
+            return tuple2(a, b);
+        }, function (t0, t1) {
+            return true;
+        });
+    }
+
     public static function zipWith<T1, T2, R>(  stream0 : Stream<T1>,
                                                 stream1 : Stream<T2>,
-                                                func : Function2<T1, T2, R>
+                                                func : Function2<T1, T2, R>,
+                                                ?guard : Predicate2<Float, Float> = null
                                                 ) : Stream<R> {
         var time = -1.0;
         var value : Option<T1> = None;
+
+        var guarded = if (null == guard) {
+            function (t0, t1) {
+                return t0 == t1;
+            }
+        } else {
+            guard;
+        }
 
         create(function(pulse : Pulse<T1>) : Propagation<T1> {
             time = pulse.time();
@@ -277,7 +299,7 @@ class Streams {
         }, Some(CollectionsUtil.toCollection(stream0)));
 
         return create(function(pulse : Pulse<T2>) : Propagation<R> {
-            return if (time == pulse.time()) {
+            return if (guarded(time, pulse.time())) {
                 Propagate(pulse.withValue(func(value.get(), pulse.value())));
             } else {
                 Negate;

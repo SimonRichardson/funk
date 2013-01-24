@@ -9,26 +9,31 @@ using funk.reactive.extensions.Streams;
 
 class Logger<T> {
 
-	private var _category : Category;
+	private var _tag : Tag;
 
 	private var _streamIn : Stream<LogLevel<T>>;
 
 	private var _streamOut : Stream<Message<T>>;
 
-	public function new(category : Category) {
-		_category = category;
+	public function new(tag : Tag) {
+		_tag = tag;
 
 		_streamIn = Streams.identity(None);
 		_streamOut = Streams.identity(None);
 
-		function (value : LogLevel<T>) {
-			// TODO (Simon) : It should be possible to intercept this and then map the value.
-			_streamOut.dispatch(Message(category, value));
-		}.bind(_streamIn);
+		init();
 	}
 
-	public function category() : Category {
-		return _category;
+	@:overridable
+	private function init() : Void {
+		function (value : LogLevel<T>) {
+			// TODO (Simon) : It should be possible to intercept this and then map the value.
+			streamOut().dispatch(Message(tag(), value));
+		}.bind(streamIn());
+	}
+
+	public function tag() : Tag {
+		return _tag;
 	}
 
 	public function streamIn() : Stream<LogLevel<T>> {

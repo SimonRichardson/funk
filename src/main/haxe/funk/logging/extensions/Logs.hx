@@ -17,10 +17,12 @@ class Logs {
 	}
 
     public static function debug<T>(output : T) : T {
-        return log(Debug(output)).value();
+        log(Debug(Data(output)));
+        return output;
     }
 
-    public static function debugWithValue<T1, T2>(output : T1, value : T2) : T1 {
-        return log(Debug(tuple2(output, value))).value()._1();
+    public static function debugWithValue<T>(output : T, value : String) : T {
+        log(Debug(DataWithValue(output, value)));
+        return output;
     }
 }

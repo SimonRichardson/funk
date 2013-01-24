@@ -3,19 +3,16 @@ package funk.logging;
 import funk.logging.LogLevel;
 import funk.reactive.Stream;
 
-enum Category {
-	Actor;
-	Default;
-	Net;
-	Other(name : String);
-}
-
 class Log {
 
 	private static var defaultLogger : Logger<Dynamic>;
 
 	public static function init() {
-		defaultLogger = new Logger(Default);
+		defaultLogger = new Logger(Tag("Default"));
+	}
+
+	public static function logger() : Logger<Dynamic> {
+		return defaultLogger;
 	}
 
 	public static function streamIn() : Stream<LogLevel<Dynamic>> {
