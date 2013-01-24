@@ -10,7 +10,7 @@ class TraceOutput<T> extends Output<T> {
 	}
 
 	override private function process(message : Message<T>) : Void {
-		// Should produce the output [DEFAULT][DEBUG]
+		// Should produce the output [DEFAULT][DEBUG] message
 		trace(message.toString());
     }
 }
