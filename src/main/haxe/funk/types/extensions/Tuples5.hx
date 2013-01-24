@@ -46,6 +46,11 @@ class Tuples5 {
 		}
 	}
 
+	public static function join<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : String {
+		return Std.format('${Anys.toString(_1(tuple))}${Anys.toString(_2(tuple))}${Anys.toString(_3(tuple))}${Anys.toString(_4(tuple))}${Anys.toString(_5(tuple))}');
+	}
+
+
 	public static function toArray<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : Array<Dynamic> {
 		return Type.enumParameters(tuple);
 	}
@@ -57,9 +62,6 @@ class Tuples5 {
 															?func3 : Function1<T4, String>,
 															?func4 : Function1<T5, String>
 															) : String {
-		return switch (tuple) {
-			case tuple5(t1, t2, t3, t4, t5):
-				Std.format('(${Anys.toString(t1, func0)}, ${Anys.toString(t2, func1)}, ${Anys.toString(t3, func2)}, ${Anys.toString(t4, func3)}, ${Anys.toString(t5, func4)})');
-		}
+		return Std.format('(${Anys.toString(_1(tuple), func0)}, ${Anys.toString(_2(tuple), func1)}, ${Anys.toString(_3(tuple), func2)}, ${Anys.toString(_4(tuple), func3)}, ${Anys.toString(_5(tuple), func4)})');
 	}
 }

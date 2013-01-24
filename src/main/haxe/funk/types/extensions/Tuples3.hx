@@ -35,6 +35,10 @@ class Tuples3 {
 		}
 	}
 
+	public static function join<T1, T2, T3>(tuple : Tuple3<T1, T2, T3>) : String {
+		return Std.format('${Anys.toString(_1(tuple))}${Anys.toString(_2(tuple))}${Anys.toString(_3(tuple))}');
+	}
+
 	public static function toArray<T1, T2, T3>(tuple : Tuple3<T1, T2, T3>) : Array<Dynamic> {
 		return Type.enumParameters(tuple);
 	}
@@ -44,9 +48,6 @@ class Tuples3 {
 													?func1 : Function1<T2, String>,
 													?func2 : Function1<T3, String>
 													) : String {
-		return switch (tuple) {
-			case tuple3(t1, t2, t3):
-				Std.format('(${Anys.toString(t1, func0)}, ${Anys.toString(t2, func1)}, ${Anys.toString(t3, func2)})');
-		}
+		return Std.format('(${Anys.toString(_1(tuple), func0)}, ${Anys.toString(_2(tuple), func1)}, ${Anys.toString(_3(tuple), func2)})');
 	}
 }

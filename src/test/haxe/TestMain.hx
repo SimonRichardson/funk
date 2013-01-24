@@ -48,7 +48,7 @@ class TestMain
         //suites.push(PromiseSuite);
         //suites.push(ReactiveSuite);
         //suites.push(SignalSuite);
-        //suites.push(TypesSuite);
+        suites.push(TypesSuite);
 
         #if MCOVER
             var client = new mcover.coverage.munit.client.MCoverPrintClient();

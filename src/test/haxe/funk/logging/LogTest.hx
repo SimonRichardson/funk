@@ -45,7 +45,7 @@ class LogTest {
 
 		Log.streamOut().foreach(function (value) {
 			var tuple : Tuple2<String, String> = value.logLevel().value();
-			actual = tuple.zip();
+			actual = tuple.join();
 		});
 
 		"Hello".debugWithValue(", world!");

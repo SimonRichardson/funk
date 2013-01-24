@@ -21,13 +21,16 @@ class Tuples1 {
 		}
 	}
 
+	public static function join<T1>(tuple : Tuple1<T1>) : String {
+		return Std.format('${Anys.toString(_1(tuple))}');
+	}
+
+
 	public static function toArray<T1>(tuple : Tuple1<T1>) : Array<Dynamic> {
 		return Type.enumParameters(tuple);
 	}
 
 	public static function toString<T1>(tuple : Tuple1<T1>, ?func0 : Function1<T1, String>) : String {
-		return switch (tuple) {
-			case tuple1(t1): Std.format('(${Anys.toString(t1, func0)})');
-		}
+		return Std.format('(${Anys.toString(_1(tuple), func0)})');
 	}
 }

@@ -13,6 +13,11 @@ using massive.munit.Assert;
 class Tuple2Test {
 
 	@Test
+	public function when_calling_join__should_return_valid_string() : Void {
+		tuple2(1, 'a').join().areEqual('1a');
+	}
+
+	@Test
 	public function when_calling_toString__should_return_valid_string() : Void {
 		tuple2(1, 'a').toString().areEqual('(1, a)');
 	}
