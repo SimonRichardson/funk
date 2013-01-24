@@ -19,7 +19,7 @@ class BehaviourSignal1 {
                                                     Propagations.identity());
 
         signal.add(function(value0 : T1) {
-            behaviour.emit(tuple1(value0));
+            behaviour.dispatch(tuple1(value0));
         });
 
         return behaviour;

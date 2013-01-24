@@ -1,5 +1,9 @@
 package funk.logging;
 
+import funk.reactive.Stream;
+
+using funk.reactive.extensions.Streams;
+
 class Output<T> {
 
     private var _isActive : Bool;

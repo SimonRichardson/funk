@@ -69,7 +69,7 @@ class Stream<T> {
         return removed;
     }
 
-    public function emit(value : T) : Stream<T> {
+    public function dispatch(value : T) : Stream<T> {
         var time = Process.stamp();
         var pulse = Pulse(time, value);
 

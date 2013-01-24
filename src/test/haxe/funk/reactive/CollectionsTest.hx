@@ -39,7 +39,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 		var called = try {
 
-			stream.emitWithDelay(3, 1);
+			stream.dispatchWithDelay(3, 1);
 
 			advanceProcessBy(1);
 
@@ -56,7 +56,7 @@ class CollectionsTest extends ProcessAsyncBase {
 		var stream = ColUtil.toStream([1, 2].toCollection(), Behaviours.constant(1));
 		var values = stream.values();
 
-		stream.emitWithDelay(3, 1);
+		stream.dispatchWithDelay(3, 1);
 
 		advanceProcessBy(1);
 

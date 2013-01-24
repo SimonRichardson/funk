@@ -44,7 +44,7 @@ class StreamTest extends ProcessAsyncBase {
 		});
 
     	for(item in [1, 2, 3, 4, 5, 6, 7]) {
-        	stream.emit(item);
+        	stream.dispatch(item);
     	}
 
     	counter.areEqual(7);
@@ -55,7 +55,7 @@ class StreamTest extends ProcessAsyncBase {
 		var values = stream.values();
 
         for(item in [1, 2, 3, 4, 5]) {
-        	stream.emit(item);
+        	stream.dispatch(item);
         }
 
         values.areIterablesEqual([1, 2, 3, 4, 5]);
@@ -67,7 +67,7 @@ class StreamTest extends ProcessAsyncBase {
 		var values = stream.constant(total).values();
 
         for(index in 0...total) {
-        	stream.emit(index);
+        	stream.dispatch(index);
         }
 
         values.areIterablesEqual([3, 3, 3]);
@@ -84,7 +84,7 @@ class StreamTest extends ProcessAsyncBase {
 		var value = 1.1;
 
 		var values = stream.values();
-		stream.emit(value);
+		stream.dispatch(value);
 		values.last().areEqual(Some(value));
 	}
 
@@ -93,7 +93,7 @@ class StreamTest extends ProcessAsyncBase {
 		var value = "string";
 
 		var values = stream.values();
-		stream.emit(value);
+		stream.dispatch(value);
 		values.last().areEqual(Some(value));
 	}
 
@@ -102,7 +102,7 @@ class StreamTest extends ProcessAsyncBase {
 		var value = {};
 
 		var values = stream.values();
-		stream.emit(value);
+		stream.dispatch(value);
 		values.last().areEqual(Some(value));
 	}
 
@@ -121,7 +121,7 @@ class StreamTest extends ProcessAsyncBase {
 		var values = mapped.values();
 
         for(item in [1, 2, 3, 4, 5, 6, 7]) {
-        	stream.emit(item);
+        	stream.dispatch(item);
         }
 
         values.areIterablesEqual([2, 4, 6, 8, 10, 12, 14]);
@@ -143,8 +143,8 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = bound.values();
 
-		stream.emit(0);
-		stream0.emit(123);
+		stream.dispatch(0);
+		stream0.dispatch(123);
 
 		values.last().areEqual(Some(123));
 	}
@@ -165,8 +165,8 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = bound.values();
 
-		stream.emit(2);
-		stream2.emit(789);
+		stream.dispatch(2);
+		stream2.dispatch(789);
 
 		values.last().areEqual(Some(789));
 	}
@@ -187,7 +187,7 @@ class StreamTest extends ProcessAsyncBase {
 
 		var values = bound.values();
 
-		stream.emit(0);
+		stream.dispatch(0);
 
 		values.size().areEqual(0);
 	}
@@ -201,7 +201,7 @@ class StreamTest extends ProcessAsyncBase {
 		var values = zipped.values();
 
         for(item in [1, 2, 3, 4, 5, 6, 7]) {
-        	stream.emit(item);
+        	stream.dispatch(item);
         }
 
         values.areIterablesEqual([1, 4, 9, 16, 25, 36, 49]);
@@ -214,7 +214,7 @@ class StreamTest extends ProcessAsyncBase {
 		var values = shifted.values();
 
         for(item in [1, 2, 3, 4, 5, 6, 7]) {
-        	stream.emit(item);
+        	stream.dispatch(item);
         }
 
         values.areIterablesEqual([1, 2, 3, 4, 5]);
@@ -227,7 +227,7 @@ class StreamTest extends ProcessAsyncBase {
 		var values = shifted.values();
 
         for(item in [1, 2, 3, 4, 5, 6, 7]) {
-        	stream.emit(item);
+        	stream.dispatch(item);
         }
 
         values.size().areEqual(5);
@@ -240,7 +240,7 @@ class StreamTest extends ProcessAsyncBase {
 		var values = shifted.values();
 
         for(item in [1, 2, 3, 4, 5, 6, 7]) {
-        	stream.emit(item);
+        	stream.dispatch(item);
         }
 
         values.areIterablesEqual([1, 2]);
@@ -253,7 +253,7 @@ class StreamTest extends ProcessAsyncBase {
 		var values = shifted.values();
 
         for(item in [1, 2, 3, 4, 5, 6, 7]) {
-        	stream.emit(item);
+        	stream.dispatch(item);
         }
 
         values.size().areEqual(2);
@@ -264,7 +264,7 @@ class StreamTest extends ProcessAsyncBase {
 		var calmed = stream.calm(Behaviours.constant(2)).values();
 
 		for(i in 0...4) {
-			stream.emit(i);
+			stream.dispatch(i);
 		}
 
 		advanceProcessBy(1, false);
@@ -277,7 +277,7 @@ class StreamTest extends ProcessAsyncBase {
 		var calmed = stream.calm(Behaviours.constant(1)).values();
 
 		for(i in 0...4) {
-			stream.emit(i);
+			stream.dispatch(i);
 		}
 
 		advanceProcessBy(2, false);
@@ -290,13 +290,13 @@ class StreamTest extends ProcessAsyncBase {
 		var calmed = stream.calm(Behaviours.constant(1)).values();
 
 		for(i in 0...4) {
-			stream.emit(i);
+			stream.dispatch(i);
 		}
 
 		advanceProcessBy(2, false);
 
 		for(i in 4...8) {
-			stream.emit(i);
+			stream.dispatch(i);
 		}
 
 		advanceProcessBy(2, false);
@@ -309,13 +309,13 @@ class StreamTest extends ProcessAsyncBase {
 		var calmed = stream.calm(Behaviours.constant(1)).values();
 
 		for(i in 0...4) {
-			stream.emit(i);
+			stream.dispatch(i);
 		}
 
 		advanceProcessBy(2, false);
 
 		for(i in 4...8) {
-			stream.emitWithDelay(i, 2);
+			stream.dispatchWithDelay(i, 2);
 		}
 
 		calmed.areIterablesEqual([3]);
@@ -326,13 +326,13 @@ class StreamTest extends ProcessAsyncBase {
 		var calmed = stream.calm(Behaviours.constant(1)).values();
 
 		for(i in 0...4) {
-			stream.emit(i);
+			stream.dispatch(i);
 		}
 
 		advanceProcessBy(2, false);
 
 		for(i in 4...8) {
-			stream.emitWithDelay(i, 2);
+			stream.dispatchWithDelay(i, 2);
 			advanceProcessBy(2, false);
 		}
 

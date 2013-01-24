@@ -51,7 +51,7 @@ class RenderEvents {
             var event = document.createEvent("Event");
             event.initEvent(type, false, false);
 
-            stream.emit(event);
+            stream.dispatch(event);
 
             if (!finished) {
                 win.requestAnimationFrame(tick);

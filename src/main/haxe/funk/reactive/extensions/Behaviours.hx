@@ -22,8 +22,8 @@ class Behaviours {
 		return Streams.identity(None).startsWith(value);
 	}
 
-	public static function emit<T>(behaviour : Behaviour<T>, value : T) : Void {
-		behaviour.stream().emit(value);
+	public static function dispatch<T>(behaviour : Behaviour<T>, value : T) : Void {
+		behaviour.stream().dispatch(value);
 	}
 
 	public static function lift<T, R>(behaviour : Behaviour<T>, func : Function1<T, R>) : Behaviour<R> {

@@ -39,7 +39,7 @@ class Deferred<T> {
 		_values = _stateStream.values();
 
 		// Set-up for the state
-		_stateStream.emit(Pending);
+		_stateStream.dispatch(Pending);
 	}
 
 	public function attempt() : Attempt<T> {
@@ -76,7 +76,7 @@ class Deferred<T> {
 			case Some(state):
 				switch(state) {
 					case Pending:
-						_progressStream.emit(value);
+						_progressStream.dispatch(value);
 					default:
 						throw Errors.IllegalOperationError('Invalid state');
 				}
@@ -90,7 +90,7 @@ class Deferred<T> {
 			case Some(state):
 				switch(state) {
 					case Pending:
-						_stateStream.emit(Resolved(Some(value)));
+						_stateStream.dispatch(Resolved(Some(value)));
 					default:
 						throw Errors.IllegalOperationError('Invalid state');
 				}
@@ -104,7 +104,7 @@ class Deferred<T> {
 			case Some(state):
 				switch(state) {
 					case Pending:
-						_stateStream.emit(Rejected(error));
+						_stateStream.dispatch(Rejected(error));
 					default:
 						throw Errors.IllegalOperationError('Invalid state');
 				}
@@ -114,7 +114,7 @@ class Deferred<T> {
 	}
 
 	public function abort() : Void {
-		_stateStream.emit(Aborted);
+		_stateStream.dispatch(Aborted);
 	}
 
 	public function promise() : Promise<T> {

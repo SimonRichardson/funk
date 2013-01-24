@@ -39,7 +39,7 @@ class Streams {
 
             task = Process.stop(task);
             task = Process.start(function() {
-                stream.emit(pulse.value());
+                stream.dispatch(pulse.value());
             }, behaviour.value());
 
             return Negate;
@@ -73,7 +73,7 @@ class Streams {
         var out : Stream<T> = identity(None);
 
         create(function(pulse : Pulse<T>) : Propagation<T> {
-            out.emitWithDelay(pulse.value(), behaviour.value());
+            out.dispatchWithDelay(pulse.value(), behaviour.value());
 
             return Negate;
         }, Some(CollectionsUtil.toCollection(stream)));
@@ -81,9 +81,9 @@ class Streams {
         return out;
     }
 
-    public static function emitWithDelay<T>(stream : Stream<T>, value : T, delay : Int) : Stream<T> {
+    public static function dispatchWithDelay<T>(stream : Stream<T>, value : T, delay : Int) : Stream<T> {
         Process.start(function() {
-            stream.emit(value);
+            stream.dispatch(value);
         }, delay);
 
         return stream;
@@ -150,7 +150,7 @@ class Streams {
             }
         }, None);
 
-        stream.emit(value);
+        stream.dispatch(value);
 
         return stream;
     }
@@ -226,7 +226,7 @@ class Streams {
 
         var pulser : Function0<Void> = null;
         pulser = function() {
-            stream.emit(Process.stamp());
+            stream.dispatch(Process.stamp());
 
             task = Process.stop(task);
 

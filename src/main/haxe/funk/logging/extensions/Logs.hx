@@ -12,7 +12,7 @@ using funk.types.extensions.Tuples2;
 class Logs {
 
 	public static function log<T>(output : LogLevel<T>) : LogLevel<T> {
-		Log.streamIn().emit(output);
+		Log.streamIn().dispatch(output);
 		return output;
 	}
 

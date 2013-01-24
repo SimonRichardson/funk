@@ -18,7 +18,7 @@ class BehaviourSignal0 {
                                                         tuple1(null),
                                                         Propagations.identity());
         signal.add(function() {
-            behaviour.emit(tuple1(Unit));
+            behaviour.dispatch(tuple1(Unit));
         });
         return behaviour;
     }

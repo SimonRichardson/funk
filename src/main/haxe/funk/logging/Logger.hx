@@ -23,8 +23,12 @@ class Logger<T> {
 
 		function (value : LogLevel<T>) {
 			// TODO (Simon) : It should be possible to intercept this and then map the value.
-			_streamOut.emit(Message(category, value));
+			_streamOut.dispatch(Message(category, value));
 		}.bind(_streamIn);
+	}
+
+	public function category() : Category {
+		return _category;
 	}
 
 	public function streamIn() : Stream<LogLevel<T>> {

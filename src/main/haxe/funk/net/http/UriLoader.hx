@@ -58,14 +58,14 @@ class UriLoader {
         });
 
         _statusStream = Streams.identity(None);
-        _statusStream.emit(None);
+        _statusStream.dispatch(None);
 
         _loader.onStatus = function (status : Int) {
             if (status == 0) {
                 // http://en.wikipedia.org/wiki/Same_origin_policy
                 _deferred.reject(HttpError(Std.format("SecurityError: 'Same Origin Policy' at '${_request.uri()}'")));
             } else {
-                _statusStream.emit(status.toHttpStatusCode().toOption());
+                _statusStream.dispatch(status.toHttpStatusCode().toOption());
             }
         };
         _loader.onData = function (data : String) {

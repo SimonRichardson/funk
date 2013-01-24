@@ -23,7 +23,7 @@ class Events {
         var stream = Streams.identity(None);
 
         var method = function (event) {
-            stream.emit(event);
+            stream.dispatch(event);
         };
 
         target.addEventListener(type, method, useCapture);

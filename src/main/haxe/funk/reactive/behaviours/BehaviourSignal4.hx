@@ -20,7 +20,7 @@ class BehaviourSignal4 {
         							     				        Propagations.identity());
 
         signal.add(function(value0 : T1, value1 : T2, value2 : T3, value3 : T4) {
-            behaviour.emit(tuple4(value0, value1, value2, value3));
+            behaviour.dispatch(tuple4(value0, value1, value2, value3));
         });
 
         return behaviour;

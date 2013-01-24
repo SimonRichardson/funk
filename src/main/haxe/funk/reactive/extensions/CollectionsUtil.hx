@@ -50,7 +50,7 @@ class CollectionsUtil {
 		pulser = function() {
 			var next = iterator.next();
 
-			stream.emit(next);
+			stream.dispatch(next);
 
 			task = Process.stop(task);
 
