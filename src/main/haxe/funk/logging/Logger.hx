@@ -5,9 +5,12 @@ import funk.logging.LogLevel;
 import funk.reactive.Stream;
 
 using funk.collections.extensions.CollectionsUtil;
+using funk.logging.extensions.LogLevels;
 using funk.reactive.extensions.Streams;
 
 class Logger<T> {
+
+	public var logLevel(get_logLevel, set_logLevel) : Int;
 
 	private var _tag : Tag;
 
@@ -15,8 +18,11 @@ class Logger<T> {
 
 	private var _streamOut : Stream<Message<T>>;
 
+	private var _logLevel : Int;
+
 	public function new(tag : Tag) {
 		_tag = tag;
+		_logLevel = 1;
 
 		_streamIn = Streams.identity(None);
 		_streamOut = Streams.identity(None);
@@ -28,7 +34,9 @@ class Logger<T> {
 	private function init() : Void {
 		function (value : LogLevel<T>) {
 			// TODO (Simon) : It should be possible to intercept this and then map the value.
-			streamOut().dispatch(Message(tag(), value));
+			if (value.bit() >= logLevel) {
+				streamOut().dispatch(Message(tag(), value));
+			}
 		}.bind(streamIn());
 	}
 
@@ -42,5 +50,14 @@ class Logger<T> {
 
 	public function streamOut() : Stream<Message<T>> {
 		return _streamOut;
+	}
+
+	private function get_logLevel() : Int {
+		return _logLevel;
+	}
+
+	private function set_logLevel(value : Int) : Int {
+		_logLevel = value;
+		return _logLevel;
 	}
 }

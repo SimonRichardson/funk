@@ -56,7 +56,7 @@ class LogTest {
 	}
 
 	@Test
-	public function should_creating_two_loggers() {
+	public function should_creating_two_loggers_zipped_together__should_ouput_to_one_log() {
 		var logger0 = new Logger(Tag("Logger0"));
 		var logger1 = new Logger(Tag("Logger1"));
 
@@ -70,7 +70,7 @@ class LogTest {
 
 			actual = value.data().toString();
 		});
-		
+
 		logger0.streamIn().dispatch(Debug(Data(1)));
 		logger1.streamIn().dispatch(Debug(Data(2)));
 
