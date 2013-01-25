@@ -85,113 +85,136 @@ private class ListImplIterator<T> {
 
 class Lists {
 
-	public static function contains<T>(list : List<T>, item : T, ?func : Predicate2<T, T>) : Bool {
+	inline public static function contains<T>(list : List<T>, item : T, ?func : Predicate2<T, T>) : Bool {
 		var eq = function(a, b) {
 			return null != func ? func(a, b) : a == b;
 		};
 
-		while(nonEmpty(list)) {
-			if (eq(head(list), item)) {
-				return true;
+		var result = false;
+		var p = list;
+		while(nonEmpty(p)) {
+			if (eq(head(p), item)) {
+				result = true;
+				break;
 			}
-			list = tail(list);
+			p = tail(p);
 		}
-		return false;
+		return result;
 	}
 
-	public static function count<T>(list : List<T>, func : Predicate1<T>) : Int {
+	inline public static function count<T>(list : List<T>, func : Predicate1<T>) : Int {
 		var counter = 0;
-		while (nonEmpty(list)) {
-			if (func(head(list))) {
+
+		var p = list;
+		while (nonEmpty(p)) {
+			if (func(head(p))) {
 				counter++;
 			}
-			list = tail(list);
+			p = tail(p);
 		}
 		return counter;
 	}
 
-	public static function dropLeft<T>(list : List<T>, amount : Int) : List<T> {
+	inline public static function dropLeft<T>(list : List<T>, amount : Int) : List<T> {
 		if (amount < 0) {
 			Funk.error(Errors.ArgumentError('Amount must be positive'));
 		}
+
+		var p = list;
+		var result = p;
 
 		if (amount > 0) {
 			for (i in 0...amount) {
-				if (isEmpty(list)) {
-					return Nil;
+				if (isEmpty(p)) {
+					result = Nil;
+					break;
 				}
-				list = tail(list);
+				p = tail(p);
+				result = p;
 			}
 		}
 
-		return list;
+		return result;
 	}
 
-	public static function dropRight<T>(list : List<T>, amount : Int) : List<T> {
-		if (amount < 0) {
+	inline public static function dropRight<T>(list : List<T>, amount : Int) : List<T> {
+		var p = list;
+
+		return if (amount < 0) {
 			Funk.error(Errors.ArgumentError('Amount must be positive'));
 		} else if (amount == 0) {
-			return list;
+			p;
+		} else {
+
+			amount = size(p) - amount;
+			if (amount <= 0) {
+				Nil;
+			} else {
+
+				var stack = Nil;
+				for (i in 0...amount) {
+					var h = head(p);
+					p = tail(p);
+					stack = prepend(stack, h);
+				}
+
+				reverse(stack);
+			}
+		}
+	}
+
+	inline public static function dropWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+		var p = list;
+		var result = Nil;
+		while (nonEmpty(p)) {
+			if (!func(head(p))) {
+				result = p;
+				break;
+			}
+
+			p = tail(p);
 		}
 
-		amount = size(list) - amount;
-		if (amount <= 0) {
-			return Nil;
+		return result;
+	}
+
+	inline public static function exists<T>(list : List<T>, func : Predicate1<T>) : Bool {
+		var p = list;
+		var result = false;
+		while (nonEmpty(p)) {
+			if (func(head(p))) {
+				result = true;
+				break;
+			}
+			p = tail(p);
 		}
 
+		return result;
+	}
+
+	inline public static function flatMap<T1, T2>(list : List<T1>, func : Function1<T1, List<T2>>) : List<T2> {
 		var stack = Nil;
-		for (i in 0...amount) {
-			var h = head(list);
-			list = tail(list);
-			stack = prepend(stack, h);
+		var p = list;
+		while (nonEmpty(p)) {
+			stack = prependAll(stack, func(head(p)));
+			p = tail(p);
 		}
-
 		return reverse(stack);
 	}
 
-	public static function dropWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
-		while (nonEmpty(list)) {
-			if (!func(head(list))) {
-				return list;
-			}
-
-			list = tail(list);
-		}
-
-		return Nil;
-	}
-
-	public static function exists<T>(list : List<T>, func : Predicate1<T>) : Bool {
-		while (nonEmpty(list)) {
-			if (func(head(list))) {
-				return true;
-			}
-			list = tail(list);
-		}
-
-		return false;
-	}
-
-	public static function flatMap<T>(list : List<T>, func : Function1<T, List<T>>) : List<T> {
-		var stack = Nil;
-		while (nonEmpty(list)) {
-			stack = prependAll(stack, func(head(list)));
-			list = tail(list);
-		}
-		return reverse(stack);
-	}
-
-	public static function flatten<T>(list : List<T>) : List<T> {
-		return flatMap(list, function(x) {
+	inline public static function flatten<T1, T2>(list : List<T1>) : List<T2> {
+		var p = list;
+		return flatMap(p, function(x) {
 			return ListsUtil.toList(x);
 		});
 	}
 
-	public static function filter<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+	inline public static function filter<T>(list : List<T>, func : Predicate1<T>) : List<T> {
 		var stack = Nil;
 		var allFiltered = true;
 
 		var p = list;
+		var all = list;
 		while (nonEmpty(p)) {
 			var h = head(p);
 
@@ -204,18 +227,19 @@ class Lists {
 			}
 		}
 
-		if (allFiltered) {
-			return list;
+		return if (allFiltered) {
+			all;
+		} else {
+			reverse(stack);
 		}
-
-		return reverse(stack);
 	}
 
-	public static function filterNot<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+	inline public static function filterNot<T>(list : List<T>, func : Predicate1<T>) : List<T> {
 		var stack = Nil;
 		var allFiltered = true;
 
 		var p = list;
+		var all = list;
 		while (nonEmpty(p)) {
 			var h = head(p);
 
@@ -228,229 +252,265 @@ class Lists {
 			}
 		}
 
-		if (allFiltered) {
-			return list;
+		return if (allFiltered) {
+			all;
+		} else {
+			reverse(stack);
 		}
-
-		return reverse(stack);
 	}
 
-	public static function find<T>(list : List<T>, func : Predicate1<T>) : Option<T> {
-		while (nonEmpty(list)) {
-			if (func(head(list))) {
-				return headOption(list);
+	inline public static function find<T>(list : List<T>, func : Predicate1<T>) : Option<T> {
+		var result = None;
+		var p = list;
+		while (nonEmpty(p)) {
+			if (func(head(p))) {
+				result = headOption(p);
+				break;
 			}
-			list = tail(list);
+			p = tail(p);
 		}
-		return None;
+		return result;
 	}
 
-	public static function findIndexOf<T>(list : List<T>, func : Predicate1<T>) : Int {
+	inline public static function findIndexOf<T>(list : List<T>, func : Predicate1<T>) : Int {
 		var index = 0;
-		while (nonEmpty(list)) {
-			if (func(head(list))) {
-				return index;
+		var p = list;
+		var result = -1;
+		while (nonEmpty(p)) {
+			if (func(head(p))) {
+				result = index;
+				break;
 			}
 			index++;
-			list = tail(list);
+			p = tail(p);
 		}
-		return -1;
+		return result;
 	}
 
-	public static function foldLeft<T>(list : List<T>, value : T, func : Function2<T, T, T>) : Option<T> {
-		while (nonEmpty(list)) {
-			value = func(value, head(list));
-			list = tail(list);
+	inline public static function foldLeft<T>(list : List<T>, value : T, func : Function2<T, T, T>) : Option<T> {
+		var p = list;
+		while (nonEmpty(p)) {
+			value = func(value, head(p));
+			p = tail(p);
 		}
 		return Some(value);
 	}
 
-	public static function foldRight<T>(list : List<T>, value : T, func : Function2<T, T, T>) : Option<T> {
-		list = reverse(list);
-		while (nonEmpty(list)) {
-			value = func(value, head(list));
-			list = tail(list);
+	inline public static function foldRight<T>(list : List<T>, value : T, func : Function2<T, T, T>) : Option<T> {
+		var p = list;
+		p = reverse(p);
+		while (nonEmpty(p)) {
+			value = func(value, head(p));
+			p = tail(p);
 		}
 		return Some(value);
 	}
 
-	public static function forall<T>(list : List<T>, func : Predicate1<T>) : Bool {
-		while (nonEmpty(list)) {
-			if (!func(head(list))) {
-				return false;
+	inline public static function forall<T>(list : List<T>, func : Predicate1<T>) : Bool {
+		var p = list;
+		var result = true;
+		while (nonEmpty(p)) {
+			if (!func(head(p))) {
+				result = false;
+				break;
 			}
-			list = tail(list);
+			p = tail(p);
 		}
-		return true;
+		return result;
 	}
 
-	public static function foreach<T>(list : List<T>, func : Function1<T, Void>) : Void {
-		while (nonEmpty(list)) {
-			func(head(list));
-			list = tail(list);
+	inline public static function foreach<T>(list : List<T>, func : Function1<T, Void>) : Void {
+		var p = list;
+		while (nonEmpty(p)) {
+			func(head(p));
+			p = tail(p);
 		}
 	}
 
-	public static function get<T>(list : List<T>, index : Int) : Option<T> {
-		if (index < 0 || index > size(list)) {
-			return None;
-		}
+	inline public static function get<T>(list : List<T>, index : Int) : Option<T> {
+		var p = list;
+		return if (index < 0 || index > size(p)) {
+			None;
+		} else {
 
-		while (nonEmpty(list)) {
-			if (index == 0) {
-				return headOption(list);
+			var result = None;
+			while (nonEmpty(p)) {
+				if (index == 0) {
+					result = headOption(p);
+					break;
+				}
+
+				index--;
+				p = tail(p);
 			}
 
-			index--;
-			list = tail(list);
+			result;
 		}
-
-		return None;
 	}
 
-	public static function indexOf<T>(list : List<T>, value : T) : Int {
+	inline public static function indexOf<T>(list : List<T>, value : T) : Int {
 		var index = 0;
-		while (nonEmpty(list)) {
-			if (Anys.equals(head(list), value)) {
-				return index;
+		var p = list;
+		var result = -1;
+		while (nonEmpty(p)) {
+			if (Anys.equals(head(p), value)) {
+				result = index;
+				break;
 			}
 			index++;
-			list = tail(list);
+			p = tail(p);
 		}
-		return -1;
+		return result;
 	}
 
-	public static function map<T, E>(list : List<T>, func : Function1<T, E>) : List<E> {
+	inline public static function map<T, E>(list : List<T>, func : Function1<T, E>) : List<E> {
 		var stack = Nil;
-		while (nonEmpty(list)) {
-			stack = prepend(stack, func(head(list)));
-			list = tail(list);
+		var p = list;
+		while (nonEmpty(p)) {
+			stack = prepend(stack, func(head(p)));
+			p = tail(p);
 		}
 		return reverse(stack);
 	}
 
-	public static function partition<T>(list : List<T>, func : Predicate1<T>) : Tuple2<List<T>, List<T>> {
+	inline public static function partition<T>(list : List<T>, func : Predicate1<T>) : Tuple2<List<T>, List<T>> {
 		var left = Nil;
 		var right = Nil;
 
-		while (nonEmpty(list)) {
-			var h = head(list);
+		var p = list;
+		while (nonEmpty(p)) {
+			var h = head(p);
 			if (func(h)) {
 				left = prepend(left, h);
 			} else {
 				right = prepend(right, h);
 			}
-			list = tail(list);
+			p = tail(p);
 		}
 
 		return tuple2(reverse(left), reverse(right));
 	}
 
-	public static function reduceLeft<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
-		if (size(list) < 1) {
-			return None;
-		}
+	inline public static function reduceLeft<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
+		var p = list;
+		return if (size(p) < 1) {
+			None;
+		} else {
 
-		var value = head(list);
-		list = tail(list);
-		while (nonEmpty(list)) {
-			value = func(value, head(list));
-			list = tail(list);
+			var value = head(p);
+			p = tail(p);
+			while (nonEmpty(p)) {
+				value = func(value, head(p));
+				p = tail(p);
+			}
+
+			Some(value);
 		}
-		return Some(value);
 	}
 
-	public static function reduceRight<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
-		if (size(list) < 1) {
-			return None;
-		}
+	inline public static function reduceRight<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
+		var p = list;
+		return if (size(p) < 1) {
+			None;
+		} else {
 
-		list = reverse(list);
-		var value = head(list);
-		list = tail(list);
-		while (nonEmpty(list)) {
-			value = func(value, head(list));
-			list = tail(list);
+			p = reverse(p);
+			var value = head(p);
+			p = tail(p);
+			while (nonEmpty(p)) {
+				value = func(value, head(p));
+				p = tail(p);
+			}
+			
+			Some(value);
 		}
-		return Some(value);
 	}
 
-	public static function takeLeft<T>(list : List<T>, amount : Int) : List<T> {
-		if (amount < 0) {
+	inline public static function takeLeft<T>(list : List<T>, amount : Int) : List<T> {
+		var p = list;
+		return if (amount < 0) {
 			Funk.error(Errors.ArgumentError('Amount must be positive'));
 		} else if (amount == 0) {
-			return Nil;
-		} else if (amount > size(list)) {
-			return list;
-		}
+			Nil;
+		} else if (amount > size(p)) {
+			p;
+		} else {
 
-		var stack = Nil;
-		for (i in 0...amount) {
-			stack = prepend(stack, head(list));
-			list = tail(list);
-		}
+			var stack = Nil;
+			for (i in 0...amount) {
+				stack = prepend(stack, head(p));
+				p = tail(p);
+			}
 
-		return reverse(stack);
+			reverse(stack);
+		}
 	}
 
-	public static function takeRight<T>(list : List<T>, amount : Int) : List<T> {
-		if (amount < 0) {
+	inline public static function takeRight<T>(list : List<T>, amount : Int) : List<T> {
+		var p = list;
+		return if (amount < 0) {
 			Funk.error(Errors.ArgumentError('Amount must be positive'));
 		} else if (amount == 0) {
-			return Nil;
-		} else if (amount > size(list)) {
-			return list;
+			Nil;
+		} else if (amount > size(p)) {
+			p;
+		} else {
+
+			p = reverse(p);
+
+			var stack = Nil;
+			for (i in 0...amount) {
+				stack = prepend(stack, head(p));
+				p = tail(p);
+			}
+
+			stack;
 		}
-
-		list = reverse(list);
-
-		var stack = Nil;
-		for (i in 0...amount) {
-			stack = prepend(stack, head(list));
-			list = tail(list);
-		}
-
-		return stack;
 	}
 
-	public static function takeWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+	inline public static function takeWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
 		var stack = Nil;
-		while (nonEmpty(list)) {
-			var h = head(list);
+		var p = list;
+		while (nonEmpty(p)) {
+			var h = head(p);
 			if (func(h)) {
 				stack = prepend(stack, h);
 			}
-			list = tail(list);
+			p = tail(p);
 		}
 		return reverse(stack);
 	}
 
-	public static function zip<T1, T2>(list : List<T1>, other : List<T2>) : List<Tuple2<T1, T2>> {
-		var amount = Std.int(Math.min(size(list), size(other)));
+	inline public static function zip<T1, T2>(list : List<T1>, other : List<T2>) : List<Tuple2<T1, T2>> {
+		var p = list;
+		var amount = Std.int(Math.min(size(p), size(other)));
 
-		if (amount <= 0) {
-			return Nil;
+		return if (amount <= 0) {
+			Nil;
+		} else {
+
+			var stack = Nil;
+			for (i in 0...amount) {
+				stack = prepend(stack, tuple2(head(p), head(other)));
+				p = tail(p);
+				other = tail(other);
+			}
+
+			reverse(stack);
 		}
-
-		var stack = Nil;
-		for (i in 0...amount) {
-			stack = prepend(stack, tuple2(head(list), head(other)));
-			list = tail(list);
-			other = tail(other);
-		}
-
-		return reverse(stack);
 	}
 
 
-	public static function append<T>(list : List<T>, item : T) : List<T> {
-		return appendAll(list, Cons(item, Nil));
+	inline public static function append<T>(list : List<T>, item : T) : List<T> {
+		var p = list;
+		return appendAll(p, Cons(item, Nil));
 	}
 
-	public static function appendAll<T>(list : List<T>, items : List<T>) : List<T> {
+	inline public static function appendAll<T>(list : List<T>, items : List<T>) : List<T> {
 		var result = items;
+		var p = list;
 
-		var stack = reverse(list);
+		var stack = reverse(p);
 		while(nonEmpty(stack)) {
 			result = Cons(head(stack), result);
 			stack = tail(stack);
@@ -459,20 +519,24 @@ class Lists {
 		return result;
 	}
 
-	public static function appendIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
-		return appendAll(list, iterator.toList());
+	inline public static function appendIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
+		var p = list;
+		return appendAll(p, iterator.toList());
 	}
 
-	public static function appendIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
-		return appendIterator(list, iterable.iterator());
+	inline public static function appendIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
+		var p = list;
+		return appendIterator(p, iterable.iterator());
 	}
 
-	public static function prepend<T>(list : List<T>, item : T) : List<T> {
-		return Cons(item, list);
+	inline public static function prepend<T>(list : List<T>, item : T) : List<T> {
+		var p = list;
+		return Cons(item, p);
 	}
 
-	public static function prependAll<T>(list : List<T>, items : List<T>) : List<T> {
-		var result = list;
+	inline public static function prependAll<T>(list : List<T>, items : List<T>) : List<T> {
+		var p = list;
+		var result = p;
 
 		while(nonEmpty(items)) {
 			result = Cons(head(items), result);
@@ -482,82 +546,91 @@ class Lists {
 		return result;
 	}
 
-	public static function prependIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
-		return prependAll(list, iterator.toList());
+	inline public static function prependIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
+		var p = list;
+		return prependAll(p, iterator.toList());
 	}
 
-	public static function prependIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
-		return prependIterator(list, iterable.iterator());
+	inline public static function prependIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
+		var p = list;
+		return prependIterator(p, iterable.iterator());
 	}
 
-	public static function head<T>(list : List<T>) : T {
-		return switch(list) {
+	inline public static function head<T>(list : List<T>) : T {
+		var p = list;
+		return switch(p) {
 			case Nil: null;
 			case Cons(head, _): head;
 		}
 	}
 
-	public static function headOption<T>(list : List<T>) : Option<T> {
-		return if (null == list) {
+	inline public static function headOption<T>(list : List<T>) : Option<T> {
+		var p = list;
+		return if (null == p) {
 			None;
 		} else {
-			switch(list) {
+			switch(p) {
 				case Nil: None;
 				case Cons(head, _): Some(head);
 			}
 		}
 	}
 
-	public static function tail<T>(list : List<T>) : List<T> {
-		return if (null == list) {
+	inline public static function tail<T>(list : List<T>) : List<T> {
+		var p = list;
+		return if (null == p) {
 			null;
 		} else {
-			switch(list) {
+			switch(p) {
 				case Nil: null;
 				case Cons(_, tail): tail;
 			}
 		}
 	}
 
-	public static function tailOption<T>(list : List<T>) : Option<List<T>> {
-		return if (null == list) {
+	inline public static function tailOption<T>(list : List<T>) : Option<List<T>> {
+		var p = list;
+		return if (null == p) {
 			None;
 		} else {
-			switch(list) {
+			switch(p) {
 				case Nil: None;
 				case Cons(_, tail): Some(tail);
 			}
 		}
 	}
 
-	public static function reverse<T>(list : List<T>) : List<T> {
+	inline public static function reverse<T>(list : List<T>) : List<T> {
+		var p = list;
 		var stack = Nil;
 		var valid = true;
 		while(valid) {
-			switch(list) {
+			switch(p) {
 				case Nil:
 					valid = false;
 				case Cons(head, tail):
 					stack = Cons(head, stack);
-					list = tail;
+					p = tail;
 			}
 		}
 		return stack;
 	}
 
-	public static function size<T>(list : List<T>) : Int {
+	inline public static function size<T>(list : List<T>) : Int {
 		var count = 0;
 
-		while(nonEmpty(list)) {
+		var p = list;
+		while(nonEmpty(p)) {
 			count++;
-			list = tail(list);
+			p = tail(p);
 		}
 
 		return count;
 	}
 
-	public static function indices<T>(list : List<T>) : List<Int> {
-		var n = size(list);
+	inline public static function indices<T>(list : List<T>) : List<Int> {
+		var p = list;
+		var n = size(p);
 		var stack = Nil;
 		while(--n > -1) {
 			stack = prepend(stack, n);
@@ -565,71 +638,79 @@ class Lists {
 		return stack;
 	}
 
-	public static function init<T>(list : List<T>) : List<T> {
-		return dropRight(list, 1);
+	inline public static function init<T>(list : List<T>) : List<T> {
+		var p = list;
+		return dropRight(p, 1);
 	}
 
-	public static function last<T>(list : List<T>) : Option<T> {
+	inline public static function last<T>(list : List<T>) : Option<T> {
 		var value = None;
 
-		while(nonEmpty(list)) {
-			value = headOption(list);
-			list = tail(list);
+		var p = list;
+		while(nonEmpty(p)) {
+			value = headOption(p);
+			p = tail(p);
 		}
 
 		return value;
 	}
 
-	public static function zipWithIndex<T>(list : List<T>) : List<Tuple2<T, Int>> {
-		var amount = size(list);
+	inline public static function zipWithIndex<T>(list : List<T>) : List<Tuple2<T, Int>> {
+		var p = list;
+		var amount = size(p);
 
 		var stack = Nil;
 		for (i in 0...amount) {
-			var h = head(list);
-			list = tail(list);
+			var h = head(p);
+			p = tail(p);
 			stack = prepend(stack, tuple2(h, i));
 		}
 
 		return reverse(stack);
 	}
 
-	public static function isEmpty<T>(list : List<T>) : Bool {
-		return switch(list) {
-			case Nil:
-				true;
-			case Cons(_, _):
-				false;
+	inline public static function isEmpty<T>(list : List<T>) : Bool {
+		var p = list;
+		return switch(p) {
+			case Nil: true;
+			case Cons(_, _): false;
 		};
 	}
 
-	public static function nonEmpty<T>(list : List<T>) : Bool {
-		return !isEmpty(list);
+	inline public static function nonEmpty<T>(list : List<T>) : Bool {
+		var p = list;
+		return !isEmpty(p);
 	}
 
-	public static function hasDefinedSize<T>(list : List<T>) : Bool {
-		return switch (list) {
+	inline public static function hasDefinedSize<T>(list : List<T>) : Bool {
+		var p = list;
+		return switch (p) {
 			case Nil: false;
 			case Cons(_, _): true;
 		};
 	}
 
-	public static function collection<T>(list : List<T>) : Collection<T> {
-		return new ListImpl(list);
+	inline public static function collection<T>(list : List<T>) : Collection<T> {
+		var p = list;
+		return new ListImpl(p);
 	}
 
-	public static function iterable<T>(list : List<T>) : Iterable<T> {
-		return new ListImpl(list);
+	inline public static function iterable<T>(list : List<T>) : Iterable<T> {
+		var p = list;
+		return new ListImpl(p);
 	}
 
-	public static function iterator<T>(list : List<T>) : Iterator<T> {
-		return new ListImplIterator(list);
+	inline public static function iterator<T>(list : List<T>) : Iterator<T> {
+		var p = list;
+		return new ListImplIterator(p);
 	}
 
-	public static function toString<T>(list : List<T>, ?func : Function1<T, String>) : String {
-		return switch(list) {
+	inline public static function toString<T>(list : List<T>, ?func : Function1<T, String>) : String {
+		var p = list;
+		return switch(p) {
 			case Nil: 'Nil';
 			case Cons(_, _):
-				var mapped : Collection<String> = Collections.map(collection(list), function(value) {
+				var mapped : Collection<String> = Collections.map(collection(p), function(value) {
 					return Anys.toString(value, func);
 				});
 

@@ -9,28 +9,32 @@ using funk.collections.immutable.extensions.Lists;
 
 class Iterators {
 
-	public static function reverse<T>(iterator : Iterator<T>) : Iterator<T> {
-		var stack = toArray(iterator);
+	inline public static function reverse<T>(iterator : Iterator<T>) : Iterator<T> {
+		var p = iterator;
+		var stack = toArray(p);
 		stack.reverse();
 		return stack.iterator();
 	}
 
-	public static function toArray<T>(iterator : Iterator<T>) : Array<T> {
+	inline public static function toArray<T>(iterator : Iterator<T>) : Array<T> {
 		var stack = [];
-		for(i in iterator) {
+		var p = iterator;
+		for(i in p) {
 			stack.push(i);
 		}
 		return stack;
 	}
 
-	public static function toCollection<T>(iterator : Iterator<T>) : Collection<T> {
-		return CollectionsUtil.toCollection(toArray(iterator));
+	inline public static function toCollection<T>(iterator : Iterator<T>) : Collection<T> {
+		var p = iterator;
+		return CollectionsUtil.toCollection(toArray(p));
 	}
 
-	public static function toList<T>(iterator : Iterator<T>) : List<T> {
+	inline public static function toList<T>(iterator : Iterator<T>) : List<T> {
+		var p = iterator;
 		var list = Nil;
-		while(iterator.hasNext()) {
-			list = list.prepend(iterator.next());
+		while(p.hasNext()) {
+			list = list.prepend(p.next());
 		}
 		return list.reverse();
 	}

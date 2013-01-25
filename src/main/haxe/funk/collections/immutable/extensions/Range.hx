@@ -7,8 +7,7 @@ using funk.collections.immutable.extensions.Lists;
 
 class Range {
 
-    public static function to(start : Int, end : Int) : List<Int> {
-
+    inline public static function to(start : Int, end : Int) : List<Int> {
         var m = start - 1;
         var n = end + 1;
 
@@ -19,8 +18,7 @@ class Range {
         return list;
     }
 
-    public static function until(start : Int, end : Int) : List<Int> {
-
+    inline public static function until(start : Int, end : Int) : List<Int> {
         var m = start - 1;
         var n = end;
 

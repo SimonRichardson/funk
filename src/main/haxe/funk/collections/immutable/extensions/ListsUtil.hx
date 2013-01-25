@@ -24,47 +24,57 @@ class ListsUtil {
 	}
 
 	public static function toList<T1, T2>(any : T1) : List<T2> {
-		var arrayToList = function(array : Array<T2>) {
-			var list = Nil;
-
-			for (item in array) {
-				list = list.append(item);
+		return if (Std.is(any, List)) {
+			cast any;
+		} else {
+			var result = switch(Type.typeof(any)) {
+				case TObject:
+					if (Std.is(any, Array)) {
+						arrayToList(cast any);
+					} else if (Std.is(any, String)) {
+						stringToList(cast any);
+					} else {
+						anyToList(cast any);
+					}
+				case TClass(c):
+					if (c == Array) {
+						arrayToList(cast any);
+					} else if (c == String) {
+						stringToList(cast any);
+					} else {
+						anyToList(cast any);
+					}
+				default:
+					anyToList(cast any);
 			}
-
-			return list;
-		};
-
-		var stringToList = function(string : String) {
-			var list = Nil;
-
-			for (item in Strings.iterator(string)) {
-				list = list.append(cast item);
+			if (!Std.is(result, List)) {
+				throw "fuck a duck";
 			}
-
-			return list;
-		};
-
-		switch(Type.typeof(any)) {
-			case TEnum(e):
-				if (e == List) {
-					return cast any;
-				}
-			case TObject:
-				if (Std.is(any, Array)) {
-					return arrayToList(cast any);
-				} else if (Std.is(any, String)) {
-					return stringToList(cast any);
-				}
-			case TClass(c):
-				if (c == Array) {
-					return arrayToList(cast any);
-				} else if (c == String) {
-					return stringToList(cast any);
-				}
-			default:
+			cast result;
 		}
-
-		return Nil.append(cast any);
 	}
 
+	inline private static function anyToList<T>(any : T) : List<T> {
+		return Nil.append(any);
+	}
+
+	inline private static function arrayToList<T>(array : Array<T>) : List<T> {
+		var list = Nil;
+
+		for (item in array) {
+			list = list.append(item);
+		}
+
+		return list;
+	}
+
+	inline private static function stringToList<T>(string : String) : List<String> {
+		var list = Nil;
+
+		for (item in Strings.iterator(string)) {
+			list = list.append(item);
+		}
+
+		return list;
+	}
 }

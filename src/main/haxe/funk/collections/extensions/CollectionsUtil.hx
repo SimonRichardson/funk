@@ -17,7 +17,7 @@ class CollectionsUtil {
 
 	inline private static var REFLECT_NAME : String = '__reflect__';
 
-	public static function zero<T>() : Collection<T> {
+	inline public static function zero<T>() : Collection<T> {
 		// TODO (Simon) : We could optimise this.
 		return toCollection([]);
 	}
