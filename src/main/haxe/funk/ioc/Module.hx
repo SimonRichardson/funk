@@ -49,22 +49,16 @@ class Module implements IModule {
             Funk.error(BindingError("Modules have to be created using \"Injector.add(new Module())\"."));
         }
 
-        try {
-            Injector.pushScope(this);
-
-            var instance = switch(find(type)) {
-                case None: Reflects.createEmptyInstance(type);
-                case Some(tuple): tuple._2().getInstance();
-            }
-
-            Injector.popScope();
-
-            return Some(instance);
-        } catch(error : Dynamic) {
-            Injector.popScope();
+        Injector.pushScope(this);
+        
+        var instance = switch(find(type)) {
+            case None: Reflects.createEmptyInstance(type);
+            case Some(tuple): tuple._2().getInstance();
         }
 
-        return None;
+        Injector.popScope();
+
+        return Options.toOption(instance);
     }
 
     @:final

@@ -16,7 +16,7 @@ class IocSuite extends TestSuite
 
         add(funk.ioc.BindingTest);
         add(funk.ioc.InjectorTest);
-        //add(funk.ioc.InjectTest);
+        add(funk.ioc.InjectTest);
         add(funk.ioc.ModuleTest);
     }
 }

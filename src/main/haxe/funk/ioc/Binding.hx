@@ -94,30 +94,9 @@ class Binding<T> {
 
     private function solve() : T {
         return switch(_bindingType) {
-            case To(type):
-                switch (_module.getInstance(type)) {
-                    case Some(v): v;
-                    case None: 
-                        // Try and bind to the original type, else bind to the type.
-                        switch(_boundTo){
-                            case Some(v): Reflects.createEmptyInstance(v);
-                            case None: Reflects.createEmptyInstance(type);
-                            default: 
-                                Funk.error(BindingError("Invalid To Bind"));
-                        }
-                }
+            case To(type): Reflects.createEmptyInstance(type);
             case Instance(instance): instance;
-            case Provider(provider):
-                switch (_module.getInstance(provider)) {
-                    case Some(v):
-                        if (Reflects.hasMethod(v, 'get')) {
-                            v.get();
-                        } else {
-                            Funk.error(BindingError("Invalid Provider"));
-                        }
-                    case None:
-                        Funk.error(BindingError("Provider not found in module."));
-                }
+            case Provider(provider): Reflects.createEmptyInstance(provider).get();
             default: 
                 Funk.error(BindingError("Invalid Bind"));
         }
