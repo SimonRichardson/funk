@@ -27,14 +27,14 @@ class BindingTest {
 
 	@Test
 	public function create_new_binding_should_not_throw_error() {
-		var binding = new Binding(new Module(), None);
+		var binding = new Binding(new Module());
 		binding.isNotNull();
 	}
 
 	@Test
 	public function create_new_binding_should_throw_error_if_module_is_null() {
 		var called = try {
-			new Binding(null, None);
+			new Binding(null);
 			false;
 		} catch (error : Dynamic) {
 			true;
@@ -45,7 +45,7 @@ class BindingTest {
 
 	@Test
 	public function binding_with_to_with_null_should_throw_Error() {
-		var binding = new Binding(new Module(), None);
+		var binding = new Binding(new Module());
 
 		var called = try {
 			binding.to(null);
@@ -59,20 +59,20 @@ class BindingTest {
 
 	@Test
 	public function binding_with_to_should_return_a_scope() {
-		var binding = new Binding(new Module(), None);
+		var binding = new Binding(new Module());
 		binding.to(String).areEqual(binding);
 	}
 
 	@Test
 	public function binding_with_to_and_calling_getInstance_should_return_now_string() {
-		var binding = new Binding(module, None);
+		var binding = new Binding(module);
 		binding.to(String);
 		binding.getInstance().areEqual(new String("").unbox());
 	}
 
 	@Test
 	public function binding_with_to_and_calling_getInstance_asSingleton_should_return_provided_object() {
-		var binding = new Binding(module, None);
+		var binding = new Binding(module);
 		binding.to(Array).asSingleton();
 
 		var instance = binding.getInstance();
@@ -81,7 +81,7 @@ class BindingTest {
 
 	@Test
 	public function binding_with_toInstance_with_null_should_throw_Error() {
-		var binding = new Binding(new Module(), None);
+		var binding = new Binding(new Module());
 
 		var called = try {
 			binding.toInstance(null);
@@ -95,21 +95,21 @@ class BindingTest {
 
 	@Test
 	public function binding_with_toInstance_should_return_a_scope() {
-		var binding = new Binding(new Module(), None);
+		var binding = new Binding(new Module());
 		binding.toInstance(String).areEqual(binding);
 	}
 
 	@Test
 	public function binding_with_toInstance_and_calling_getInstance_should_return_same_instance() {
 		var instance = Date.now();
-		var binding = new Binding(module, None);
+		var binding = new Binding(module);
 		binding.toInstance(instance);
 		binding.getInstance().areEqual(instance);
 	}
 
 	@Test
 	public function binding_with_toInstance_and_calling_getInstance_asSingleton_should_return_provided_object() {
-		var binding = new Binding(module, None);
+		var binding = new Binding(module);
 		binding.toInstance(Date.now()).asSingleton();
 
 		var instance = binding.getInstance();
@@ -118,7 +118,7 @@ class BindingTest {
 
 	@Test
 	public function binding_with_toProvider_with_null_should_throw_Error() {
-		var binding = new Binding(new Module(), None);
+		var binding = new Binding(new Module());
 
 		var called = try {
 			binding.toProvider(null);
@@ -132,7 +132,7 @@ class BindingTest {
 
 	@Test
 	public function binding_with_toProvider_should_return_a_scope() {
-		var binding = new Binding(new Module(), None);
+		var binding = new Binding(new Module());
 		binding.toProvider(MockProvider).areEqual(binding);
 	}
 
@@ -140,14 +140,14 @@ class BindingTest {
 	public function binding_with_toProvider_and_calling_getInstance_should_return_provided_object() {
 		MockProvider.instance = new MockObject();
 
-		var binding = new Binding(module, None);
+		var binding = new Binding(module);
 		binding.toProvider(MockProvider);
 		Assert.areEqual(binding.getInstance(), MockProvider.instance);
 	}
 
 	@Test
 	public function binding_with_toProvider_and_calling_getInstance_asSingleton_should_return_provided_object() {
-		var binding = new Binding(module, None);
+		var binding = new Binding(module);
 		binding.toProvider(MockProvider).asSingleton();
 
 		MockProvider.instance = new MockObject();

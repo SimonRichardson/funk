@@ -1,6 +1,7 @@
 package funk.ioc;
 
 import funk.Funk;
+import funk.types.Function0;
 import funk.types.Option;
 import funk.types.Provider;
 
@@ -8,7 +9,7 @@ using funk.types.extensions.Bools;
 using funk.types.extensions.Reflects;
 
 enum BindingType<T> {
-    To(type : Class<T>);
+    To(type : Class<T>, func : Function0<Array<Dynamic>>);
     Instance(instance : T);
     Provider(provider : Class<Provider<T>>);
 }
@@ -18,8 +19,6 @@ class Binding<T> {
 
     private var _module : Module;
 
-    private var _boundTo : Option<Class<T>>;
-
     private var _bindingType : BindingType<T>;
 
     private var _singletonScope : Bool;
@@ -28,29 +27,30 @@ class Binding<T> {
 
     private var _value : T;
 
-    public function new(module : Module, boundTo : Option<Class<T>>) {
+    public function new(module : Module) {
         if (null == module) {
             Funk.error(ArgumentError());
         }
 
         _module = module;
-        _boundTo = boundTo;
 
         _evaluated = false;
         _singletonScope = false;
     }
 
-    public function boundTo() : Option<Class<T>> {
-        return _boundTo;
-    }
-
-    public function to(type : Class<T>) : Scope {
+    public function to(type : Class<T>, ?func : Function0<Array<Dynamic>>) : Scope {
         if (null == type) {
             Funk.error(ArgumentError());
         }
 
+        if (null == func) {
+            func = function () {
+                return [];
+            };
+        }
+
         _evaluated = false;
-        _bindingType = To(type);
+        _bindingType = To(type, func);
         return this;
     }
 
@@ -94,10 +94,10 @@ class Binding<T> {
 
     private function solve() : T {
         return switch(_bindingType) {
-            case To(type): Reflects.createEmptyInstance(type);
+            case To(type, func): Reflects.createInstance(type, func());
             case Instance(instance): instance;
             case Provider(provider): Reflects.createEmptyInstance(provider).get();
-            default: 
+            default:
                 Funk.error(BindingError("Invalid Bind"));
         }
     }

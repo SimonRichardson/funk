@@ -3,6 +3,7 @@ package funk.ioc;
 import funk.Funk;
 import funk.collections.immutable.List;
 import funk.ioc.Binding;
+import funk.types.Function0;
 import funk.types.Option;
 import funk.types.Tuple2;
 
@@ -50,7 +51,7 @@ class Module implements IModule {
         }
 
         Injector.pushScope(this);
-        
+
         var instance = switch(find(type)) {
             case None: Reflects.createEmptyInstance(type);
             case Some(tuple): tuple._2().getInstance();
@@ -68,12 +69,19 @@ class Module implements IModule {
 
     @:final
     public function bind(type: Class<Dynamic>) : Binding<Dynamic> {
+        return bindWith(type, function () {
+            return [];
+        });
+    }
+
+    @:final
+    public function bindWith(type : Class<Dynamic>, func : Function0<Array<Dynamic>>) : Binding<Dynamic> {
         if(binds(type)) {
             Funk.error(BindingError(Std.format("$type is already bound.")));
         }
 
-        var binding = new Binding(this, Some(type));
-        binding.to(type);
+        var binding = new Binding(this);
+        binding.to(type, func);
 
         _map = _map.prepend(tuple2(type, binding));
 
