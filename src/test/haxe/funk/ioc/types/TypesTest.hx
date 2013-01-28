@@ -38,8 +38,11 @@ private class TraceCommand extends Command<Tracer> {
         super();
     }
 
-    override public function execute(value : EnumValue) : Void {
-        trace("Trace " +  value);
+    override public function execute(value : Tracer) : Void {
+        switch(value) {
+            case Trace(value): trace("Trace " +  value);
+            case Ignore:
+        }
     }
 }
 
