@@ -39,7 +39,7 @@ class TestMain
     {
 
         var suites = new Array<Class<massive.munit.TestSuite>>();
-    
+
         suites.push(ActorsSuite);
         suites.push(CollectionsSuite);
         suites.push(IocSuite);

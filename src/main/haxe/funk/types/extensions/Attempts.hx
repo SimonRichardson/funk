@@ -9,6 +9,7 @@ import funk.types.Option;
 import funk.types.extensions.Anys;
 import funk.types.extensions.Options;
 
+using funk.types.extensions.Bools;
 using funk.types.extensions.Options;
 
 class Attempts {
@@ -159,6 +160,6 @@ class Attempts {
     }
 
     public static function toAttempt<T>(any : Null<T>) : Attempt<T> {
-        return any != null ? Failure(Error("Failure")) : Success(any);
+        return Anys.toBool(any).not() ? Failure(Error("Failure")) : Success(any);
     }
 }

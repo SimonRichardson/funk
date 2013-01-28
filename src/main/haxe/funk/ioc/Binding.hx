@@ -15,17 +15,21 @@ enum BindingType<T> {
 }
 
 @:final
-class Binding<T> {
+class Binding<T1, T2> {
+
+    public var boundTo(get_boundTo, set_boundTo) : T2;
 
     private var _module : Module;
 
-    private var _bindingType : BindingType<T>;
+    private var _boundTo : T2;
+
+    private var _bindingType : BindingType<T1>;
 
     private var _singletonScope : Bool;
 
     private var _evaluated : Bool;
 
-    private var _value : T;
+    private var _value : T1;
 
     public function new(module : Module) {
         if (null == module) {
@@ -38,7 +42,7 @@ class Binding<T> {
         _singletonScope = false;
     }
 
-    public function to(type : Class<T>, ?func : Function0<Array<Dynamic>>) : Scope {
+    public function to(type : Class<T1>, ?func : Function0<Array<Dynamic>>) : Scope {
         if (null == type) {
             Funk.error(ArgumentError());
         }
@@ -54,7 +58,7 @@ class Binding<T> {
         return this;
     }
 
-    public function toInstance(instance : T) : Scope {
+    public function toInstance(instance : T1) : Scope {
         if (null == instance) {
             Funk.error(ArgumentError());
         }
@@ -64,7 +68,7 @@ class Binding<T> {
         return this;
     }
 
-    public function toProvider(provider : Class<Provider<T>>) : Scope {
+    public function toProvider(provider : Class<Provider<T1>>) : Scope {
         if (null == provider) {
             Funk.error(ArgumentError());
         }
@@ -74,7 +78,7 @@ class Binding<T> {
         return this;
     }
 
-    public function getInstance() : T {
+    public function getInstance() : T1 {
         return if(_singletonScope) {
             if(!_evaluated) {
                 _value = solve();
@@ -92,7 +96,7 @@ class Binding<T> {
         _singletonScope = true;
     }
 
-    private function solve() : T {
+    private function solve() : T1 {
         return switch(_bindingType) {
             case To(type, func): Reflects.createInstance(type, func());
             case Instance(instance): instance;
@@ -100,5 +104,14 @@ class Binding<T> {
             default:
                 Funk.error(BindingError("Invalid Bind"));
         }
+    }
+
+    private function get_boundTo() : T2 {
+        return _boundTo;
+    }
+
+    private function set_boundTo(value : T2) : T2 {
+        _boundTo = value;
+        return _boundTo;
     }
 }

@@ -25,7 +25,7 @@ interface IModule {
 
 class Module implements IModule {
 
-    private var _map: List<Tuple2<Class<Dynamic>, Binding<Dynamic>>>;
+    private var _map: List<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>>;
 
     private var _initialized: Bool;
 
@@ -68,14 +68,14 @@ class Module implements IModule {
     }
 
     @:final
-    public function bind(type: Class<Dynamic>) : Binding<Dynamic> {
-        return bindWith(type, function () {
+    public function bind(type: Class<Dynamic>) : Binding<Dynamic, Dynamic> {
+        return bindWith(type, function () : Array<Dynamic> {
             return [];
         });
     }
 
     @:final
-    public function bindWith(type : Class<Dynamic>, func : Function0<Array<Dynamic>>) : Binding<Dynamic> {
+    public function bindWith(type : Class<Dynamic>, func : Function0<Array<Dynamic>>) : Binding<Dynamic, Dynamic> {
         if(binds(type)) {
             Funk.error(BindingError(Std.format("$type is already bound.")));
         }
@@ -89,9 +89,16 @@ class Module implements IModule {
     }
 
     @:final
-    private function find(type : Class<Dynamic>) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic>>> {
-        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
+    private function find(type : Class<Dynamic>) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>> {
+        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>) : Bool {
             return (tuple._1() == type);
+        });
+    }
+
+    @:final
+    private function findByBoundTo<E>(type : E) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>> {
+        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>) : Bool {
+            return (tuple._2().boundTo == type);
         });
     }
 
