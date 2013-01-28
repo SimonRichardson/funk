@@ -5,7 +5,7 @@ import funk.types.Attempt;
 
 using funk.types.extensions.Options;
 
-class Command<T> {
+class Mediator<T> {
 
     private var _events : EventStream<EnumValue>;
 
@@ -13,14 +13,14 @@ class Command<T> {
         _events = cast Inject.as(EventStream).get();
     }
 
-    public function guard(value : T) : Attempt<T> {
-        return Success(value);
-    }
-
-    public function execute(value : T) : Void {
+    public function handle(value : T) : Void {
     }
 
     public function dispatch(value : EnumValue) : Void {
         _events.dispatch(value);
+    }
+
+    public function events() : EventStream<EnumValue> {
+        return _events;
     }
 }

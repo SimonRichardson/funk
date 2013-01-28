@@ -2,6 +2,7 @@ package funk.ioc.types;
 
 import funk.ioc.Module;
 import funk.ioc.types.Command;
+import funk.ioc.types.EventStream;
 import funk.types.Attempt;
 import funk.types.Tuple2;
 

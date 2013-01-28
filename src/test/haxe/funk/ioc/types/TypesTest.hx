@@ -18,6 +18,8 @@ class TypesTest {
         facade.addCommand(Tracer, TraceCommand);
         facade.addCommand(Nil, NilCommand);
 
+        facade.addProxy(TraceProxy);
+
         facade.dispatch(Trace("Hello, World!"));
         facade.dispatch(Ignore);
     }
@@ -57,3 +59,10 @@ private class NilCommand extends Command<Nil> {
     }
 }
 
+private class TraceProxy<T> extends Proxy<T> {
+
+    public function new() {
+        super();
+    }
+
+}
