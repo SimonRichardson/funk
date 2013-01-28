@@ -17,4 +17,8 @@ class Enums {
 	public static function getConstructors<T>(e : Enum<T>) : Array<String> {
 		return Type.getEnumConstructs(e);
 	}
+
+	public static function getName<T>(e : Enum<T>) : String {
+		return Type.getEnumName(e);
+	}
 }

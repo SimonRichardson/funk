@@ -5,6 +5,7 @@ import funk.collections.immutable.List;
 import funk.ioc.Binding;
 import funk.types.Function0;
 import funk.types.Option;
+import funk.types.Predicate2;
 import funk.types.Tuple2;
 
 using funk.collections.immutable.extensions.Lists;
@@ -96,9 +97,16 @@ class Module implements IModule {
     }
 
     @:final
-    private function findByBoundTo<E>(type : E) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>> {
+    private function findByBoundTo<E>(  type : E,
+                                        ?func : Predicate2<Dynamic, E> = null
+                                        ) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>> {
+        if (func == null) {
+            func = function(a, b) {
+                return a == b;
+            }
+        }
         return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>) : Bool {
-            return (tuple._2().boundTo == type);
+            return func(tuple._2().boundTo, type);
         });
     }
 

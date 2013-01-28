@@ -31,11 +31,11 @@ class Facade extends Module {
         _controller.construct();
     }
 
-    public function addCommand<T1, T2>(value : T1, type : Class<Command<T2>>) : Void {
+    public function addCommand<T1, T2>(value : Enum<T1>, type : Class<Command<T2>>) : Void {
         _controller.add(value, type);
     }
 
-    public function dispatch<T, V>(type : T, value : V) : Void {
-        _events.dispatch(tuple2(type, value));
+    public function dispatch(value : EnumValue) : Void {
+        _events.dispatch(value);
     }
 }

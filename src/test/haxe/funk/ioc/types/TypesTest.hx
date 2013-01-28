@@ -15,19 +15,42 @@ class TypesTest {
         var facade : Facade = cast Injector.add(new Facade());
         facade.construct();
 
-        facade.addCommand("Trace", TraceCommand);
+        facade.addCommand(Tracer, TraceCommand);
+        facade.addCommand(Nil, NilCommand);
 
-        facade.dispatch("Trace", "Hello, World!");
+        facade.dispatch(Trace("Hello, World!"));
+        facade.dispatch(Ignore);
     }
 }
 
-private class TraceCommand extends Command<String> {
+private enum Tracer {
+    Trace(value : String);
+    Ignore;
+}
+
+private enum Nil {
+    Nothing;
+}
+
+private class TraceCommand extends Command<Tracer> {
 
     public function new() {
         super();
     }
 
-    override public function execute(value : String) : Void {
-        trace(value);
+    override public function execute(value : EnumValue) : Void {
+        trace("Trace " +  value);
     }
 }
+
+private class NilCommand extends Command<Nil> {
+
+    public function new() {
+        super();
+    }
+
+    override public function execute(value : EnumValue) : Void {
+        trace("Nil " + value);
+    }
+}
+
