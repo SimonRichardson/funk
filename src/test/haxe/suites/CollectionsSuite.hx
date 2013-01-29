@@ -7,11 +7,9 @@ import funk.collections.ParallelTest;
 import funk.collections.immutable.ListTest;
 import funk.collections.immutable.ListCollectionsTest;
 
-class CollectionsSuite extends TestSuite
-{
+class CollectionsSuite extends TestSuite {
 
-	public function new()
-	{
+	public function new() {
 		super();
 
 		add(funk.collections.CollectionsTest);

@@ -4,8 +4,7 @@ import massive.munit.TestSuite;
 
 import funk.actors.ActorTest;
 
-class ActorsSuite extends TestSuite
-{
+class ActorsSuite extends TestSuite {
 
 	public function new()
 	{

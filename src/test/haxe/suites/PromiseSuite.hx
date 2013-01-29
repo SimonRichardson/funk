@@ -5,11 +5,9 @@ import massive.munit.TestSuite;
 import funk.types.DeferredTest;
 import funk.types.PromiseTest;
 
-class PromiseSuite extends TestSuite
-{
+class PromiseSuite extends TestSuite {
 
-	public function new()
-	{
+	public function new() {
 		super();
 
 		add(funk.types.DeferredTest);

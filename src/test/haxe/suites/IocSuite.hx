@@ -7,11 +7,9 @@ import funk.ioc.InjectorTest;
 import funk.ioc.InjectTest;
 import funk.ioc.ModuleTest;
 
-class IocSuite extends TestSuite
-{
+class IocSuite extends TestSuite {
 
-    public function new()
-    {
+    public function new() {
         super();
 
         add(funk.ioc.BindingTest);

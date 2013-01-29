@@ -14,11 +14,9 @@ import funk.reactive.behaviours.BehaviourSignal3Test;
 import funk.reactive.behaviours.BehaviourSignal4Test;
 import funk.reactive.behaviours.BehaviourSignal5Test;
 
-class ReactiveSuite extends TestSuite
-{
+class ReactiveSuite extends TestSuite {
 
-	public function new()
-	{
+	public function new() {
 		super();
 
 		add(funk.reactive.CollectionsTest);

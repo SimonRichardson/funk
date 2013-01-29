@@ -20,11 +20,9 @@ import funk.types.Tuple4Test;
 import funk.types.Tuple5Test;
 import funk.types.WildcardTest;
 
-class TypesSuite extends TestSuite
-{
+class TypesSuite extends TestSuite {
 
-	public function new()
-	{
+	public function new() {
 		super();
 
 		add(funk.types.AttemptTest);

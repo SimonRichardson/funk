@@ -23,11 +23,9 @@ import funk.signals.PrioritySignal3Test;
 import funk.signals.PrioritySignal4Test;
 import funk.signals.PrioritySignal5Test;
 
-class SignalSuite extends TestSuite
-{
+class SignalSuite extends TestSuite {
 
-	public function new()
-	{
+	public function new() {
 		super();
 
 		add(funk.signals.SignalTest);

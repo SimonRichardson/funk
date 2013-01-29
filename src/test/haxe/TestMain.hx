@@ -9,6 +9,7 @@ import suites.CollectionsSuite;
 import suites.IocSuite;
 import suites.LoggingSuite;
 import suites.NetSuite;
+import suites.PatternsSuite;
 import suites.PromiseSuite;
 import suites.ReactiveSuite;
 import suites.SignalSuite;
@@ -25,8 +26,7 @@ import js.Dom;
  * Refer to munit command line tool for more information (haxelib run munit)
  */
 
-class TestMain
-{
+class TestMain {
 
     #if neko
         private var reporting : Bool;
@@ -35,20 +35,20 @@ class TestMain
 
     static function main(){ new TestMain(); }
 
-    public function new()
-    {
+    public function new() {
 
         var suites = new Array<Class<massive.munit.TestSuite>>();
 
-        suites.push(ActorsSuite);
-        suites.push(CollectionsSuite);
-        suites.push(IocSuite);
-        suites.push(LoggingSuite);
-        suites.push(NetSuite);
-        suites.push(PromiseSuite);
-        suites.push(ReactiveSuite);
-        suites.push(SignalSuite);
-        suites.push(TypesSuite);
+        // suites.push(ActorsSuite);
+        // suites.push(CollectionsSuite);
+        // suites.push(IocSuite);
+        // suites.push(LoggingSuite);
+        // suites.push(NetSuite);
+        suites.push(PatternsSuite);
+        // suites.push(PromiseSuite);
+        // suites.push(ReactiveSuite);
+        // suites.push(SignalSuite);
+        // suites.push(TypesSuite);
 
         #if MCOVER
             var client = new mcover.coverage.munit.client.MCoverPrintClient();
@@ -70,10 +70,8 @@ class TestMain
         updates the background color and closes the current browser
         for flash and html targets (useful for continous integration servers)
     */
-    private function completionHandler(successful:Bool):Void
-    {
-        try
-        {
+    private function completionHandler(successful : Bool) : Void {
+        try {
             #if flash
                 flash.external.ExternalInterface.call("testResult", successful);
             #elseif js
@@ -81,10 +79,8 @@ class TestMain
             #elseif neko
                 neko.Sys.exit(successful ? 0 : 1);
             #end
-        }
-        // if run from outside browser can get error which we can ignore
-        catch (e:Dynamic)
-        {
+        } catch (e:Dynamic) {
+            // if run from outside browser can get error which we can ignore
         }
     }
 }

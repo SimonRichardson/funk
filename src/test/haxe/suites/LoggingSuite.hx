@@ -4,11 +4,9 @@ import massive.munit.TestSuite;
 
 import funk.logging.LogTest;
 
-class LoggingSuite extends TestSuite
-{
+class LoggingSuite extends TestSuite {
 
-    public function new()
-    {
+    public function new() {
         super();
 
         add(funk.logging.LogTest);
