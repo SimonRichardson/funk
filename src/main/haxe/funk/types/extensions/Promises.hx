@@ -51,6 +51,19 @@ class Promises {
         return promise;
     }
 
+    public static function empty<T>() : Promise<T> {
+        return new EmptyPromise();
+    }
+
+    public static function dispatch<T>(value : T) : Promise<T> {
+        var deferred = new Deferred();
+        var promise = deferred.promise();
+
+        deferred.resolve(value);
+
+        return promise;
+    }
+
     public static function filter<T>(promise : Promise<T>, func : Predicate1<T>) : Promise<T> {
         var deferred = new Deferred<T>();
         var future = deferred.promise();

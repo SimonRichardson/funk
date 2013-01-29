@@ -1,22 +1,21 @@
 package funk.patterns.mvc;
 
 import funk.actors.Actor;
+import funk.actors.Message;
 import funk.collections.immutable.List;
+import funk.patterns.mvc.Choices;
+import funk.patterns.mvc.Observable;
+import funk.types.Deferred;
+import funk.types.extensions.Promises;
+import funk.types.Option;
+import funk.types.Promise;
 
 using funk.actors.extensions.Messages;
 using funk.collections.immutable.extensions.Lists;
 
-enum State<T> {
-	GetState;
-	SetState(value : T);
-	UpdateState(actor : Model<T>, value : T);
-}
+class Model<T, K> extends Actor<EnumValue, T> {
 
-class Model<T> extends Actor<T, T> {
-	
-	private var _value : T;
-
-	private var _listeners : List<Actor<T, T>>;
+	private var _listeners : List<Actor<EnumValue, T>>;
 
 	public function new() {
 		super();
@@ -24,46 +23,33 @@ class Model<T> extends Actor<T, T> {
 		_listeners = Nil;
 	}
 
-	private function handle(deferred : Deferred, message : Message<T>) : Void {
-
+	private function get() : Promise<Message<T>> {
+		return Promises.dispatch(Empty);
 	}
 
-	override private function recieve(message : Message<T>) : Promise<Message<T>> {
+	override private function recieve(message : Message<EnumValue>) : Promise<Message<T>> {
 		return switch (_status) {
 			case Running:
-				var deferred = new Deferred();
-				var promise = deferred.promise();
-
-				var value = message.getBody();
+				var value = message.body();
 				if (Std.is(value, Observable)) {
-					switch(value) {
-						case AddListener(value): 
-							_listeners = _listeners.prepend(value);
-							deferred.resolve(value);
-
-						case RemoveListener(value): 
+					var observable : Observable<T> = cast value;
+					switch(observable) {
+						case AddListener(value): _listeners = _listeners.prepend(value);
+						case RemoveListener(value):
 							_listeners = _listeners.filterNot(function(val) {
 								return val == value;
 							});
-							deferred.resolve(value);
 					}
-				} else if (Std.is(value, State)) {
-					switch(value) {
-						case SetState(s): 
-							_value = s;
-							_listeners.foreach(function(actor) {
-								send(UpdateState(_value)).to(actor);
-							});
-							deferred.resolve(_value);
+					// Send back an empty promise.
+					Promises.empty();
 
-						case GetState: 
-							deferred.resolve(_value);
+				} else if (Std.is(value, Choices)) {
+					var choices : Choices<T, K> = cast value;
+					switch(choices) {
+						case Get: get();
+						default: Promises.empty();
 					}
-				} else {
-					handle(deferred, value);
 				}
-				
-				promise;
 			default:
 				Funk.error(ActorError("Actor is not running"));
 		}

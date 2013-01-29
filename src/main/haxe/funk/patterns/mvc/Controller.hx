@@ -1,14 +1,21 @@
 package funk.patterns.mvc;
 
-class Controller<T> {
-	
-	private var _model : Model<T>;
+import funk.patterns.mvc.Choices;
+import funk.types.Promise;
 
-	public function new(model : Model<T>) {
+class Controller<T, K> {
+
+	private var _model : Model<T, K>;
+
+	public function new(model : Model<T, K>) {
 		_model = model;
 	}
 
-	public function model() : Model<T> {
+    public function get() : Promise<T> {
+        return cast _model.send(Get).to(Some(_model));
+    }
+
+	public function model() : Model<T, K> {
 		return _model;
 	}
 }

@@ -1,6 +1,8 @@
 package funk.patterns.mvc;
 
-enum Observable<T1, T2> {
-	AddListener(actor : Actor<T1, T2>);
-	RemoveListener(actor : Actor<T1, T2>);
+import funk.actors.Actor;
+
+enum Observable<T> {
+	AddListener(actor : Actor<EnumValue, T>);
+	RemoveListener(actor : Actor<EnumValue, T>);
 }

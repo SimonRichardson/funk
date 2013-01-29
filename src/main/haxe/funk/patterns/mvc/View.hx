@@ -1,8 +1,15 @@
 package funk.patterns.mvc;
 
-class View<T> {
-	
-	public function new(model : Model<T>) {
+import funk.actors.Actor;
+import funk.patterns.mvc.Observable;
+
+class View<T, K> extends Actor<EnumValue, T> {
+
+    private var _model : Model<T, K>;
+
+	public function new(model : Model<T, K>) {
+        super();
+
 		_model = model;
 		_model.send(AddListener(this));
 	}
