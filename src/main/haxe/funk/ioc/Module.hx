@@ -26,7 +26,7 @@ interface IModule {
 
 class Module implements IModule {
 
-    private var _map: List<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>>;
+    private var _map: List<Tuple2<Class<Dynamic>, Binding<Dynamic>>>;
 
     private var _initialized: Bool;
 
@@ -65,13 +65,13 @@ class Module implements IModule {
         return find(type).toBool();
     }
 
-    public function bind(type : Class<Dynamic>) : Binding<Dynamic, Dynamic> {
+    public function bind(type : Class<Dynamic>) : Binding<Dynamic> {
         return bindWith(type, function () : Array<Dynamic> {
             return [];
         });
     }
 
-    public function bindWith(type : Class<Dynamic>, func : Function0<Array<Dynamic>>) : Binding<Dynamic, Dynamic> {
+    public function bindWith(type : Class<Dynamic>, func : Function0<Array<Dynamic>>) : Binding<Dynamic> {
         if(binds(type)) {
             Funk.error(BindingError(Std.format("$type is already bound.")));
         }
@@ -85,27 +85,14 @@ class Module implements IModule {
     }
 
     public function unbind(type : Class<Dynamic>) : Void {
-        _map = _map.filter(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>) {
+        _map = _map.filter(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) {
             return tuple._1() == type;
         });
     }
 
-    private function find(type : Class<Dynamic>) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>> {
-        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>) : Bool {
+    private function find(type : Class<Dynamic>) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic>>> {
+        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
             return tuple._1() == type;
-        });
-    }
-
-    private function findByBoundTo<E>(  type : E,
-                                        ?func : Predicate2<Dynamic, E> = null
-                                        ) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>> {
-        if (func == null) {
-            func = function(a, b) {
-                return a == b;
-            }
-        }
-        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>) : Bool {
-            return func(tuple._2().boundTo, type);
         });
     }
 
