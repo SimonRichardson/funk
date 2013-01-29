@@ -35,7 +35,6 @@ class Module implements IModule {
         _initialized = false;
     }
 
-    @:final
     public function initialize() : Void {
         configure();
         _initialized = true;
@@ -45,8 +44,7 @@ class Module implements IModule {
     public function configure() : Void {
     }
 
-    @:final
-    public function getInstance(type: Class<Dynamic>) : Option<Dynamic> {
+    public function getInstance(type : Class<Dynamic>) : Option<Dynamic> {
         if(!_initialized) {
             Funk.error(BindingError("Modules have to be created using \"Injector.add(new Module())\"."));
         }
@@ -63,19 +61,16 @@ class Module implements IModule {
         return Options.toOption(instance);
     }
 
-    @:final
-    public function binds(type: Class<Dynamic>) : Bool {
+    public function binds(type : Class<Dynamic>) : Bool {
         return find(type).toBool();
     }
 
-    @:final
-    public function bind(type: Class<Dynamic>) : Binding<Dynamic, Dynamic> {
+    public function bind(type : Class<Dynamic>) : Binding<Dynamic, Dynamic> {
         return bindWith(type, function () : Array<Dynamic> {
             return [];
         });
     }
 
-    @:final
     public function bindWith(type : Class<Dynamic>, func : Function0<Array<Dynamic>>) : Binding<Dynamic, Dynamic> {
         if(binds(type)) {
             Funk.error(BindingError(Std.format("$type is already bound.")));
@@ -89,14 +84,18 @@ class Module implements IModule {
         return binding;
     }
 
-    @:final
-    private function find(type : Class<Dynamic>) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>> {
-        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>) : Bool {
-            return (tuple._1() == type);
+    public function unbind(type : Class<Dynamic>) : Void {
+        _map = _map.filter(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>) {
+            return tuple._1() == type;
         });
     }
 
-    @:final
+    private function find(type : Class<Dynamic>) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>> {
+        return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>) : Bool {
+            return tuple._1() == type;
+        });
+    }
+
     private function findByBoundTo<E>(  type : E,
                                         ?func : Predicate2<Dynamic, E> = null
                                         ) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic, Dynamic>>> {
@@ -110,7 +109,6 @@ class Module implements IModule {
         });
     }
 
-    @:final
     public function dispose() : Void {
         _map = Nil;
         _initialized = false;

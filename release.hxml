@@ -3,6 +3,7 @@
 -cmd cp -r src/main/haxe bin/release
 -cmd cp haxelib.xml bin/release
 -cmd cd bin/release
+-cmd find . -name '*.DS_Store' -type f -delete
 -cmd zip -r release.zip *
 -cmd cd ../../
 -cmd mv bin/release/release.zip bin/release.zip
