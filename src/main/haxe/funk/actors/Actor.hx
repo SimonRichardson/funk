@@ -63,9 +63,7 @@ class Actor<T1, T2> {
 	public function send(message : T1) : Reference<T1, T2> {
 		return switch (_status) {
 			case Running:
-				new Reference(this, message, function(	actor : Option<Actor<T1, T2>>,
-														message : Option<Message<T1>>
-														) : Promise<Message<T2>> {
+				new Reference(this, message, function (actor, message) {
 					var deferred = new Deferred();
 					var promise = deferred.promise();
 

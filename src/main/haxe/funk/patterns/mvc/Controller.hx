@@ -3,6 +3,8 @@ package funk.patterns.mvc;
 import funk.patterns.mvc.Choices;
 import funk.types.Promise;
 
+using funk.actors.extensions.Actors;
+
 class Controller<T, K> {
 
 	private var _model : Model<T, K>;
@@ -12,7 +14,7 @@ class Controller<T, K> {
 	}
 
     public function get() : Promise<T> {
-        return cast _model.send(Get).to(Some(_model));
+        return cast _model.echo(Get);
     }
 
 	public function model() : Model<T, K> {

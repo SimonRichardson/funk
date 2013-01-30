@@ -1,5 +1,6 @@
 package funk.actors.types;
 
+import funk.actors.extensions.Actors;
 import funk.collections.immutable.List;
 import funk.actors.Actor;
 import funk.actors.Reference;
@@ -10,6 +11,7 @@ import funk.types.Option;
 import funk.types.Promise;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.actors.extensions.Actors;
 using funk.actors.extensions.Messages;
 using funk.types.extensions.Promises;
 
@@ -45,7 +47,7 @@ class ProxyActor<T1, T2> extends Actor<T1, T2> {
 							var promises = Nil;
 							_children.foreach(function (actor : Actor<T1, T2>) {
 								// Note (Simon) : send to itself so it goes through correctly
-								var promise  = actor.send(msg.body()).to(Some(actor));
+								var promise = actor.echo(msg.body());
 								promises = promises.prepend(promise);
 							});
 
