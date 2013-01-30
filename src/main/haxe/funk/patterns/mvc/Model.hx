@@ -24,7 +24,7 @@ class Model<T, K> extends Actor<EnumValue, T> {
 	}
 
 	private function get() : Promise<Message<T>> {
-		return Promises.dispatch(Empty);
+		return Promises.dispatch(tuple2(Nil, None));
 	}
 
 	override private function recieve(message : Message<EnumValue>) : Promise<Message<T>> {

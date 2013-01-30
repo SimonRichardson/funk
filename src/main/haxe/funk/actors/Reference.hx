@@ -34,7 +34,7 @@ class Reference<T1, T2> {
 				headers = headers.prepend(Origin(_actor.address()));
 				headers = headers.prepend(Recipient(act.address()));
 
-				_broadcaster(actor, Some(Message(headers, _value)));
+				_broadcaster(actor, Some(tuple2(headers, Some(_value))));
 			case None:
 				_broadcaster(actor, None);
 		}

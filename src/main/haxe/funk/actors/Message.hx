@@ -1,8 +1,7 @@
 package funk.actors;
 
 import funk.collections.immutable.List;
+import funk.types.Option;
+import funk.types.Tuple2;
 
-enum Message<T> {
-    Empty;
-	Message(header : List<Header>, body : T);
-}
+typedef Message<T> = Tuple2<List<Header>, Option<T>>;
