@@ -16,7 +16,7 @@ using funk.types.extensions.Promises;
 
 class Model<T, K> extends Actor<EnumValue, T> {
 
-	private var _listeners : List<Actor<EnumValue, T>>;
+	private var _listeners : List<Actor<T, K>>;
 
 	public function new() {
 		super();
@@ -40,10 +40,6 @@ class Model<T, K> extends Actor<EnumValue, T> {
 		return Promises.dispatch(None);
 	}
 
-	private function value<R>() : Option<R> {
-		return None;
-	}
-
 	override private function recieve(message : Message<EnumValue>) : Promise<Message<T>> {
 		return switch (_status) {
 			case Running:
@@ -55,7 +51,7 @@ class Model<T, K> extends Actor<EnumValue, T> {
 					case Some(value):
 
 						if (Std.is(value, Observable)) {
-							var observable : Observable<T> = cast value;
+							var observable : Observable<T, K> = cast value;
 							switch(observable) {
 								case AddListener(value): _listeners = _listeners.prepend(value);
 								case RemoveListener(value):

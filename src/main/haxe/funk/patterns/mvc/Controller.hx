@@ -14,19 +14,19 @@ class Controller<T, K> {
 	}
 
 	public function add(value : T) : Promise<T> {
-        return cast _model.echo(Add(value));
+        return cast _model.dispatch(Add(value));
     }
 
     public function addAt(value : T, key : K) : Promise<T> {
-    	return cast _model.echo(AddAt(value, key));
+    	return cast _model.dispatch(AddAt(value, key));
     }
 
     public function get() : Promise<T> {
-        return cast _model.echo(Get);
+        return cast _model.dispatch(Get);
     }
 
     public function getAt(key : K) : Promise<T> {
-    	return cast _model.echo(GetAt(key));
+    	return cast _model.dispatch(GetAt(key));
     }
 
 	public function model() : Model<T, K> {

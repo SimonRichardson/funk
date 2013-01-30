@@ -17,7 +17,9 @@ class ModelTest {
 		var controller = new MockController(model);
 		var view = new MockView(model);
 
-		controller.append("Ducky");		
+		controller.add("Ducky").then(function (message) {
+			trace(message);
+		});	
 	}
 }
 
@@ -61,12 +63,6 @@ private class MockController extends Controller<String, Int> {
 
 	public function new(model : Model<String, Int>) {
 		super(model);
-	}
-
-	public function insert(value : String) : Void {
-		controller.add(value).then(function (message) {
-			trace(message);
-		});
 	}
 }
 

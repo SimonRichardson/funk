@@ -16,7 +16,7 @@ class ActorTest {
 	@Test
 	public function hello() : Void {
 		var actor = new Actor();
-		actor.echo("Hello").then(function(message) {
+		actor.dispatch("Hello").then(function(message) {
 			if (message.body().get() == "Hello") {
 				actor.send("World").toAddress(message.sender().get()).then(function (message) {
 
