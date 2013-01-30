@@ -24,12 +24,24 @@ class Model<T, K> extends Actor<EnumValue, T> {
 		_listeners = Nil;
 	}
 
+	private function add(value : T) : Promise<Option<T>> {
+		return Promises.dispatch(None); 
+	}
+
+	private function addAt(value : T, key : K) : Promise<Option<T>> {
+		return Promises.dispatch(None); 
+	}
+
 	private function get() : Promise<Option<T>> {
 		return Promises.dispatch(None);
 	}
 
 	private function getAt(key : K) : Promise<Option<T>> {
 		return Promises.dispatch(None);
+	}
+
+	private function value<R>() : Option<R> {
+		return None;
 	}
 
 	override private function recieve(message : Message<EnumValue>) : Promise<Message<T>> {
@@ -58,6 +70,8 @@ class Model<T, K> extends Actor<EnumValue, T> {
 							
 							var choices : Choices<T, K> = cast value;
 							var response = switch(choices) {
+								case Add(value): add(value);
+								case AddAt(value, key): addAt(value, key);
 								case Get: get();
 								case GetAt(key): getAt(key);
 								default: 
@@ -69,7 +83,6 @@ class Model<T, K> extends Actor<EnumValue, T> {
 							});
 
 						} else {
-							trace("fuck" + value);
 							Promises.empty();
 						}
 

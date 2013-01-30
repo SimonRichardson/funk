@@ -3,7 +3,7 @@ package funk.patterns.mvc;
 import funk.actors.Actor;
 import funk.patterns.mvc.Observable;
 
-class View<T, K> extends Actor<EnumValue, T> {
+class View<T, K> extends Actor<T, K> {
 
     private var _model : Model<T, K>;
 

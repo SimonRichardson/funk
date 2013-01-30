@@ -7,6 +7,7 @@ import funk.types.extensions.Promises;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.collections.immutable.extensions.ListsUtil;
+using funk.types.extensions.Options;
 
 class ModelTest {
 
@@ -16,9 +17,7 @@ class ModelTest {
 		var controller = new MockController(model);
 		var view = new MockView(model);
 
-		controller.getAt(1).then(function (message) {
-			trace(message);
-		});
+		controller.append("Ducky");		
 	}
 }
 
@@ -30,6 +29,23 @@ private class MockModel extends Model<String, Int> {
 		super();
 
 		_list = "Hello, world!".toList();
+	}
+
+	override private function add(value : String) : Promise<Option<String>> {
+		_list = _list.append(value);
+		return Promises.dispatch(value.toOption());
+	}
+
+	override private function addAt(value : String, key : Int) : Promise<Option<String>> {
+		var index = 0;
+		_list = _list.flatMap(function (val : String) {
+			return if (index++ == key) {
+				Nil.prepend(val).prepend(value);
+			} else {
+				value.toList();
+			}
+		});
+		return Promises.dispatch(value.toOption());
 	}
 
 	override private function get() : Promise<Option<String>> {
@@ -45,6 +61,12 @@ private class MockController extends Controller<String, Int> {
 
 	public function new(model : Model<String, Int>) {
 		super(model);
+	}
+
+	public function insert(value : String) : Void {
+		controller.add(value).then(function (message) {
+			trace(message);
+		});
 	}
 }
 

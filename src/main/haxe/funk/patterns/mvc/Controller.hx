@@ -13,6 +13,14 @@ class Controller<T, K> {
 		_model = model;
 	}
 
+	public function add(value : T) : Promise<T> {
+        return cast _model.echo(Add(value));
+    }
+
+    public function addAt(value : T, key : K) : Promise<T> {
+    	return cast _model.echo(AddAt(value, key));
+    }
+
     public function get() : Promise<T> {
         return cast _model.echo(Get);
     }
