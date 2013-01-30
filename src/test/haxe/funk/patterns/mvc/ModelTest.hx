@@ -1,5 +1,13 @@
 package funk.patterns.mvc;
 
+import funk.collections.immutable.List;
+import funk.types.Option;
+import funk.types.Promise;
+import funk.types.extensions.Promises;
+
+using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.extensions.ListsUtil;
+
 class ModelTest {
 
 	@Test
@@ -8,29 +16,37 @@ class ModelTest {
 		var controller = new MockController(model);
 		var view = new MockView(model);
 
-		controller.get().then(function (value) {
-			trace(value);
+		controller.get().then(function (message) {
+			trace(message);
 		});
 	}
 }
 
-private class MockModel<T> extends Model<T, Int> {
+private class MockModel extends Model<String, Int> {
+
+	private var _list : List<String>;
 
 	public function new() {
 		super();
+
+		_list = "Hello, world!".toList();
+	}
+
+	override private function get() : Promise<Option<String>> {
+		return Promises.dispatch(_list.headOption());
 	}
 }
 
-private class MockController<T> extends Controller<T, Int> {
+private class MockController extends Controller<String, Int> {
 
-	public function new(model : Model<T, Int>) {
+	public function new(model : Model<String, Int>) {
 		super(model);
 	}
 }
 
-private class MockView<T> extends View<T, Int> {
+private class MockView extends View<String, Int> {
 
-	public function new(model : Model<T, Int>) {
+	public function new(model : Model<String, Int>) {
 		super(model);
 	}
 }

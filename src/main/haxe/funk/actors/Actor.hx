@@ -3,9 +3,11 @@ package funk.actors;
 import funk.collections.immutable.List;
 import funk.actors.Actor;
 import funk.actors.ActorStatus;
-import funk.actors.Reference;
+import funk.actors.Header;
 import funk.actors.Message;
+import funk.actors.Reference;
 import funk.types.Deferred;
+import funk.types.Function2;
 import funk.types.Option;
 import funk.types.Promise;
 
@@ -62,29 +64,8 @@ class Actor<T1, T2> {
 
 	public function send(message : T1) : Reference<T1, T2> {
 		return switch (_status) {
-			case Running:
-				new Reference(this, message, function (actor, message) {
-					var deferred = new Deferred();
-					var promise = deferred.promise();
-
-					switch(actor) {
-						case Some(act):
-							switch (message) {
-								case Some(msg):
-									_recipients = _recipients.prepend(act);
-
-									act.recieve(msg).pipe(deferred);
-								case None:
-									deferred.reject(ActorError("No message supplied"));
-							}
-						case None:
-							deferred.reject(ActorError("No actor supplied"));
-					}
-
-					return promise;
-				});
-			default:
-				Funk.error(ActorError("Actor is not running"));
+			case Running: createReference(message);
+			default: Funk.error(ActorError("Actor is not running"));
 		}
 	}
 
@@ -101,8 +82,24 @@ class Actor<T1, T2> {
 
 				promise;
 			default:
-				Funk.error(ActorError("Actor is not running"));
+				Promises.reject("Actor is not running");
 		}
+	}
+
+	@:overridable
+	private function createReference(message : T1) : Reference<T1, T2> {
+		return new ReferenceImpl(this, message, function (	actor : Actor<T1, T2>, 
+															message : Message<T1>
+															) : Promise<Message<T2>> {
+			var deferred = new Deferred();
+			var promise = deferred.promise();
+			
+			_recipients = _recipients.prepend(actor);
+			
+			actor.recieve(message).pipe(deferred);
+			
+			return promise;
+		});
 	}
 
 	private function generateAddress() : String {
@@ -120,3 +117,40 @@ class Actor<T1, T2> {
 		return buffer;
 	}
 }
+
+private typedef Broadcaster<T1, T2> = Function2<Actor<T1, T2>, Message<T1>, Promise<Message<T2>>>;
+
+private class ReferenceImpl<T1, T2> {
+
+	private var _actor : Actor<T1, T2>;
+
+	private var _value : T1;
+
+	private var _broadcaster : Broadcaster<T1, T2>;
+
+	public function new(actor : Actor<T1, T2>, value : T1, broadcaster : Broadcaster<T1, T2>) {
+		_actor = actor;
+		_value = value;
+		_broadcaster = broadcaster;
+	}
+
+	public function to(actor : Option<Actor<T1, T2>>) : Promise<Message<T2>> {
+		return switch(actor) {
+			case Some(act):
+				var headers = Nil;
+				headers = headers.prepend(Origin(_actor.address()));
+				headers = headers.prepend(Recipient(act.address()));
+
+				_broadcaster(act, tuple2(headers, Some(_value)));
+
+			case None: Promises.reject("Unexpected: Actor not found");
+		};
+	}
+
+	public function toAddress(address : String) : Promise<Message<T2>> {
+		return to(_actor.recipients().find(function (actor) {
+			return actor.address() == address;
+		}));
+	}
+}
+

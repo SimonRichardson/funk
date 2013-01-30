@@ -55,6 +55,13 @@ class Promises {
         return new EmptyPromise();
     }
 
+    public static function reject<T>(value : String) : Promise<T> {
+        var deferred = new Deferred();
+        var promise = deferred.promise();
+        deferred.reject(ActorError(value));
+        return promise;
+    }
+
     public static function dispatch<T>(value : T) : Promise<T> {
         var deferred = new Deferred();
         var promise = deferred.promise();
