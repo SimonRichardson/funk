@@ -1,7 +1,7 @@
-package funk.patterns.mvc;
+package funk.actors.types.mvc;
 
 import funk.actors.Message;
-import funk.patterns.mvc.Choices;
+import funk.actors.types.mvc.Model;
 import funk.types.Promise;
 
 using funk.actors.extensions.Actors;

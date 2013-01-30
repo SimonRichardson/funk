@@ -1,4 +1,4 @@
-package funk.patterns.mvc;
+package funk.actors.types.mvc;
 
 import funk.collections.immutable.List;
 import funk.types.Option;
@@ -68,9 +68,5 @@ private class MockView extends View<String, Int> {
 
 	public function new(model : Model<String, Int>) {
 		super(model);
-
-		this.model().react().foreach(function(value : Option<List<String>>) {
-			trace(value.get().toString());
-		});
 	}
 }

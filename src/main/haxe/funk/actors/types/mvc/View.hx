@@ -1,4 +1,4 @@
-package funk.patterns.mvc;
+package funk.actors.types.mvc;
 
 import funk.actors.Actor;
 import funk.actors.Message;
@@ -15,6 +15,11 @@ class View<T, K> extends Actor<T> {
         super();
 
 		_model = model;
+		_model.react().foreach(handle);
+	}
+
+	private function handle<R>(value : R) : Void {
+		
 	}
 
 	private function model() : Model<T, K> {
