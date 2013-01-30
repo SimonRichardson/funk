@@ -17,6 +17,10 @@ class Controller<T, K> {
         return cast _model.echo(Get);
     }
 
+    public function getAt(key : K) : Promise<T> {
+    	return cast _model.echo(GetAt(key));
+    }
+
 	public function model() : Model<T, K> {
 		return _model;
 	}

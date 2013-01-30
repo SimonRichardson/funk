@@ -9,6 +9,7 @@ import funk.types.Deferred;
 import funk.types.Option;
 import funk.types.Promise;
 
+using funk.actors.extensions.Headers;
 using funk.actors.extensions.Messages;
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Promises;
@@ -27,10 +28,17 @@ class Model<T, K> extends Actor<EnumValue, T> {
 		return Promises.dispatch(None);
 	}
 
+	private function getAt(key : K) : Promise<Option<T>> {
+		return Promises.dispatch(None);
+	}
+
 	override private function recieve(message : Message<EnumValue>) : Promise<Message<T>> {
 		return switch (_status) {
 			case Running:
+				var headers = message.headers();
+				
 				var body = message.body();
+
 				switch (body) {
 					case Some(value):
 
@@ -49,12 +57,16 @@ class Model<T, K> extends Actor<EnumValue, T> {
 						} else if (Std.is(value, Choices)) {
 							
 							var choices : Choices<T, K> = cast value;
-							switch(choices) {
-								case Get: get().map(function (value : Option<T>) {
-									return tuple2(Nil, value);
-								});
-								default: Promises.empty();
-							}
+							var response = switch(choices) {
+								case Get: get();
+								case GetAt(key): getAt(key);
+								default: 
+									Funk.error(ActorError("Not implemented yet"));
+							};
+
+							response.map(function (value : Option<T>) {
+								return tuple2(headers.invert(), value);
+							});
 
 						} else {
 							trace("fuck" + value);

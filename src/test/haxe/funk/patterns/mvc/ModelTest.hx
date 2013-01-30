@@ -16,7 +16,7 @@ class ModelTest {
 		var controller = new MockController(model);
 		var view = new MockView(model);
 
-		controller.get().then(function (message) {
+		controller.getAt(1).then(function (message) {
 			trace(message);
 		});
 	}
@@ -34,6 +34,10 @@ private class MockModel extends Model<String, Int> {
 
 	override private function get() : Promise<Option<String>> {
 		return Promises.dispatch(_list.headOption());
+	}
+
+	override private function getAt(value : Int) : Promise<Option<String>> {
+		return Promises.dispatch(_list.get(value));
 	}
 }
 
