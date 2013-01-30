@@ -14,18 +14,22 @@ using funk.actors.extensions.Messages;
 using funk.types.extensions.Promises;
 using funk.net.http.extensions.UriRequests;
 
-class UrlActor<T1 : String, T2 : String> extends Actor<T1, T2> {
+class UrlActor<T : String> extends Actor<T> {
 
 	public function new() {
 		super();
 	}
 
-	override private function recieve(message : Message<T1>) : Promise<Message<T2>> {
-		var deferred = new Deferred();
-		var promise = deferred.promise();
+	override private function recieve<R>(message : Message<T>) : Promise<Message<R>> {
+		return switch (_status) {
+			case Running:
+				var deferred = new Deferred();
+				var promise = deferred.promise();
 
-		message.body().fromUri().get().pipe(deferred);
+				message.body().fromUri().get().pipe(deferred);
 
-		return cast promise;
+			default:
+				Promises.reject("Actor is not running");
+		}
 	}
 }

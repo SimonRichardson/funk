@@ -9,13 +9,13 @@ using funk.collections.immutable.extensions.Lists;
 
 class Actors {
 
-    public static function commutes<T1, T2>(a : Actor<T1, T2>, b : Actor<T1, T2>) : Bool {
-        return a.recipients().exists(function (actor : Actor<T1, T2>) {
+    public static function commutes<T>(a : Actor<T>, b : Actor<T>) : Bool {
+        return a.recipients().exists(function (actor : Actor<T>) {
             return actor.address() == b.address();
         });
     }
 
-    public static function dispatch<T1, T2>(a : Actor<T1, T2>, value : T1) : Promise<Message<T2>> {
-        return a.send(value).to(Some(a));
+    public static function dispatch<T1, T2>(a : Actor<T1>, value : T1) : Promise<Message<T2>> {
+        return a.send(value).to(cast Some(a));
     }
 }

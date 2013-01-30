@@ -4,7 +4,8 @@ import funk.actors.Actor;
 import funk.actors.Message;
 import funk.collections.immutable.List;
 import funk.patterns.mvc.Choices;
-import funk.patterns.mvc.Observable;
+import funk.reactive.Stream;
+import funk.reactive.extensions.Streams;
 import funk.types.Deferred;
 import funk.types.Option;
 import funk.types.Promise;
@@ -14,14 +15,18 @@ using funk.actors.extensions.Messages;
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Promises;
 
-class Model<T, K> extends Actor<EnumValue, T> {
+class Model<T, K> extends Actor<Choices<T, K>> {
 
-	private var _listeners : List<Actor<T, K>>;
+	private var stream : Stream<Dynamic>;
 
 	public function new() {
 		super();
 
-		_listeners = Nil;
+		stream = Streams.identity(None);
+	}
+
+	public function react<R>() : Stream<R> {
+		return cast stream;
 	}
 
 	private function add(value : T) : Promise<Option<T>> {
@@ -40,8 +45,12 @@ class Model<T, K> extends Actor<EnumValue, T> {
 		return Promises.dispatch(None);
 	}
 
-	override private function recieve(message : Message<EnumValue>) : Promise<Message<T>> {
-		return switch (_status) {
+	private function data<R>() : Option<R> {
+		return None;
+	}
+
+	override private function recieve<R>(message : Message<Choices<T, K>>) : Promise<Message<R>> {
+		return cast switch (_status) {
 			case Running:
 				var headers = message.headers();
 				
@@ -49,44 +58,28 @@ class Model<T, K> extends Actor<EnumValue, T> {
 
 				switch (body) {
 					case Some(value):
-
-						if (Std.is(value, Observable)) {
-							var observable : Observable<T, K> = cast value;
-							switch(observable) {
-								case AddListener(value): _listeners = _listeners.prepend(value);
-								case RemoveListener(value):
-									_listeners = _listeners.filterNot(function(val) {
-										return val == value;
-									});
-							}
-							// (Simon) Send back an empty promise.
-							Promises.empty();
-
-						} else if (Std.is(value, Choices)) {
 							
-							var choices : Choices<T, K> = cast value;
-							var response = switch(choices) {
-								case Add(value): add(value);
-								case AddAt(value, key): addAt(value, key);
-								case Get: get();
-								case GetAt(key): getAt(key);
-								default: 
-									Funk.error(ActorError("Not implemented yet"));
-							};
+						var response : Promise<Option<T>> = switch(value) {
+							case Add(value): add(value);
+							case AddAt(value, key): addAt(value, key);
+							case Get: get();
+							case GetAt(key): getAt(key);
+							default: 
+								Funk.error(ActorError("Not implemented yet"));
+						};
 
-							response.map(function (value : Option<T>) {
-								return tuple2(headers.invert(), value);
-							});
+						react().dispatch(data());
 
-						} else {
-							Promises.empty();
-						}
+						response.map(function (value : Option<T>) {
+							return tuple2(headers.invert(), cast value);
+						});
 
 					// (Simon) Not entirely sure what to do here, as we've received a empty message.
-					case None: Promises.empty();
+					case None: Promises.dispatch(tuple2(headers.invert(), None));
 				}
 				
-			default: Promises.reject("Actor is not running");
+			default: 
+				Promises.reject("Actor is not running");
 		}
 	}
 }

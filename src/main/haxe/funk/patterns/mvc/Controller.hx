@@ -1,5 +1,6 @@
 package funk.patterns.mvc;
 
+import funk.actors.Message;
 import funk.patterns.mvc.Choices;
 import funk.types.Promise;
 
@@ -13,20 +14,20 @@ class Controller<T, K> {
 		_model = model;
 	}
 
-	public function add(value : T) : Promise<T> {
-        return cast _model.dispatch(Add(value));
+	public function add<R>(value : T) : Promise<Message<R>> {
+        return _model.dispatch(Add(value));
     }
 
-    public function addAt(value : T, key : K) : Promise<T> {
-    	return cast _model.dispatch(AddAt(value, key));
+    public function addAt<R>(value : T, key : K) : Promise<Message<R>> {
+    	return _model.dispatch(AddAt(value, key));
     }
 
-    public function get() : Promise<T> {
-        return cast _model.dispatch(Get);
+    public function get<R>() : Promise<Message<R>> {
+        return _model.dispatch(Get);
     }
 
-    public function getAt(key : K) : Promise<T> {
-    	return cast _model.dispatch(GetAt(key));
+    public function getAt<R>(key : K) : Promise<Message<R>> {
+    	return _model.dispatch(GetAt(key));
     }
 
 	public function model() : Model<T, K> {

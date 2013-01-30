@@ -7,6 +7,7 @@ import funk.types.extensions.Promises;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.collections.immutable.extensions.ListsUtil;
+using funk.reactive.extensions.Streams;
 using funk.types.extensions.Options;
 
 class ModelTest {
@@ -17,7 +18,7 @@ class ModelTest {
 		var controller = new MockController(model);
 		var view = new MockView(model);
 
-		controller.add("Ducky").then(function (message) {
+		controller.addAt("Ducky", 1).then(function (message) {
 			trace(message);
 		});	
 	}
@@ -39,14 +40,7 @@ private class MockModel extends Model<String, Int> {
 	}
 
 	override private function addAt(value : String, key : Int) : Promise<Option<String>> {
-		var index = 0;
-		_list = _list.flatMap(function (val : String) {
-			return if (index++ == key) {
-				Nil.prepend(val).prepend(value);
-			} else {
-				value.toList();
-			}
-		});
+		_list = _list.insert(value, key);
 		return Promises.dispatch(value.toOption());
 	}
 
@@ -56,6 +50,10 @@ private class MockModel extends Model<String, Int> {
 
 	override private function getAt(value : Int) : Promise<Option<String>> {
 		return Promises.dispatch(_list.get(value));
+	}
+
+	override private function data<R>() : Option<R> {
+		return cast Some(_list);
 	}
 }
 
@@ -70,5 +68,9 @@ private class MockView extends View<String, Int> {
 
 	public function new(model : Model<String, Int>) {
 		super(model);
+
+		this.model().react().foreach(function(value : Option<List<String>>) {
+			trace(value.get().toString());
+		});
 	}
 }

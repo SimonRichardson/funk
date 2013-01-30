@@ -363,6 +363,29 @@ class Lists {
 		return result;
 	}
 
+	inline public static function insert<T>(list : List<T>, value : T, index : Int) : List<T> {
+		var added = false;
+
+		var stack = Nil;
+		var p = list;
+		while (nonEmpty(p)) {
+			if (index-- == 0) {
+				stack = prepend(stack, value);
+				added = true;
+			}
+
+			stack = prepend(stack, head(p));
+
+			p = tail(p);
+		}
+
+		if (!added) {
+			stack = prepend(stack, value);
+		}
+
+		return reverse(stack);
+	}
+
 	inline public static function map<T, E>(list : List<T>, func : Function1<T, E>) : List<E> {
 		var stack = Nil;
 		var p = list;
