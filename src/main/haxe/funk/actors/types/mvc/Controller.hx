@@ -30,7 +30,27 @@ class Controller<T, K> {
     	return _model.dispatch(GetAt(key));
     }
 
-	public function model() : Model<T, K> {
+    private function remove<R>(value : T) : Promise<Message<R>> {
+        return _model.dispatch(Remove(value));
+    }
+
+    private function removeAt<R>(key : K) : Promise<Message<R>> {
+        return _model.dispatch(RemoveAt(key));
+    }
+
+    private function sync<R>() : Promise<Message<R>> {
+        return _model.dispatch(Sync);
+    }
+
+    private function update<R>(a : T, b : T) : Promise<Message<R>> {
+        return _model.dispatch(Update(a, b));
+    }
+
+    private function updateAt<R>(value : T, key : K) : Promise<Message<R>> {
+        return _model.dispatch(UpdateAt(value, key));
+    }
+
+	public function model<R>() : Model<T, K> {
 		return _model;
 	}
 }
