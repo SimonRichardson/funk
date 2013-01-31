@@ -143,6 +143,13 @@ class Attempts {
         }
     }
 
+    public static function toBool<T>(attempt : Attempt<T>) : Bool {
+        return switch(attempt) {
+            case Success(_): true;
+            case Failure(_): false;
+        }
+    }
+
     public static function toOption<T>(attempt : Attempt<T>) : Option<T> {
         return switch(attempt) {
             case Success(value): Some(value);

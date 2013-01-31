@@ -57,7 +57,7 @@ class ModuleTest {
 
 	@Test
 	public function when_creating_new_module_calling_getInstance_should_return_valid_option() {
-		module.getInstance(String).areEqual(Some(""));
+		module.getInstance(String).areEqual(None);
 	}
 
 	@Test
@@ -98,7 +98,7 @@ class ModuleTest {
 	@Test
 	public function when_creating_new_module_calling_bind_then_getInstance_should_return_valid_option() {
 		module.bind(String);
-		module.getInstance(String).areEqual(Some(""));
+		module.getInstance(String).areEqual(None);
 	}
 
 	@Test

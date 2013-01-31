@@ -1,7 +1,13 @@
 package funk.types.extensions;
 
+import funk.types.Attempt;
+import funk.types.Either;
 import funk.types.Function1;
 import funk.types.Predicate2;
+import funk.types.Option;
+import funk.types.extensions.Attempts;
+import funk.types.extensions.Eithers;
+import funk.types.extensions.Options;
 
 class Anys {
 
@@ -33,12 +39,18 @@ class Anys {
           	cast(value) > 0;
         } else if(Std.is(value, String)) {
             Strings.isNonEmpty(cast value);
+        } else if(Std.is(value, Option)) {
+        	Options.toBool(cast value);
+        } else if(Std.is(value, Attempt)) {
+        	Attempts.toBool(cast value);
+        } else if(Std.is(value, Either)) {
+        	Eithers.toBool(cast value);
         } else {
 			true;
 		}
 	}
 
 	public static function toString<T>(value : T, ?func : Function1<T, String>) : String {
-		return null != func ? func(value) : Std.string(value);
+		return toBool(func) ? func(value) : Std.string(value);
 	}
 }

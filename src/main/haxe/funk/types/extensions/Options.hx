@@ -146,6 +146,6 @@ class Options {
 	}
 
 	public static function toOption<T>(any : Null<T>) : Option<T> {
-		return any != null ? Some(any) : None;
+		return Anys.toBool(any) ? Some(any) : None;
 	}
 }

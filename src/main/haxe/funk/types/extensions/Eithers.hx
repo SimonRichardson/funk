@@ -143,6 +143,13 @@ class Eithers {
 		}
 	}
 
+	public static function toBool<T1, T2>(either : Either<T1, T2>) : Bool {
+		return switch(either) {
+			case Left(_): false;
+			case Right(value): true;
+		}
+	}
+
 	public static function toOption<T1, T2>(either : Either<T1, T2>) : Option<T2> {
 		return switch(either) {
 			case Left(_): None;
