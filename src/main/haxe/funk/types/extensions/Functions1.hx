@@ -3,7 +3,9 @@ package funk.types.extensions;
 import funk.Funk;
 import funk.types.Function0;
 import funk.types.Function1;
+import funk.types.Option;
 
+using funk.types.extensions.Options;
 using funk.types.extensions.Tuples1;
 
 class Functions1 {
@@ -46,5 +48,9 @@ class Functions1 {
 		return function(value0) {
 			return func(tuple1(value0));
 		};
+	}
+
+	public static function wait<T1>(func : Function1<T1, Void>, ?async : Async1<T1> = null) : Async1<T1> {
+		return new Async1(func).add(async.toOption());
 	}
 }

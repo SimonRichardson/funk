@@ -5,7 +5,9 @@ import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function5;
 import funk.types.Tuple5;
+import funk.types.Option;
 
+using funk.types.extensions.Options;
 using funk.types.extensions.Tuples5;
 
 private typedef Curry5<T1, T2, T3, T4, T5, R> = Function1<T1, Function1<T2, Function1<T3, Function1<T4, Function1<T5, R>>>>>;
@@ -102,5 +104,11 @@ class Functions5 {
 		return function(value0, value1, value2, value3, value4) {
 			return func(tuple5(value0, value1, value2, value3, value4));
 		};
+	}
+
+	public static function wait<T1, T2, T3, T4, T5>(	func : Function5<T1, T2, T3, T4, T5, Void>, 
+														?async : Async5<T1, T2, T3, T4, T5> = null
+														) : Async5<T1, T2, T3, T4, T5> {
+		return new Async5(func).add(async.toOption());
 	}
 }

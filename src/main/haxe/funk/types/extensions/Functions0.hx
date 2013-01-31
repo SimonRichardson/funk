@@ -4,7 +4,6 @@ import funk.Funk;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Option;
-import funk.types.extensions.Options;
 
 using funk.types.extensions.Options;
 
@@ -34,7 +33,7 @@ class Functions0 {
 		};
 	}
 
-	public static function wait<T, R>(func : Function0<R>, ?async : Async0<T> = null) : Async0<R> {
+	public static function wait(func : Function0<Void>, ?async : Async0 = null) : Async0 {
 		return new Async0(func).add(async.toOption());
 	}
 }

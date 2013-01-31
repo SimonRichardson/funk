@@ -100,7 +100,7 @@ class Model<T, K> extends Actor<Requests<T, K>> {
 							case UpdateAt(value, key): updateAt(value, key);
 						};
 
-						var promise = response.map(function (value : Option<T>) {
+						var promise = response.map(function(value : Option<T>) {
 							return tuple2(headers.invert(), cast value);
 						});
 

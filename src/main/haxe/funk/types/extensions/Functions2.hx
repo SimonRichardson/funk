@@ -5,7 +5,9 @@ import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Tuple2;
+import funk.types.Option;
 
+using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
 
 private typedef Curry2<T1, T2, R> = Function1<T1, Function1<T2, R>>;
@@ -70,5 +72,11 @@ class Functions2 {
 		return function(value0, value1) {
 			return func(tuple2(value0, value1));
 		};
+	}
+
+	public static function wait<T1, T2>(	func : Function2<T1, T2, Void>, 
+											?async : Async2<T1, T2> = null
+											) : Async2<T1, T2> {
+		return new Async2(func).add(async.toOption());
 	}
 }

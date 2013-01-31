@@ -12,6 +12,7 @@ import funk.types.Option;
 import funk.types.Promise;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.actors.extensions.Headers;
 using funk.actors.extensions.Messages;
 using funk.types.extensions.Options;
 using funk.types.extensions.Promises;
@@ -23,18 +24,25 @@ class Actor<T> {
 
 	private var _status : ActorStatus;
 
-	private var _recipients : List<Actor<T>>;
+	private var _associates : List<Actor<T>>;
+
+	private var _recipients : List<String>;
 
 	public function new() {
 		_status = Running;
-		_recipients = Nil.prepend(this);
 
 		_address = generateAddress();
+
+		_associates = Nil.prepend(this);
+		_recipients = Nil.prepend(_address);
+
+		// Each actor is now added to the global registrar.
+		Registrar.add(this);
 	}
 
 	public function actor() : Actor<T> {
 		var actor = new Actor();
-		_recipients = _recipients.prepend(actor);
+		_associates = _associates.prepend(actor);
 		return actor;
 	}
 
@@ -46,12 +54,16 @@ class Actor<T> {
 		return _address;
 	}
 
-	public function recipients() : List<Actor<T>> {
+	public function associates() : List<Actor<T>> {
+		return _associates;
+	}
+
+	public function recipients() : List<String> {
 		return _recipients;
 	}
 
 	public function belongsTo(actor : Actor<T>) : Void {
-		_recipients = _recipients.prepend(actor);
+		_associates = _associates.prepend(actor);
 	}
 
 	public function start() : Actor<T> {
@@ -72,19 +84,21 @@ class Actor<T> {
 	}
 
 	@:overridable
-	private function recieve<R>(message : Message<R>) : Promise<Message<R>> {
+	private function recieve<R>(message : Message<T>) : Promise<Message<R>> {
 		return switch (_status) {
 			case Running:
-				var deferred = new Deferred();
-				var promise = deferred.promise();
+				var deferred : Deferred<Message<T>> = new Deferred();
+				var promise : Promise<Message<T>> = deferred.promise();
 
-				deferred.resolve(message.map(function (message) {
-					return cast message;
-				}));
+				deferred.resolve(message);
 
-				promise;
-			default:
-				Promises.reject("Actor is not running");
+				var headers = message.headers();
+				var result : Promise<Message<R>> = promise.map(function(value : Message<T>) {
+					return tuple2(headers.invert(), cast value);
+				});
+				result;
+
+			default: Promises.reject("Actor is not running");
 		}
 	}
 
@@ -96,9 +110,9 @@ class Actor<T> {
 			var deferred = new Deferred();
 			var promise = deferred.promise();
 			
-			//_recipients = _recipients.prepend(actor);
+			_recipients = _recipients.prepend(actor.address());
 			
-			actor.recieve(message).pipe(deferred);
+			actor.recieve(cast message).pipe(deferred);
 			
 			return cast promise;
 		});
@@ -122,7 +136,7 @@ class Actor<T> {
 
 private typedef Broadcaster<T1, T2> = Function2<Actor<T2>, Message<T1>, Promise<Message<T2>>>;
 
-private class ReferenceImpl<T1, T2> {
+class ReferenceImpl<T1, T2> {
 
 	private var _actor : Actor<T1>;
 
@@ -150,11 +164,25 @@ private class ReferenceImpl<T1, T2> {
 	}
 
 	public function toAddress(address : String) : Promise<Message<T2>> {
-		return to(_actor.recipients().find(function (actor) {
+		// Try and get a know associate
+		var associate = _actor.associates().find(function(actor) {
 			return actor.address() == address;
-		}).map(function (actor) {
-			return cast actor;
-		}));
+		});
+
+		// Else speak to the registrar
+		return to(switch(associate) {
+			case Some(_): cast associate;
+			case None: 
+				// See if it even belongs to the recipients.
+				var recipient = _actor.recipients().find(function(value) {
+					return address == value;
+				});
+
+				switch(recipient) {
+					case Some(address): cast Registrar.find(address);
+					case None: None;
+				}
+		});
 	}
 }
 

@@ -60,8 +60,8 @@ class Function0Test {
 		var called = false;
 		var a = function() { 
 			called = true;
-			return true; 
 		};
+
 		a.promote()(true);
 		called.isTrue();
 	}
@@ -71,8 +71,7 @@ class Function0Test {
 		var called = false;
 		var a = function() {
 			called = true;
-			return true;
-		}
+		};
 
 		var aa = a.wait();
 		called.isFalse();
@@ -83,8 +82,7 @@ class Function0Test {
 		var called = false;
 		var a = function() {
 			called = true;
-			return true;
-		}
+		};
 
 		var aa = a.wait();
 		aa.yield();
@@ -99,12 +97,10 @@ class Function0Test {
 
 		var a = function() {
 			called0 = true;
-			return true;
-		}
+		};
 		var b = function() {
 			called1 = true;
-			return true;
-		}
+		};
 
 		var aa = a.wait();
 		var bb = b.wait(aa);
@@ -121,12 +117,10 @@ class Function0Test {
 
 		var a = function() {
 			called0 = true;
-			return true;
-		}
+		};
 		var b = function() {
 			called1 = true;
-			return true;
-		}
+		};
 
 		var aa = a.wait();
 		var bb = b.wait(aa);

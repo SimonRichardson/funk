@@ -10,8 +10,10 @@ using funk.collections.immutable.extensions.Lists;
 class Actors {
 
     public static function commutes<T>(a : Actor<T>, b : Actor<T>) : Bool {
-        return a.recipients().exists(function (actor : Actor<T>) {
-            return actor.address() == b.address();
+    	var bAddress = b.address();
+
+        return a.recipients().exists(function (address) {
+            return address == bAddress;
         });
     }
 
