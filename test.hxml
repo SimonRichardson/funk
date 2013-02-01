@@ -1,7 +1,7 @@
 -cmd echo "Building Test Suite:"
 
 # js
---next 
+--next
 -cmd echo "\t[Javascript]"
 
 --next
@@ -18,7 +18,7 @@
 #-D parallel
 
 # Neko
---next 
+--next
 -cmd echo "\t[Neko]"
 
 --next
@@ -33,7 +33,7 @@
 #-D parallel
 
 # as3
---next 
+--next
 -cmd echo "\t[Actionscript]"
 
 --next
