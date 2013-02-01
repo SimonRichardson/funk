@@ -80,12 +80,8 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		return None;
 	}
 
-	override private function onRecieve<T1, T2>(message : Message<Requests<Dynamic, Dynamic>>) : Promise<Message<T2>> {
-		var mapped : Message<Requests<V, K>> = message.map(function(value) {
-			return tuple2(value.headers(), cast value.body());
-		});
-
-		return cast switch(mapped.body()) {
+	override private function onRecieve<T1, R>(message : Message<Requests<V, K>>) : Promise<Message<R>> {
+		return cast switch(message.body()) {
 			case Some(value):
 
 				var response : Promise<Option<V>> = switch(value) {
@@ -102,7 +98,7 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 
 				// Invert the headers and merge the result to a message.
 				var promise : Promise<Message<V>> = response.map(function(value : Option<V>) {
-					return tuple2(mapped.headers().invert(), value);
+					return tuple2(message.headers().invert(), value);
 				});
 
 				// Automatically dispatch the data.
