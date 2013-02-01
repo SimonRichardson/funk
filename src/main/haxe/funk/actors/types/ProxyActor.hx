@@ -33,8 +33,9 @@ class ProxyActor<T> extends Actor<T> {
 		return actor;
 	}
 
+	/*
 	override private function createReference<R>(message : T) : Reference<T, R> {
-		return new ReferenceImpl(this, message, function (	actor : Actor<R>, 
+		return new ReferenceImpl(this, message, function (	actor : Actor<R>,
 															message : Message<T>
 															) : Promise<Message<R>> {
 			var deferred = new Deferred();
@@ -43,7 +44,7 @@ class ProxyActor<T> extends Actor<T> {
 			_recipients = _recipients.prepend(actor.address());
 
 			var promises = Nil;
-			
+
 			_children.foreach(function (actor : Actor<T>) {
 				// Note (Simon) : send to itself so it goes through correctly
 				var promise = actor.dispatch(message.body().get());
@@ -82,10 +83,9 @@ class ProxyActor<T> extends Actor<T> {
 				});
 				result;
 
-			default:
-				Promises.reject("Actor is not running");
+			default: Promises.reject("Actor is not running");
 		}
-	}
+	}*/
 }
 
 private class ProxySubActors<T> extends Actor<T> {

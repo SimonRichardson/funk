@@ -76,46 +76,47 @@ class Actor<T> {
 		return this;
 	}
 
-	public function send<R>(message : T) : Reference<T, R> {
+	public function send<R>(value : T) : Reference<T, R> {
 		return switch (_status) {
-			case Running: createReference(message);
+			case Running: onSend(value);
 			default: Funk.error(ActorError("Actor is not running"));
 		}
 	}
 
 	@:overridable
-	private function recieve<R>(message : Message<T>) : Promise<Message<R>> {
+	private function onSend<R>(value : T) : Reference<T, R> {
+		return new ReferenceImpl(this, value, function (	actor : Actor<R>,
+															message : Message<T>
+															) : Promise<Message<R>> {
+			var deferred = new Deferred();
+			var promise = deferred.promise();
+
+			_recipients = _recipients.prepend(actor.address());
+
+			actor.recieve(message).pipe(deferred);
+
+			return cast promise;
+		});
+	}
+
+	private function recieve<R>(message : Message<R>) : Promise<Message<T>> {
 		return switch (_status) {
-			case Running:
-				var deferred : Deferred<Message<T>> = new Deferred();
-				var promise : Promise<Message<T>> = deferred.promise();
-
-				deferred.resolve(message);
-
-				var headers = message.headers();
-				var result : Promise<Message<R>> = promise.map(function(value : Message<T>) {
-					return tuple2(headers.invert(), cast value);
-				});
-				result;
-
+			case Running: onRecieve(message);
 			default: Promises.reject("Actor is not running");
 		}
 	}
 
 	@:overridable
-	private function createReference<R>(message : T) : Reference<T, R> {
-		return new ReferenceImpl(this, message, function (	actor : Actor<R>, 
-															message : Message<T>
-															) : Promise<Message<R>> {
-			var deferred = new Deferred();
-			var promise = deferred.promise();
-			
-			_recipients = _recipients.prepend(actor.address());
-			
-			actor.recieve(cast message).pipe(deferred);
-			
-			return cast promise;
-		});
+	private function onRecieve<R>(message : Message<R>) : Promise<Message<T>> {
+		var deferred : Deferred<Message<T>> = new Deferred();
+		var promise : Promise<Message<T>> = deferred.promise();
+
+		var headers = message.headers();
+		deferred.resolve(message.map(function (value : Message<R>) {
+			return tuple2(headers.invert(), cast value.body());
+		}));
+
+		return promise;
 	}
 
 	private function generateAddress() : String {
@@ -172,7 +173,7 @@ class ReferenceImpl<T1, T2> {
 		// Else speak to the registrar
 		return to(switch(associate) {
 			case Some(_): cast associate;
-			case None: 
+			case None:
 				// See if it even belongs to the recipients.
 				var recipient = _actor.recipients().find(function(value) {
 					return address == value;
@@ -185,4 +186,3 @@ class ReferenceImpl<T1, T2> {
 		});
 	}
 }
-

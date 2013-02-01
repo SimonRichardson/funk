@@ -20,6 +20,7 @@ class UrlActor<T : String> extends Actor<T> {
 		super();
 	}
 
+	/*
 	override private function recieve<R>(message : Message<T>) : Promise<Message<R>> {
 		return switch (_status) {
 			case Running:
@@ -32,4 +33,5 @@ class UrlActor<T : String> extends Actor<T> {
 				Promises.reject("Actor is not running");
 		}
 	}
+	*/
 }

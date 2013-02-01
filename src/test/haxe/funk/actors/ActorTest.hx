@@ -24,4 +24,18 @@ class ActorTest {
 			}
 		});
 	}
+
+	@Test
+	public function sending_Float_to_String_actor__should_return_a_string() {
+		var actor1 : Actor<Float> = new Actor<Float>();
+		var actor2 : Actor<String> = new Actor<String>();
+
+		var expected = '123';
+		var actual = '';
+		actor1.send(123).to(Some(actor2)).then(function(message) {
+			actual = message.body().get();
+		});
+
+		actual.areEqual(expected);
+	}
 }
