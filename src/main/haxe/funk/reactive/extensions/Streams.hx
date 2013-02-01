@@ -66,7 +66,7 @@ class Streams {
             collection.foreach(function (source : Stream<T1>) {
                 switch(source.toOption()) {
                     case Some(val): val.attach(cast stream);
-                    case None: 
+                    case None:
                 }
             });
         });

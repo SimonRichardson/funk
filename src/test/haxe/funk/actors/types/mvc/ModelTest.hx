@@ -5,10 +5,13 @@ import funk.types.Option;
 import funk.types.Promise;
 import funk.types.extensions.Promises;
 
+using funk.actors.extensions.Messages;
 using funk.collections.immutable.extensions.Lists;
 using funk.collections.immutable.extensions.ListsUtil;
 using funk.reactive.extensions.Streams;
 using funk.types.extensions.Options;
+using massive.munit.Assert;
+using unit.Asserts;
 
 class ModelTest {
 
@@ -18,9 +21,14 @@ class ModelTest {
 		var controller = new MockController(model);
 		var view = new MockView(model);
 
-		controller.addAt("Ducky", 1).then(function (message) {
-			trace(message);
-		});	
+		var expected = 'Hello';
+		var actual = '';
+
+		controller.addAt(expected, 1).then(function (message) {
+			actual = message.body().get();
+		});
+
+		actual.areEqual(expected);
 	}
 }
 

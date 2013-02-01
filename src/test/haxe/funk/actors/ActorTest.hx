@@ -14,15 +14,35 @@ using unit.Asserts;
 class ActorTest {
 
 	@Test
-	public function hello() : Void {
+	public function sending_a_value__should_send_correct_result() : Void {
 		var actor = new Actor();
-		actor.dispatch("Hello").then(function(message) {
-			if (message.body().get() == "Hello") {
-				actor.send("World").toAddress(message.sender().get()).then(function (message) {
 
+		var expected = 'Hello';
+		var actual = '';
+
+		actor.dispatch(expected).then(function(message) {
+			actual = message.body().get();
+		});
+
+		actual.areEqual(expected);
+	}
+
+	@Test
+	public function sending_a_response_to_sender__should_send_correct_result() : Void {
+		var actor = new Actor();
+
+		var expected = 'World';
+		var actual = '';
+
+		actor.dispatch('Hello').then(function(message) {
+			if (message.body().get() == 'Hello') {
+				actor.send(expected).toAddress(message.sender().get()).then(function (message) {
+					actual = message.body().get();
 				});
 			}
 		});
+
+		actual.areEqual(expected);
 	}
 
 	@Test
@@ -30,9 +50,10 @@ class ActorTest {
 		var actor1 : Actor<Float> = new Actor<Float>();
 		var actor2 : Actor<String> = new Actor<String>();
 
-		var expected = '123';
+		var expected = '123.01';
 		var actual = '';
-		actor1.send(123).to(Some(actor2)).then(function(message) {
+
+		actor1.send(123.01).to(Some(actor2)).then(function(message) {
 			actual = message.body().get();
 		});
 

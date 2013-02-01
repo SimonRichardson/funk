@@ -26,7 +26,7 @@ enum Requests<T, K> {
     UpdateAt(value : T, key : K);
 }
 
-class Model<T, K> extends Actor<Requests<T, K>> {
+class Model<V, K> extends Actor<Requests<V, K>> {
 
 	private var stream : Stream<Dynamic>;
 
@@ -40,39 +40,39 @@ class Model<T, K> extends Actor<Requests<T, K>> {
 		return cast stream;
 	}
 
-	private function add(value : T) : Promise<Option<T>> {
-		return Promises.dispatch(None); 
-	}
-
-	private function addAt(value : T, key : K) : Promise<Option<T>> {
-		return Promises.dispatch(None); 
-	}
-
-	private function get() : Promise<Option<T>> {
+	private function add(value : V) : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
 
-	private function getAt(key : K) : Promise<Option<T>> {
+	private function addAt(value : V, key : K) : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
 
-	private function remove(value : T) : Promise<Option<T>> {
+	private function get() : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
 
-	private function removeAt(key : K) : Promise<Option<T>> {
+	private function getAt(key : K) : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
 
-	private function sync() : Promise<Option<T>> {
+	private function remove(value : V) : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
 
-	private function update(a : T, b : T) : Promise<Option<T>> {
+	private function removeAt(key : K) : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
 
-	private function updateAt(value : T, key : K) : Promise<Option<T>> {
+	private function sync() : Promise<Option<V>> {
+		return Promises.dispatch(None);
+	}
+
+	private function update(a : V, b : V) : Promise<Option<V>> {
+		return Promises.dispatch(None);
+	}
+
+	private function updateAt(value : V, key : K) : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
 
@@ -80,40 +80,38 @@ class Model<T, K> extends Actor<Requests<T, K>> {
 		return None;
 	}
 
-	override private function recieve<R>(message : Message<Requests<T, K>>) : Promise<Message<R>> {
-		return cast switch (_status) {
-			case Running:
-				var headers = message.headers();
+	override private function onRecieve<T1, T2>(message : Message<Requests<Dynamic, Dynamic>>) : Promise<Message<T2>> {
+		var mapped : Message<Requests<V, K>> = message.map(function(value) {
+			return tuple2(value.headers(), cast value.body());
+		});
 
-				switch (message.body()) {
-					case Some(value):
-							
-						var response : Promise<Option<T>> = switch(value) {
-							case Add(value): add(value);
-							case AddAt(value, key): addAt(value, key);
-							case Get: get();
-							case GetAt(key): getAt(key);
-							case Remove(value): remove(value);
-							case RemoveAt(key): removeAt(key);
-							case Sync: sync();
-							case Update(a, b): update(a, b);
-							case UpdateAt(value, key): updateAt(value, key);
-						};
+		return cast switch(mapped.body()) {
+			case Some(value):
 
-						var promise = response.map(function(value : Option<T>) {
-							return tuple2(headers.invert(), cast value);
-						});
+				var response : Promise<Option<V>> = switch(value) {
+					case Add(value): add(value);
+					case AddAt(value, key): addAt(value, key);
+					case Get: get();
+					case GetAt(key): getAt(key);
+					case Remove(value): remove(value);
+					case RemoveAt(key): removeAt(key);
+					case Sync: sync();
+					case Update(a, b): update(a, b);
+					case UpdateAt(value, key): updateAt(value, key);
+				};
 
-						// Automatically dispatch the data.
-						react().dispatch(data());
+				// Invert the headers and merge the result to a message.
+				var promise : Promise<Message<V>> = response.map(function(value : Option<V>) {
+					return tuple2(mapped.headers().invert(), value);
+				});
 
-						promise;
+				// Automatically dispatch the data.
+				react().dispatch(data());
 
-					// (Simon) Not entirely sure what to do here, as we've received a empty message.
-					case None: Promises.dispatch(tuple2(headers.invert(), None));
-				}
-				
-			default: Promises.reject("Actor is not running");
-		}
+				promise;
+
+			// (Simon) Not entirely sure what to do here, as we've received a empty message.
+			case None: Promises.dispatch(tuple2(message.headers().invert(), None));
+		};
 	}
 }

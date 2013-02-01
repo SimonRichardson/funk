@@ -6,14 +6,18 @@ import funk.actors.ActorStatus;
 import funk.actors.Header;
 import funk.actors.Message;
 import funk.actors.Reference;
+import funk.reactive.Stream;
 import funk.types.Deferred;
 import funk.types.Function2;
+import funk.types.Function3;
 import funk.types.Option;
 import funk.types.Promise;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.actors.extensions.Headers;
 using funk.actors.extensions.Messages;
+using funk.reactive.extensions.Behaviours;
+using funk.reactive.extensions.Streams;
 using funk.types.extensions.Options;
 using funk.types.extensions.Promises;
 
@@ -86,20 +90,49 @@ class Actor<T> {
 	@:overridable
 	private function onSend<R>(value : T) : Reference<T, R> {
 		return new ReferenceImpl(this, value, function (	actor : Actor<R>,
-															message : Message<T>
+															message : Message<T>,
+															timeout : Stream<Float>
 															) : Promise<Message<R>> {
+			_recipients = _recipients.prepend(actor.address());
+
+			var completed = false;
+
 			var deferred = new Deferred();
 			var promise = deferred.promise();
 
-			_recipients = _recipients.prepend(actor.address());
+			// Note (Simon) : This is a different actor that the current one.
+			var response = actor.recieve(message);
+			response.progress(function(value) {
+            	deferred.progress(value);
+	        });
+	        response.when(function(attempt) {
+	        	completed = true;
 
-			actor.recieve(message).pipe(deferred);
+	        	timeout.finish();
+
+	            switch (attempt) {
+	                case Failure(error):
+	                	deferred.reject(error);
+	                case Success(value):
+	                	deferred.resolve(value);
+	            }
+	        });
+
+			timeout.foreach(function(value) {
+				if (!completed) {
+					completed = true;
+
+					timeout.finish();
+
+					deferred.reject(ActorError(Std.format("Actor has timed out after ${value}ms")));
+				}
+			});
 
 			return cast promise;
 		});
 	}
 
-	private function recieve<R>(message : Message<R>) : Promise<Message<T>> {
+	private function recieve<T1, T2>(message : Message<T1>) : Promise<Message<T2>> {
 		return switch (_status) {
 			case Running: onRecieve(message);
 			default: Promises.reject("Actor is not running");
@@ -107,12 +140,12 @@ class Actor<T> {
 	}
 
 	@:overridable
-	private function onRecieve<R>(message : Message<R>) : Promise<Message<T>> {
-		var deferred : Deferred<Message<T>> = new Deferred();
-		var promise : Promise<Message<T>> = deferred.promise();
+	private function onRecieve<T1, T2>(message : Message<T1>) : Promise<Message<T2>> {
+		var deferred : Deferred<Message<T2>> = new Deferred();
+		var promise : Promise<Message<T2>> = deferred.promise();
 
 		var headers = message.headers();
-		deferred.resolve(message.map(function (value : Message<R>) {
+		deferred.resolve(message.map(function (value : Message<T1>) {
 			return tuple2(headers.invert(), cast value.body());
 		}));
 
@@ -135,7 +168,7 @@ class Actor<T> {
 	}
 }
 
-private typedef Broadcaster<T1, T2> = Function2<Actor<T2>, Message<T1>, Promise<Message<T2>>>;
+private typedef Broadcaster<T1, T2> = Function3<Actor<T2>, Message<T1>, Stream<Float>, Promise<Message<T2>>>;
 
 class ReferenceImpl<T1, T2> {
 
@@ -158,7 +191,7 @@ class ReferenceImpl<T1, T2> {
 				headers = headers.prepend(Origin(_actor.address()));
 				headers = headers.prepend(Recipient(act.address()));
 
-				_broadcaster(act, tuple2(headers, Some(_value)));
+				_broadcaster(act, tuple2(headers, Some(_value)), Streams.identity(None));
 
 			case None: Promises.reject("Unexpected: Actor not found");
 		};
@@ -184,5 +217,20 @@ class ReferenceImpl<T1, T2> {
 					case None: None;
 				}
 		});
+	}
+
+	public function toActorWithTimeout(actor : Option<Actor<T2>>, time : Float) : Promise<Message<T2>> {
+		return switch(actor) {
+			case Some(act):
+				var headers = Nil;
+				headers = headers.prepend(Origin(_actor.address()));
+				headers = headers.prepend(Recipient(act.address()));
+
+				var timeout = Streams.timer(Behaviours.constant(time));
+
+				_broadcaster(act, tuple2(headers, Some(_value)), timeout);
+
+			case None: Promises.reject("Unexpected: Actor not found");
+		};
 	}
 }
