@@ -20,6 +20,7 @@ class UriActorTest {
 
     @Test
     public function sending_a_value_to_proxy__should_get_a_uri() : Void {
+        // FIXME (Simon) : Unit test the uri package first.
         //var actor = new UriActor();
         //actor.dispatch('javascript: void;').then(function(message) {
         //    trace(message);
