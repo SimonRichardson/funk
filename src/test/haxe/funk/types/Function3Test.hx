@@ -38,9 +38,9 @@ class Function3Test {
     public function when_calling__3__should_call_function() : Void {
         var called = false;
         var a = function(value1, value2, value3) {
-            called = value2;
+            called = value3;
         };
-        a._2(true)(false, false);
+        a._3(true)(false, false);
         called.isTrue();
     }
 
