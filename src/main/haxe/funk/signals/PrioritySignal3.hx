@@ -70,7 +70,7 @@ class PrioritySlot3<T1, T2, T3> extends Slot3<T1, T2, T3> {
 
 	private var _priority : Int;
 
-	public function new(	signal : ISignal3<T1, T2, T3>,
+	public function new(	signal : Signal3<T1, T2, T3>,
 							listener : Function3<T1, T2, T3, Void>,
 							once : Bool,
 							priority : Int) {

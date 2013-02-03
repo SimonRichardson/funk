@@ -66,7 +66,7 @@ class PrioritySlot0 extends Slot0 {
 
 	private var _priority : Int;
 
-	public function new(signal : ISignal0, listener : Function0<Void>, once : Bool, priority : Int) {
+	public function new(signal : Signal0, listener : Function0<Void>, once : Bool, priority : Int) {
 		super(signal, listener, once);
 
 		_priority = priority;

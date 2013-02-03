@@ -19,7 +19,7 @@ class Stream<T> {
 
 	private var _listeners : Array<Stream<T>>;
 
-    private var _finishedListeners : ISignal0;
+    private var _finishedListeners : Signal0;
 
 	public function new(propagator : Function1<Pulse<T>, Propagation<T>>) {
 		_rank = Rank.next();

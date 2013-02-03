@@ -13,18 +13,7 @@ using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Functions1;
 using funk.types.extensions.Options;
 
-interface ISignal1<T1> implements ISignal {
-
-	function add(func : Function1<T1, Void>) : Option<Slot1<T1>>;
-
-	function addOnce(func : Function1<T1, Void>) : Option<Slot1<T1>>;
-
-	function remove(func : Function1<T1, Void>) : Option<Slot1<T1>>;
-
-	function dispatch(value0 : T1) : Void;
-}
-
-class Signal1<T1> extends Signal, implements ISignal1<T1> {
+class Signal1<T1> extends Signal {
 
 	private var _list : List<Slot1<T1>>;
 
@@ -111,9 +100,9 @@ class Slot1<T1> extends Slot {
 
 	private var _listener : Function1<T1, Void>;
 
-	private var _signal : ISignal1<T1>;
+	private var _signal : Signal1<T1>;
 
-	public function new(signal : ISignal1<T1>, listener : Function1<T1, Void>, once : Bool) {
+	public function new(signal : Signal1<T1>, listener : Function1<T1, Void>, once : Bool) {
 		super();
 
 		_signal = signal;

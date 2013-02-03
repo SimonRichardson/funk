@@ -1,13 +1,6 @@
 package funk.signals;
 
-interface ISignal {
-
-	function size() : Int;
-
-	function removeAll() : Void;
-}
-
-class Signal implements ISignal {
+class Signal {
 
 	public function new() {
 	}

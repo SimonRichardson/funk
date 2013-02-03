@@ -13,7 +13,7 @@ using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Functions5;
 using funk.types.extensions.Options;
 
-interface ISignal5<T1, T2, T3, T4, T5> implements ISignal {
+interface ISignal5<T1, T2, T3, T4, T5> {
 
 	function add(func : Function5<T1, T2, T3, T4, T5, Void>) : Option<Slot5<T1, T2, T3, T4, T5>>;
 
@@ -24,7 +24,7 @@ interface ISignal5<T1, T2, T3, T4, T5> implements ISignal {
 	function dispatch(value0 : T1, value1 : T2, value2 : T3, value3 : T4, value4 : T5) : Void;
 }
 
-class Signal5<T1, T2, T3, T4, T5> extends Signal, implements ISignal5<T1, T2, T3, T4, T5> {
+class Signal5<T1, T2, T3, T4, T5> extends Signal {
 
 	private var _list : List<Slot5<T1, T2, T3, T4, T5>>;
 
@@ -122,9 +122,9 @@ class Slot5<T1, T2, T3, T4, T5> extends Slot {
 
 	private var _listener : Function5<T1, T2, T3, T4, T5, Void>;
 
-	private var _signal : ISignal5<T1, T2, T3, T4, T5>;
+	private var _signal : Signal5<T1, T2, T3, T4, T5>;
 
-	public function new(	signal : ISignal5<T1, T2, T3, T4, T5>,
+	public function new(	signal : Signal5<T1, T2, T3, T4, T5>,
 							listener : Function5<T1, T2, T3, T4, T5, Void>,
 							once : Bool) {
 		super();

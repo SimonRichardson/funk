@@ -13,7 +13,7 @@ using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Functions4;
 using funk.types.extensions.Options;
 
-interface ISignal4<T1, T2, T3, T4> implements ISignal {
+interface ISignal4<T1, T2, T3, T4> {
 
 	function add(func : Function4<T1, T2, T3, T4, Void>) : Option<Slot4<T1, T2, T3, T4>>;
 
@@ -24,7 +24,7 @@ interface ISignal4<T1, T2, T3, T4> implements ISignal {
 	function dispatch(value0 : T1, value1 : T2, value2 : T3, value3 : T4) : Void;
 }
 
-class Signal4<T1, T2, T3, T4> extends Signal, implements ISignal4<T1, T2, T3, T4> {
+class Signal4<T1, T2, T3, T4> extends Signal {
 
 	private var _list : List<Slot4<T1, T2, T3, T4>>;
 
@@ -116,9 +116,9 @@ class Slot4<T1, T2, T3, T4> extends Slot {
 
 	private var _listener : Function4<T1, T2, T3, T4, Void>;
 
-	private var _signal : ISignal4<T1, T2, T3, T4>;
+	private var _signal : Signal4<T1, T2, T3, T4>;
 
-	public function new(	signal : ISignal4<T1, T2, T3, T4>,
+	public function new(	signal : Signal4<T1, T2, T3, T4>,
 							listener : Function4<T1, T2, T3, T4, Void>,
 							once : Bool) {
 		super();
