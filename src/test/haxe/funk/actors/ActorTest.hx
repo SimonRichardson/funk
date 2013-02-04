@@ -54,7 +54,7 @@ class ActorTest {
 		var actual = '';
 
 		actor1.send(123.01).to(Some(actor2)).then(function(message) {
-			actual = message.body().get();
+			actual = Std.string(message.body().get());
 		});
 
 		actual.areEqual(expected);

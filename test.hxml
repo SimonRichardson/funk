@@ -57,5 +57,5 @@
 --next
 -cmd echo "\nRunning Tests:\n\t[Javascript]\n\t[Actionscript]\n\t[Neko]"
 
-#--next
-#-cmd haxelib run munit test -nogen -js -as3 -neko
+--next
+-cmd haxelib run munit test -nogen -js -as3 -neko

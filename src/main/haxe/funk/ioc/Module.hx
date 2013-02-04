@@ -3,6 +3,7 @@ package funk.ioc;
 import funk.Funk;
 import funk.collections.immutable.List;
 import funk.ioc.Binding;
+import funk.types.extensions.Anys;
 import funk.types.Function0;
 import funk.types.Option;
 import funk.types.Predicate2;
@@ -86,13 +87,13 @@ class Module implements IModule {
 
     public function unbind(type : Class<Dynamic>) : Void {
         _map = _map.filter(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) {
-            return tuple._1() == type;
+            return Anys.equals(tuple._1(), type);
         });
     }
 
     private function find(type : Class<Dynamic>) : Option<Tuple2<Class<Dynamic>, Binding<Dynamic>>> {
         return _map.find(function(tuple : Tuple2<Class<Dynamic>, Binding<Dynamic>>) : Bool {
-            return tuple._1() == type;
+            return Anys.equals(tuple._1(), type);
         });
     }
 

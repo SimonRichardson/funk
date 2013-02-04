@@ -16,13 +16,26 @@ class Inject {
         }
 
         return switch(Injector.currentScope()){
-            case Some(scope): scope.getInstance(type);
-            case None:
-                switch(Injector.scopeOf(type)) {
-                    case Some(module): module.getInstance(type);
-                    case None: None;
-                }
+            case Some(scope):
+                var instance = scope.getInstance(type);
+                switch (instance) {
+                    case Some(_): instance;
+                    case None: with(type);
+                };
+            case None: with(type);
+        };
+    }
+
+    @:noUsing
+    public static function with<T>(type : Class<T>) : Option<T> {
+        if (null == type) {
+            Funk.error(ArgumentError());
         }
+
+        return switch(Injector.scopeOf(type)) {
+            case Some(module): module.getInstance(type);
+            case None: None;
+        };
     }
 
     @:noUsing

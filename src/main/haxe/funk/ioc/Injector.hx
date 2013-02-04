@@ -38,9 +38,9 @@ class Injector {
             return Funk.error(InjectorError("Injector.initialize() must be called first"));
         }
 
-        module.initialize();
-
         _modules = _modules.prepend(module);
+
+        module.initialize();
 
         return module;
     }
@@ -90,11 +90,11 @@ class Injector {
             var module : IModule = modules.head();
 
             if (module.binds(type)) {
-                if (result.isDefined()) {
-                    Funk.error(BindingError(Std.format("More than one module binds $type.")));
-                }
-
                 result = modules.headOption();
+
+                if (result.isDefined()) {
+                    break;
+                }
             }
 
             modules = modules.tail();

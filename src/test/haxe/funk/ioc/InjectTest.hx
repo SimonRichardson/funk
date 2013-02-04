@@ -1,5 +1,6 @@
 package funk.ioc;
 
+import funk.collections.immutable.List;
 import funk.ioc.Injector;
 import funk.ioc.Inject;
 import funk.ioc.Module;
@@ -113,6 +114,70 @@ class InjectTest {
     public function when_inject_withIn_should_be_instance_of_correct_object() {
         var instance : Option<MockObject> = module.getInstance(MockObject);
         Std.is(Inject.withIn(IAnotherObject, MockModule).get(), IAnotherObject).isTrue();
+    }
+
+    @Test
+    public function when_injecting_into_a_module_with_an_interface() {
+        Injector.add(new GeneralModule());
+        Std.is(Inject.as(Renderer).get(), HtmlDomRenderer).isTrue();
+    }
+
+    @Test
+    public function when_doing_nesting_injection() {
+        Injector.add(new GeneralModule());
+        Injector.add(new OtherModule());
+        Std.is(Inject.as(Other).get(), Other).isTrue();
+    }
+}
+
+private class GeneralModule extends Module {
+
+    public function new() {
+        super();
+    }
+
+    override public function configure() {
+        bind(Renderer).to(HtmlDomRenderer);
+    }
+}
+
+private class OtherModule extends Module {
+
+    public function new() {
+        super();
+    }
+
+    override public function configure() {
+        bind(Other);
+    }
+}
+
+private interface Renderer<T> {
+
+    function addChildren(name : String, nodes : List<T>) : Void;
+
+    function removeChildren(name : String) : Void;
+}
+
+private class HtmlDomRenderer implements Renderer<String> {
+
+    public function new() {
+
+    }
+
+    public function addChildren(name : String, nodes : List<String>) : Void {
+    }
+
+    public function removeChildren(name : String) : Void {
+    }
+}
+
+private class Other {
+
+    private var _renderer : Renderer<String>;
+
+    public function new() {
+        _renderer = cast Inject.as(Renderer).get();
     }
 }
 
