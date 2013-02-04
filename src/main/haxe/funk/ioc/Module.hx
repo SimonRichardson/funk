@@ -52,13 +52,13 @@ class Module implements IModule {
         Injector.pushScope(this);
 
         var instance = switch(find(type)) {
-            case None: Reflects.createEmptyInstance(type);
-            case Some(tuple): tuple._2().getInstance();
+            case Some(tuple): Some(tuple._2().getInstance());
+            case None: None;
         }
 
         Injector.popScope();
 
-        return Options.toOption(instance);
+        return instance;
     }
 
     public function binds(type : Class<Dynamic>) : Bool {

@@ -46,9 +46,21 @@ class InjectTest {
     }
 
     @Test
-    public function when_creating_an_object_by_interface_should_return_correct_object() {
+    public function when_creating_an_object_by_interface_should_return_correct_interface() {
         var instance : Option<MockObject> = module.getInstance(MockObject);
         Std.is(instance.get().byInterface, IAnotherObject).isTrue();
+    }
+
+    @Test
+    public function when_creating_an_object_by_interface_should_return_correct_object() {
+        var instance : Option<MockObject> = module.getInstance(MockObject);
+        Std.is(instance.get().byInterface, AnotherObject).isTrue();
+    }
+
+    @Test
+    public function when_creating_an_object_by_interface_should_return_correct_object_and_return_string() {
+        var instance : Option<MockObject> = module.getInstance(MockObject);
+        instance.get().byInterface.hello().areEqual("World!");
     }
 
     @Test
@@ -115,6 +127,7 @@ private class MockModule extends Module {
         bind(String).toInstance("Hello");
         bind(IAnotherObject).to(AnotherObject);
         bind(MockSingleton).asSingleton();
+        bind(MockObject);
     }
 }
 
@@ -147,6 +160,7 @@ private class MockSingleton {
 @:keep
 private interface IAnotherObject {
 
+    function hello() : String;
 }
 
 @:keep
@@ -154,5 +168,9 @@ private class AnotherObject implements IAnotherObject {
 
     public function new() {
 
+    }
+
+    public function hello() : String {
+        return "World!";
     }
 }
