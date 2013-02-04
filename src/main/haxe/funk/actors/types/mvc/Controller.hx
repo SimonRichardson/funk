@@ -8,49 +8,56 @@ using funk.actors.extensions.Actors;
 
 class Controller<T, K> {
 
+    public var model(get_model, set_model) : Model<T, K>;
+
 	private var _model : Model<T, K>;
 
-	public function new(model : Model<T, K>) {
-		_model = model;
+	public function new() {
+
 	}
 
 	public function add<R>(value : T) : Promise<Message<R>> {
-        return _model.dispatch(Add(value));
+        return model.dispatch(Add(value));
     }
 
     public function addAt<R>(value : T, key : K) : Promise<Message<R>> {
-    	return _model.dispatch(AddAt(value, key));
+    	return model.dispatch(AddAt(value, key));
     }
 
     public function get<R>() : Promise<Message<R>> {
-        return _model.dispatch(Get);
+        return model.dispatch(Get);
     }
 
     public function getAt<R>(key : K) : Promise<Message<R>> {
-    	return _model.dispatch(GetAt(key));
+    	return model.dispatch(GetAt(key));
     }
 
     private function remove<R>(value : T) : Promise<Message<R>> {
-        return _model.dispatch(Remove(value));
+        return model.dispatch(Remove(value));
     }
 
     private function removeAt<R>(key : K) : Promise<Message<R>> {
-        return _model.dispatch(RemoveAt(key));
+        return model.dispatch(RemoveAt(key));
     }
 
     private function sync<R>() : Promise<Message<R>> {
-        return _model.dispatch(Sync);
+        return model.dispatch(Sync);
     }
 
     private function update<R>(a : T, b : T) : Promise<Message<R>> {
-        return _model.dispatch(Update(a, b));
+        return model.dispatch(Update(a, b));
     }
 
     private function updateAt<R>(value : T, key : K) : Promise<Message<R>> {
-        return _model.dispatch(UpdateAt(value, key));
+        return model.dispatch(UpdateAt(value, key));
     }
 
-	public function model<R>() : Model<T, K> {
-		return _model;
-	}
+    private function get_model() : Model<T, K> {
+        return _model;
+    }
+
+    private function set_model(value : Model<T, K>) : Model<T, K> {
+        _model = value;
+        return _model;
+    }
 }

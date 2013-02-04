@@ -9,20 +9,25 @@ using funk.reactive.extensions.Streams;
 
 class View<T, K> extends Actor<T> {
 
+	public var model(get_model, set_model) : Model<T, K>;
+
     private var _model : Model<T, K>;
 
-	public function new(model : Model<T, K>) {
+	public function new() {
         super();
-
-		_model = model;
-		_model.react().foreach(handle);
 	}
 
 	private function handle<R>(value : R) : Void {
-		
+
 	}
 
-	private function model() : Model<T, K> {
-		return _model;
-	}
+	private function get_model() : Model<T, K> {
+        return _model;
+    }
+
+    private function set_model(value : Model<T, K>) : Model<T, K> {
+        _model = value;
+        _model.react().foreach(handle);
+        return _model;
+    }
 }

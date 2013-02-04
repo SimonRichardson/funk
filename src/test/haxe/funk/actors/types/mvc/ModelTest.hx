@@ -18,8 +18,11 @@ class ModelTest {
 	@Test
 	public function test() {
 		var model = new MockModel();
-		var controller = new MockController(model);
-		var view = new MockView(model);
+		var controller = new MockController();
+		var view = new MockView();
+
+		controller.model = model;
+		view.model = model;
 
 		var expected = 'Hello';
 		var actual = '';
@@ -67,14 +70,14 @@ private class MockModel extends Model<String, Int> {
 
 private class MockController extends Controller<String, Int> {
 
-	public function new(model : Model<String, Int>) {
-		super(model);
+	public function new() {
+		super();
 	}
 }
 
 private class MockView extends View<String, Int> {
 
-	public function new(model : Model<String, Int>) {
-		super(model);
+	public function new() {
+		super();
 	}
 }
