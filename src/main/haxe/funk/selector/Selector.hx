@@ -1,5 +1,15 @@
 package funk.selector;
 
+import funk.collections.immutable.List;
+import funk.types.Function1;
+import funk.types.Option;
+import funk.types.Tuple2;
+
+using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.extensions.ListsUtil;
+using funk.types.extensions.Options;
+using funk.types.extensions.Tuples2;
+
 class Selector {
 
 	public function new() {
@@ -14,25 +24,23 @@ class Selector {
 }
 
 private enum Constant {
-	Integer(value : Int);
-	Str(value : String);
+	Accessor(value : String);
+	ClassName(value : String);
 	Ident(value : String);
+	Integer(value : Int);
+	Tag(value : String);
 }
 
 private enum Token {
 	Eof;
-	Colon;
+	Gt;
 	Const(value : Constant);
-	Dash;
-	Dolar;
-	Dot;
-	Sharp;
 	WhiteSpace;
-	Unknown(value : String);
+	Unknown;
 }
 
 private enum Expr {
-	EVar(name : String, value : Value); 
+	EVar(name : String, value : Value);
 }
 
 private enum Value {
@@ -45,8 +53,36 @@ private class Lexer {
 
 	private var _index : Int;
 
+	private var _patterns : List<Tuple2<EReg, Function1<String, Token>>>;
+
 	public function new(source : String) {
 		_source = source;
+		_patterns = [
+			tuple2("\\s*", function(value) {
+				return WhiteSpace;
+			}),
+			tuple2(">", function(value){
+				return Gt;
+			}),
+			tuple2("\\.[a-zA-Z0-9\\-\\_]*", function(value){
+				return Const(ClassName(value));
+			}),
+			tuple2("#[a-zA-Z0-9\\-\\_]*", function(value){
+				return Const(Ident(value));
+			}),
+			tuple2(":[a-zA-Z0-9\\-\\_]*", function(value){
+				return Const(Accessor(value));
+			}),
+			tuple2("0", function(value) {
+				return Const(Integer(Std.parseInt(value)));
+			}),
+			tuple2("-?[1-9][0-9]*", function(value) {
+				return Const(Integer(Std.parseInt(value)));
+			}),
+			tuple2("[a-zA-Z0-9\\-\\_]*", function(value) {
+				return Const(Tag(value));
+			})
+		].toList();
 	}
 
 	public function hasNext() : Bool {
@@ -55,25 +91,29 @@ private class Lexer {
 
 	public function next() : Token {
 		return if (this.hasNext()) {
-			var char = _source.charAt(_index++);
-			switch(char) {
-				case ":": Colon;
-				case ".": Dot;
-				case "#": Sharp;
-				case "-": Dash;
-				case "$": Dolar;
-				default:
-					var charCode = char.charCodeAt(0);
-					if (charCode >= 48 && charCode <= 57) {
-						Const(Integer(Std.parseInt(char)));
-					} else if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122)) {
-						Const(Ident(char));
-					} else if (charCode <= 32) {
-						WhiteSpace;
-					} else {
-						Unknown(char);
+			var substr = _source.substr(_index++);
+
+			var token = None;
+			_patterns.find(function(tuple) {
+				var ereg = new EReg("^" + tuple._1(), "");
+
+				var result = false;
+				if(ereg.match(substr)) {
+					var matched = ereg.matched(0);
+
+					if (matched.length > 0) {
+						_index += matched.length - 1;
+
+						token = tuple._2()(matched).toOption();
+						result = true;
 					}
-			}
+
+				}
+				return result;
+			});
+			token.getOrElse(function() {
+				return Unknown;
+			});
 		} else {
 			Eof;
 		}
