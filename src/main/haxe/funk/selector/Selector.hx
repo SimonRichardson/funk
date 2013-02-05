@@ -13,15 +13,10 @@ using funk.types.extensions.Tuples2;
 
 class Selector {
 
-	public function new() {
-
-	}
-
-	public function query(selector : String) : Void {
+	public static function query(selector : String) : List<Expr> {
 		var lexer = new Lexer(selector);
 		var parser = new Parser(lexer);
-		var list : List<Expr> = parser.execute();
-		trace(list);
+		return parser.execute();
 	}
 }
 
@@ -38,7 +33,9 @@ private enum Token {
 	Eof;
 	Gt;
 	Const(value : Constant);
+	Plus;
 	SemiColon;
+	Tilde;
 	WhiteSpace;
 	Unknown;
 }
@@ -50,10 +47,12 @@ private enum Expr {
 private enum Value {
 	VAccessor(value : String, next : Value);
 	VClassName(value : String, next : Value);
-	VDesender(next : Value);
+	VChild(next : Value);
 	VInteger(value : Int);
-	VNumber(value : Float);
 	VIdent(value : String, next : Value);
+	VNext(value : Value);
+	VNumber(value : Float);
+	VSibling(next : Value);
 	VTag(value : String, next : Value);
 }
 
@@ -76,6 +75,12 @@ private class Lexer {
 			}),
 			tuple2(";", function(value){
 				return SemiColon;
+			}),
+			tuple2("\\~", function(value){
+				return Tilde;
+			}),
+			tuple2("\\+", function(value){
+				return Plus;
 			}),
 			tuple2("0", function(value) {
 				return Const(Integer(Std.parseInt(value)));
@@ -176,9 +181,11 @@ private class Parser {
 							case Number(value): VNumber(value);
 							case Tag(value): VTag(value, matchToken(next()));
 						}
-					case Gt: VDesender(matchToken(next()));
+					case Gt: VChild(matchToken(next()));
 					case WhiteSpace: matchToken(next());
+					case Plus: VNext(matchToken(next()));
 					case SemiColon: null;
+					case Tilde: VSibling(matchToken(next()));
 					case Eof: null;
 					case Unknown: Funk.error(IllegalOperationError("Unknown token"));
 				}
