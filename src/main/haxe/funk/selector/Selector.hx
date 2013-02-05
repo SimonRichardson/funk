@@ -38,12 +38,13 @@ private enum Token {
 	Eof;
 	Gt;
 	Const(value : Constant);
+	SemiColon;
 	WhiteSpace;
 	Unknown;
 }
 
 private enum Expr {
-	EBlock(value : Value);
+	ELine(value : Value);
 }
 
 private enum Value {
@@ -54,7 +55,6 @@ private enum Value {
 	VNumber(value : Float);
 	VIdent(value : String, next : Value);
 	VTag(value : String, next : Value);
-	VEnd;
 }
 
 private class Lexer {
@@ -73,6 +73,9 @@ private class Lexer {
 			}),
 			tuple2(">", function(value){
 				return Gt;
+			}),
+			tuple2(";", function(value){
+				return SemiColon;
 			}),
 			tuple2("0", function(value) {
 				return Const(Integer(Std.parseInt(value)));
@@ -147,7 +150,7 @@ private class Parser {
 	public function execute() : List<Expr> {
 		var list = Nil;
 		while(_lexer.hasNext()) {
-			list = list.append(EBlock(matchToken(next())));
+			list = list.append(ELine(matchToken(next())));
 		}
 		return list;
 	}
@@ -175,10 +178,11 @@ private class Parser {
 						}
 					case Gt: VDesender(matchToken(next()));
 					case WhiteSpace: matchToken(next());
-					case Eof: VEnd;
+					case SemiColon: null;
+					case Eof: null;
 					case Unknown: Funk.error(IllegalOperationError("Unknown token"));
 				}
-			case None: VEnd;
+			case None: null;
 		}
 	}
 }
