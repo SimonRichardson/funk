@@ -23,6 +23,7 @@ enum Requests<T, K> {
     RemoveAt(key : K);
     Sync;
     Update(a : T, b : T);
+    UpdateAll(a : T);
     UpdateAt(value : T, key : K);
 }
 
@@ -72,6 +73,10 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		return Promises.dispatch(None);
 	}
 
+	private function updateAll(a : V) : Promise<Option<V>> {
+		return Promises.dispatch(None);
+	}
+
 	private function updateAt(value : V, key : K) : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
@@ -93,6 +98,7 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 					case RemoveAt(key): removeAt(key);
 					case Sync: sync();
 					case Update(a, b): update(a, b);
+					case UpdateAll(a): updateAll(a);
 					case UpdateAt(value, key): updateAt(value, key);
 				};
 
