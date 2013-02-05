@@ -11,6 +11,7 @@ import suites.LoggingSuite;
 import suites.NetSuite;
 import suites.PromiseSuite;
 import suites.ReactiveSuite;
+import suites.SelectorSuite;
 import suites.SignalSuite;
 import suites.TypesSuite;
 
@@ -38,15 +39,16 @@ class TestMain {
 
         var suites = new Array<Class<massive.munit.TestSuite>>();
 
-        suites.push(ActorsSuite);
-        suites.push(CollectionsSuite);
-        suites.push(IocSuite);
-        suites.push(LoggingSuite);
-        suites.push(NetSuite);
-        suites.push(PromiseSuite);
-        suites.push(ReactiveSuite);
-        suites.push(SignalSuite);
-        suites.push(TypesSuite);
+        //suites.push(ActorsSuite);
+        //suites.push(CollectionsSuite);
+        //suites.push(IocSuite);
+        //suites.push(LoggingSuite);
+        //suites.push(NetSuite);
+        //suites.push(PromiseSuite);
+        //suites.push(ReactiveSuite);
+        suites.push(SelectorSuite);
+        //suites.push(SignalSuite);
+        //suites.push(TypesSuite);
 
         #if MCOVER
             var client = new mcover.coverage.munit.client.MCoverPrintClient();
