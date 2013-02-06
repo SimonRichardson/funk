@@ -28,6 +28,7 @@ private enum Constant {
 	Integer(value : Int);
 	Number(value : Float);
 	Tag(value : String);
+	Word(value : String);
 }
 
 private enum Token {
@@ -35,6 +36,8 @@ private enum Token {
 	Gt;
 	Comma;
 	Const(value : Constant);
+	LeftBracket;
+	RightBracket;
 	Plus;
 	SemiColon;
 	Star;
@@ -47,19 +50,21 @@ enum Expr {
 	ELine(expr : Expr);
 	EProp(value : Value);
 	EPropBlock(value : Value, expr : Expr);
+	ESub(expr : Expr);
 }
 
 enum Value {
-	VAccessor(value : String);
-	VAll;
-	VClassName(value : String);
-	VChild;
-	VInteger(value : Int);
-	VIdent(value : String);
-	VNext;
-	VNumber(value : Float);
-	VSibling;
-	VTag(value : String);
+	Accessor(value : String);
+	All;
+	ClassName(value : String);
+	Child;
+	Integer(value : Int);
+	Ident(value : String);
+	Next;
+	Number(value : Float);
+	Sibling;
+	Tag(value : String);
+	Word(value : String);
 }
 
 private class LexerPatterns {
@@ -73,7 +78,7 @@ private class LexerPatterns {
 		var list = Nil;
 		list = list.prepend(tuple2("\\s*", function(value) {
 			return WhiteSpace;
-		}));		
+		}));
 		list = list.prepend(tuple2(">", function(value){
 			return Gt;
 		}));
@@ -91,6 +96,12 @@ private class LexerPatterns {
 		}));
 		list = list.prepend(tuple2("\\*", function(value){
 			return Star;
+		}));
+		list = list.prepend(tuple2("\\(", function(value){
+			return LeftBracket;
+		}));
+		list = list.prepend(tuple2("\\)", function(value){
+			return RightBracket;
 		}));
 		list = list.prepend(tuple2("0", function(value) {
 			return Const(Integer(Std.parseInt(value)));
@@ -110,14 +121,17 @@ private class LexerPatterns {
 		list = list.prepend(tuple2("#[a-zA-Z0-9\\-\\_]*", function(value){
 			return Const(Ident(value.substr(1)));
 		}));
-		list = list.prepend(tuple2(":[a-zA-Z0-9\\-\\_\\(\\)]*", function(value){
+		list = list.prepend(tuple2(":[a-zA-Z0-9\\-\\_]*", function(value){
 			return Const(Accessor(value.substr(1)));
 		}));
 		list = list.prepend(tuple2("[a-zA-Z0-9\\-\\_]*", function(value) {
 			return Const(Tag(value));
 		}));
+		list = list.prepend(tuple2("(\".*?\")|('.*?')", function(value) {
+			return Const(Word(value.substr(1, value.length - 2)));
+		}));
 
-		patterns = list;
+		patterns = list.reverse();
 	}
 }
 
@@ -167,14 +181,20 @@ private class Parser {
 
 	private var _lexer : Lexer;
 
+	private var _bracket : Int;
+
 	public function new(lexer : Lexer) {
 		_lexer = lexer;
+		_bracket = 0;
 	}
 
 	public function execute() : List<Expr> {
 		var list = Nil;
 		while(_lexer.hasNext()) {
-			list = list.append(ELine(matchToken(next())));
+			var expr = matchToken(next());
+			if (expr.toBool()) {
+				list = list.append(ELine(expr));
+			}
 		}
 		return list;
 	}
@@ -194,7 +214,31 @@ private class Parser {
 			} else {
 				null;
 			}
-			return token.toBool() ? EPropBlock(value, token) : EProp(value);
+			return if (token.toBool()) {
+				EPropBlock(value, token);
+			} else {
+				trace(_bracket);
+				if (_bracket != 0) {
+					//Funk.error(IllegalOperationError("Bracket mismatch; extra left ( found."));
+				}
+				EProp(value);
+			}
+		};
+		var openBlock = function () {
+			_bracket++;
+			var token = if (hasNext()) {
+				matchToken(next());
+			} else {
+				Funk.error(IllegalOperationError("Exhausted"));
+			}
+			return ESub(token);
+		};
+		var closeBlock = function () {
+			_bracket--;
+			if (_bracket < 0) {
+				Funk.error(IllegalOperationError("Bracket mismatch; extra right ) found."));
+			}
+			return null;
 		};
 
 		return switch (opt) {
@@ -202,19 +246,22 @@ private class Parser {
 				switch(token){
 					case Const(const):
 						switch (const) {
-							case Accessor(value): fold(VAccessor(value));
-							case ClassName(value): fold(VClassName(value));
-							case Ident(value): fold(VIdent(value));
-							case Integer(value): EProp(VInteger(value));
-							case Number(value): EProp(VNumber(value));
-							case Tag(value): fold(VTag(value));
+							case Accessor(value): fold(Accessor(value));
+							case ClassName(value): fold(ClassName(value));
+							case Ident(value): fold(Ident(value));
+							case Integer(value): fold(Integer(value));
+							case Number(value): fold(Number(value));
+							case Tag(value): fold(Tag(value));
+							case Word(value): fold(Word(value));
 						}
-					case Gt: fold(VChild);
+					case Gt: fold(Child);
 					case Comma: null;
-					case Plus: fold(VNext);
-					case Star: fold(VAll);
+					case LeftBracket: openBlock();
+					case RightBracket: closeBlock();
+					case Plus: fold(Next);
+					case Star: fold(All);
 					case SemiColon: null;
-					case Tilde: fold(VSibling);
+					case Tilde: fold(Sibling);
 					case WhiteSpace: matchToken(next());
 					case Unknown: Funk.error(IllegalOperationError("Unknown token"));
 					case Eof: null;
