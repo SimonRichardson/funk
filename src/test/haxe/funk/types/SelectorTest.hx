@@ -16,6 +16,11 @@ class SelectorTest {
     }
 
     @Test
+    public function when_calling_selector__should_return_a_non_empty_list() {
+        Selector.query("body > :first-child").nonEmpty().isTrue();
+    }
+
+    @Test
     public function should_calling_selector_query_return_correct_expr_1() {
         Selector.query("body>:first-child").areEqual(Cons(ELine(EPropBlock(VTag("body"),EPropBlock(VChild,EProp(VAccessor(":first-child"))))),Nil));
     }

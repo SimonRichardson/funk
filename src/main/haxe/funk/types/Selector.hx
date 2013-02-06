@@ -60,74 +60,84 @@ enum Value {
 	VTag(value : String);
 }
 
+private class LexerPatterns {
+
+	public static var patterns : List<Tuple2<String, Function1<String, Token>>>;
+
+	/**
+	 * Low level caching, so we don't have to generate these every time the lexer is invoked
+	 */
+	private static function __init__() {
+		var list = Nil;
+		list = list.prepend(tuple2("\\s*", function(value) {
+			return WhiteSpace;
+		}));		
+		list = list.prepend(tuple2(">", function(value){
+			return Gt;
+		}));
+		list = list.prepend(tuple2(",", function(value){
+			return Comma;
+		}));
+		list = list.prepend(tuple2(";", function(value){
+			return SemiColon;
+		}));
+		list = list.prepend(tuple2("\\~", function(value){
+			return Tilde;
+		}));
+		list = list.prepend(tuple2("\\+", function(value){
+			return Plus;
+		}));
+		list = list.prepend(tuple2("0", function(value) {
+			return Const(Integer(Std.parseInt(value)));
+		}));
+		list = list.prepend(tuple2("-?[0-9]+\\.[0-9]*", function(value) {
+			return Const(Number(Std.parseFloat(value)));
+		}));
+		list = list.prepend(tuple2("-?\\.[0-9]+", function(value) {
+			return Const(Number(Std.parseFloat(value)));
+		}));
+		list = list.prepend(tuple2("-?[1-9][0-9]*", function(value) {
+			return Const(Integer(Std.parseInt(value)));
+		}));
+		list = list.prepend(tuple2("\\.[a-zA-Z0-9\\-\\_]*", function(value){
+			return Const(ClassName(value));
+		}));
+		list = list.prepend(tuple2("#[a-zA-Z0-9\\-\\_]*", function(value){
+			return Const(Ident(value));
+		}));
+		list = list.prepend(tuple2(":[a-zA-Z0-9\\-\\_\\(\\)]*", function(value){
+			return Const(Accessor(value));
+		}));
+		list = list.prepend(tuple2("[a-zA-Z0-9\\-\\_]*", function(value) {
+			return Const(Tag(value));
+		}));
+
+		patterns = list;
+	}
+}
+
 private class Lexer {
 
 	private var _source : String;
 
 	private var _index : Int;
 
-	private var _patterns : List<Tuple2<EReg, Function1<String, Token>>>;
-
 	public function new(source : String) {
+		_index = 0;
 		_source = source;
-		_patterns = [
-			tuple2("\\s*", function(value) {
-				return WhiteSpace;
-			}),
-			tuple2(">", function(value){
-				return Gt;
-			}),
-			tuple2(",", function(value){
-				return Comma;
-			}),
-			tuple2(";", function(value){
-				return SemiColon;
-			}),
-			tuple2("\\~", function(value){
-				return Tilde;
-			}),
-			tuple2("\\+", function(value){
-				return Plus;
-			}),
-			tuple2("0", function(value) {
-				return Const(Integer(Std.parseInt(value)));
-			}),
-			tuple2("-?[0-9]+\\.[0-9]*", function(value) {
-				return Const(Number(Std.parseFloat(value)));
-			}),
-			tuple2("-?\\.[0-9]+", function(value) {
-				return Const(Number(Std.parseFloat(value)));
-			}),
-			tuple2("-?[1-9][0-9]*", function(value) {
-				return Const(Integer(Std.parseInt(value)));
-			}),
-			tuple2("\\.[a-zA-Z0-9\\-\\_]*", function(value){
-				return Const(ClassName(value));
-			}),
-			tuple2("#[a-zA-Z0-9\\-\\_]*", function(value){
-				return Const(Ident(value));
-			}),
-			tuple2(":[a-zA-Z0-9\\-\\_\\(\\)]*", function(value){
-				return Const(Accessor(value));
-			}),
-			tuple2("[a-zA-Z0-9\\-\\_]*", function(value) {
-				return Const(Tag(value));
-			})
-		].toList();
 	}
 
 	public function hasNext() : Bool {
 		return _index < _source.length;
 	}
 
-	public function next() : Token {
-		return if (this.hasNext()) {
+	public function next() : Option<Token> {
+		return if (hasNext()) {
 			var substr = _source.substr(_index++);
 
 			var token = None;
-			_patterns.find(function(tuple) {
+			LexerPatterns.patterns.find(function(tuple) {
 				var ereg = new EReg("^" + tuple._1(), "");
-
 				var result = false;
 				if(ereg.match(substr)) {
 					var matched = ereg.matched(0);
@@ -138,15 +148,12 @@ private class Lexer {
 						token = tuple._2()(matched).toOption();
 						result = true;
 					}
-
 				}
 				return result;
 			});
-			token.getOrElse(function() {
-				return Unknown;
-			});
+			token;
 		} else {
-			Eof;
+			Some(Eof);
 		}
 	}
 }
@@ -172,11 +179,7 @@ private class Parser {
 	}
 
 	private function next() : Option<Token> {
-		return if (_lexer.hasNext()) {
-			Some(_lexer.next());
-		} else {
-			None;
-		}
+		return _lexer.hasNext() ? _lexer.next() : None;
 	}
 
 	private function matchToken(opt : Option<Token>) : Expr {
