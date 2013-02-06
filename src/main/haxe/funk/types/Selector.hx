@@ -193,6 +193,9 @@ private class Parser {
 		while(_lexer.hasNext()) {
 			var expr = matchToken(next());
 			if (expr.toBool()) {
+				if (_bracket != 0) {
+					Funk.error(IllegalOperationError("Bracket mismatch; extra left ( found."));
+				}
 				list = list.append(ELine(expr));
 			}
 		}
@@ -209,20 +212,8 @@ private class Parser {
 
 	private function matchToken(opt : Option<Token>) : Expr {
 		var fold = function (value : Value) {
-			var token = if (hasNext()) {
-				matchToken(next());
-			} else {
-				null;
-			}
-			return if (token.toBool()) {
-				EPropBlock(value, token);
-			} else {
-				trace(_bracket);
-				if (_bracket != 0) {
-					//Funk.error(IllegalOperationError("Bracket mismatch; extra left ( found."));
-				}
-				EProp(value);
-			}
+			var token = if (hasNext()) matchToken(next()) else null;
+			return token.toBool() ? EPropBlock(value, token) : EProp(value);
 		};
 		var openBlock = function () {
 			_bracket++;
@@ -257,7 +248,11 @@ private class Parser {
 					case Gt: fold(Child);
 					case Comma: null;
 					case LeftBracket: openBlock();
-					case RightBracket: closeBlock();
+					case RightBracket:
+						closeBlock();
+						if (hasNext()) {
+							matchToken(next());
+						}
 					case Plus: fold(Next);
 					case Star: fold(All);
 					case SemiColon: null;

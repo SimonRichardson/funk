@@ -21,8 +21,35 @@ class SelectorTest {
     }
 
     @Test
-    public function when_calling_selector_query_with_accessor__should_return_valid_expr_1() {
+    public function when_calling_selector_query_with_incorrect_accessor__should_return_valid_expr_0() {
+        var called = try {
+            Selector.query(":n-child((1)");
+            false;
+        } catch(e : Dynamic) {
+            true;
+        }
+        called.isTrue();
+    }
+
+    @Test
+    public function when_calling_selector_query_with_incorrect_accessor__should_return_valid_expr_1() {
+        var called = try {
+            Selector.query(":n-child(1))");
+            false;
+        } catch(e : Dynamic) {
+            true;
+        }
+        called.isTrue();
+    }
+
+    @Test
+    public function when_calling_selector_query_with_accessor__should_return_valid_expr_0() {
         Selector.query(":n-child(1)").areEqual(Cons(ELine(EPropBlock(Accessor("n-child"),ESub(EProp(Integer(1))))),Nil));
+    }
+
+    @Test
+    public function when_calling_selector_query_with_accessor__should_return_valid_expr_1() {
+        Selector.query(":n-child((1))").areEqual(Cons(ELine(EPropBlock(Accessor("n-child"),ESub(ESub(EProp(Integer(1)))))),Nil));
     }
 
     @Test
