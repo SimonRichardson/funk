@@ -37,6 +37,7 @@ private enum Token {
 	Const(value : Constant);
 	Plus;
 	SemiColon;
+	Star;
 	Tilde;
 	WhiteSpace;
 	Unknown;
@@ -50,6 +51,7 @@ enum Expr {
 
 enum Value {
 	VAccessor(value : String);
+	VAll;
 	VClassName(value : String);
 	VChild;
 	VInteger(value : Int);
@@ -86,6 +88,9 @@ private class LexerPatterns {
 		}));
 		list = list.prepend(tuple2("\\+", function(value){
 			return Plus;
+		}));
+		list = list.prepend(tuple2("\\*", function(value){
+			return Star;
 		}));
 		list = list.prepend(tuple2("0", function(value) {
 			return Const(Integer(Std.parseInt(value)));
@@ -207,6 +212,7 @@ private class Parser {
 					case Gt: fold(VChild);
 					case Comma: null;
 					case Plus: fold(VNext);
+					case Star: fold(VAll);
 					case SemiColon: null;
 					case Tilde: fold(VSibling);
 					case WhiteSpace: matchToken(next());

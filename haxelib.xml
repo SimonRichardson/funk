@@ -1,5 +1,5 @@
 <project name="funk" url="https://github.com/simonrichardson/funk" license="GPL">
     <user name="stickupkid"/>
     <description>The Funk library supports functional development in Haxe.</description>
-    <version name="0.0.9">Fixes to the injector getInstance.</version>
+    <version name="0.0.10">Implementing the selector query.</version>
 </project>
