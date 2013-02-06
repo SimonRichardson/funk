@@ -1,4 +1,4 @@
-package funk.selector;
+package funk.types;
 
 import funk.Funk;
 import funk.collections.immutable.List;
@@ -8,6 +8,7 @@ import funk.types.Tuple2;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.collections.immutable.extensions.ListsUtil;
+using funk.types.extensions.Anys;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
 
@@ -32,6 +33,7 @@ private enum Constant {
 private enum Token {
 	Eof;
 	Gt;
+	Comma;
 	Const(value : Constant);
 	Plus;
 	SemiColon;
@@ -40,20 +42,22 @@ private enum Token {
 	Unknown;
 }
 
-private enum Expr {
-	ELine(value : Value);
+enum Expr {
+	ELine(expr : Expr);
+	EProp(value : Value);
+	EPropBlock(value : Value, expr : Expr);
 }
 
-private enum Value {
-	VAccessor(value : String, next : Value);
-	VClassName(value : String, next : Value);
-	VChild(next : Value);
+enum Value {
+	VAccessor(value : String);
+	VClassName(value : String);
+	VChild;
 	VInteger(value : Int);
-	VIdent(value : String, next : Value);
-	VNext(value : Value);
+	VIdent(value : String);
+	VNext;
 	VNumber(value : Float);
-	VSibling(next : Value);
-	VTag(value : String, next : Value);
+	VSibling;
+	VTag(value : String);
 }
 
 private class Lexer {
@@ -72,6 +76,9 @@ private class Lexer {
 			}),
 			tuple2(">", function(value){
 				return Gt;
+			}),
+			tuple2(",", function(value){
+				return Comma;
 			}),
 			tuple2(";", function(value){
 				return SemiColon;
@@ -160,6 +167,10 @@ private class Parser {
 		return list;
 	}
 
+	private function hasNext() : Bool {
+		return _lexer.hasNext();
+	}
+
 	private function next() : Option<Token> {
 		return if (_lexer.hasNext()) {
 			Some(_lexer.next());
@@ -168,26 +179,36 @@ private class Parser {
 		}
 	}
 
-	private function matchToken(opt : Option<Token>) : Value {
+	private function matchToken(opt : Option<Token>) : Expr {
+		var fold = function (value : Value) {
+			var token = if (hasNext()) {
+				matchToken(next());
+			} else {
+				null;
+			}
+			return token.toBool() ? EPropBlock(value, token) : EProp(value);
+		};
+
 		return switch (opt) {
 			case Some(token):
 				switch(token){
 					case Const(const):
 						switch (const) {
-							case Accessor(value): VAccessor(value, matchToken(next()));
-							case ClassName(value): VClassName(value, matchToken(next()));
-							case Ident(value): VIdent(value, matchToken(next()));
-							case Integer(value): VInteger(value);
-							case Number(value): VNumber(value);
-							case Tag(value): VTag(value, matchToken(next()));
+							case Accessor(value): fold(VAccessor(value));
+							case ClassName(value): fold(VClassName(value));
+							case Ident(value): fold(VIdent(value));
+							case Integer(value): EProp(VInteger(value));
+							case Number(value): EProp(VNumber(value));
+							case Tag(value): fold(VTag(value));
 						}
-					case Gt: VChild(matchToken(next()));
-					case WhiteSpace: matchToken(next());
-					case Plus: VNext(matchToken(next()));
+					case Gt: fold(VChild);
+					case Comma: null;
+					case Plus: fold(VNext);
 					case SemiColon: null;
-					case Tilde: VSibling(matchToken(next()));
-					case Eof: null;
+					case Tilde: fold(VSibling);
+					case WhiteSpace: matchToken(next());
 					case Unknown: Funk.error(IllegalOperationError("Unknown token"));
+					case Eof: null;
 				}
 			case None: null;
 		}
