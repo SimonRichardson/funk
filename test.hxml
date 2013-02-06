@@ -48,14 +48,14 @@
 -D test
 #-D parallel
 
-#--next
-#-cmd echo "\nRunning Code Coverage:\n\t[Javascript]\n\t[Actionscript]"
-#
-#--next
-#-cmd haxelib run munit test -coverage -nogen -js -as3
-#
-#--next
-#-cmd echo "\nRunning Tests:\n\t[Javascript]\n\t[Actionscript]\n\t[Neko]"
+--next
+-cmd echo "\nRunning Code Coverage:\n\t[Javascript]\n\t[Actionscript]"
 
 --next
--cmd haxelib run munit test -nogen -js #-as3 -neko
+-cmd haxelib run munit test -coverage -nogen -js -as3
+
+--next
+-cmd echo "\nRunning Tests:\n\t[Javascript]\n\t[Actionscript]\n\t[Neko]"
+
+--next
+-cmd haxelib run munit test -nogen -js -as3 -neko
