@@ -105,13 +105,13 @@ private class LexerPatterns {
 			return Const(Integer(Std.parseInt(value)));
 		}));
 		list = list.prepend(tuple2("\\.[a-zA-Z0-9\\-\\_]*", function(value){
-			return Const(ClassName(value));
+			return Const(ClassName(value.substr(1)));
 		}));
 		list = list.prepend(tuple2("#[a-zA-Z0-9\\-\\_]*", function(value){
-			return Const(Ident(value));
+			return Const(Ident(value.substr(1)));
 		}));
 		list = list.prepend(tuple2(":[a-zA-Z0-9\\-\\_\\(\\)]*", function(value){
-			return Const(Accessor(value));
+			return Const(Accessor(value.substr(1)));
 		}));
 		list = list.prepend(tuple2("[a-zA-Z0-9\\-\\_]*", function(value) {
 			return Const(Tag(value));
