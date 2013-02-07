@@ -1,11 +1,11 @@
-package funk.logging;
+package funk.io.logging;
 
-import funk.logging.Log;
-import funk.logging.LogLevel;
+import funk.io.logging.Log;
+import funk.io.logging.LogLevel;
 import funk.reactive.Stream;
 
 using funk.collections.extensions.CollectionsUtil;
-using funk.logging.extensions.LogLevels;
+using funk.io.logging.extensions.LogLevels;
 using funk.reactive.extensions.Streams;
 
 class Logger<T> {

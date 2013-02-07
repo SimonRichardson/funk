@@ -1,11 +1,11 @@
-package funk.logging.extensions;
+package funk.io.logging.extensions;
 
-import funk.logging.Log;
-import funk.logging.LogLevel;
+import funk.io.logging.Log;
+import funk.io.logging.LogLevel;
 import funk.reactive.Stream;
 import funk.types.Tuple2;
 
-using funk.logging.extensions.LogLevels;
+using funk.io.logging.extensions.LogLevels;
 using funk.reactive.extensions.Streams;
 using funk.types.extensions.Tuples2;
 

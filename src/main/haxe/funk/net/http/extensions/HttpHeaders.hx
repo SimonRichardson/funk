@@ -23,6 +23,28 @@ class HttpHeaders {
         }
     }
 
+    public static function getHttpCustomRequest(value : HttpHeader) : Option<Tuple2<String, String>> {
+        return switch(value) {
+            case HttpRequest(request): 
+                switch(request) {
+                    case X(a, b): Some(tuple2(a, b));
+                    default: None;
+                }
+            default: None;
+        }
+    }
+
+    public static function getHttpCustomResponse(value : HttpHeader) : Option<Tuple2<String, String>> {
+        return switch(value) {
+            case HttpResponse(response): 
+                switch(response) {
+                    case X(a, b): Some(tuple2(a, b));
+                    default: None;
+                }
+            default: None;
+        }
+    }
+
     public static function toHttpVersion(value : HttpHeader) : HttpVersion {
         return switch(value) {
             case HttpRequest(request):
@@ -56,6 +78,7 @@ class HttpHeaders {
                     case UserAgent(_): Http("1.0");
                     case Via(_): Http("1.1");
                     case Warning(_): Http("1.1");
+                    case X(_, _): Unknown("");
                 }
 
             case HttpResponse(response):
@@ -93,6 +116,7 @@ class HttpHeaders {
                     case Via(_): Http("1.1");
                     case Warning(_): Http("1.1");
                     case WWWAuthenticate(_): Http("1.0");
+                    case X(_, _): Unknown("");
                 }
         }
     }
@@ -140,6 +164,7 @@ class HttpHeaders {
                     case UserAgent(v): Some(v);
                     case Via(v): Some(v);
                     case Warning(v): Some(v);
+                    case X(name, value): Some(Std.format("${name},${value}"));
                 }
             case HttpResponse(response):
                 name = Some(getName(Std.string(response)));
@@ -178,6 +203,7 @@ class HttpHeaders {
                     case Via(v): Some(v);
                     case Warning(v): Some(v);
                     case WWWAuthenticate(v): Some(v);
+                    case X(name, value): Some(Std.format("${name},${value}"));
                 }
         }
 

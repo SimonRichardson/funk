@@ -1,6 +1,6 @@
-package funk.logging.extensions;
+package funk.io.logging.extensions;
 
-import funk.logging.Tag;
+import funk.io.logging.Tag;
 
 class Tags {
 

@@ -1,6 +1,6 @@
-package funk.logging.outputs;
+package funk.io.logging.outputs;
 
-using funk.logging.extensions.Messages;
+using funk.io.logging.extensions.Messages;
 
 @:final
 class TraceOutput<T> extends Output<T> {

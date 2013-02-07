@@ -1,6 +1,6 @@
-package funk.logging;
+package funk.io.logging;
 
-import funk.logging.Log;
+import funk.io.logging.Log;
 
 enum LogLevel<T> {
     Trace(value : LogValue<T>);

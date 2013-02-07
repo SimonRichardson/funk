@@ -1,4 +1,4 @@
-package funk.logging;
+package funk.io.logging;
 
 import funk.reactive.Stream;
 

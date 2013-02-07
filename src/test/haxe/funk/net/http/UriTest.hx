@@ -1,4 +1,4 @@
-package funk.net;
+package funk.net.http;
 
 import funk.collections.immutable.List;
 import funk.types.Option;

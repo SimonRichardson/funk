@@ -1,9 +1,9 @@
 package funk.net.http.extensions;
 
 import funk.collections.immutable.List;
+import funk.io.http.UriLoader;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
-import funk.net.http.UriLoader;
 import funk.net.http.UriRequest;
 import funk.types.Option;
 import funk.types.Promise;

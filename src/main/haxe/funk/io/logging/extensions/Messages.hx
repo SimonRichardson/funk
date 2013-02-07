@@ -1,11 +1,11 @@
-package funk.logging.extensions;
+package funk.io.logging.extensions;
 
-import funk.logging.Log;
-import funk.logging.LogLevel;
-import funk.logging.Message;
+import funk.io.logging.Log;
+import funk.io.logging.LogLevel;
+import funk.io.logging.Message;
 
-using funk.logging.extensions.Tags;
-using funk.logging.extensions.LogLevels;
+using funk.io.logging.extensions.Tags;
+using funk.io.logging.extensions.LogLevels;
 
 class Messages {
 

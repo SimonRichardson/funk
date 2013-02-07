@@ -1,6 +1,6 @@
-package funk.logging;
+package funk.io.logging;
 
-import funk.logging.LogLevel;
+import funk.io.logging.LogLevel;
 import funk.reactive.Stream;
 
 class Log {

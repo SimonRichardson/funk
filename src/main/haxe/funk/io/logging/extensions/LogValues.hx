@@ -1,7 +1,7 @@
-package funk.logging.extensions;
+package funk.io.logging.extensions;
 
-import funk.logging.Log;
-import funk.logging.LogLevel;
+import funk.io.logging.Log;
+import funk.io.logging.LogLevel;
 import funk.types.Option;
 import funk.types.extensions.Anys;
 

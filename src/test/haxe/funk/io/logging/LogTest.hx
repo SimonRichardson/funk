@@ -1,15 +1,15 @@
-package funk.logging;
+package funk.io.logging;
 
-import funk.logging.LogLevel;
-import funk.logging.outputs.TraceOutput;
+import funk.io.logging.LogLevel;
+import funk.io.logging.outputs.TraceOutput;
 import funk.reactive.Stream;
 import funk.types.Tuple2;
 
-using funk.logging.extensions.Logs;
-using funk.logging.extensions.Loggers;
-using funk.logging.extensions.LogLevels;
-using funk.logging.extensions.LogValues;
-using funk.logging.extensions.Messages;
+using funk.io.logging.extensions.Logs;
+using funk.io.logging.extensions.Loggers;
+using funk.io.logging.extensions.LogLevels;
+using funk.io.logging.extensions.LogValues;
+using funk.io.logging.extensions.Messages;
 using funk.reactive.extensions.Streams;
 using funk.types.extensions.Tuples2;
 using massive.munit.Assert;

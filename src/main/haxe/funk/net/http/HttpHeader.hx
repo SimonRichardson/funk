@@ -42,6 +42,7 @@ enum HttpRequestHeader {
     UserAgent(value : String);
     Via(value : String);
     Warning(value : String);
+    X(name : String, value : String);
 }
 
 enum HttpResponseHeader {
@@ -78,4 +79,5 @@ enum HttpResponseHeader {
     Via(value : String);
     Warning(value : String);
     WWWAuthenticate(value : String);
+    X(name : String, value : String);
 }
