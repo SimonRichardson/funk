@@ -2,6 +2,7 @@ package funk.ioc;
 
 import funk.Funk;
 import funk.collections.immutable.List;
+import funk.collections.immutable.Map;
 import funk.ioc.Module;
 import funk.types.Option;
 import funk.types.Tuple2;
@@ -13,7 +14,7 @@ using funk.types.extensions.Tuples2;
 @:final
 class Injector {
 
-    private static var _map : List<Tuple2<Class<Dynamic>, IModule>>;
+    private static var _map : Map<Class<Dynamic>, IModule>;
 
     private static var _scopes : List<IModule>;
 

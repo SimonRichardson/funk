@@ -2,6 +2,7 @@ package funk.types;
 
 import funk.Funk;
 import funk.collections.immutable.List;
+import funk.collections.immutable.Map;
 import funk.types.Function1;
 import funk.types.Option;
 import funk.types.Tuple2;
@@ -69,7 +70,7 @@ enum Value {
 
 private class LexerPatterns {
 
-	public static var patterns : List<Tuple2<String, Function1<String, Token>>>;
+	public static var patterns : Map<String, Function1<String, Token>>;
 
 	/**
 	 * Low level caching, so we don't have to generate these every time the lexer is invoked

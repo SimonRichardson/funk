@@ -1,6 +1,7 @@
 package funk.net.http.extensions;
 
 import funk.collections.immutable.List;
+import funk.collections.immutable.Map;
 import funk.net.http.UriRequest;
 import funk.types.Option;
 import funk.types.Tuple2;
@@ -128,8 +129,8 @@ class Uris {
         }
     }
 
-    public static function parameters(request : UriRequest) : List<Tuple2<String, Option<String>>> {
-        var list = Nil;
+    public static function parameters(request : UriRequest) : Map<String, Option<String>> {
+        var map = Nil;
 
         // TODO (Simon) : This seems weak
         var opt = match(uri(request), 10);
@@ -139,11 +140,11 @@ class Uris {
                 var parts = value.split("=");
                 var l = parts[0];
                 var r = parts.length < 1 || parts[1] == null || parts[1].isEmptyOrBlank() ? None : Some(parts[1]);
-                list = list.prepend(tuple2(l, r));
+                map = map.prepend(tuple2(l, r));
             });
         });
 
-        return list;
+        return map;
     }
 
     public static function hash(request : UriRequest) : Option<String> {

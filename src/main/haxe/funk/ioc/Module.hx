@@ -2,6 +2,7 @@ package funk.ioc;
 
 import funk.Funk;
 import funk.collections.immutable.List;
+import funk.collections.immutable.Map;
 import funk.ioc.Binding;
 import funk.types.extensions.Anys;
 import funk.types.Function0;
@@ -27,7 +28,7 @@ interface IModule {
 
 class Module implements IModule {
 
-    private var _map: List<Tuple2<Class<Dynamic>, Binding<Dynamic>>>;
+    private var _map: Map<Class<Dynamic>, Binding<Dynamic>>;
 
     private var _initialized: Bool;
 

@@ -4,6 +4,7 @@ import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.extensions.Collections;
 import funk.collections.immutable.List;
+import funk.collections.immutable.Map;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Option;
@@ -444,7 +445,7 @@ class Lists {
 				value = func(value, head(p));
 				p = tail(p);
 			}
-			
+
 			Some(value);
 		}
 	}
@@ -504,7 +505,7 @@ class Lists {
 		return reverse(stack);
 	}
 
-	inline public static function zip<T1, T2>(list : List<T1>, other : List<T2>) : List<Tuple2<T1, T2>> {
+	inline public static function zip<T1, T2>(list : List<T1>, other : List<T2>) : Map<T1, T2> {
 		var p = list;
 		var amount = Std.int(Math.min(size(p), size(other)));
 
