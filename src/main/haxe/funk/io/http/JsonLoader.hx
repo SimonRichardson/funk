@@ -32,8 +32,31 @@ using funk.types.extensions.Bools;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
 
-#if js
-class JsonpLoader<T : Dynamic> {
+#if !js
+class JsonLoader<T : Dynamic> {
+
+    private var _uriLoader : UriLoader<T>;
+
+    public function new(request : UriRequest) {
+        _uriLoader = new UriLoader(request, function(value) {
+            return Json.parse(value);
+        });
+    }
+
+    public function start(method : HttpMethod) : Promise<T> {
+        return _uriLoader.start(method);
+    }
+
+    public function stop() : Promise<T> {
+        return _uriLoader.stop();
+    }
+
+    public function status() : Stream<Option<HttpStatusCode>> {
+        return _uriLoader.status();
+    }
+}
+#else
+class JsonLoader<T : Dynamic> {
 
     private var _request : UriRequest;
 
@@ -68,7 +91,7 @@ class JsonpLoader<T : Dynamic> {
             });
 
             callbackName = switch (custom) {
-                case Some(header): 
+                case Some(header):
                     switch(header.getHttpCustomRequest()) {
                         case Some(tuple): tuple._2();
                         case None: callbackName;
@@ -92,7 +115,7 @@ class JsonpLoader<T : Dynamic> {
         // Merge the url and parameters
         _requestId = tuple._1();
         _requestUri = switch(_request.url()) {
-            case Some(url): 
+            case Some(url):
 
                 var parameters = _request.parameters().map(function(tuple) {
                     var key = tuple._1();
@@ -127,7 +150,7 @@ class JsonpLoader<T : Dynamic> {
 
         switch (method) {
             case Get:
-            default: 
+            default:
                 _statusStream.dispatch(HttpClientError(Failure).toOption());
                 _deferred.reject(HttpError(Std.format("Error at: ${Std.string(method)} not supported")));
         };
@@ -185,13 +208,13 @@ class JsonpLoaderResponder {
 
     public static function inject(uri : String, id : String) : Void {
         var element = window.document.createElement('script');
-        
+
         element.setAttribute('type', 'text/javascript');
         element.setAttribute('src', uri);
         element.setAttribute('id', id);
 
         switch(window.document.getElementsByTagName('head').toOption()) {
-            case Some(collection): 
+            case Some(collection):
                 var length = collection.length;
                 if(length > 0) {
                     var head = collection[0];

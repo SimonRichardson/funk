@@ -30,12 +30,16 @@ class UriRequests {
     }
 
     public static function get(request : UriRequest) : Promise<String> {
-        var http = new UriLoader(request);
+        var http = new UriLoader(request, function(value) {
+            return value;
+        });
         return http.start(Get);
     }
 
     public static function post(request : UriRequest) : Promise<String> {
-        var http = new UriLoader(request);
+        var http = new UriLoader(request, function(value) {
+            return value;
+        });
         return http.start(Post);
     }
 }

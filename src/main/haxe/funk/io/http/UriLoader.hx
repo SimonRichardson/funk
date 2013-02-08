@@ -3,12 +3,14 @@ package funk.io.http;
 import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.immutable.List;
+import funk.collections.immutable.Map;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
 import funk.net.http.UriRequest;
 import funk.net.http.HttpStatusCode;
 import funk.reactive.Stream;
 import funk.types.Deferred;
+import funk.types.Function1;
 import funk.types.Promise;
 import funk.types.Option;
 import funk.types.Tuple2;
@@ -26,20 +28,23 @@ using funk.types.extensions.Bools;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
 
-class UriLoader {
+class UriLoader<T> {
 
     private var _request : UriRequest;
 
+    private var _map : Function1<String, T>;
+
     private var _loader : Http;
 
-    private var _deferred : Deferred<String>;
+    private var _deferred : Deferred<T>;
 
-    private var _states : Collection<State<String>>;
+    private var _states : Collection<State<T>>;
 
     private var _statusStream : Stream<Option<HttpStatusCode>>;
 
-    public function new(request : UriRequest) {
+    public function new(request : UriRequest, map : Function1<String, T>) {
         _request = request;
+        _map = map;
 
         _loader = new Http(request.uri());
         _deferred = new Deferred();
@@ -73,7 +78,7 @@ class UriLoader {
         };
         _loader.onData = function (data : String) {
             if (_states.contains(Aborted).not()) {
-                _deferred.resolve(data);
+                _deferred.resolve(_map(data));
             }
         };
         _loader.onError = function (error : String) {
@@ -82,7 +87,7 @@ class UriLoader {
         };
     }
 
-    public function start(method : HttpMethod) : Promise<String> {
+    public function start(method : HttpMethod) : Promise<T> {
         var promise = _deferred.promise();
 
         if (_states.contains(Aborted)) {
@@ -105,7 +110,7 @@ class UriLoader {
         return promise;
     }
 
-    public function stop() : Promise<String> {
+    public function stop() : Promise<T> {
         _deferred.abort();
 
         return _deferred.promise();

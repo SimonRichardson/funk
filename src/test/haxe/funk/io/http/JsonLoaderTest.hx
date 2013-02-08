@@ -1,7 +1,7 @@
 package funk.io.http;
 
 import funk.collections.immutable.List;
-import funk.io.http.JsonpLoader;
+import funk.io.http.JsonLoader;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
 import funk.net.http.HttpStatusCode;
@@ -21,8 +21,7 @@ using funk.net.http.extensions.Uris;
 using massive.munit.Assert;
 using unit.Asserts;
 
-#if js
-class JsonpLoaderTest {
+class JsonLoaderTest {
 
 	private static inline var TIMEOUT : Int = 4000;
 
@@ -40,7 +39,7 @@ class JsonpLoaderTest {
 			Assert.isNotNull(actual);
 		}, TIMEOUT);
 
-		var loader = new JsonpLoader(Request("http://jsfiddle.net/echo/jsonp/?message=" + expected));
+		var loader = new JsonLoader(Request("http://localhost:1234/server.n?message=" + expected));
 		loader.start(Get).then(function(data) {
 			actual = data;
 			handler();
@@ -56,11 +55,10 @@ class JsonpLoaderTest {
 			actual.areEqual(expected);
 		}, TIMEOUT);
 
-		var loader = new JsonpLoader(Request("http://jsfiddle.net/echo/jsonp/?message=" + expected));
+		var loader = new JsonLoader(Request("http://localhost:1234/server.n?message=" + expected));
 		loader.start(Get).then(function(data) {
 			actual = Reflect.field(data, "message");
 			handler();
 		});
 	}
 }
-#end

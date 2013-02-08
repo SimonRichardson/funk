@@ -1,0 +1,7 @@
+# neko
+-neko bin/server.n
+-main ServerMain
+-cp src/test/haxe/
+
+--next
+-cmd nekotools server -h localhost -p 1234 -d bin

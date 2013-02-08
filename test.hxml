@@ -38,7 +38,7 @@
 -D parallel
 
 --next
--cmd haxelib run munit test -coverage -nogen -js -as3
-
---next
 -cmd haxelib run munit test -nogen -js -as3 -neko
+
+#--next
+#-cmd haxelib run munit test -coverage -nogen -js -as3
