@@ -24,9 +24,11 @@ using unit.Asserts;
 #if js
 class JsonpLoaderTest {
 
+	private static inline var TIMEOUT : Int = 4000;
+
 	@Before
 	public function setup() {
-		
+
 	}
 
 	@AsyncTest
@@ -36,7 +38,7 @@ class JsonpLoaderTest {
 
 		var handler = asyncFactory.createHandler(this, function() {
 			Assert.isNotNull(actual);
-		}, 4000);
+		}, TIMEOUT);
 
 		var loader = new JsonpLoader(Request("http://jsfiddle.net/echo/jsonp/?message=" + expected));
 		loader.start(Get).then(function(data) {
@@ -52,7 +54,7 @@ class JsonpLoaderTest {
 
 		var handler = asyncFactory.createHandler(this, function() {
 			actual.areEqual(expected);
-		}, 4000);
+		}, TIMEOUT);
 
 		var loader = new JsonpLoader(Request("http://jsfiddle.net/echo/jsonp/?message=" + expected));
 		loader.start(Get).then(function(data) {
