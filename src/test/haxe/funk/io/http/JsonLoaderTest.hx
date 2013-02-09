@@ -39,7 +39,7 @@ class JsonLoaderTest {
 			Assert.isNotNull(actual);
 		}, TIMEOUT);
 
-		var loader = new JsonLoader(Request("http://localhost:1234/server.n?message=" + expected));
+		var loader = new JsonLoader(Request("http://localhost:1234/echo.n?message=" + expected));
 		loader.start(Get).then(function(data) {
 			actual = data;
 			handler();
@@ -55,7 +55,7 @@ class JsonLoaderTest {
 			actual.areEqual(expected);
 		}, TIMEOUT);
 
-		var loader = new JsonLoader(Request("http://localhost:1234/server.n?message=" + expected));
+		var loader = new JsonLoader(Request("http://localhost:1234/echo.n?message=" + expected));
 		loader.start(Get).then(function(data) {
 			actual = Reflect.field(data, "message");
 			handler();

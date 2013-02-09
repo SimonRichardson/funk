@@ -1,7 +1,15 @@
-# neko
+# server
 -neko bin/server.n
--main ServerMain
+-main tools.ServerMain
 -cp src/test/haxe/
 
+# ehco client
 --next
--cmd nekotools server -h localhost -p 1234 -d bin
+-neko bin/echo.n
+-main tools.EchoMain
+-cp src/test/haxe
+
+# run server
+--next
+-cmd cd bin
+-cmd neko server.n
