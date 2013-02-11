@@ -21,15 +21,13 @@ using funk.net.http.extensions.Uris;
 using massive.munit.Assert;
 using unit.Asserts;
 
-class JsonLoaderTest {
-
-	private static inline var TIMEOUT : Int = 4000;
-
-	private var _baseUri : String;
+class JsonLoaderTest extends BaseLoaderTest {
 
 	@Before
-	public function setup() {
-		_baseUri = "http://localhost:1234/echo.n?";
+	override public function setup() {
+		super.setup();
+
+		baseType = "json";
 	}
 
 	@AsyncTest
@@ -41,7 +39,7 @@ class JsonLoaderTest {
 			Assert.isNotNull(actual);
 		}, TIMEOUT);
 
-		var loader = new JsonLoader(Request(Std.format("${_baseUri}message=${expected}")));
+		var loader = new JsonLoader(Request(Std.format("${baseUri}message=${expected}")));
 		loader.start(Get).then(function(data) {
 			actual = data;
 			handler();
@@ -57,7 +55,7 @@ class JsonLoaderTest {
 			actual.areEqual(expected);
 		}, TIMEOUT);
 
-		var loader = new JsonLoader(Request(Std.format("${_baseUri}message=${expected}")));
+		var loader = new JsonLoader(Request(Std.format("${baseUri}message=${expected}")));
 		loader.start(Get).then(function(data) {
 			actual = Reflect.field(data, "message");
 			handler();

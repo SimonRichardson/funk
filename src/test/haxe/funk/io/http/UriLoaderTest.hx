@@ -21,15 +21,13 @@ using funk.net.http.extensions.Uris;
 using massive.munit.Assert;
 using unit.Asserts;
 
-class UriLoaderTest {
-
-    private static inline var TIMEOUT : Int = 4000;
-
-    private var _baseUri : String;
+class UriLoaderTest extends BaseLoaderTest {
 
     @Before
-    public function setup() {
-        _baseUri = "http://localhost:1234/echo.n?";
+    override public function setup() {
+        super.setup();
+
+        baseType = "text";
     }
 
 	@AsyncTest
@@ -41,7 +39,7 @@ class UriLoaderTest {
             Assert.isNotNull(actual);
         }, TIMEOUT);
 
-        Std.format("${_baseUri}message=${expected}").fromUri().get().then(function(data) {
+        Std.format("${baseUri}message=${expected}").fromUri().get().then(function(data) {
             actual = data;
             handler();
         });

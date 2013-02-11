@@ -21,15 +21,13 @@ using funk.net.http.extensions.Uris;
 using massive.munit.Assert;
 using unit.Asserts;
 
-class XmlLoaderTest {
-
-    private static inline var TIMEOUT : Int = 4000;
-
-    private var _baseUri : String;
+class XmlLoaderTest extends BaseLoaderTest {
 
     @Before
-    public function setup() {
-        _baseUri = "http://localhost:1234/echo.n?";
+    override public function setup() {
+        super.setup();
+
+        baseType = "xml";
     }
 
     @AsyncTest
@@ -41,7 +39,7 @@ class XmlLoaderTest {
             Assert.isNotNull(actual);
         }, TIMEOUT);
 
-        var loader = new XmlLoader(Request(Std.format("${_baseUri}message=${expected}")));
+        var loader = new XmlLoader(Request(Std.format("${baseUri}message=${expected}")));
         loader.start(Get).then(function(data) {
             actual = data;
             handler();
@@ -57,9 +55,9 @@ class XmlLoaderTest {
             actual.areEqual(expected);
         }, TIMEOUT);
 
-        var loader = new XmlLoader(Request(Std.format("${_baseUri}message=${expected}")));
+        var loader = new XmlLoader(Request(Std.format("${baseUri}message=${expected}")));
         loader.start(Get).then(function(data) {
-            actual = Reflect.field(data, "message");
+            actual = data.firstChild().firstChild().firstChild().toString();
             handler();
         });
     }

@@ -11,9 +11,9 @@ import funk.types.Promise;
 import funk.types.Option;
 import haxe.Http;
 
-class XmlLoader<T : Xml> {
+class XmlLoader {
 
-    private var _uriLoader : UriLoader<T>;
+    private var _uriLoader : UriLoader<Xml>;
 
     public function new(request : UriRequest) {
         _uriLoader = new UriLoader(request, function(value) {
@@ -25,11 +25,11 @@ class XmlLoader<T : Xml> {
         });
     }
 
-    public function start(method : HttpMethod) : Promise<T> {
+    public function start(method : HttpMethod) : Promise<Xml> {
         return _uriLoader.start(method);
     }
 
-    public function stop() : Promise<T> {
+    public function stop() : Promise<Xml> {
         return _uriLoader.stop();
     }
 
