@@ -10,6 +10,7 @@
 --js-modern
 -D test
 -D parallel
+-D net
 
 # Neko
 
@@ -22,6 +23,7 @@
 -lib munit
 -lib hamcrest
 -D test
+-D net
 
 # as3
 
@@ -36,6 +38,7 @@
 -lib hamcrest
 -D test
 -D parallel
+-D net
 
 --next
 -cmd haxelib run munit test -nogen -js -as3 -neko

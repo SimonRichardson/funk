@@ -1,6 +1,7 @@
 package tools;
 
 import neko.io.File;
+import haxe.io.Output;
 import haxe.Json;
 import neko.Lib;
 import neko.Web;
@@ -8,8 +9,9 @@ import neko.vm.Thread;
 
 class EchoMain {
 
+    private static var out : Output;
+
     public static function main() {
-        var out = File.write("echo.log", false);
         var map = new Hash<String>();
         var response = "";
 
@@ -29,8 +31,18 @@ class EchoMain {
             parsed;
         }
 
-        Lib.print(result);
-        out.writeString(result);
+        log(result);
+    }
+
+    private static function log(msg : String) : Void {
+        #if output
+        if (out == null) {
+            out = File.write("echo.log", false);
+        }
+        out.writeString(msg);
         out.flush();
+        #end
+
+        Lib.println(msg);
     }
 }

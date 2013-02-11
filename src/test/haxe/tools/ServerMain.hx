@@ -1,5 +1,6 @@
 package tools;
 
+import haxe.io.Output;
 import neko.io.File;
 import neko.io.Process;
 import neko.Lib;
@@ -7,30 +8,23 @@ import neko.vm.Thread;
 
 class ServerMain {
 
-    public static function main() {
-        var out = File.write("server.log", false);
+    private static var out : Output;
 
+    public static function main() {
         Thread.create(function() {
             var serverProcess : Process = null;
 
             try {
                 serverProcess = new Process("nekotools", ["server", "-p", "1234"]);
 
-                out.writeString("Starting nekotools server\n");
-                out.flush();
+                log("Starting nekotools server\n");
             } catch(e : Dynamic) {
-                out.writeString("Unable to launch nekotools server. Please kill existing process and try again.\n");
-                out.writeString(Std.string(e) + "\n");
-                out.flush();
-
-                Lib.println("Unable to launch nekotools server. Please kill existing process and try again.");
+                log("Unable to launch nekotools server. Please kill existing process and try again.\n");
+                log(Std.string(e) + "\n");
             }
 
             while(true){
-                out.writeString(Std.format("Time: ${Sys.cpuTime()}\n"));
-                out.flush();
-
-                Lib.println("hmm");
+                log(Std.format("Time: ${Sys.cpuTime()}\n"));
 
                 Sys.sleep(1);
             }
@@ -39,5 +33,17 @@ class ServerMain {
         while(true){
             Sys.sleep(0.01);
         }
+    }
+
+    private static function log(msg : String) : Void {
+        #if output
+        if (out == null) {
+            out = File.write("server.log", false);
+        }
+        out.writeString(msg);
+        out.flush();
+        #end
+
+        Lib.println(msg);
     }
 }
