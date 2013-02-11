@@ -39,7 +39,11 @@ class JsonLoader<T : Dynamic> {
 
     public function new(request : UriRequest) {
         _uriLoader = new UriLoader(request, function(value) {
-            return Json.parse(value);
+            return try {
+                Json.parse(value);
+            } catch (error : Dynamic) {
+                Funk.error(HttpError("Error parsing the JSON"));
+            }
         });
     }
 

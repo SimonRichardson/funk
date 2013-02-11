@@ -16,6 +16,7 @@ import funk.types.Option;
 import funk.types.Tuple2;
 import haxe.Http;
 
+using StringTools;
 using funk.collections.immutable.extensions.Lists;
 using funk.collections.extensions.Collections;
 using funk.net.http.extensions.HttpHeaders;
@@ -46,29 +47,35 @@ class UriLoader<T> {
         _request = request;
         _map = map;
 
+        var url = switch(request.url()) {
+            case Some(value): value.urlEncode();
+            case None: Funk.error(HttpError("Invalid UriRequest"));
+        };
+
         _loader = new Http(request.uri());
         _deferred = new Deferred();
         _states = _deferred.states();
 
         request.parameters().foreach(function (tuple : Tuple2<String, Option<String>>) {
-            _loader.setParameter(tuple._1(), switch (tuple._2()) {
-                case Some(value): value;
+           /* _loader.setParameter(tuple._1().urlEncode(), switch (tuple._2()) {
+                case Some(value): value.urlEncode();
                 case None: "";
-            });
+            });*/
         });
 
         // Convert the possible headers into an option and then loop over it.
         request.headers().foreach(function (list) {
-            list.foreach(function(request : HttpHeader) {
+            /*list.foreach(function(request : HttpHeader) {
                 var tuple = request.toTuple();
-                _loader.setHeader(tuple._1(), tuple._2());
-            });
+                _loader.setHeader(tuple._1().urlEncode(), tuple._2().urlEncode());
+            });*/
         });
 
         _statusStream = Streams.identity(None);
         _statusStream.dispatch(None);
 
         _loader.onStatus = function (status : Int) {
+            trace("STATUS " + status);
             if (status == 0) {
                 // http://en.wikipedia.org/wiki/Same_origin_policy
                 _deferred.reject(HttpError(Std.format("SecurityError: 'Same Origin Policy' at '${_request.uri()}'")));
@@ -77,11 +84,13 @@ class UriLoader<T> {
             }
         };
         _loader.onData = function (data : String) {
+            trace("DATA " + data);
             if (_states.contains(Aborted).not()) {
                 _deferred.resolve(_map(data));
             }
         };
         _loader.onError = function (error : String) {
+            trace("ERROR " + error);
             _statusStream.dispatch(HttpClientError(Failure).toOption());
             _deferred.reject(HttpError(Std.format("$error for url ${_request.uri()}")));
         };
@@ -102,6 +111,8 @@ class UriLoader<T> {
         };
 
         try {
+            trace(_request);
+            trace(_loader);
             _loader.request(request);
         } catch (error : Dynamic) {
             _deferred.reject(HttpError(Std.format("Error at: ${Std.string(error)}")));

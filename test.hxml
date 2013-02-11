@@ -38,9 +38,6 @@
 -D parallel
 
 --next
--cmd haxe server.hxml
-
---next
 -cmd haxelib run munit test -nogen -js -as3 -neko
 
 #--next

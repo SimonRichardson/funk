@@ -25,21 +25,23 @@ class JsonLoaderTest {
 
 	private static inline var TIMEOUT : Int = 4000;
 
+	private var _baseUri : String;
+
 	@Before
 	public function setup() {
-
+		_baseUri = "http://localhost:1234/echo.n?";
 	}
 
 	@AsyncTest
 	public function when_creating_loader__should_not_be_null(asyncFactory : AsyncFactory) {
 		var actual = null;
-		var expected = "Hello, World!";
+		var expected = "Hello";
 
 		var handler = asyncFactory.createHandler(this, function() {
 			Assert.isNotNull(actual);
 		}, TIMEOUT);
 
-		var loader = new JsonLoader(Request("http://localhost:1234/echo.n?message=" + expected));
+		var loader = new JsonLoader(Request(Std.format("${_baseUri}message=${expected}")));
 		loader.start(Get).then(function(data) {
 			actual = data;
 			handler();
@@ -49,13 +51,13 @@ class JsonLoaderTest {
 	@AsyncTest
 	public function when_creating_loader__should_response_be_correct_message(asyncFactory : AsyncFactory) {
 		var actual = "";
-		var expected = "Hello, World!";
+		var expected = "Hello";
 
 		var handler = asyncFactory.createHandler(this, function() {
 			actual.areEqual(expected);
 		}, TIMEOUT);
 
-		var loader = new JsonLoader(Request("http://localhost:1234/echo.n?message=" + expected));
+		var loader = new JsonLoader(Request(Std.format("${_baseUri}message=${expected}")));
 		loader.start(Get).then(function(data) {
 			actual = Reflect.field(data, "message");
 			handler();
