@@ -7,6 +7,12 @@ import neko.Lib;
 import neko.Web;
 import neko.vm.Thread;
 
+enum Type {
+    TJson;
+    TXml;
+    THtml;
+}
+
 class EchoMain {
 
     private static var out : Output;
@@ -14,17 +20,35 @@ class EchoMain {
     public static function main() {
         var map = new Hash<String>();
         var response = "";
+        var type = "json";
 
         var params = Web.getParams();
         for (i in params.keys()) {
             if (i == "callback") {
                 response = params.get(i);
+            } else if(i == "type") {
+                type = switch(params.get(i)) {
+                    case "xml": TXml;
+                    case "html": THtml;
+                    default: TJson;
+                }
             } else {
                 map.set(i, params.get(i));
             }
         }
 
-        var parsed = Json.stringify(map);
+        var parsed = switch(type) {
+            case TJson: Json.stringify(map);
+            case TXml:
+                var buffer = new StringBuf();
+                buffer.add("<echo>");
+                for (i in map.keys()) {
+                    buffer.add("<" + i + ">" + map.get(i) + "</" + i + ">");
+                }
+                buffer.add("</echo>");
+                buffer.toString();
+            case THtml: "";
+        }
         var result = if (response != "") {
             Std.format("${response}(${parsed})");
         } else {

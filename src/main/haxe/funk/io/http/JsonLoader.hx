@@ -42,7 +42,7 @@ class JsonLoader<T : Dynamic> {
             return try {
                 Json.parse(value);
             } catch (error : Dynamic) {
-                Funk.error(HttpError("Error parsing the JSON"));
+                Funk.error(HttpError("Error parsing the Json"));
             }
         });
     }
