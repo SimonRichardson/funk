@@ -3,10 +3,16 @@ package funk.reactive.events;
 import funk.reactive.events.Events;
 import funk.reactive.Stream;
 import funk.reactive.extensions.Streams;
+import funk.types.Function0;
 
 #if js
-import CommonJS;
-import UserAgentContext;
+import js.Dom;
+typedef CustomWindow = {>Window,
+    function requestAnimationFrame(func : Function0<Void>) : Void;
+};
+typedef CustomEvent = {>Event,
+    function initEvent(type : String, bubbles : Bool, cancelable : Bool) : Int;
+};
 #elseif flash9
 import flash.display.Stage;
 import flash.events.Event;
@@ -23,7 +29,7 @@ enum RenderEventType {
 
 class RenderEvents {
 
-    #if (flash9)
+    #if flash9
     public static function enterFrame(target : EventDispatcher) : Stream<Event> {
         return Events.event(target, RenderEventTypes.toString(EnterFrame));
     }
@@ -31,7 +37,7 @@ class RenderEvents {
     public static function render(stage : Stage) : Stream<Event> {
         return Events.event(stage, RenderEventTypes.toString(Render));
     }
-    #elseif (js)
+    #elseif js
     public static function enterFrame() : Stream<Event> {
         return customEvent(RenderEventTypes.toString(EnterFrame));
     }
@@ -43,12 +49,12 @@ class RenderEvents {
     private static function customEvent(type : String) : Stream<Event> {
         var stream = Streams.identity(None);
 
-        var win = untyped __js__("window");
-        var document = CommonJS.getHtmlDocument();
+        var win : CustomWindow = untyped __js__("window");
+        var document : Document = win.document;
         var finished = false;
 
         function tick() {
-            var event = document.createEvent("Event");
+            var event : CustomEvent = untyped __js__("document.createEvent('Event')");
             event.initEvent(type, false, false);
 
             stream.dispatch(event);

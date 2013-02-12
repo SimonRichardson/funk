@@ -5,7 +5,8 @@ import funk.reactive.Stream;
 import funk.reactive.extensions.Streams;
 
 #if js
-import js.w3c.level3.Events;
+import js.Dom;
+typedef KeyboardEvent = Event;
 #elseif flash9
 import flash.events.Event;
 import flash.events.EventDispatcher;

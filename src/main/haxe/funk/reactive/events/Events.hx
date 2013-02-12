@@ -6,8 +6,11 @@ import funk.reactive.extensions.Streams;
 import funk.types.Function1;
 
 #if js
-import UserAgentContext;
-typedef EventDispatcher = EventTarget;
+import js.Dom;
+typedef EventDispatcher = {
+    function addEventListener(type : String, method : Function1<Event, Void>, useCapture : Bool) : Void;
+    function removeEventListener(type : String, method : Function1<Event, Void>, useCapture : Bool) : Void;
+};
 #elseif flash9
 import flash.events.Event;
 import flash.events.EventDispatcher;

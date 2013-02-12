@@ -51,7 +51,7 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		return Promises.dispatch(None);
 	}
 
-	private function addAll(value : List<T>) : Promise<Option<V>> {
+	private function addAll(value : List<V>) : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
 
@@ -72,7 +72,7 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 	}
 
 	private function removeAll() : Promise<Option<V>> {
-		return Promise.dispatch(None);
+		return Promises.dispatch(None);
 	}
 
 	private function sync() : Promise<Option<V>> {

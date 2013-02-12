@@ -6,7 +6,6 @@
 -debug
 -lib munit
 -lib hamcrest
--lib xirsys_stdjs
 --js-modern
 -D test
 -D parallel
@@ -40,8 +39,8 @@
 -D parallel
 -D net
 
---next
--cmd haxelib run munit test -nogen -js -as3 -neko
-
 #--next
-#-cmd haxelib run munit test -coverage -nogen -js -as3
+#-cmd haxelib run munit test -nogen -js -as3 -neko
+
+--next
+-cmd haxelib run munit test -coverage -nogen -js -as3
