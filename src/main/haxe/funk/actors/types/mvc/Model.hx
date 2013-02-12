@@ -17,10 +17,12 @@ using funk.types.extensions.Promises;
 enum Requests<T, K> {
     Add(value : T);
     AddAt(value : T, key : K);
+    AddAll(value : List<T>);
     Get;
     GetAt(key : K);
     Remove(value : T);
     RemoveAt(key : K);
+    RemoveAll;
     Sync;
     Update(a : T, b : T);
     UpdateAll(a : T);
@@ -49,6 +51,10 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		return Promises.dispatch(None);
 	}
 
+	private function addAll(value : List<T>) : Promise<Option<V>> {
+		return Promises.dispatch(None);
+	}
+
 	private function get() : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
@@ -63,6 +69,10 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 
 	private function removeAt(key : K) : Promise<Option<V>> {
 		return Promises.dispatch(None);
+	}
+
+	private function removeAll() : Promise<Option<V>> {
+		return Promise.dispatch(None);
 	}
 
 	private function sync() : Promise<Option<V>> {
@@ -92,10 +102,12 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 				var response : Promise<Option<V>> = switch(value) {
 					case Add(value): add(value);
 					case AddAt(value, key): addAt(value, key);
+					case AddAll(value): addAll(value);
 					case Get: get();
 					case GetAt(key): getAt(key);
 					case Remove(value): remove(value);
 					case RemoveAt(key): removeAt(key);
+					case RemoveAll: removeAll();
 					case Sync: sync();
 					case Update(a, b): update(a, b);
 					case UpdateAll(a): updateAll(a);

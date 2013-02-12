@@ -2,6 +2,7 @@ package funk.actors.types.mvc;
 
 import funk.actors.Message;
 import funk.actors.types.mvc.Model;
+import funk.collections.immutable.List;
 import funk.types.Promise;
 
 using funk.actors.extensions.Actors;
@@ -24,6 +25,10 @@ class Controller<T, K> {
     	return model.dispatch(AddAt(value, key));
     }
 
+    public function addAll<R>(value : List<T>) : Promise<Message<R>> {
+        return model.dispatch(AddAll(value));
+    }
+
     public function get<R>() : Promise<Message<R>> {
         return model.dispatch(Get);
     }
@@ -38,6 +43,10 @@ class Controller<T, K> {
 
     public function removeAt<R>(key : K) : Promise<Message<R>> {
         return model.dispatch(RemoveAt(key));
+    }
+
+    public function removeAll<R>() : Promise<Message<R>> {
+        return model.dispatch(RemoveAll);
     }
 
     public function sync<R>() : Promise<Message<R>> {
