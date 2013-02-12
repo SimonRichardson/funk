@@ -5,6 +5,7 @@ import funk.collections.Collection;
 import funk.collections.immutable.List;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
+import funk.net.http.HttpResponse;
 import funk.net.http.HttpStatusCode;
 import funk.net.http.UriRequest;
 import funk.reactive.Stream;
@@ -47,11 +48,11 @@ class JsonLoader<T : Dynamic> {
         });
     }
 
-    public function start(method : HttpMethod) : Promise<T> {
+    public function start(method : HttpMethod) : Promise<HttpResponse<T>> {
         return _uriLoader.start(method);
     }
 
-    public function stop() : Promise<T> {
+    public function stop() : Promise<HttpResponse<T>> {
         return _uriLoader.stop();
     }
 
@@ -68,9 +69,9 @@ class JsonLoader<T : Dynamic> {
 
     private var _requestUri : Option<String>;
 
-    private var _deferred : Deferred<T>;
+    private var _deferred : Deferred<HttpResponse<T>>;
 
-    private var _states : Collection<State<T>>;
+    private var _states : Collection<State<HttpResponse<T>>>;
 
     private var _statusStream : Stream<Option<HttpStatusCode>>;
 
@@ -108,8 +109,13 @@ class JsonLoader<T : Dynamic> {
         var tuple = JsonpLoaderResponder.create(function(data) {
             try {
                 // Wait to make sure we can parse before sending the OK
-                _statusStream.dispatch(HttpSuccess(OK).toOption());
-                _deferred.resolve(data);
+                var statusValue = HttpSuccess(OK).toOption();
+                _statusStream.dispatch(statusValue);
+                _deferred.resolve({
+                    code: statusValue,
+                    body: Some(data),
+                    headers: Nil
+                });
             } catch (error : Dynamic) {
                 _statusStream.dispatch(HttpSuccess(NoContent).toOption());
                 _deferred.reject(HttpError("Error parsing data format"));
@@ -145,7 +151,7 @@ class JsonLoader<T : Dynamic> {
         }
     }
 
-    public function start(method : HttpMethod) : Promise<T> {
+    public function start(method : HttpMethod) : Promise<HttpResponse<T>> {
         var promise = _deferred.promise();
 
         if (_states.contains(Aborted)) {
@@ -175,7 +181,7 @@ class JsonLoader<T : Dynamic> {
         return promise;
     }
 
-    public function stop() : Promise<T> {
+    public function stop() : Promise<HttpResponse<T>> {
         _deferred.abort();
 
         return _deferred.promise();

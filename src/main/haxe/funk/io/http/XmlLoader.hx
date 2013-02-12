@@ -3,6 +3,7 @@ package funk.io.http;
 import funk.Funk;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
+import funk.net.http.HttpResponse;
 import funk.net.http.HttpStatusCode;
 import funk.net.http.UriRequest;
 import funk.reactive.Stream;
@@ -25,11 +26,11 @@ class XmlLoader {
         });
     }
 
-    public function start(method : HttpMethod) : Promise<Xml> {
+    public function start(method : HttpMethod) : Promise<HttpResponse<Xml>> {
         return _uriLoader.start(method);
     }
 
-    public function stop() : Promise<Xml> {
+    public function stop() : Promise<HttpResponse<Xml>> {
         return _uriLoader.stop();
     }
 

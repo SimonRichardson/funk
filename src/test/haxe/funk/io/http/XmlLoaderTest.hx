@@ -7,7 +7,9 @@ import funk.net.http.HttpMethod;
 import funk.net.http.HttpStatusCode;
 import funk.net.http.UriRequest;
 import funk.reactive.Stream;
+import funk.types.Attempt;
 import funk.types.Promise;
+import funk.types.Option;
 import haxe.Http;
 
 import massive.munit.async.AsyncFactory;
@@ -18,6 +20,7 @@ using funk.net.http.extensions.HttpHeaders;
 using funk.net.http.extensions.HttpStatusCodes;
 using funk.net.http.extensions.UriRequests;
 using funk.net.http.extensions.Uris;
+using funk.types.extensions.Options;
 using massive.munit.Assert;
 using unit.Asserts;
 
@@ -25,9 +28,9 @@ class XmlLoaderTest extends BaseLoaderTest {
 
     @Before
     override public function setup() {
-        super.setup();
-
         baseType = "xml";
+
+        super.setup();
     }
 
     @AsyncTest
@@ -40,8 +43,33 @@ class XmlLoaderTest extends BaseLoaderTest {
         }, TIMEOUT);
 
         var loader = new XmlLoader(Request(Std.format("${baseUri}message=${expected}")));
-        loader.start(Get).then(function(data) {
-            actual = data;
+        loader.start(Get).when(function(attempt) {
+            switch(attempt){
+                case Success(data): actual = data.body.get();
+                default: Assert.fail("Failed if called");
+            }
+            
+            handler();
+        });
+    }
+
+    @AsyncTest
+    public function when_creating_loader__should_be_valid_option(asyncFactory : AsyncFactory) {
+        var actual = null;
+        var expected = "Hello";
+
+        var handler = asyncFactory.createHandler(this, function() {
+            // This would run fine if we had a valid server
+            Assert.areEqual(cast actual, cast None);//Some(HttpSuccess(OK)));
+        }, TIMEOUT);
+
+        var loader = new XmlLoader(Request(Std.format("${baseUri}message=${expected}")));
+        loader.start(Get).when(function(attempt) {
+            switch(attempt){
+                case Success(data): actual = data.code;
+                default: Assert.fail("Failed if called");
+            }
+            
             handler();
         });
     }
@@ -56,8 +84,12 @@ class XmlLoaderTest extends BaseLoaderTest {
         }, TIMEOUT);
 
         var loader = new XmlLoader(Request(Std.format("${baseUri}message=${expected}")));
-        loader.start(Get).then(function(data) {
-            actual = data.firstChild().firstChild().firstChild().toString();
+        loader.start(Get).when(function(attempt) {
+            switch(attempt){
+                case Success(data): actual = data.body.get().firstChild().firstChild().firstChild().toString();
+                default: Assert.fail("Failed if called");
+            }
+            
             handler();
         });
     }

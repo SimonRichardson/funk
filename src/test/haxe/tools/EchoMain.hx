@@ -24,6 +24,12 @@ class EchoMain {
         var type = TText;
 
         var params = Web.getParams();
+
+        Web.setReturnCode(200);
+
+        log("Parameters : ");
+        log(params.toString());
+
         for (i in params.keys()) {
             if (i == "callback") {
                 response = params.get(i);
@@ -34,7 +40,7 @@ class EchoMain {
                     case "html": THtml;
                     default: TText;
                 }
-            } else {
+            } else if (i != "") {
                 map.set(i, params.get(i));
             }
         }
@@ -62,18 +68,22 @@ class EchoMain {
             parsed;
         }
 
-        log(result);
+        log(result, true);
     }
 
-    private static function log(msg : String) : Void {
+    private static function log(msg : String, ?print : Bool = false) : Void {
         #if output
         if (out == null) {
-            out = File.write("echo.log", false);
+            out = File.append("echo.log", false);
+            out.writeString("\n-------------------------------\n");
+            out.flush();
         }
-        out.writeString(msg);
+        out.writeString(msg + "\n");
         out.flush();
         #end
 
-        Lib.println(msg);
+        if (print) {
+            Lib.println(msg);
+        }
     }
 }

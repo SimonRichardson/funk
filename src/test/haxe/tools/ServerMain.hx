@@ -38,7 +38,9 @@ class ServerMain {
     private static function log(msg : String) : Void {
         #if output
         if (out == null) {
-            out = File.write("server.log", false);
+            out = File.append("server.log", false);
+            out.writeString("\n-------------------------------\n");
+            out.flush();
         }
         out.writeString(msg);
         out.flush();

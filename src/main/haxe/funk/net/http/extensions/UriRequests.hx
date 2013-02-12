@@ -4,6 +4,7 @@ import funk.collections.immutable.List;
 import funk.io.http.UriLoader;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
+import funk.net.http.HttpResponse;
 import funk.net.http.UriRequest;
 import funk.types.Option;
 import funk.types.Promise;
@@ -29,14 +30,14 @@ class UriRequests {
         return RequestWithHeaders(value, headers);
     }
 
-    public static function get(request : UriRequest) : Promise<String> {
+    public static function get(request : UriRequest) : Promise<HttpResponse<String>> {
         var http = new UriLoader(request, function(value) {
             return value;
         });
         return http.start(Get);
     }
 
-    public static function post(request : UriRequest) : Promise<String> {
+    public static function post(request : UriRequest) : Promise<HttpResponse<String>> {
         var http = new UriLoader(request, function(value) {
             return value;
         });

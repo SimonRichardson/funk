@@ -7,6 +7,7 @@ import funk.collections.immutable.Map;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
 import funk.net.http.UriRequest;
+import funk.net.http.HttpResponse;
 import funk.net.http.HttpStatusCode;
 import funk.reactive.Stream;
 import funk.types.Deferred;
@@ -37,9 +38,9 @@ class UriLoader<T> {
 
     private var _loader : Http;
 
-    private var _deferred : Deferred<T>;
+    private var _deferred : Deferred<HttpResponse<T>>;
 
-    private var _states : Collection<State<T>>;
+    private var _states : Collection<State<HttpResponse<T>>>;
 
     private var _statusStream : Stream<Option<HttpStatusCode>>;
 
@@ -74,6 +75,12 @@ class UriLoader<T> {
         _statusStream = Streams.identity(None);
         _statusStream.dispatch(None);
 
+        // Grab the last status value
+        var statusValue = None;
+        _statusStream.values().foreach(function (opt) {
+            statusValue = opt;
+        });
+
         _loader.onStatus = function (status : Int) {
             if (status == 0) {
                 // http://en.wikipedia.org/wiki/Same_origin_policy
@@ -84,7 +91,11 @@ class UriLoader<T> {
         };
         _loader.onData = function (data : String) {
             if (_states.contains(Aborted).not()) {
-                _deferred.resolve(_map(data));
+                _deferred.resolve({
+                    code: statusValue,
+                    body: Some(_map(data)),
+                    headers: Nil
+                });
             }
         };
         _loader.onError = function (error : String) {
@@ -93,7 +104,7 @@ class UriLoader<T> {
         };
     }
 
-    public function start(method : HttpMethod) : Promise<T> {
+    public function start(method : HttpMethod) : Promise<HttpResponse<T>> {
         var promise = _deferred.promise();
 
         if (_states.contains(Aborted)) {
@@ -116,7 +127,7 @@ class UriLoader<T> {
         return promise;
     }
 
-    public function stop() : Promise<T> {
+    public function stop() : Promise<HttpResponse<T>> {
         _deferred.abort();
 
         return _deferred.promise();
