@@ -15,6 +15,7 @@ using funk.collections.extensions.Collections;
 using funk.collections.extensions.CollectionsUtil;
 using funk.types.extensions.Attempts;
 using funk.types.extensions.Options;
+using funk.types.extensions.Promises;
 using massive.munit.Assert;
 using unit.Asserts;
 
@@ -281,5 +282,30 @@ class PromiseTest {
 			called = true;
 		}
 		called.isTrue();
+	}
+
+	@Test
+	public function when_chaining_promises__should_be_called() : Void {
+		var called : Bool = false;
+		promise._then(function (value) {
+			return Std.string(value);
+		}).then(function (value) {
+			called = true;
+		});
+		deferred.resolve(1);
+		called.isTrue();
+	}
+
+	@Test
+	public function when_chaining_promises__should_pass_correctly_mapped_value() : Void {
+		var expected : String = "_1_";
+		var actual : String = "";
+		promise._then(function (value) {
+			return Std.format("_${Std.string(value)}_");
+		}).then(function (value) {
+			actual = value;
+		});
+		deferred.resolve(1);
+		actual.areEqual(expected);
 	}
 }

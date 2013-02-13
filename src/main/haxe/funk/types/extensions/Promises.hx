@@ -56,15 +56,15 @@ class Promises {
         return new EmptyPromise();
     }
 
-    public static function but<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
+    public static function _but<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
         return map(promise, func);
     }
 
-    public static function then<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
+    public static function _then<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
         return map(promise, func);
     }
 
-    public static function when<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
+    public static function _when<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
         return map(promise, func);
     }
 
