@@ -5,6 +5,7 @@ import funk.collections.immutable.List;
 import funk.types.Attempt;
 import funk.types.Deferred;
 import funk.types.Function0;
+import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Function5;
 import funk.types.Option;
@@ -53,6 +54,18 @@ class Promises {
 
     public static function empty<T>() : Promise<T> {
         return new EmptyPromise();
+    }
+
+    public static function but<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
+        return map(promise, func);
+    }
+
+    public static function then<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
+        return map(promise, func);
+    }
+
+    public static function when<T1, T2>(promise : Promise<T1>, func : Function1<T1, T2>) : Promise<T2> {
+        return map(promise, func);
     }
 
     public static function reject<T>(value : String) : Promise<T> {

@@ -10,9 +10,6 @@ import js.Dom;
 typedef CustomWindow = {>Window,
     function requestAnimationFrame(func : Function0<Void>) : Void;
 };
-typedef CustomEvent = {>Event,
-    function initEvent(type : String, bubbles : Bool, cancelable : Bool) : Int;
-};
 #elseif flash9
 import flash.display.Stage;
 import flash.events.Event;
@@ -54,7 +51,7 @@ class RenderEvents {
         var finished = false;
 
         function tick() {
-            var event : CustomEvent = untyped __js__("document.createEvent('Event')");
+            var event : funk.reactive.events.Event = untyped __js__("document.createEvent('Event')");
             event.initEvent(type, false, false);
 
             stream.dispatch(event);

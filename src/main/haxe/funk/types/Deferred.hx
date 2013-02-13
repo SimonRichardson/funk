@@ -78,10 +78,10 @@ class Deferred<T> {
 					case Pending:
 						_progressStream.dispatch(value);
 					default:
-						throw Errors.IllegalOperationError('Invalid state');
+						Funk.error(Errors.IllegalOperationError('Invalid state'));
 				}
 			case None:
-				throw Errors.IllegalOperationError('Invalid value');
+				Funk.error(Errors.IllegalOperationError('Invalid value'));
 		}
 	}
 
@@ -92,10 +92,10 @@ class Deferred<T> {
 					case Pending:
 						_stateStream.dispatch(Resolved(Some(value)));
 					default:
-						throw Errors.IllegalOperationError('Invalid state');
+						Funk.error(Errors.IllegalOperationError('Invalid state'));
 				}
 			case None:
-				throw Errors.IllegalOperationError('Invalid value');
+				Funk.error(Errors.IllegalOperationError('Invalid value'));
 		}
 	}
 
@@ -106,10 +106,10 @@ class Deferred<T> {
 					case Pending:
 						_stateStream.dispatch(Rejected(error));
 					default:
-						throw Errors.IllegalOperationError('Invalid state');
+						Funk.error(Errors.IllegalOperationError('Invalid state'));
 				}
 			case None:
-				throw Errors.IllegalOperationError('Invalid value');
+				Funk.error(Errors.IllegalOperationError('Invalid value'));
 		}
 	}
 
