@@ -2,6 +2,7 @@ package funk.io.http;
 
 import funk.collections.immutable.List;
 import funk.io.http.JsonLoader;
+import funk.io.http.MimeType;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
 import funk.net.http.HttpStatusCode;
@@ -42,8 +43,7 @@ class JsonLoaderTest extends BaseLoaderTest {
 			Assert.isNotNull(actual);
 		}, TIMEOUT);
 
-		var loader = new JsonLoader(Request(Std.format("${baseUri}message=${expected}")));
-		loader.start(Get).when(function(attempt) {
+		Std.format("${baseUri}message=${expected}").fromUri().get(Content(Application(Json))).when(function(attempt) {
 			switch(attempt){
 				case Success(data): actual = data.body.get();
 				default: Assert.fail("Failed if called");
@@ -67,8 +67,7 @@ class JsonLoaderTest extends BaseLoaderTest {
 			#end
 		}, TIMEOUT);
 
-		var loader = new JsonLoader(Request(Std.format("${baseUri}message=${expected}")));
-		loader.start(Get).when(function(attempt) {
+		Std.format("${baseUri}message=${expected}").fromUri().get(Content(Application(Json))).when(function(attempt) {
 			switch(attempt){
 				case Success(data): 
 					actual = data.code;
@@ -88,8 +87,7 @@ class JsonLoaderTest extends BaseLoaderTest {
 			actual.areEqual(expected);
 		}, TIMEOUT);
 
-		var loader = new JsonLoader(Request(Std.format("${baseUri}message=${expected}")));
-		loader.start(Get).when(function(attempt) {
+		Std.format("${baseUri}message=${expected}").fromUri().get(Content(Application(Json))).when(function(attempt) {
 			switch(attempt){
 				case Success(data): actual = Reflect.field(data.body.get(), "message");
 				default: Assert.fail("Failed if called");

@@ -1,7 +1,8 @@
 package funk.net.http.extensions;
 
 import funk.collections.immutable.List;
-import funk.io.http.UriLoader;
+import funk.io.http.Loader;
+import funk.io.http.MimeType;
 import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
 import funk.net.http.HttpResponse;
@@ -10,6 +11,7 @@ import funk.types.Option;
 import funk.types.Promise;
 
 using funk.collections.immutable.extensions.Lists;
+using funk.io.http.extensions.Loaders;
 
 class UriRequests {
 
@@ -30,17 +32,11 @@ class UriRequests {
         return RequestWithHeaders(value, headers);
     }
 
-    public static function get(request : UriRequest) : Promise<HttpResponse<String>> {
-        var http = new UriLoader(request, function(value) {
-            return value;
-        });
-        return http.start(Get);
+    public static function get<T>(request : UriRequest, ?type : MimeType = null) : Promise<HttpResponse<T>> {
+        return request.loader(type).start(Get);
     }
 
-    public static function post(request : UriRequest) : Promise<HttpResponse<String>> {
-        var http = new UriLoader(request, function(value) {
-            return value;
-        });
-        return http.start(Post);
+    public static function post<T>(request : UriRequest, ?type : MimeType = null) : Promise<HttpResponse<T>> {
+        return request.loader(type).start(Post);
     }
 }
