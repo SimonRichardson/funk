@@ -51,7 +51,7 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		return Promises.dispatch(None);
 	}
 
-	private function addAll(value : List<V>) : Promise<Option<V>> {
+	private function addAll(value : List<V>) : Promise<Option<List<V>>> {
 		return Promises.dispatch(None);
 	}
 
@@ -71,7 +71,7 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		return Promises.dispatch(None);
 	}
 
-	private function removeAll() : Promise<Option<V>> {
+	private function removeAll() : Promise<Option<List<V>>> {
 		return Promises.dispatch(None);
 	}
 
@@ -99,15 +99,15 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		return cast switch(message.body()) {
 			case Some(value):
 
-				var response : Promise<Option<V>> = switch(value) {
+				var response : Promise<Option<Dynamic>> = switch(value) {
 					case Add(value): add(value);
 					case AddAt(value, key): addAt(value, key);
-					case AddAll(value): addAll(value);
+					case AddAll(value): cast addAll(value);
 					case Get: get();
 					case GetAt(key): getAt(key);
 					case Remove(value): remove(value);
 					case RemoveAt(key): removeAt(key);
-					case RemoveAll: removeAll();
+					case RemoveAll: cast removeAll();
 					case Sync: sync();
 					case Update(a, b): update(a, b);
 					case UpdateAll(a): updateAll(a);
@@ -115,8 +115,8 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 				};
 
 				// Invert the headers and merge the result to a message.
-				var promise : Promise<Message<V>> = response.map(function(value : Option<V>) {
-					return tuple2(message.headers().invert(), value);
+				var promise : Promise<Message<T2>> = response.map(function(value) {
+					return cast tuple2(message.headers().invert(), value);
 				});
 
 				// Automatically dispatch the data.
