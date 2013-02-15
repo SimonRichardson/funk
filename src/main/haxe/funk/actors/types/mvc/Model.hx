@@ -18,8 +18,11 @@ enum Requests<T, K> {
     Add(value : T);
     AddAt(value : T, key : K);
     AddAll(value : List<T>);
+	FindByKey(key : K);
+    FindByValue(value : T);
     Get;
     GetAt(key : K);
+    GetAll;
     Remove(value : T);
     RemoveAt(key : K);
     RemoveAll;
@@ -55,11 +58,23 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		return Promises.dispatch(None);
 	}
 
+	private function findByKey(key : K) : Promise<Option<V>> {
+		return Promises.dispatch(None);
+	}
+
+	private function findByValue(value : V) : Promise<Option<V>> {
+		return Promises.dispatch(None);
+	}
+
 	private function get() : Promise<Option<V>> {
 		return Promises.dispatch(None);
 	}
 
 	private function getAt(key : K) : Promise<Option<V>> {
+		return Promises.dispatch(None);
+	}
+
+	private function getAll() : Promise<Option<List<V>>> {
 		return Promises.dispatch(None);
 	}
 
@@ -103,8 +118,11 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 					case Add(value): add(value);
 					case AddAt(value, key): addAt(value, key);
 					case AddAll(value): cast addAll(value);
+					case FindByKey(key): findByKey(key);
+					case FindByValue(value): findByValue(value);
 					case Get: get();
 					case GetAt(key): getAt(key);
+					case GetAll: cast getAll();
 					case Remove(value): remove(value);
 					case RemoveAt(key): removeAt(key);
 					case RemoveAll: cast removeAll();

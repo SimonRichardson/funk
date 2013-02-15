@@ -33,8 +33,20 @@ class Controller<T, K> {
         return model.dispatch(Get);
     }
 
+    public function findByKey<R>(key : K) : Promise<Message<R>> {
+        return model.dispatch(FindByKey(key));
+    }
+
+    public function findByValue<R>(value : T) : Promise<Message<R>> {
+        return model.dispatch(FindByValue(value));
+    }
+
     public function getAt<R>(key : K) : Promise<Message<R>> {
     	return model.dispatch(GetAt(key));
+    }
+
+    public function getAll<R>() : Promise<Message<R>> {
+        return model.dispatch(GetAll);
     }
 
     public function remove<R>(value : T) : Promise<Message<R>> {
