@@ -14,6 +14,7 @@ import flash.events.MouseEvent;
 #end
 
 enum MouseEventType {
+    Click;
     MouseDown;
     MouseOver;
     MouseOut;
@@ -24,6 +25,10 @@ enum MouseEventType {
 class MouseEvents {
 
     #if (js || flash9)
+    public static function click(target : EventDispatcher) : Stream<MouseEvent> {
+        return Events.event(target, MouseEventTypes.toString(Click));
+    }
+
     public static function mouseDown(target : EventDispatcher) : Stream<MouseEvent> {
         return Events.event(target, MouseEventTypes.toString(MouseDown));
     }

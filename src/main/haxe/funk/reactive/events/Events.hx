@@ -14,7 +14,7 @@ extern class Event {
     public var bubbles(default, never) : Bool;
     public var cancelable(default, never) : Bool;
     public var timeStamp(default, never) : Float;
-    public var defaultPrevented (default, never) : Bool;
+    public var defaultPrevented(default, never) : Bool;
 
     public function stopPropagation() : Void;
     public function preventDefault() : Void;
