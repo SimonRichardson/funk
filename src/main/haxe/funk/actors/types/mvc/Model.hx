@@ -8,6 +8,7 @@ import funk.reactive.extensions.Streams;
 import funk.types.Deferred;
 import funk.types.Option;
 import funk.types.Promise;
+import funk.types.Tuple2;
 
 using funk.actors.extensions.Headers;
 using funk.actors.extensions.Messages;
@@ -34,7 +35,7 @@ enum Requests<T, K> {
 
 class Model<V, K> extends Actor<Requests<V, K>> {
 
-	private var stream : Stream<Dynamic>;
+	private var stream : Stream<Tuple2<Requests<V, K>, Dynamic>>;
 
 	public function new() {
 		super();
@@ -42,7 +43,7 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		stream = Streams.identity(None);
 	}
 
-	public function react<R>() : Stream<R> {
+	public function react<R>() : Stream<Tuple2<Requests<V, K>, R>> {
 		return cast stream;
 	}
 
@@ -138,7 +139,7 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 				});
 
 				// Automatically dispatch the data.
-				react().dispatch(data());
+				react().dispatch(tuple2(value, data()));
 
 				promise;
 

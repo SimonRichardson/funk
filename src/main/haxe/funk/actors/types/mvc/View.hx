@@ -3,6 +3,8 @@ package funk.actors.types.mvc;
 import funk.actors.Actor;
 import funk.actors.Message;
 import funk.types.Promise;
+import funk.types.Tuple2;
+import funk.actors.types.mvc.Model;
 
 using funk.actors.extensions.Actors;
 using funk.reactive.extensions.Streams;
@@ -17,7 +19,7 @@ class View<T, K> extends Actor<T> {
         super();
 	}
 
-	private function handle<R>(value : R) : Void {
+	private function handle<R>(value : Tuple2<Requests<T, K>, R>) : Void {
 
 	}
 
@@ -27,7 +29,7 @@ class View<T, K> extends Actor<T> {
 
     private function set_model(value : Model<T, K>) : Model<T, K> {
         _model = value;
-        _model.react().foreach(handle);
+        _model.react().foreach(cast handle);
         return _model;
     }
 }
