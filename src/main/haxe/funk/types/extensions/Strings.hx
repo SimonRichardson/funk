@@ -32,6 +32,10 @@ class Strings {
 		return "";
 	}
 
+	public static function map<R>(value : String, func : Function1<String, R>) : R {
+		return func(value);
+	}
+
 	public static function dashesToCamelCase(value : String, ?capitaliseFirst : Bool = false) : String {
 		var regexp = new EReg("-([a-z])", "g");
 		var result = regexp.customReplace(value, function (pattern) {
