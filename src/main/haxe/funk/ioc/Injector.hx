@@ -9,6 +9,7 @@ import funk.types.Tuple2;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Options;
+using funk.types.extensions.Reflects;
 using funk.types.extensions.Tuples2;
 
 @:final
@@ -54,7 +55,20 @@ class Injector {
 
         module.dispose();
 
-        _modules = _modules.filter(function (mod : IModule) {
+        _modules = _modules.filterNot(function(mod : IModule) {
+            return mod == module;
+        });
+
+        // We have to make sure the the current scope is removed and it's not referenced in scopes.
+        switch(_currentScope) {
+            case Some(value): 
+                if (value == module) {
+                    _currentScope = None;
+                }
+            case None:
+        }
+
+        _scopes = _scopes.filterNot(function(mod : IModule) {
             return mod == module;
         });
 

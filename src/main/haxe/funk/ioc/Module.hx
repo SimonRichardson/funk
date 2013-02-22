@@ -98,7 +98,7 @@ class Module implements IModule {
         });
     }
 
-    public function dispose() : Void {
+    public function dispose() : Void {       
         _map = Nil;
         _initialized = false;
     }

@@ -7,6 +7,10 @@ using Lambda;
 
 class Reflects {
 
+    public static function getClassName<T>(value : T) : String {
+        return Type.getClassName(Type.getClass(value));
+    }
+
 	public static function hasMethod<T>(value : T, methodName : String) : Bool {
 		return if (null != Reflect.field(value, methodName)) {
 			true;
