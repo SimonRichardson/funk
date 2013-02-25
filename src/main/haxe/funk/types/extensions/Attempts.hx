@@ -26,7 +26,7 @@ class Attempts {
 
     public static function success<T>(attempt : Attempt<T>) : Option<T> {
         return switch(attempt) {
-            case Success(value): value.toOption();
+            case Success(value): Options.toOption(value);
             case Failure(_): None;
         }
     }
@@ -34,7 +34,7 @@ class Attempts {
     public static function failure<T>(attempt : Attempt<T>) : Option<Errors> {
         return switch(attempt) {
             case Success(_): None;
-            case Failure(value): value.toOption();
+            case Failure(value): Options.toOption(value);
         }
     }
 

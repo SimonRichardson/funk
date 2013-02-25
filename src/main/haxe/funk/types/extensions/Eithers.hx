@@ -8,7 +8,6 @@ import funk.types.Function1;
 import funk.types.Predicate2;
 import haxe.ds.Option;
 import funk.types.extensions.Anys;
-import funk.types.extensions.Options;
 
 using funk.types.extensions.Options;
 
@@ -27,7 +26,7 @@ class Eithers {
 
 	public static function left<T1, T2>(either : Either<T1, T2>) : Option<T1> {
 		return switch(either) {
-			case Left(value): value.toOption();
+			case Left(value): Options.toOption(value);
 			case Right(_): None;
 		}
 	}
@@ -35,7 +34,7 @@ class Eithers {
 	public static function right<T1, T2>(either : Either<T1, T2>) : Option<T2> {
 		return switch(either) {
 			case Left(_): None;
-			case Right(value): value.toOption();
+			case Right(value): Options.toOption(value);
 		}
 	}
 

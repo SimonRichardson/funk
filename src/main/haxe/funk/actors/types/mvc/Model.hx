@@ -111,7 +111,7 @@ class Model<V, K> extends Actor<Requests<V, K>> {
 		return None;
 	}
 
-	override private function onRecieve<T1, T2>(message : Message<Requests<V, K>>) : Promise<Message<T2>> {
+	override private function onRecieve<T1, T2>(message : Message<T1>) : Promise<Message<T2>> {
 		return cast switch(message.body()) {
 			case Some(value):
 

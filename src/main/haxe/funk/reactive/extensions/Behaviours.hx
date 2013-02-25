@@ -73,10 +73,11 @@ class Behaviours {
 												that : Behaviour<E1>,
 												func : Function2<T, E1, E2>
 												) : Behaviour<E2> {
+		var sources : Array<Dynamic> = [behaviour, that];
 		var stream = Streams.create(function(pulse : Pulse<E1>) : Propagation<E2> {
 			var result = func(behaviour.value(), that.value());
 			return Propagate(pulse.withValue(result));
-		}, Some([behaviour, that].toCollection()));
+		}, Some(sources.toCollection()));
 
 		return stream.startsWith(func(behaviour.value(), that.value()));
 	}
