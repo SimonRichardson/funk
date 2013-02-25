@@ -1,19 +1,15 @@
 package funk.collections;
 
 import funk.collections.CollectionsTestBase;
-import funk.collections.extensions.Collections;
-import funk.collections.extensions.CollectionsUtil;
-import funk.collections.extensions.Parallels;
 import funk.types.Option;
 import funk.types.extensions.Options;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
-
 using funk.collections.extensions.CollectionsUtil;
-using funk.collections.extensions.Parallels;
 using funk.collections.extensions.Collections;
+using funk.collections.extensions.Parallels;
 using funk.types.extensions.Options;
 using massive.munit.Assert;
 
