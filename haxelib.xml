@@ -1,5 +1,5 @@
 <project name="funk" url="https://github.com/simonrichardson/funk" license="GPL">
     <user name="stickupkid"/>
     <description>The Funk library supports functional development in Haxe.</description>
-    <version name="0.0.12">Added a mime type so it's easier to load content from hofs.</version>
+    <version name="1.0.0">Moved to haxe3 syntax.</version>
 </project>
