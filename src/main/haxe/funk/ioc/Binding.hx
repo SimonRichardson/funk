@@ -97,8 +97,7 @@ class Binding<T> {
             case To(type, func): Reflects.createInstance(type, func());
             case Instance(instance): instance;
             case Provider(provider): Reflects.createEmptyInstance(provider).get();
-            default:
-                Funk.error(BindingError("Invalid Bind"));
+            case _: Funk.error(BindingError("Invalid Bind"));
         }
     }
 }

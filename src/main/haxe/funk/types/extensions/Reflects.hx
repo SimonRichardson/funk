@@ -43,7 +43,7 @@ class Reflects {
                     case 'Float': capture(Float, args, 0.0);
                     case 'Int': capture(Int, args, 0);
                     case 'String': capture(String, args, new String(""));
-                    default: cast Type.createInstance(type, args);
+                    case _: cast Type.createInstance(type, args);
                 }
             default:
                 throw "Invalid class to create instance of";

@@ -236,6 +236,7 @@ class JsonpLoaderResponder {
     }
 
     public static function remove(id : String) : Void {
+        var window = Browser.window;
         var element = window.document.getElementById(id).toOption();
         switch(element) {
             case Some(value): value.parentNode.removeChild(value);

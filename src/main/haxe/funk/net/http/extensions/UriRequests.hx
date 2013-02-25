@@ -20,7 +20,7 @@ class UriRequests {
 
     public static function headers(request : UriRequest) : Option<List<HttpHeader>> {
         return switch(request) {
-            case RequestWithHeaders(uri, headers):
+            case RequestWithHeaders(_, headers):
                 headers.isEmpty() ? None : Some(headers);
             default:
                 None;

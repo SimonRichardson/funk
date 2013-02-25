@@ -41,7 +41,7 @@ class Attempts {
 
     public static function swap<T>(attempt : Attempt<T>) : Attempt<Errors> {
         return switch(attempt) {
-            case Success(value): Failure(Error("Failure"));
+            case Success(_): Failure(Error("Failure"));
             case Failure(value): Success(value);
         }
     }
@@ -80,13 +80,13 @@ class Attempts {
     public static function foldSuccess<T1, T2>(attempt : Attempt<T1>, func : Function1<T1, T2>) : T2 {
         return switch(attempt) {
             case Success(value): func(value);
-            case Failure(value): Funk.error(IllegalOperationError());
+            case Failure(_): Funk.error(IllegalOperationError());
         }
     }
 
     public static function foldFailure<T1, T2>(attempt : Attempt<T1>, func : Function1<Errors, T2>) : T2 {
         return switch(attempt) {
-            case Success(value): Funk.error(IllegalOperationError());
+            case Success(_): Funk.error(IllegalOperationError());
             case Failure(value): func(value);
         }
     }
@@ -104,13 +104,13 @@ class Attempts {
     public static function mapSuccess<T1, T2>(attempt : Attempt<T1>, func : Function1<T1, T2>) : Attempt<T2> {
         return switch(attempt) {
             case Success(value): Success(func(value));
-            case Failure(value): Funk.error(IllegalOperationError());
+            case Failure(_): Funk.error(IllegalOperationError());
         }
     }
 
     public static function mapFailure<T>(attempt : Attempt<T>, func : Function1<Errors, Errors>) : Attempt<T> {
         return switch(attempt) {
-            case Success(value): Funk.error(IllegalOperationError());
+            case Success(_): Funk.error(IllegalOperationError());
             case Failure(value): Failure(func(value));
         }
     }

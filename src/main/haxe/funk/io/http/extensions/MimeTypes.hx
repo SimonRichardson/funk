@@ -4,78 +4,42 @@ class MimeTypes {
 
 	public static function isBinary(type : MimeType) : Bool {
 		return switch(type) {
-            case Content(type):
-                switch(type) {
-                    case Application(type):
-                    	switch(type) {
-							case GZip: true;
-							case OctetStream: true;
-							case Zip: true;
-							default: false;
-                    	}
-                    case Audio(type): true;
-                    case Image(type): true;
-                    case Multipart(type): true;
-                    case Video(type): true;
-                    default: false;
-                }
-            default: false;
+            case Content(Application(GZip)): true;
+            case Content(Application(OctetStream)): true;
+            case Content(Application(Zip)): true;
+            case Content(Audio(_)): true;
+            case Content(Image(_)): true;
+            case Content(Multipart(_)): true;
+            case Content(Video(_)): true;
+            case _: false;
         }
 	}
 
 	public static function isJson(type : MimeType) : Bool {
 		return switch(type) {
-            case Content(type):
-                switch(type) {
-                    case Application(type):
-                    	switch(type) {
-							case Json: true;
-							default: false;
-                    	}
-                    default: false;
-                }
-            default: false;
+            case Content(Application(Json)): true;
+            case _: false;
         }
 	}
 
 	public static function isText(type : MimeType) : Bool {
 		return switch(type) {
-            case Content(type):
-                switch(type) {
-                	case Text(type):
-                		switch(type) {
-                			case Plain: true;
-                			default: false;
-                		}
-                    default: false;
-                }
-            default: false;
+            case Content(Text(Plain)): true;
+            case _: false;
         }
 	}
 
 	public static function isXml(type : MimeType) : Bool {
 		return switch(type) {
-            case Content(type):
-                switch(type) {
-                	case Application(type):
-                		switch (type) {
-                			case Atom: true;
-                			case Rdf: true;
-                			case Rss: true;
-                			case Soap: true;
-                			case Xhtml: true;
-                			case Xml: true;
-                			case XmlDtd: true;
-                			default: false;
-                		}
-                	case Text(type):
-                		switch(type) {
-                			case Xml: true;
-                			default: false;
-                		}
-                    default: false;
-                }
-            default: false;
+            case Content(Application(Atom)): true;
+            case Content(Application(Rdf)): true;
+            case Content(Application(Rss)): true;
+            case Content(Application(Soap)): true;
+            case Content(Application(Xhtml)): true;
+            case Content(Application(Xml)): true;
+            case Content(Application(XmlDtd)): true;
+            case Content(Text(Xml)): true;
+            case _: false;
         }
 	}
 }
