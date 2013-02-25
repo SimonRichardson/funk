@@ -44,6 +44,6 @@ class Headers {
 	}
 
 	public static function path(from : Header, to : Header) : String {
-		return Std.format("${address(to)}@${address(from)}");
+		return '${address(to)}@${address(from)}';
 	}
 }

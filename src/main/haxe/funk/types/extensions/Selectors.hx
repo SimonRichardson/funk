@@ -12,19 +12,19 @@ class Selectors {
 		return switch(expr) {
 			case ELine(e): extractExpr(e);
 			case EProp(v): extractValue(v);
-			case EPropBlock(v, e): Std.format("${extractValue(v)} ${extractExpr(e)}");
+			case EPropBlock(v, e): '${extractValue(v)} ${extractExpr(e)}';
 			case ESub(e): extractExpr(e);
 		};
 	}
 
 	private static function extractValue(value : Value) : String {
 		return switch(value) {
-			case Accessor(v): Std.format(":${v}");
+			case Accessor(v): ':${v}';
 			case All: "*";
-			case ClassName(v): Std.format(".${v}");
+			case ClassName(v): '.${v}';
 			case Child: ">";
 			case Integer(v): Std.string(v);
-			case Ident(v): Std.format("#${v}");
+			case Ident(v): '#${v}';
 			case Next: "+";
 			case Number(v): Std.string(v);
 			case Sibling: "~";

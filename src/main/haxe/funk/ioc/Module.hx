@@ -75,7 +75,7 @@ class Module implements IModule {
 
     public function bindWith(type : Class<Dynamic>, func : Function0<Array<Dynamic>>) : Binding<Dynamic> {
         if(binds(type)) {
-            Funk.error(BindingError(Std.format("$type is already bound.")));
+            Funk.error(BindingError('$type is already bound.'));
         }
 
         var binding = new Binding(this);

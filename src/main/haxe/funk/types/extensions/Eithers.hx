@@ -146,7 +146,7 @@ class Eithers {
 	public static function toBool<T1, T2>(either : Either<T1, T2>) : Bool {
 		return switch(either) {
 			case Left(_): false;
-			case Right(value): true;
+			case Right(_): true;
 		}
 	}
 
@@ -161,8 +161,8 @@ class Eithers {
 												?funcLeft : Function1<T1, String>,
 												?funcRight : Function1<T2, String>) : String {
 		return switch (either) {
-			case Left(value): Std.format('Left(${Anys.toString(value, funcLeft)})');
-			case Right(value): Std.format('Right(${Anys.toString(value, funcRight)})');
+			case Left(value): 'Left(${Anys.toString(value, funcLeft)})';
+			case Right(value): 'Right(${Anys.toString(value, funcRight)})';
 		}
 	}
 

@@ -42,7 +42,7 @@ class XmlLoaderTest extends BaseLoaderTest {
             Assert.isNotNull(actual);
         }, TIMEOUT);
 
-        Std.format("${baseUri}message=${expected}").fromUri().get(Content(Application(Xml))).when(function(attempt) {
+        '${baseUri}message=${expected}'.fromUri().get(Content(Application(Xml))).when(function(attempt) {
             switch(attempt){
                 case Success(data): actual = data.body.get();
                 default: Assert.fail("Failed if called");
@@ -62,7 +62,7 @@ class XmlLoaderTest extends BaseLoaderTest {
             Assert.areEqual(cast actual, cast None);//Some(HttpSuccess(OK)));
         }, TIMEOUT);
 
-        Std.format("${baseUri}message=${expected}").fromUri().get(Content(Application(Xml))).when(function(attempt) {
+        '${baseUri}message=${expected}'.fromUri().get(Content(Application(Xml))).when(function(attempt) {
             switch(attempt){
                 case Success(data): actual = data.code;
                 default: Assert.fail("Failed if called");
@@ -81,7 +81,7 @@ class XmlLoaderTest extends BaseLoaderTest {
             actual.areEqual(expected);
         }, TIMEOUT);
 
-        Std.format("${baseUri}message=${expected}").fromUri().get(Content(Application(Xml))).when(function(attempt) {
+        '${baseUri}message=${expected}'.fromUri().get(Content(Application(Xml))).when(function(attempt) {
             switch(attempt){
                 case Success(data): 
                     var xml : Xml = data.body.get();

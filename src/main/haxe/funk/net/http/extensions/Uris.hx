@@ -33,16 +33,16 @@ class Uris {
                             case Some(v2):
                                 switch(parts.path) {
                                     case Some(v3):
-                                        Some(Std.format("$v0://$v1:$v2$v3"));
+                                        Some('$v0://$v1:$v2$v3');
                                     case None:
-                                        Some(Std.format("$v0://$v1:$v2"));
+                                        Some('$v0://$v1:$v2');
                                 }
                             case None:
                                 switch(parts.path) {
                                     case Some(v3):
-                                        Some(Std.format("$v0://$v1$v3"));
+                                        Some('$v0://$v1$v3');
                                     case None:
-                                        Some(Std.format("$v0://$v1"));
+                                        Some('$v0://$v1');
                                 }
                         }
                     case None:
@@ -55,16 +55,16 @@ class Uris {
                             case Some(v2):
                                 switch(parts.path) {
                                     case Some(v3):
-                                        Some(Std.format("$v1:$v2$v3"));
+                                        Some('$v1:$v2$v3');
                                     case None:
-                                        Some(Std.format("$v1:$v2"));
+                                        Some('$v1:$v2');
                                 }
                             case None:
                                 switch(parts.path) {
                                     case Some(v3):
-                                        Some(Std.format("$v1$v3"));
+                                        Some('$v1$v3');
                                     case None:
-                                        Some(Std.format("$v1"));
+                                        Some('$v1');
                                 }
                         }
                     case None:
@@ -84,9 +84,9 @@ class Uris {
                     case Some(domain):
                         switch(match(uri(request), 6)) {
                             case Some(top):
-                                Some(Std.format("$sub.$domain.$top"));
+                                Some('$sub.$domain.$top');
                             case None:
-                                Some(Std.format("$sub.$domain"));
+                                Some('$sub.$domain');
                         }
                     case None:
                         Some(sub);
@@ -96,9 +96,9 @@ class Uris {
                     case Some(domain):
                         switch(match(uri(request), 6)) {
                             case Some(top):
-                                Some(Std.format("$domain.$top"));
+                                Some('$domain.$top');
                             case None:
-                                Some(Std.format("$domain"));
+                                Some('$domain');
                         }
                     case None:
                         None;
@@ -115,14 +115,14 @@ class Uris {
             case Some(path):
                 switch(match(uri(request), 9)) {
                     case Some(file):
-                        Some(Std.format("$path$file"));
+                        Some('$path$file');
                     case None:
                         Some(path);
                 }
             case None:
                 switch(match(uri(request), 9)) {
                     case Some(file):
-                        Some(Std.format("$file"));
+                        Some('$file');
                     case None:
                         None;
                 }

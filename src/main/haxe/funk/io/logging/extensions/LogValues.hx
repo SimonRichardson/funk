@@ -19,10 +19,9 @@ class LogValues {
     }
 
     public static function toString<T>(logValue : LogValue<T>) : String {
-    	var data = switch(logValue) {
+    	return switch(logValue) {
     		case Data(data): Anys.toString(data);
-    		case DataWithValue(data, value): Std.format("${Anys.toString(data)}${value}");
+    		case DataWithValue(data, value): '${Anys.toString(data)}${value}';
     	};
-		return Std.format("${data}");
 	}
 }

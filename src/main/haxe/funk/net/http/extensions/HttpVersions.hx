@@ -14,9 +14,9 @@ class HttpVersions {
 
     public static function toString(value : HttpVersion) : String {
         return switch (value) {
-            case Http(version): Std.format("HTTP/$version");
-            case WebDav(version): Std.format("WebDav/$version");
-            case Unknown(version): Std.format("$version");
+            case Http(version): 'HTTP/$version';
+            case WebDav(version): 'WebDav/$version';
+            case Unknown(version): '$version';
         }
     }
 }

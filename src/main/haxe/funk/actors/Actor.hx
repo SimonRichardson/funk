@@ -124,7 +124,7 @@ class Actor<T> {
 
 					timeout.finish();
 
-					deferred.reject(ActorError(Std.format("Actor has timed out after ${value}ms")));
+					deferred.reject(ActorError('Actor has timed out after ${value}ms'));
 				}
 			});
 

@@ -37,7 +37,7 @@ class Tuples2 {
 	}
 
 	public static function join<T1, T2>(tuple : Tuple2<T1, T2>) : String {
-		return Std.format('${Anys.toString(_1(tuple))}${Anys.toString(_2(tuple))}');
+		return '${Anys.toString(_1(tuple))}${Anys.toString(_2(tuple))}';
 	}
 
 	public static function toArray<T1, T2>(tuple : Tuple2<T1, T2>) : Array<Dynamic> {
@@ -48,6 +48,6 @@ class Tuples2 {
 												?func0 : Function1<T1, String>,
 												?func1 : Function1<T2, String>
 												) : String {
-		return Std.format('(${Anys.toString(_1(tuple), func0)}, ${Anys.toString(_2(tuple), func1)})');
+		return '(${Anys.toString(_1(tuple), func0)}, ${Anys.toString(_2(tuple), func1)})';
 	}
 }

@@ -16,7 +16,6 @@ import suites.TypesSuite;
 
 #if js
 import js.Lib;
-import js.Dom;
 #end
 
 

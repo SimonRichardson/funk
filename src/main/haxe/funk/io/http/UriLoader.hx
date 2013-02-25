@@ -84,7 +84,7 @@ class UriLoader<T> {
         _loader.onStatus = function (status : Int) {
             if (status == 0) {
                 // http://en.wikipedia.org/wiki/Same_origin_policy
-                _deferred.reject(HttpError(Std.format("SecurityError: 'Same Origin Policy' at '${_request.uri()}'")));
+                _deferred.reject(HttpError('SecurityError: "Same Origin Policy" at "${_request.uri()}"'));
             } else {
                 _statusStream.dispatch(status.toHttpStatusCode().toOption());
             }
@@ -100,7 +100,7 @@ class UriLoader<T> {
         };
         _loader.onError = function (error : String) {
             _statusStream.dispatch(HttpClientError(Failure).toOption());
-            _deferred.reject(HttpError(Std.format("$error for url ${_request.uri()}")));
+            _deferred.reject(HttpError('$error for url ${_request.uri()}'));
         };
     }
 
@@ -115,13 +115,13 @@ class UriLoader<T> {
             case Get: false;
             case Post: true;
             // TODO (Simon) : Work out other methods.
-            default: Funk.error(IllegalOperationError("${Std.string(method)} not supported"));
+            default: Funk.error(IllegalOperationError('${Std.string(method)} not supported'));
         };
 
         try {
             _loader.request(request);
         } catch (error : Dynamic) {
-            _deferred.reject(HttpError(Std.format("Error at: ${Std.string(error)}")));
+            _deferred.reject(HttpError('Error at: ${Std.string(error)}'));
         }
 
         return promise;

@@ -18,7 +18,7 @@ class Options {
 
 	public static function orElse<T>(option : Option<T>, func : Function0<Option<T>>) : Option<T> {
 		return switch (option) {
-			case Some(value): option;
+			case Some(_): option;
 			case None: func();
 		}
 	}
@@ -135,8 +135,7 @@ class Options {
 
 	public static function toString<T>(option : Option<T>, ?func : Function1<T, String>) : String {
 		return switch (option) {
-			case Some(value):
-				Std.format('Some(${Anys.toString(value, func)})');
+			case Some(value): 'Some(${Anys.toString(value, func)})';
 			case None: 'None';
 		}
 	}

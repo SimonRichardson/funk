@@ -22,7 +22,7 @@ class Tuples1 {
 	}
 
 	public static function join<T1>(tuple : Tuple1<T1>) : String {
-		return Std.format('${Anys.toString(_1(tuple))}');
+		return '${Anys.toString(_1(tuple))}';
 	}
 
 
@@ -31,6 +31,6 @@ class Tuples1 {
 	}
 
 	public static function toString<T1>(tuple : Tuple1<T1>, ?func0 : Function1<T1, String>) : String {
-		return Std.format('(${Anys.toString(_1(tuple), func0)})');
+		return '(${Anys.toString(_1(tuple), func0)})';
 	}
 }

@@ -164,7 +164,7 @@ class HttpHeaders {
                     case UserAgent(v): Some(v);
                     case Via(v): Some(v);
                     case Warning(v): Some(v);
-                    case X(name, value): Some(Std.format("${name},${value}"));
+                    case X(name, value): Some('${name},${value}');
                 }
             case HttpResponse(response):
                 name = Some(getName(Std.string(response)));
@@ -203,7 +203,7 @@ class HttpHeaders {
                     case Via(v): Some(v);
                     case Warning(v): Some(v);
                     case WWWAuthenticate(v): Some(v);
-                    case X(name, value): Some(Std.format("${name},${value}"));
+                    case X(name, value): Some('${name},${value}');
                 }
         }
 
@@ -212,6 +212,6 @@ class HttpHeaders {
 
     public static function toString(value : HttpHeader) : String {
         var tuple = toTuple(value);
-        return Std.format("${tuple._1()}: ${tuple._2()}");
+        return '${tuple._1()}: ${tuple._2()}';
     }
 }

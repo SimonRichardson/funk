@@ -24,7 +24,7 @@ class ServerMain {
             }
 
             while(true){
-                log(Std.format("Time: ${Sys.cpuTime()}\n"));
+                log('Time: ${Sys.cpuTime()}\n');
 
                 Sys.sleep(1);
             }

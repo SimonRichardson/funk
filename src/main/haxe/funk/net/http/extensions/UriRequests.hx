@@ -46,12 +46,12 @@ class UriRequests {
                                                     parameters : Map<String, Option<String>>
                                                     ) : UriRequest {
         // TODO (Simon) : Work out if the uri has already got parameters
-        var uri = Std.format("${value}?");
+        var uri = '${value}?';
 
         parameters.foreach(function(tuple) {
             switch(tuple._2()) {
-                case Some(val): uri += Std.format("${tuple._1()}=${val}&");
-                case None: uri += "${tuple._1()}&";
+                case Some(val): uri += '${tuple._1()}=${val}&';
+                case None: uri += '${tuple._1()}&';
             };
         });
 

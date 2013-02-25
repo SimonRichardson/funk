@@ -6,7 +6,6 @@
 -debug
 -lib munit
 -lib hamcrest
---js-modern
 -D test
 -D parallel
 -D net

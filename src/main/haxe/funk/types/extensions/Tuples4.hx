@@ -41,7 +41,7 @@ class Tuples4 {
 	}
 
 	public static function join<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : String {
-		return Std.format('${Anys.toString(_1(tuple))}${Anys.toString(_2(tuple))}${Anys.toString(_3(tuple))}${Anys.toString(_4(tuple))}');
+		return '${Anys.toString(_1(tuple))}${Anys.toString(_2(tuple))}${Anys.toString(_3(tuple))}${Anys.toString(_4(tuple))}';
 	}
 
 	public static function toArray<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : Array<Dynamic> {
@@ -54,6 +54,6 @@ class Tuples4 {
 														?func2 : Function1<T3, String>,
 														?func3 : Function1<T4, String>
 														) : String {
-		return Std.format('(${Anys.toString(_1(tuple), func0)}, ${Anys.toString(_2(tuple), func1)}, ${Anys.toString(_3(tuple), func2)}, ${Anys.toString(_4(tuple), func3)})');
+		return '(${Anys.toString(_1(tuple), func0)}, ${Anys.toString(_2(tuple), func1)}, ${Anys.toString(_3(tuple), func2)}, ${Anys.toString(_4(tuple), func3)})';
 	}
 }

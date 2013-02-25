@@ -33,7 +33,6 @@ class LogLevels {
     }
 
     public static function toString<T>(level : LogLevel<T>) : String {
-
-		return Std.format("[${label(level)}] ${LogValues.toString(value(level))}");
+		return '[${label(level)}] ${LogValues.toString(value(level))}';
 	}
 }

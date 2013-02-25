@@ -49,14 +49,14 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_calling_toString__should_return_valid_string() {
-		actual.toString().areEqual(Std.format('$name(1, 2, 3, 4, 5)'));
+		actual.toString().areEqual('$name(1, 2, 3, 4, 5)');
 	}
 
 	@Test
 	public function when_calling_toString_on_a_complex_list__should_return_valid_string() {
 		complex.toString(function (x) {
 			return x.toString();
-		}).areEqual(Std.format('$name($name(1, 2, 3), $name(4, 5), $name(6), $name(7, 8, 9))'));
+		}).areEqual('$name($name(1, 2, 3), $name(4, 5), $name(6), $name(7, 8, 9))');
 	}
 
 	@Test
@@ -155,7 +155,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_tail__should_be_2_3_4() : Void {
-		actual.tail().toString().areEqual(Std.format('$name(2, 3, 4, 5)'));
+		actual.tail().toString().areEqual('$name(2, 3, 4, 5)');
 	}
 
 	@Test
@@ -177,7 +177,7 @@ class CollectionsTestBase {
 	public function when_tailOption__should_be_Some_2_3_4() : Void {
 		actual.tailOption().toString(function(value) {
 			return value.toString();
-		}).areEqual(Std.format('Some($name(2, 3, 4, 5))'));
+		}).areEqual('Some($name(2, 3, 4, 5))');
 	}
 
 	// Reverse
@@ -189,7 +189,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_calling_reverse__should_be_5_4_3_2_1() {
-		actual.reverse().toString().areEqual(Std.format('$name(5, 4, 3, 2, 1)'));
+		actual.reverse().toString().areEqual('$name(5, 4, 3, 2, 1)');
 	}
 
 	// Append
@@ -206,7 +206,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_calling_append__should_be_1_2_3_4_5() {
-		actual.append(6).toString().areEqual(Std.format('$name(1, 2, 3, 4, 5, 6)'));
+		actual.append(6).toString().areEqual('$name(1, 2, 3, 4, 5, 6)');
 	}
 
 	@Test
@@ -221,7 +221,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_calling_appendAll__should_be_1_2_3_4_5_6_7_8_9() {
-		actual.appendAll(other).toString().areEqual(Std.format('$name(1, 2, 3, 4, 5, 6, 7, 8, 9)'));
+		actual.appendAll(other).toString().areEqual('$name(1, 2, 3, 4, 5, 6, 7, 8, 9)');
 	}
 
 	// Prepend
@@ -238,7 +238,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_calling_prepend__should_be_6_1_2_3_4_5() {
-		actual.prepend(6).toString().areEqual(Std.format('$name(6, 1, 2, 3, 4, 5)'));
+		actual.prepend(6).toString().areEqual('$name(6, 1, 2, 3, 4, 5)');
 	}
 
 	@Test
@@ -253,7 +253,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_calling_prependAll__should_be_9_8_7_6_1_2_3_4_5() {
-		actual.prependAll(other).toString().areEqual(Std.format('$name(9, 8, 7, 6, 1, 2, 3, 4, 5)'));
+		actual.prependAll(other).toString().areEqual('$name(9, 8, 7, 6, 1, 2, 3, 4, 5)');
 	}
 
 	// Indices
@@ -265,7 +265,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_indices__should_be_equal_0_1_2_3_4() : Void {
-		actual.indices().toString().areEqual(Std.format('$name(0, 1, 2, 3, 4)'));
+		actual.indices().toString().areEqual('$name(0, 1, 2, 3, 4)');
 	}
 
 	// Drop
@@ -277,7 +277,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_dropLeft_2__return_List_3_4_5() : Void {
-		actual.dropLeft(2).toString().areEqual(Std.format('$name(3, 4, 5)'));
+		actual.dropLeft(2).toString().areEqual('$name(3, 4, 5)');
 	}
 
 	@Test
@@ -335,7 +335,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_dropRight_2_on_list__returns_1_2_3() : Void {
-		actual.dropRight(2).toString().areEqual(Std.format('$name(1, 2, 3)'));
+		actual.dropRight(2).toString().areEqual('$name(1, 2, 3)');
 	}
 
 	@Test
@@ -372,7 +372,7 @@ class CollectionsTestBase {
 	public function when_dropWhile__return_is_type_of_list() : Void {
 		actual.dropWhile(function(x) {
 			return x < 2;
-		}).toString().areEqual(Std.format('$name(2, 3, 4, 5)'));
+		}).toString().areEqual('$name(2, 3, 4, 5)');
 	}
 
 	@Test
@@ -427,7 +427,7 @@ class CollectionsTestBase {
 			return other;
 		});
 
-		result.toString().areEqual(Std.format('$name(6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9)'));
+		result.toString().areEqual('$name(6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9, 6, 7, 8, 9)');
 	}
 
 	// Flatten
@@ -439,7 +439,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_flatten__should_flatten_sublists() : Void {
-		complex.flatten().toString().areEqual(Std.format('$name(1, 2, 3, 4, 5, 6, 7, 8, 9)'));
+		complex.flatten().toString().areEqual('$name(1, 2, 3, 4, 5, 6, 7, 8, 9)');
 	}
 
 	// Filter
@@ -448,7 +448,7 @@ class CollectionsTestBase {
 	public function when_filter__should_return_list() : Void {
 		actual.filter(function(x) {
 			return x == 1;
-		}).toString().areEqual(Std.format('$name(1)'));
+		}).toString().areEqual('$name(1)');
 	}
 
 	@Test
@@ -469,7 +469,7 @@ class CollectionsTestBase {
 	public function when_filter__should_return_even_list_toString() : Void {
 		actual.filter(function(x) {
 			return x % 2 == 0;
-		}).toString().areEqual(Std.format('$name(2, 4)'));
+		}).toString().areEqual('$name(2, 4)');
 	}
 
 	@Test
@@ -483,7 +483,7 @@ class CollectionsTestBase {
 	public function when_filter_all__should_return_toString() : Void {
 		actual.filter(function(x) {
 			return true;
-		}).toString().areEqual(Std.format('$name(1, 2, 3, 4, 5)'));
+		}).toString().areEqual('$name(1, 2, 3, 4, 5)');
 	}
 
 	@Test
@@ -499,7 +499,7 @@ class CollectionsTestBase {
 	public function when_filterNot__should_return_list() : Void {
 		actual.filterNot(function(x) {
 			return x == 1;
-		}).toString().areEqual(Std.format('$name(2, 3, 4, 5)'));
+		}).toString().areEqual('$name(2, 3, 4, 5)');
 	}
 
 	@Test
@@ -520,7 +520,7 @@ class CollectionsTestBase {
 	public function when_filterNot__should_return_even_list_toString() : Void {
 		actual.filterNot(function(x) {
 			return x % 2 == 0;
-		}).toString().areEqual(Std.format('$name(1, 3, 5)'));
+		}).toString().areEqual('$name(1, 3, 5)');
 	}
 
 	@Test
@@ -534,7 +534,7 @@ class CollectionsTestBase {
 	public function when_filterNot_all__should_return_toString() : Void {
 		actual.filterNot(function(x) {
 			return false;
-		}).toString().areEqual(Std.format('$name(1, 2, 3, 4, 5)'));
+		}).toString().areEqual('$name(1, 2, 3, 4, 5)');
 	}
 
 	@Test
@@ -719,7 +719,7 @@ class CollectionsTestBase {
 	public function when_map__should_return_list() : Void {
 		actual.map(function(value) {
 			return value + 1.1;
-		}).toString().areEqual(Std.format('$name(2.1, 3.1, 4.1, 5.1, 6.1)'));
+		}).toString().areEqual('$name(2.1, 3.1, 4.1, 5.1, 6.1)');
 	}
 
 	@Test
@@ -775,21 +775,21 @@ class CollectionsTestBase {
 			return x.toString();
 		}, function (x) {
 			return x.toString();
-		}).areEqual(Std.format('($name(2, 4), $name(1, 3, 5))'));
+		}).areEqual('($name(2, 4), $name(1, 3, 5))');
 	}
 
 	@Test
 	public function when_partition__should_return_a_ITuple2_and__1_is_List() : Void {
 		actual.partition(function(value) {
 			return true;
-		})._1().toString().areEqual(Std.format('$name(1, 2, 3, 4, 5)'));
+		})._1().toString().areEqual('$name(1, 2, 3, 4, 5)');
 	}
 
 	@Test
 	public function when_partition_false__should_return_a_ITuple2_and__2_is_List() : Void {
 		actual.partition(function(value) {
 			return false;
-		})._2().toString().areEqual(Std.format('$name(1, 2, 3, 4, 5)'));
+		})._2().toString().areEqual('$name(1, 2, 3, 4, 5)');
 	}
 
 	@Test
@@ -917,7 +917,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_takeLeft_1__should_return_1_2_3_4() : Void {
-		actual.takeLeft(4).toString().areEqual(Std.format('$name(1, 2, 3, 4)'));
+		actual.takeLeft(4).toString().areEqual('$name(1, 2, 3, 4)');
 	}
 
 	@Test
@@ -975,7 +975,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_takeRight_4__should_return_size_2_3_4_5() : Void {
-		actual.takeRight(4).toString().areEqual(Std.format('$name(2, 3, 4, 5)'));
+		actual.takeRight(4).toString().areEqual('$name(2, 3, 4, 5)');
 	}
 
 	@Test
@@ -1017,7 +1017,7 @@ class CollectionsTestBase {
 	public function when_takeWhile__should_return_valid_IList() : Void {
 		actual.takeWhile(function(value) {
 			return true;
-		}).toString().areEqual(Std.format('$name(1, 2, 3, 4, 5)'));
+		}).toString().areEqual('$name(1, 2, 3, 4, 5)');
 	}
 
 	@Test
@@ -1059,7 +1059,7 @@ class CollectionsTestBase {
 	public function when_takeWhile__should_return_1_2() : Void {
 		actual.takeWhile(function(value) {
 			return value <= 2;
-		}).toString().areEqual(Std.format('$name(1, 2)'));
+		}).toString().areEqual('$name(1, 2)');
 	}
 
 	@Test
@@ -1103,7 +1103,7 @@ class CollectionsTestBase {
 	public function when_zip__should_calling_toString() : Void {
 		actual.zip(other).toString(function(x) {
 			return x.toString();
-		}).areEqual(Std.format('$name((1, 6), (2, 7), (3, 8), (4, 9))'));
+		}).areEqual('$name((1, 6), (2, 7), (3, 8), (4, 9))');
 	}
 
 	// Init
@@ -1120,7 +1120,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_init__should_be_equal_4() : Void {
-		actual.init().toString().areEqual(Std.format('$name(1, 2, 3, 4)'));
+		actual.init().toString().areEqual('$name(1, 2, 3, 4)');
 	}
 
 	// Last
@@ -1156,7 +1156,7 @@ class CollectionsTestBase {
 	public function when_zipWithIndex__should_be_equal_to_nil() : Void {
 		actual.zipWithIndex().toString(function (tuple) {
 			return tuple.toString();
-		}).areEqual(Std.format('$name((1, 0), (2, 1), (3, 2), (4, 3), (5, 4))'));
+		}).areEqual('$name((1, 0), (2, 1), (3, 2), (4, 3), (5, 4))');
 	}
 
 	// Has Defined Size

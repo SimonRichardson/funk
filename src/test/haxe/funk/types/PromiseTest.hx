@@ -301,7 +301,7 @@ class PromiseTest {
 		var expected : String = "_1_";
 		var actual : String = "";
 		promise._then(function (value) {
-			return Std.format("_${Std.string(value)}_");
+			return '_${Std.string(value)}_';
 		}).then(function (value) {
 			actual = value;
 		});

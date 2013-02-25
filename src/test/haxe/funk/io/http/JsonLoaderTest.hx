@@ -43,7 +43,7 @@ class JsonLoaderTest extends BaseLoaderTest {
 			Assert.isNotNull(actual);
 		}, TIMEOUT);
 
-		Std.format("${baseUri}message=${expected}").fromUri().get(Content(Application(Json))).when(function(attempt) {
+		'${baseUri}message=${expected}'.fromUri().get(Content(Application(Json))).when(function(attempt) {
 			switch(attempt){
 				case Success(data): actual = data.body.get();
 				default: Assert.fail("Failed if called");
@@ -67,7 +67,7 @@ class JsonLoaderTest extends BaseLoaderTest {
 			#end
 		}, TIMEOUT);
 
-		Std.format("${baseUri}message=${expected}").fromUri().get(Content(Application(Json))).when(function(attempt) {
+		'${baseUri}message=${expected}'.fromUri().get(Content(Application(Json))).when(function(attempt) {
 			switch(attempt){
 				case Success(data): 
 					actual = data.code;
@@ -87,7 +87,7 @@ class JsonLoaderTest extends BaseLoaderTest {
 			actual.areEqual(expected);
 		}, TIMEOUT);
 
-		Std.format("${baseUri}message=${expected}").fromUri().get(Content(Application(Json))).when(function(attempt) {
+		'${baseUri}message=${expected}'.fromUri().get(Content(Application(Json))).when(function(attempt) {
 			switch(attempt){
 				case Success(data): actual = Reflect.field(data.body.get(), "message");
 				default: Assert.fail("Failed if called");

@@ -38,7 +38,7 @@ class Strings {
 
 	public static function dashesToCamelCase(value : String, ?capitaliseFirst : Bool = false) : String {
 		var regexp = new EReg("-([a-z])", "g");
-		var result = regexp.customReplace(value, function (pattern) {
+		var result = regexp.map(value, function (pattern) {
     		return pattern.matched(1).toUpperCase();
     	});
     	return if (capitaliseFirst) {

@@ -9,6 +9,6 @@ class Tags {
 	}
 
 	public static function toString(tag : Tag) : String {
-		return Std.format("[${value(tag)}]");
+		return '[${value(tag)}]';
 	}
 }

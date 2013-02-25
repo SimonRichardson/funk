@@ -18,6 +18,6 @@ class Messages {
     }
 
     public static function toString<T>(message : Message<T>) : String {
-		return Std.format("${Tags.toString(tag(message))}${LogLevels.toString(logLevel(message))}");
+		return '${Tags.toString(tag(message))}${LogLevels.toString(logLevel(message))}';
 	}
 }

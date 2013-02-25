@@ -18,7 +18,7 @@ import haxe.Http;
 import haxe.Json;
 
 #if js
-import js.Dom;
+import js.Browser;
 #end
 
 using funk.collections.immutable.extensions.Lists;
@@ -130,20 +130,20 @@ class JsonLoader<T : Dynamic> {
                 var parameters = _request.parameters().map(function(tuple) {
                     var key = tuple._1();
                     return switch (tuple._2()) {
-                        case Some(value): Std.format("${key}=${value}");
-                        case None: Std.format("${key}");
+                        case Some(value): '${key}=${value}';
+                        case None: '${key}';
                     };
                 }).foldLeft("", function(value, param) {
-                    return Std.format("${value}&${param}");
+                    return '${value}&${param}';
                 });
 
                 var requestCallbackPath = tuple._2();
                 var complied = switch(parameters) {
-                    case Some(value): Std.format("${value}&${callbackName}=${requestCallbackPath}");
-                    case None: Std.format("${callbackName}=${requestCallbackPath}");
+                    case Some(value): '${value}&${callbackName}=${requestCallbackPath}';
+                    case None: '${callbackName}=${requestCallbackPath}';
                 };
 
-                Some(Std.format("${url}?${complied}"));
+                Some('${url}?${complied}');
             case None:
                 _statusStream.dispatch(HttpClientError(NotFound).toOption());
                 _deferred.reject(HttpError("No valid url supplied"));
@@ -162,7 +162,7 @@ class JsonLoader<T : Dynamic> {
             case Get:
             default:
                 _statusStream.dispatch(HttpClientError(Failure).toOption());
-                _deferred.reject(HttpError(Std.format("Error at: ${Std.string(method)} not supported")));
+                _deferred.reject(HttpError('Error at: ${Std.string(method)} not supported'));
         };
 
         switch (_requestUri) {
@@ -171,11 +171,11 @@ class JsonLoader<T : Dynamic> {
                     JsonpLoaderResponder.inject(uri, _requestId);
                 } catch (error : Dynamic) {
                     _statusStream.dispatch(HttpClientError(Failure).toOption());
-                    _deferred.reject(HttpError(Std.format("Error at: ${Std.string(error)}")));
+                    _deferred.reject(HttpError('Error at: ${Std.string(error)}'));
                 }
             case None:
                 _statusStream.dispatch(HttpClientError(NotFound).toOption());
-                _deferred.reject(HttpError(Std.format("No valid url supplied")));
+                _deferred.reject(HttpError('No valid url supplied'));
         }
 
         return promise;
@@ -201,12 +201,10 @@ class JsonpLoaderResponder {
 
     public static var requestCount : Int = 0;
 
-    private static var window : Window = untyped __js__("window");
-
     public static function create(func : Function1<Dynamic, Void>) : Tuple2<String, String> {
         var requestName = requestSeed + (requestCount++);
-        var requestCallback = Std.format("jsonp_callback_${requestName}");
-        var requestCallbackPath = Std.format("funk.io.http.JsonpLoaderResponder.requests.${requestCallback}");
+        var requestCallback = 'jsonp_callback_${requestName}';
+        var requestCallbackPath = 'funk.io.http.JsonpLoaderResponder.requests.${requestCallback}';
 
         Reflect.setField(requests, requestCallback, function(data) {
             remove(requestCallback);
@@ -217,6 +215,7 @@ class JsonpLoaderResponder {
     }
 
     public static function inject(uri : String, id : String) : Void {
+        var window = Browser.window;
         var element = window.document.createElement('script');
 
         element.setAttribute('type', 'text/javascript');

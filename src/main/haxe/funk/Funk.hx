@@ -41,7 +41,7 @@ class Funk {
 			case HttpError(msg):
 				msg;
 			case IllegalOperationError(msg):
-				'Required operation can not be executed';
+				msg == null ? 'Required operation can not be executed' : msg;
 			case InjectorError(msg):
 				msg;
 			case NoSuchElementError:

@@ -19,7 +19,7 @@ class EchoMain {
     private static var out : Output;
 
     public static function main() {
-        var map = new Hash<String>();
+        var map = new Map<String, String>();
         var response = "";
         var type = TText;
 
@@ -51,19 +51,19 @@ class EchoMain {
             case TXml:
                 buffer.add("<echo>");
                 for (i in map.keys()) {
-                    buffer.add(Std.format("<${i}>${map.get(i)}</${i}>"));
+                    buffer.add('<${i}>${map.get(i)}</${i}>');
                 }
                 buffer.add("</echo>");
                 buffer.toString();
             case TText:
                 for (i in map.keys()) {
-                    buffer.add(Std.format("${i}=${map.get(i)};"));
+                    buffer.add('${i}=${map.get(i)};');
                 }
                 buffer.toString();
             case THtml: "";
         }
         var result = if (response != "") {
-            Std.format("${response}(${parsed})");
+            '${response}(${parsed})';
         } else {
             parsed;
         }

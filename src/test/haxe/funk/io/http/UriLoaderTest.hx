@@ -42,7 +42,7 @@ class UriLoaderTest extends BaseLoaderTest {
             Assert.isNotNull(actual);
         }, TIMEOUT);
 
-        Std.format("${baseUri}message=${expected}").fromUri().get().when(function(attempt) {
+        '${baseUri}message=${expected}'.fromUri().get().when(function(attempt) {
             switch(attempt){
                 case Success(data): actual = data.body.get();
                 default: Assert.fail("Failed if called");
@@ -62,7 +62,7 @@ class UriLoaderTest extends BaseLoaderTest {
             Assert.areEqual(cast actual, cast None);//Some(HttpSuccess(OK)));
         }, TIMEOUT);
 
-        Std.format("${baseUri}message=${expected}").fromUri().get().when(function(attempt) {
+        '${baseUri}message=${expected}'.fromUri().get().when(function(attempt) {
             switch(attempt){
                 case Success(data): actual = data.code;
                 default: Assert.fail("Failed if called");

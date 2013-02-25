@@ -23,7 +23,7 @@ class Asserts {
 			var value1 = b.next();
 
 			switch (Type.typeof(value0)) {
-				case TEnum(e): 
+				case TEnum(_): 
 					if (!Type.enumEq(value0, value1)) {
 						result = false;
 					}

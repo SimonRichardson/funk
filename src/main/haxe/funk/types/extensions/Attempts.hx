@@ -161,8 +161,8 @@ class Attempts {
                                         ?funcSuccess : Function1<T, String>,
                                         ?funcFailure : Function1<Errors, String>) : String {
         return switch (attempt) {
-            case Success(value): Std.format('Success(${Anys.toString(value, funcSuccess)})');
-            case Failure(value): Std.format('Failure(${Anys.toString(value, funcFailure)})');
+            case Success(value): 'Success(${Anys.toString(value, funcSuccess)})';
+            case Failure(value): 'Failure(${Anys.toString(value, funcFailure)})';
         }
     }
 
