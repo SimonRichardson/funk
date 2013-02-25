@@ -8,5 +8,5 @@
 -cmd cd ../../
 -cmd mv bin/release/release.zip bin/release.zip
 
-# Test against haxelib
--cmd haxelib test bin/release.zip
+# Install it locally.
+-cmd haxelib local bin/release.zip
