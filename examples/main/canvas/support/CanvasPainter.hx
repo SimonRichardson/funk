@@ -1,9 +1,11 @@
 package support;
 
+import js.Browser;
+import js.html.CanvasElement;
+import js.html.CanvasRenderingContext2D;
+import js.html.Event;
 import funk.collections.immutable.List;
-import CommonJS;
 import funk.reactive.events.RenderEvents;
-import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.reactive.extensions.Streams;
@@ -16,7 +18,7 @@ class CanvasPainter {
 
     private static var _commands : List<List<CanvasCommands>>;
 
-    public static function init(canvas : HTMLCanvasElement) {
+    public static function init(canvas : CanvasElement) {
         _paint = false;
         _commands = Nil;
         _rectangles = Nil;

@@ -1,10 +1,10 @@
 package support;
 
+import js.Browser;
+import js.html.CanvasElement;
 import funk.collections.immutable.List;
 import funk.types.Function1;
 import funk.types.Wildcard;
-import CommonJS;
-import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.reactive.events.MouseEvents;
@@ -13,7 +13,7 @@ using funk.reactive.extensions.Streams;
 class HtmlWildcards {
 
     public static function addLayer(    wildcard : Wildcard,
-                                        parent : HTMLCanvasElement
+                                        parent : CanvasElement
                                         ) : Function1<Layer, Void> {
         var context = parent.getContext("2d");
 

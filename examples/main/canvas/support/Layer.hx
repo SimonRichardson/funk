@@ -1,19 +1,19 @@
 package support;
 
-import CommonJS;
-import UserAgentContext;
+import js.Browser;
+import js.html.CanvasElement;
 
 class Layer {
 
     private var _context : CanvasContext;
 
-    private var _parent : HTMLCanvasElement;
+    private var _parent : CanvasElement;
 
     private var _bounds : Bounds;
 
     private var _previousBounds : Bounds;
 
-    public var parent(get_parent, set_parent) : HTMLCanvasElement;
+    public var parent(get_parent, set_parent) : CanvasElement;
 
     public var x(get_x, set_x) : Float;
 
@@ -46,11 +46,11 @@ class Layer {
         _context.render();
     }
 
-    private function get_parent() : HTMLCanvasElement {
+    private function get_parent() : CanvasElement {
         return _parent;
     }
 
-    private function set_parent(value : HTMLCanvasElement) : HTMLCanvasElement {
+    private function set_parent(value : CanvasElement) : CanvasElement {
         _parent = value;
         return _parent;
     }

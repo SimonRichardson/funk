@@ -1,9 +1,11 @@
 package support;
 
+import js.Browser;
+import js.html.CanvasElement;
+import js.html.CanvasRenderingContext2D;
 import funk.collections.immutable.List;
-import CommonJS;
 import funk.reactive.events.RenderEvents;
-import UserAgentContext;
+import support.CanvasCommands;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.reactive.extensions.Streams;

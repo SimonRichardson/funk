@@ -1,5 +1,7 @@
 package ;
 
+import js.Browser;
+import js.html.CanvasElement;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.ListsUtil;
 import funk.types.Function1;
@@ -7,8 +9,6 @@ import funk.types.Pass;
 import funk.types.Wildcard;
 import support.CanvasPainter;
 import support.Layer;
-import CommonJS;
-import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Tuples2;
@@ -48,8 +48,8 @@ class Example01 {
         layers.foreach(_.addLayer(getCanvas()));
     }
 
-    public function getCanvas() : HTMLCanvasElement {
-        return CommonJS.getHtmlDocument().body.getElementsByTagName('canvas')[0];
+    public function getCanvas() : CanvasElement {
+        return cast Browser.document.body.getElementsByTagName('canvas')[0];
     }
 
     public static function main() {

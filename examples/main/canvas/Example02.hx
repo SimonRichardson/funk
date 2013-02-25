@@ -1,5 +1,7 @@
 package ;
 
+import js.Browser;
+import js.html.CanvasElement;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.ListsUtil;
 import funk.collections.immutable.extensions.Range;
@@ -9,8 +11,6 @@ import funk.types.Wildcard;
 import support.CanvasPainter;
 import support.Layer;
 import support.CanvasContext;
-import CommonJS;
-import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Tuples2;
@@ -40,8 +40,8 @@ class Example02 {
         });
     }
 
-    public function getCanvas() : HTMLCanvasElement {
-        return CommonJS.getHtmlDocument().body.getElementsByTagName('canvas')[0];
+    public function getCanvas() : CanvasElement {
+        return cast Browser.document.body.getElementsByTagName('canvas')[0];
     }
 
     public static function with<T>(func : Function1<T, Void>) : Function1<T, Void> {

@@ -7,11 +7,8 @@
 -cp main/dom
 -cp ../src/main/haxe
 -cp ../src/test/haxe
--lib xirsys_stdjs
---js-modern
 -debug
 -D test
---dead-code-elimination
 
 --next
 -cmd echo "<html lang='en-GB'>\n<head>\n<title>Example01</title>\n</head>\n<body>\n<script type='text/javascript' src='Example01.js'></script>\n</body>\n</html>" >> ../bin/dom/Example01.html
@@ -22,11 +19,8 @@
 -cp main/dom
 -cp ../src/main/haxe
 -cp ../src/test/haxe
--lib xirsys_stdjs
---js-modern
 -debug
 -D test
---dead-code-elimination
 
 --next
 -cmd echo "<html lang='en-GB'>\n<head>\n<title>Example02</title>\n</head>\n<body>\n<script type='text/javascript' src='Example02.js'></script>\n</body>\n</html>" >> ../bin/dom/Example02.html
@@ -37,11 +31,8 @@
 -cp main/dom
 -cp ../src/main/haxe
 -cp ../src/test/haxe
--lib xirsys_stdjs
---js-modern
 -debug
 -D test
---dead-code-elimination
 
 --next
 -cmd echo "<html lang='en-GB'>\n<head>\n<title>Example03</title>\n</head>\n<body>\n<script type='text/javascript' src='Example03.js'></script>\n</body>\n</html>" >> ../bin/dom/Example03.html

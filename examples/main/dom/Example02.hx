@@ -1,5 +1,8 @@
 package ;
 
+import js.Browser;
+import js.html.Element;
+import js.html.CSSStyleDeclaration;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.ListsUtil;
 import funk.collections.immutable.extensions.Range;
@@ -8,8 +11,6 @@ import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
 import support.HtmlDivElement;
-import CommonJS;
-import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Tuples2;
@@ -39,8 +40,8 @@ class Example02 {
         });
     }
 
-    public function getBody() : HTMLElement {
-        return CommonJS.getHtmlDocument().body;
+    public function getBody() : Element {
+        return Browser.window.document.body;
     }
 
     public static function with<T>(func : Function1<T, Void>) : Function1<T, Void> {

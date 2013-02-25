@@ -1,5 +1,8 @@
 package ;
 
+import js.Browser;
+import js.html.Element;
+import js.html.CSSStyleDeclaration;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.ListsUtil;
 import funk.types.Function1;
@@ -7,8 +10,6 @@ import funk.types.Pass;
 import funk.types.Wildcard;
 import funk.reactive.events.Events;
 import support.HtmlDivElement;
-import CommonJS;
-import UserAgentContext;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.reactive.events.MouseEvents;
@@ -52,13 +53,14 @@ class Example03 {
 
         // Attach a mouse down event to all the sprites.
         elements.foreach(_.mouseDown(function (event) {
-            var left = Std.parseInt(event.target.style.left);
-            event.target.style.left = left + 10 + "px";
+            var element = cast event.target;
+            var left = Std.parseInt(element.style.left);
+            element.style.left = left + 10 + "px";
         }));
     }
 
-    public function getBody() : HTMLElement {
-        return CommonJS.getHtmlDocument().body;
+    public function getBody() : Element {
+        return Browser.window.document.body;
     }
 
     public static function main() {

@@ -1,25 +1,22 @@
 package support;
 
-import CommonJS;
-import UserAgentContext;
+import js.Browser;
+import js.html.DivElement;
+import js.html.CSSStyleDeclaration;
 
 class HtmlDivElement {
 
-    private var element : HTMLElement;
+    private var element : DivElement;
 
     public function new() {
-        element = CommonJS.newElement(type());
+        element = Browser.document.createDivElement();
     }
 
-    public function htmlElement() : HTMLElement {
+    public function htmlElement() : DivElement {
         return element;
     }
 
     public function style() : CSSStyleDeclaration {
         return element.style;
-    }
-
-    public function type() : String {
-        return "div";
     }
 }
