@@ -2,7 +2,7 @@ package funk.collections;
 
 import funk.collections.Collection;
 import funk.collections.extensions.Collections;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Tuple2;
 import funk.types.extensions.Options;
 import funk.types.extensions.Tuples2;

@@ -4,7 +4,7 @@ import funk.collections.immutable.List;
 import funk.ioc.Injector;
 import funk.ioc.Inject;
 import funk.ioc.Module;
-import funk.types.Option;
+import haxe.ds.Option;
 import massive.munit.Assert;
 import unit.Asserts;
 

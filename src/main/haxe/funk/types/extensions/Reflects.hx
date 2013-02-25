@@ -1,7 +1,7 @@
 package funk.types.extensions;
 
 import funk.Funk;
-import funk.types.Option;
+import haxe.ds.Option;
 
 using Lambda;
 
@@ -29,7 +29,7 @@ class Reflects {
 
     public static function createInstance<T>(type : Class<T>, args : Array<Dynamic>) : T {
         // Cover the native std types.
-        function capture(type : Class<Dynamic>, args : Array<Dynamic>, defaultValue : Dynamic) : Dynamic {
+        function capture(type : Dynamic, args : Array<Dynamic>, defaultValue : Dynamic) : Dynamic {
             return if (args.length == 1 && Std.is(args[0], type)) {
                 args[0];
             } else {
@@ -45,8 +45,7 @@ class Reflects {
                     case 'String': capture(String, args, new String(""));
                     case _: cast Type.createInstance(type, args);
                 }
-            default:
-                throw "Invalid class to create instance of";
+            case _: throw "Invalid class to create instance of";
         }
     }
 }

@@ -8,7 +8,7 @@ import funk.types.Attempt;
 import funk.types.Deferred;
 import funk.types.Promise;
 import funk.types.Either;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Attempts;
 import funk.types.extensions.Options;
 import massive.munit.Assert;

@@ -4,7 +4,7 @@ import funk.Funk;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Function5;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Functions5;
 import funk.types.extensions.Options;
 import funk.signals.Signal;

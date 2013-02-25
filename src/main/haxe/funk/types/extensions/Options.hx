@@ -2,7 +2,7 @@ package funk.types.extensions;
 
 import funk.Funk;
 import funk.types.extensions.Anys;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Predicate2;

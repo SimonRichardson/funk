@@ -13,7 +13,7 @@ import funk.signals.Signal1;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function2;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.extensions.Options;
@@ -26,7 +26,7 @@ using funk.types.extensions.Options;
 
 class Streams {
 
-    public static function bind<T, E>(func : Function1<T, Void>, stream : Stream<E>) : Stream<E> {
+    public static function bindTo<T, E>(func : Function1<T, Void>, stream : Stream<E>) : Stream<E> {
         stream.foreach(function(v) {
             func(cast v);
         });

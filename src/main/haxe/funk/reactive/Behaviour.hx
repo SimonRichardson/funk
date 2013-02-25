@@ -1,7 +1,7 @@
 package funk.reactive;
 
 import funk.types.Function1;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.reactive.Propagation;
 import funk.reactive.Pulse;
 import funk.reactive.extensions.Pulses;

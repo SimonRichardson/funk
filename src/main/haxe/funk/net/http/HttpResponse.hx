@@ -1,7 +1,7 @@
 package funk.net.http;
 
 import funk.collections.immutable.List;
-import funk.types.Option;
+import haxe.ds.Option;
 
 typedef HttpResponse<T> = {
 	code : Option<HttpStatusCode>,

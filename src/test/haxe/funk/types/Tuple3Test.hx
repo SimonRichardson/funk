@@ -2,7 +2,7 @@ package funk.types;
 
 import funk.types.Predicate2;
 import funk.types.Tuple3;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Tuples3;
 import funk.types.extensions.Options;
 import massive.munit.Assert;

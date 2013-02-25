@@ -2,7 +2,7 @@ package funk.ioc;
 
 import funk.Funk;
 import funk.types.Function0;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Provider;
 
 using funk.types.extensions.Bools;
@@ -97,7 +97,6 @@ class Binding<T> {
             case To(type, func): Reflects.createInstance(type, func());
             case Instance(instance): instance;
             case Provider(provider): Reflects.createEmptyInstance(provider).get();
-            case _: Funk.error(BindingError("Invalid Bind"));
         }
     }
 }

@@ -10,7 +10,7 @@ import funk.net.http.UriRequest;
 import funk.reactive.Stream;
 import funk.types.Attempt;
 import funk.types.Promise;
-import funk.types.Option;
+import haxe.ds.Option;
 import haxe.Http;
 
 import massive.munit.async.AsyncFactory;

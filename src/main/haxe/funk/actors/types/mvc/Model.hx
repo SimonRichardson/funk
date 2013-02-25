@@ -6,7 +6,7 @@ import funk.collections.immutable.List;
 import funk.reactive.Stream;
 import funk.reactive.extensions.Streams;
 import funk.types.Deferred;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Promise;
 import funk.types.Tuple2;
 

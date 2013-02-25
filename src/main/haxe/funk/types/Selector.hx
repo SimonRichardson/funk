@@ -4,7 +4,7 @@ import funk.Funk;
 import funk.collections.immutable.List;
 import funk.collections.immutable.Map;
 import funk.types.Function1;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Tuple2;
 
 using funk.collections.immutable.extensions.Lists;

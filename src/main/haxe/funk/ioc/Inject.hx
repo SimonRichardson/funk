@@ -2,7 +2,7 @@ package funk.ioc;
 
 import funk.Funk;
 import funk.ioc.Module;
-import funk.types.Option;
+import haxe.ds.Option;
 
 using funk.types.extensions.Options;
 

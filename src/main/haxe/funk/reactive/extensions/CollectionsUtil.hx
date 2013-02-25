@@ -3,7 +3,7 @@ package funk.reactive.extensions;
 import funk.collections.Collection;
 import funk.Funk;
 import funk.types.Function0;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.reactive.Behaviour;
 import funk.reactive.Process;
 import funk.reactive.Stream;

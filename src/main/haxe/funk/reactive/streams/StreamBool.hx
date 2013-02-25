@@ -6,7 +6,7 @@ import funk.reactive.Pulse;
 import funk.reactive.Stream;
 import funk.reactive.extensions.Pulses;
 import funk.reactive.extensions.Streams;
-import funk.types.Option;
+import haxe.ds.Option;
 
 using funk.collections.extensions.CollectionsUtil;
 using funk.reactive.extensions.Pulses;

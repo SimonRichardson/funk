@@ -3,7 +3,7 @@ package funk.net.http.extensions;
 import funk.collections.immutable.List;
 import funk.collections.immutable.Map;
 import funk.net.http.UriRequest;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Tuple2;
 
 using Lambda;

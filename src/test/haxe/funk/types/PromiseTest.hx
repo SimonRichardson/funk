@@ -7,7 +7,7 @@ import funk.collections.extensions.CollectionsUtil;
 import funk.types.Attempt;
 import funk.types.Deferred;
 import funk.types.Promise;
-import funk.types.Option;
+import haxe.ds.Option;
 import massive.munit.Assert;
 import unit.Asserts;
 

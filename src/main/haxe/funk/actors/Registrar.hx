@@ -1,7 +1,7 @@
 package funk.actors;
 
 import funk.collections.immutable.List;
-import funk.types.Option;
+import haxe.ds.Option;
 
 using funk.collections.immutable.extensions.Lists;
 

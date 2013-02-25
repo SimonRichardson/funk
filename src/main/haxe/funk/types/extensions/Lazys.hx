@@ -2,7 +2,7 @@ package funk.types.extensions;
 
 import funk.Funk;
 import funk.types.Lazy;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Options;
 
 using funk.types.extensions.Options;

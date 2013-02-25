@@ -6,7 +6,7 @@ import funk.net.http.HttpResponse;
 import funk.net.http.HttpMethod;
 import funk.reactive.Stream;
 import funk.types.Promise;
-import funk.types.Option;
+import haxe.ds.Option;
 import haxe.Http;
 
 typedef Loader<T> = {

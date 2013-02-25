@@ -5,7 +5,7 @@ import funk.collections.extensions.CollectionsUtil;
 import funk.reactive.extensions.Behaviours;
 import funk.reactive.extensions.CollectionsUtil;
 import funk.reactive.extensions.Streams;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Options;
 import massive.munit.Assert;
 import massive.munit.util.Timer;

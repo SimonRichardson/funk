@@ -10,7 +10,7 @@ import funk.reactive.Stream;
 import funk.types.Deferred;
 import funk.types.Function2;
 import funk.types.Function3;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Promise;
 
 using funk.collections.immutable.extensions.Lists;

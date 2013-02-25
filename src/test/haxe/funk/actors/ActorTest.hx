@@ -1,7 +1,7 @@
 package funk.actors;
 
 import funk.types.Either;
-import funk.types.Option;
+import haxe.ds.Option;
 import massive.munit.Assert;
 import unit.Asserts;
 

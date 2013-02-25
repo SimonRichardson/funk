@@ -2,7 +2,7 @@ package funk.io.logging.extensions;
 
 import funk.io.logging.Log;
 import funk.io.logging.LogLevel;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Anys;
 
 class LogValues {

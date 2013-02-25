@@ -1,7 +1,7 @@
 package funk.ioc;
 
 import funk.ioc.Injector;
-import funk.types.Option;
+import haxe.ds.Option;
 import massive.munit.Assert;
 import unit.Asserts;
 
@@ -92,7 +92,7 @@ class ModuleTest {
 	@Test
 	public function when_adding_a_bindable_should_calling_another_binds_be_false() {
 		module.bind(String);
-		module.binds(Float).isFalse();
+		module.binds(Empty1).isFalse();
 	}
 
 	@Test
@@ -104,7 +104,13 @@ class ModuleTest {
 	@Test
 	public function when_adding_multiple_bindables_should_calling_another_binds_be_false() {
 		module.bind(String);
-		module.bind(Float);
-		module.binds(Int).isFalse();
+		module.bind(Empty1);
+		module.binds(Empty2).isFalse();
 	}
+}
+
+private class Empty1 {
+}
+
+private class Empty2 {
 }

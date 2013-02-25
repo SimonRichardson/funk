@@ -3,7 +3,7 @@ package funk.actors.extensions;
 import funk.actors.Actor;
 import funk.actors.Message;
 import funk.types.Promise;
-import funk.types.Option;
+import haxe.ds.Option;
 
 using funk.collections.immutable.extensions.Lists;
 

@@ -1,7 +1,7 @@
 package funk.ioc;
 
 import funk.ioc.Injector;
-import funk.types.Option;
+import haxe.ds.Option;
 import massive.munit.Assert;
 import unit.Asserts;
 

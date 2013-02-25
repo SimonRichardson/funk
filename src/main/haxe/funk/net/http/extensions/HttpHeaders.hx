@@ -1,6 +1,6 @@
 package funk.net.http.extensions;
 
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Tuple2;
 import funk.types.extensions.Strings;
 

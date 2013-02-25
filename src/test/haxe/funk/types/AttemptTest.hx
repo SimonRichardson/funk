@@ -3,7 +3,7 @@ package funk.types;
 import funk.Funk;
 import funk.types.Attempt;
 import funk.types.Attempt;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Attempts;
 import funk.types.extensions.Attempts;
 import funk.types.extensions.Options;

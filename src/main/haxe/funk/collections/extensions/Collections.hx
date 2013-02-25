@@ -6,7 +6,7 @@ import funk.collections.extensions.CollectionsUtil;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Function3;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
 import funk.types.Tuple2;

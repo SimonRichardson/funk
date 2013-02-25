@@ -5,7 +5,7 @@ import funk.actors.Header;
 import funk.actors.Message;
 import funk.types.extensions.Tuples2;
 import funk.types.Function1;
-import funk.types.Option;
+import haxe.ds.Option;
 
 using funk.collections.immutable.extensions.Lists;
 using funk.types.extensions.Options;

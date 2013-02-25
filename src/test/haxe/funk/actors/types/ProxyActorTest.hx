@@ -4,7 +4,7 @@ import funk.actors.types.ProxyActor;
 import funk.collections.immutable.List;
 import funk.types.Either;
 import funk.types.extensions.Promises;
-import funk.types.Option;
+import haxe.ds.Option;
 import massive.munit.Assert;
 import unit.Asserts;
 

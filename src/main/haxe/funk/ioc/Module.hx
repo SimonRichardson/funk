@@ -6,7 +6,7 @@ import funk.collections.immutable.Map;
 import funk.ioc.Binding;
 import funk.types.extensions.Anys;
 import funk.types.Function0;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Predicate2;
 import funk.types.Tuple2;
 

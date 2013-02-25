@@ -1,6 +1,6 @@
 package funk.signals;
 
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Options;
 import massive.munit.Assert;
 import unit.Asserts;

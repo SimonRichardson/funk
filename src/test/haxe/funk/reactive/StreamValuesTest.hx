@@ -6,7 +6,7 @@ import funk.collections.extensions.Collections;
 import funk.collections.extensions.CollectionsUtil;
 import funk.reactive.StreamValues;
 import funk.signals.Signal1;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Tuple2;
 import funk.types.extensions.Options;
 import funk.types.extensions.Tuples2;

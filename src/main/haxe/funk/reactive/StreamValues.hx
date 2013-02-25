@@ -7,7 +7,7 @@ import funk.reactive.Propagation;
 import funk.reactive.Stream;
 import funk.signals.Signal0;
 import funk.types.Function1;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Options;
 import funk.signals.Signal1;
 

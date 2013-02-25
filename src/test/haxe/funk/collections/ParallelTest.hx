@@ -1,7 +1,7 @@
 package funk.collections;
 
 import funk.collections.CollectionsTestBase;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Options;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;

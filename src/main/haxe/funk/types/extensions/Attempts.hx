@@ -5,9 +5,8 @@ import funk.types.Attempt;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Predicate2;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Anys;
-import funk.types.extensions.Options;
 
 using funk.types.extensions.Bools;
 using funk.types.extensions.Options;

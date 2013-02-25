@@ -3,7 +3,7 @@ package funk.reactive;
 import funk.Funk;
 import funk.types.Function0;
 import funk.types.Function1;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Options;
 import funk.reactive.Process;
 import massive.munit.Assert;

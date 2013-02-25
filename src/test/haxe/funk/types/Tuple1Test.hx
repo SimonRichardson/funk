@@ -1,7 +1,7 @@
 package funk.types;
 
 import funk.types.Tuple1;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Tuples1;
 import funk.types.extensions.Options;
 import massive.munit.Assert;

@@ -8,7 +8,7 @@ import funk.io.http.MimeType;
 import funk.types.extensions.Anys;
 import funk.types.Deferred;
 import funk.types.Either;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Promise;
 
 using funk.collections.immutable.extensions.Lists;

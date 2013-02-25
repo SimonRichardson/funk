@@ -6,7 +6,7 @@ import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 import funk.types.Function0;
 import funk.types.Function1;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Strings;
 
 using funk.collections.immutable.extensions.Lists;

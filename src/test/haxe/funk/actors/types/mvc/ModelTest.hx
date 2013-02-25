@@ -1,7 +1,7 @@
 package funk.actors.types.mvc;
 
 import funk.collections.immutable.List;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Promise;
 import funk.types.extensions.Promises;
 

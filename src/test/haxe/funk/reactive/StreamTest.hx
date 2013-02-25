@@ -1,18 +1,15 @@
 package funk.reactive;
 
 import funk.collections.Collection;
-import funk.collections.extensions.Collections;
-import funk.reactive.extensions.Behaviours;
-import funk.reactive.extensions.Streams;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Tuple2;
 import funk.types.extensions.Tuples2;
 import massive.munit.Assert;
 import unit.Asserts;
 
 using funk.collections.extensions.Collections;
-using funk.reactive.extensions.Streams;
 using funk.reactive.extensions.Behaviours;
+using funk.reactive.extensions.Streams;
 using funk.types.extensions.Tuples2;
 using massive.munit.Assert;
 using unit.Asserts;
@@ -138,6 +135,7 @@ class StreamTest extends ProcessAsyncBase {
 				case 0: stream0;
 				case 1: stream1;
 				case 2: stream2;
+				case _: null;
 			};
 		});
 
@@ -160,6 +158,7 @@ class StreamTest extends ProcessAsyncBase {
 				case 0: stream0;
 				case 1: stream1;
 				case 2: stream2;
+				case _: null;
 			};
 		});
 
@@ -182,6 +181,7 @@ class StreamTest extends ProcessAsyncBase {
 				case 0: stream0;
 				case 1: stream1;
 				case 2: stream2;
+				case _: null;
 			};
 		});
 

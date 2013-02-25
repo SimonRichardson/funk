@@ -2,7 +2,7 @@ package funk.actors;
 
 import funk.actors.Actor;
 import funk.actors.Message;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Promise;
 
 typedef Reference<T1, T2> = {

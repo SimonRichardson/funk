@@ -8,7 +8,7 @@ import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
 import funk.net.http.HttpResponse;
 import funk.net.http.UriRequest;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Promise;
 import funk.types.Tuple2;
 

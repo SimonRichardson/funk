@@ -32,12 +32,12 @@ class Logger<T> {
 
 	@:overridable
 	private function init() : Void {
-		function (value : LogLevel<T>) {
+		function(value : LogLevel<T>) {
 			// TODO (Simon) : It should be possible to intercept this and then map the value.
 			if (value.bit() >= logLevel) {
 				streamOut().dispatch(Message(tag(), value));
 			}
-		}.bind(streamIn());
+		}.bindTo(streamIn());
 	}
 
 	public function tag() : Tag {

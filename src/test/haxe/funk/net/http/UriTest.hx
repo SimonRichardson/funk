@@ -1,7 +1,7 @@
 package funk.net.http;
 
 import funk.collections.immutable.List;
-import funk.types.Option;
+import haxe.ds.Option;
 import massive.munit.Assert;
 import unit.Asserts;
 

@@ -8,7 +8,7 @@ import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Function5;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate5;
 import funk.types.Promise;

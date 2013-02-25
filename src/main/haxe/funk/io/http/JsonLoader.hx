@@ -12,7 +12,7 @@ import funk.reactive.Stream;
 import funk.types.Deferred;
 import funk.types.Function1;
 import funk.types.Promise;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.Tuple2;
 import haxe.Http;
 import haxe.Json;

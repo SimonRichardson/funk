@@ -8,7 +8,7 @@ import funk.reactive.StreamValues;
 import funk.reactive.extensions.Streams;
 import funk.signals.Signal1;
 import funk.types.Attempt;
-import funk.types.Option;
+import haxe.ds.Option;
 import funk.types.extensions.Options;
 import funk.types.Promise;
 
