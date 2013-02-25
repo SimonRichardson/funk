@@ -13,13 +13,14 @@ import haxe.ds.Option;
 import funk.types.Promise;
 
 using funk.collections.immutable.extensions.Lists;
-using funk.actors.extensions.Actors;
+
 using funk.actors.extensions.Headers;
 using funk.actors.extensions.Messages;
 using funk.reactive.extensions.Behaviours;
 using funk.reactive.extensions.Streams;
 using funk.types.extensions.Options;
 using funk.types.extensions.Promises;
+using funk.actors.extensions.Actors;
 
 class ProxyActor<T> extends Actor<T> {
 
@@ -41,7 +42,7 @@ class ProxyActor<T> extends Actor<T> {
 		return cast actor();
 	}
 
-	override private function onRecieve<T1, T2>(message : Message<T1>) : Promise<Message<Dynamic>> {
+	override private function onRecieve<T1, T2>(message : Message<T1>) : Promise<Message<T2>> {
 		var promises : List<Promise<Message<T1>>> = Nil;
 
 		_children.foreach(function (actor : Actor<T>) {
@@ -58,7 +59,7 @@ class ProxyActor<T> extends Actor<T> {
 		}).pipe(deferred);
 
 		return promise.map(function(value : List<T2>) {
-			return tuple2(message.headers().invert(), value.toOption());
+			return tuple2(message.headers().invert(), cast value.toOption());
 		});
 	}
 }
