@@ -154,7 +154,7 @@ class EitherTest {
 
 	@Test
 	public function should_calling_toOption_on_right_return_valid_Option() {
-		Right(1).toOption().areEqual(Some(1));
+		Right(1).toOption().areEqual(Some(Right(1)));
 	}
 
 	@Test
@@ -165,7 +165,7 @@ class EitherTest {
 	@Test
 	public function should_calling_toOption_on_right_return_Some_value() {
 		var value = {};
-		Right(value).toOption().get().areEqual(value);
+		Right(value).toOption().get().areEqual(Right(value));
 	}
 
 	@Test

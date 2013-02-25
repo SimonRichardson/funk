@@ -1,8 +1,8 @@
 package tools;
 
 import haxe.io.Output;
-import neko.io.File;
-import neko.io.Process;
+import sys.io.File;
+import sys.io.Process;
 import neko.Lib;
 import neko.vm.Thread;
 

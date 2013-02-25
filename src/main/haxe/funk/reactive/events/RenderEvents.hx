@@ -2,14 +2,11 @@ package funk.reactive.events;
 
 import funk.reactive.events.Events;
 import funk.reactive.Stream;
-import funk.reactive.extensions.Streams;
 import funk.types.Function0;
+import funk.types.Function1;
 
 #if js
-import js.Dom;
-typedef CustomWindow = {>Window,
-    function requestAnimationFrame(func : Function0<Void>) : Void;
-};
+import js.Browser;
 #elseif flash9
 import flash.display.Stage;
 import flash.events.Event;
@@ -18,6 +15,11 @@ import flash.events.KeyboardEvent;
 #end
 
 using funk.reactive.extensions.Streams;
+
+#if js
+private typedef Event = js.html.Event;
+private typedef EventDispatcher = js.html.EventTarget;
+#end
 
 enum RenderEventType {
     EnterFrame;
@@ -46,12 +48,13 @@ class RenderEvents {
     private static function customEvent(type : String) : Stream<Event> {
         var stream = Streams.identity(None);
 
-        var win : CustomWindow = untyped __js__("window");
-        var document : Document = win.document;
+        var win = Browser.window;
+        var document = win.document;
         var finished = false;
 
-        function tick() {
-            var event : funk.reactive.events.Event = untyped __js__("document.createEvent('Event')");
+        var tick : Function1<Float, Bool> = null;
+        tick = function(value) {
+            var event = document.createEvent('Event');
             event.initEvent(type, false, false);
 
             stream.dispatch(event);
@@ -59,7 +62,8 @@ class RenderEvents {
             if (!finished) {
                 win.requestAnimationFrame(tick);
             }
-        }
+            return true;
+        };
 
         win.requestAnimationFrame(tick);
 

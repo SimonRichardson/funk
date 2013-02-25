@@ -1,6 +1,6 @@
 package tools;
 
-import neko.io.File;
+import sys.io.File;
 import haxe.io.Output;
 import haxe.Json;
 import neko.Lib;

@@ -153,7 +153,7 @@ class AttemptTest {
 
 	@Test
 	public function should_calling_toOption_on_success_return_valid_Option() {
-		Success(1).toOption().areEqual(Some(1));
+		Success(1).toOption().areEqual(Some(Success(1)));
 	}
 
 	@Test
@@ -164,7 +164,7 @@ class AttemptTest {
 	@Test
 	public function should_calling_toOption_on_success_return_Some_value() {
 		var value = {};
-		Success(value).toOption().get().areEqual(value);
+		Success(value).toOption().get().areEqual(Success(value));
 	}
 
 	@Test

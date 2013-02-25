@@ -5,12 +5,17 @@ import funk.reactive.Stream;
 import funk.reactive.extensions.Streams;
 
 #if js
-import js.Dom;
-typedef MouseEvent = Event;
+import js.Browser;
 #elseif flash9
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
+#end
+
+#if js
+private typedef Event = js.html.Event;
+private typedef MouseEvent = js.html.MouseEvent;
+private typedef EventDispatcher = js.html.EventTarget;
 #end
 
 enum MouseEventType {
