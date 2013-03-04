@@ -1,6 +1,5 @@
 package funk.collections.immutable;
 
-import funk.collections.immutable.List;
 import haxe.ds.Option;
 import funk.types.Tuple2;
 import funk.types.extensions.Options;
@@ -8,7 +7,7 @@ import funk.types.extensions.Tuples2;
 import massive.munit.Assert;
 
 using massive.munit.Assert;
-using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.List;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
 
@@ -46,7 +45,7 @@ class ListTestBase {
 
 	@Test
 	public function when_calling_toString_on_a_complex_list__should_return_valid_string() {
-		complex.toString(function (x) {
+		ListTypes.toString(complex, function (x) {
 			return x.toString();
 		}).areEqual('$name($name(1, 2, 3), $name(4, 5), $name(6), $name(7, 8, 9))');
 	}
@@ -1076,7 +1075,7 @@ class ListTestBase {
 
 	@Test
 	public function when_zip__should_calling_toString() : Void {
-		actual.zip(other).toString(function(x) {
+		ListTypes.toString(actual.zip(other), function(x) {
 			return x.toString();
 		}).areEqual('$name((1, 6), (2, 7), (3, 8), (4, 9))');
 	}
@@ -1129,7 +1128,7 @@ class ListTestBase {
 
 	@Test
 	public function when_zipWithIndex__should_be_equal_to_nil() : Void {
-		actual.zipWithIndex().toString(function (tuple) {
+		ListTypes.toString(actual.zipWithIndex(), function (tuple) {
 			return tuple.toString();
 		}).areEqual('$name((1, 0), (2, 1), (3, 2), (4, 3), (5, 4))');
 	}

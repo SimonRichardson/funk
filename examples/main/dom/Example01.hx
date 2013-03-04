@@ -2,14 +2,13 @@ package ;
 
 import js.Browser;
 import js.html.Element;
-import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.ListsUtil;
+import funk.collections.immutable.ListUtil;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
 import support.HtmlDivElement;
 
-using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.List;
 using funk.types.extensions.Tuples2;
 using support.HtmlWildcards;
 

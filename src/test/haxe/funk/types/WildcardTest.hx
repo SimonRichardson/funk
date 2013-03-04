@@ -1,9 +1,8 @@
 package funk.types;
 
-import funk.collections.immutable.List;
 import funk.types.Wildcard;
 
-using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.List;
 using funk.types.extensions.Wildcards;
 using massive.munit.Assert;
 

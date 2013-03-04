@@ -4,13 +4,12 @@ import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
-import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.ListsUtil;
+import funk.collections.immutable.ListUtil;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
 
-using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.List;
 using funk.types.extensions.Tuples2;
 using funk.reactive.events.MouseEvents;
 using funk.reactive.extensions.Streams;

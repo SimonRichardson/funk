@@ -2,11 +2,10 @@ package support;
 
 import js.Browser;
 import js.html.CanvasElement;
-import funk.collections.immutable.List;
 import funk.types.Function1;
 import funk.types.Wildcard;
 
-using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.List;
 using funk.reactive.events.MouseEvents;
 using funk.reactive.extensions.Streams;
 

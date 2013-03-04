@@ -11,6 +11,7 @@ import haxe.ds.Option;
 using funk.collections.Collection.CollectionTypes;
 using funk.collections.CollectionUtil;
 using funk.types.Foldable;
+using funk.types.Reducible;
 using funk.types.extensions.Anys;
 using funk.types.extensions.Iterators;
 using funk.types.extensions.Options;
@@ -33,18 +34,38 @@ abstract Collection<T>(CollectionType<T>) from CollectionType<T> to CollectionTy
         return this.size();
     }
 
-    @:from
-    inline public static function fromValue<T>(value : T) : Collection<T> {
-        return null;//CollectionUtil.toCollection(value);
+    @:to
+    inline public static function toFoldable<T>(collection : Collection<T>) : Foldable<T> {
+        var foldable : Foldable<T> = {
+            foldLeft: function(value : T, func : Function2<T, T, T>) {
+                return CollectionTypes.foldLeft(collection, value, func);
+            },
+            foldRight: function(value : T, func : Function2<T, T, T>) {
+                return CollectionTypes.foldRight(collection, value, func);
+            }
+        };
+        return foldable;
     }
 
     @:to
-    inline public static function toFoldable<T>(collection : Collection<T>) : Foldable<T> {
-        var foldable : Foldable<T> = cast {
-            foldLeft: CollectionTypes.foldLeft,
-            foldRight: CollectionTypes.foldRight
+    inline public static function toReducible<T>(collection : Collection<T>) : Reducible<T> {
+        var reducible : Reducible<T> = {
+            reduceLeft: function(func : Function2<T, T, T>) {
+                return CollectionTypes.reduceLeft(collection, func);
+            },
+            reduceRight: function(func : Function2<T, T, T>) {
+                return CollectionTypes.reduceRight(collection, func);
+            }
         };
-        return foldable;
+        return reducible;
+    }
+
+    @:from
+    inline public static function fromArray<T>(array : Array<T>) : Collection<T> {
+        return {
+            iterator: function() return array.iterator(),
+            size: function() return array.length
+        };
     }
 
     @:to

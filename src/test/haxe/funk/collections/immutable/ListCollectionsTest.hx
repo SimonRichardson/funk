@@ -3,8 +3,7 @@ package funk.collections.immutable;
 import funk.collections.CollectionTestBase;
 
 using funk.collections.immutable.List;
-using funk.collections.immutable.extensions.Lists;
-using funk.collections.immutable.extensions.ListsUtil;
+using funk.collections.immutable.ListUtil;
 
 class ListCollectionsTest extends CollectionTestBase {
 
@@ -16,11 +15,11 @@ class ListCollectionsTest extends CollectionTestBase {
 		actualTotal = 5;
 
 		var stack = Nil;
-		stack = Lists.prepend(stack, [1, 2, 3].toList().collection());
-		stack = Lists.prepend(stack, [4, 5].toList().collection());
-		stack = Lists.prepend(stack, [6].toList().collection());
-		stack = Lists.prepend(stack, [7, 8, 9].toList().collection());
-		stack = Lists.reverse(stack);
+		stack = ListTypes.prepend(stack, [1, 2, 3].toList().collection());
+		stack = ListTypes.prepend(stack, [4, 5].toList().collection());
+		stack = ListTypes.prepend(stack, [6].toList().collection());
+		stack = ListTypes.prepend(stack, [7, 8, 9].toList().collection());
+		stack = ListTypes.reverse(stack);
 		complex = stack.collection();
 
 		other = [6, 7, 8, 9].toList().collection();

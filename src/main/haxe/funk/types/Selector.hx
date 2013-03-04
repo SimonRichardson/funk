@@ -1,14 +1,13 @@
 package funk.types;
 
 import funk.Funk;
-import funk.collections.immutable.List;
 import funk.collections.immutable.Map;
 import funk.types.Function1;
 import haxe.ds.Option;
 import funk.types.Tuple2;
 
-using funk.collections.immutable.extensions.Lists;
-using funk.collections.immutable.extensions.ListsUtil;
+using funk.collections.immutable.List;
+using funk.collections.immutable.ListUtil;
 using funk.types.extensions.Anys;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;

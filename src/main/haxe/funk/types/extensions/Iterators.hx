@@ -3,9 +3,7 @@ package funk.types.extensions;
 import funk.collections.Collection;
 import funk.collections.CollectionUtil;
 import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.Lists;
-
-using funk.collections.immutable.extensions.Lists;
+import funk.collections.immutable.ListUtil;
 
 class Iterators {
 
@@ -26,16 +24,10 @@ class Iterators {
 	}
 
 	inline public static function toCollection<T>(iterator : Iterator<T>) : Collection<T> {
-		var p = iterator;
-		return CollectionUtil.toCollection(toArray(p));
+		return CollectionUtil.toCollection(toArray(iterator));
 	}
 
 	inline public static function toList<T>(iterator : Iterator<T>) : List<T> {
-		var p = iterator;
-		var list = Nil;
-		while(p.hasNext()) {
-			list = list.prepend(p.next());
-		}
-		return list.reverse();
+		return ListUtil.toList(toArray(iterator));
 	}
 }

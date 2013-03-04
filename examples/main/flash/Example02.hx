@@ -3,15 +3,14 @@ package ;
 import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
-import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.ListsUtil;
-import funk.collections.immutable.extensions.Range;
+import funk.collections.immutable.ListUtil;
+import funk.collections.immutable.Range;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
 
-using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.List;
 using funk.types.extensions.Tuples2;
 
 class Example02 extends Sprite {

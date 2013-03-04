@@ -1,9 +1,9 @@
 package funk.collections.immutable;
 
 import funk.collections.immutable.ListTestBase;
-import funk.collections.immutable.extensions.Lists;
 
-using funk.collections.immutable.extensions.ListsUtil;
+using funk.collections.immutable.List;
+using funk.collections.immutable.ListUtil;
 
 class ListTest extends ListTestBase {
 
@@ -15,11 +15,11 @@ class ListTest extends ListTestBase {
 		actualTotal = 5;
 
 		complex = Nil;
-		complex = Lists.prepend(complex, [1, 2, 3].toList());
-		complex = Lists.prepend(complex, [4, 5].toList());
-		complex = Lists.prepend(complex, [6].toList());
-		complex = Lists.prepend(complex, [7, 8, 9].toList());
-		complex = Lists.reverse(complex);
+		complex = ListTypes.prepend(complex, [1, 2, 3].toList());
+		complex = ListTypes.prepend(complex, [4, 5].toList());
+		complex = ListTypes.prepend(complex, [6].toList());
+		complex = ListTypes.prepend(complex, [7, 8, 9].toList());
+		complex = ListTypes.reverse(complex);
 
 		other = [6, 7, 8, 9].toList();
 		otherTotal = 4;

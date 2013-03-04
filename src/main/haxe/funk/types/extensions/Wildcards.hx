@@ -3,7 +3,7 @@ package funk.types.extensions;
 import funk.collections.Collection;
 import funk.collections.CollectionUtil;
 import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.ListsUtil;
+import funk.collections.immutable.ListUtil;
 import funk.types.extensions.Anys;
 import funk.types.Wildcard;
 
@@ -18,7 +18,7 @@ class Wildcards {
     }
 
     public static function toList<T>(wildcard : Wildcard, x : T) : List<T> {
-        return ListsUtil.toList(x);
+        return ListUtil.toList(x);
     }
 
     public static function toLowerCase<T>(wildcard : Wildcard, x : T) : String {

@@ -1,9 +1,6 @@
-package funk.collections.immutable.extensions;
+package funk.collections.immutable;
 
-import funk.Funk;
-import funk.collections.immutable.List;
-
-using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.List;
 
 class Range {
 

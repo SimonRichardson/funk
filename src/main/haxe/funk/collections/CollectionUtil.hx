@@ -3,11 +3,10 @@ package funk.collections;
 import Type;
 import funk.Funk;
 import funk.collections.Collection;
-import funk.collections.immutable.List;
 import funk.types.extensions.Strings;
 
 using Lambda;
-using funk.collections.immutable.extensions.Lists;
+using funk.collections.immutable.List;
 
 class CollectionUtil {
 
@@ -15,12 +14,12 @@ class CollectionUtil {
 
 	inline private static var REFLECT_NAME : String = '__reflect__';
 
-	inline public static function zero<T>() : Collection<T> {
+	inline public static function zero<T>() : CollectionType<T> {
 		// TODO (Simon) : We could optimise this.
 		return toCollection([]);
 	}
 
-	public static function toCollection<T, R>(x : T) : Collection<R> {
+	public static function toCollection<T, R>(x : T) : CollectionType<R> {
 		var size : Int = -1;
 		var iterable : Iterable<R> = null;
 
@@ -33,7 +32,7 @@ class CollectionUtil {
 			// Now do the switch over the value type.
 			switch (Type.typeof(x)) {
 				case TEnum(e):
-					if (e == List) {
+					if (e == ListType) {
 						return (cast e).collection();
 					}
 
