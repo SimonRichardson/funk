@@ -93,10 +93,4 @@ class Functions4 {
 			return func(tuple4(value0, value1, value2, value3));
 		};
 	}
-
-	public static function wait<T1, T2, T3, T4>(	func : Function4<T1, T2, T3, T4, Void>, 
-													?async : Async4<T1, T2, T3, T4> = null
-													) : Async4<T1, T2, T3, T4> {
-		return new Async4(func).add(async.toOption());
-	}
 }

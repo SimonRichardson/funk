@@ -49,8 +49,4 @@ class Functions1 {
 			return func(tuple1(value0));
 		};
 	}
-
-	public static function wait<T1>(func : Function1<T1, Void>, ?async : Async1<T1> = null) : Async1<T1> {
-		return new Async1(func).add(async.toOption());
-	}
 }

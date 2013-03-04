@@ -2,7 +2,6 @@ package funk.collections.immutable.extensions;
 
 import funk.Funk;
 import funk.collections.Collection;
-import funk.collections.extensions.Collections;
 import funk.collections.immutable.List;
 import funk.collections.immutable.Map;
 import funk.types.Function1;
@@ -734,11 +733,11 @@ class Lists {
 		return switch(p) {
 			case Nil: 'Nil';
 			case Cons(_, _):
-				var mapped : Collection<String> = Collections.map(collection(p), function(value) {
+				var mapped : Collection<String> = CollectionTypes.map(collection(p), function(value) {
 					return Anys.toString(value, func);
 				});
 
-				'List(' + Collections.foldLeftWithIndex(mapped, '', function(a, b, index) {
+				'List(' + CollectionTypes.foldLeftWithIndex(mapped, '', function(a, b, index) {
 					return (index < 1) ? b : a + ', ' + b;
 				}).get() + ')';
 		}

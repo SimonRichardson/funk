@@ -2,7 +2,6 @@ package funk.collections.immutable;
 
 import funk.collections.immutable.ListTestBase;
 import funk.collections.immutable.extensions.Lists;
-import funk.collections.immutable.extensions.ListsUtil;
 
 using funk.collections.immutable.extensions.ListsUtil;
 

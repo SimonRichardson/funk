@@ -1,7 +1,7 @@
 package funk.types.extensions;
 
 import funk.collections.Collection;
-import funk.collections.extensions.CollectionsUtil;
+import funk.collections.CollectionUtil;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.ListsUtil;
 import funk.types.extensions.Anys;
@@ -14,7 +14,7 @@ class Wildcards {
     }
 
     public static function toCollection<T>(wildcard : Wildcard, x : T) : Collection<T> {
-        return CollectionsUtil.toCollection(x);
+        return CollectionUtil.toCollection(x);
     }
 
     public static function toList<T>(wildcard : Wildcard, x : T) : List<T> {

@@ -1,15 +1,12 @@
 package funk.collections;
 
-import funk.collections.CollectionsTestBase;
-import funk.collections.extensions.Collections;
-import funk.collections.extensions.CollectionsUtil;
-import massive.munit.Assert;
+import funk.collections.CollectionTestBase;
 
-using funk.collections.extensions.Collections;
-using funk.collections.extensions.CollectionsUtil;
+using funk.collections.Collection;
+using funk.collections.CollectionUtil;
 using massive.munit.Assert;
 
-class CollectionsTest extends CollectionsTestBase {
+class CollectionTest extends CollectionTestBase {
 
 	@Before
 	public function setup() : Void {
@@ -28,7 +25,7 @@ class CollectionsTest extends CollectionsTestBase {
 		other = [6, 7, 8, 9].toCollection();
 		otherTotal = 4;
 
-		empty = CollectionsUtil.zero();
+		empty = CollectionUtil.zero();
 		emptyTotal = 0;
 
 		name = 'Collection';

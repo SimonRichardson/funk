@@ -1,17 +1,15 @@
-package funk.collections.extensions;
+package funk.collections;
 
 import Type;
-import Lambda;
 import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.Lists;
 import funk.types.extensions.Strings;
 
 using Lambda;
 using funk.collections.immutable.extensions.Lists;
 
-class CollectionsUtil {
+class CollectionUtil {
 
 	inline private static var NAME : String = 'Collection';
 
@@ -26,7 +24,7 @@ class CollectionsUtil {
 		var size : Int = -1;
 		var iterable : Iterable<R> = null;
 
-		// Because array is the likely option to a collection, let's optimise this to as much as possible
+		// Because array is the likely option to a collection, let's optimize this to as much as possible
 		if (Std.is(x, Array)) {
 			var array : Array<R> = cast x;
 			size = array.length;
@@ -63,8 +61,7 @@ class CollectionsUtil {
 							return cast x;
 						}
 					}
-
-				default:
+				case _:
 			}
 
 			// If none exist, create it.

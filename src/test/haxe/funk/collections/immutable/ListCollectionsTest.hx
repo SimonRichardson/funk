@@ -1,15 +1,12 @@
 package funk.collections.immutable;
 
-import funk.collections.CollectionsTestBase;
-import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.Lists;
-import funk.collections.immutable.extensions.ListsUtil;
+import funk.collections.CollectionTestBase;
 
 using funk.collections.immutable.List;
 using funk.collections.immutable.extensions.Lists;
 using funk.collections.immutable.extensions.ListsUtil;
 
-class ListCollectionsTest extends CollectionsTestBase {
+class ListCollectionsTest extends CollectionTestBase {
 
 	@Before
 	public function setup() : Void {

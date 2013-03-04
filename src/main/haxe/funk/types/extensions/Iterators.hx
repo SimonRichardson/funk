@@ -1,7 +1,7 @@
 package funk.types.extensions;
 
 import funk.collections.Collection;
-import funk.collections.extensions.CollectionsUtil;
+import funk.collections.CollectionUtil;
 import funk.collections.immutable.List;
 import funk.collections.immutable.extensions.Lists;
 
@@ -27,7 +27,7 @@ class Iterators {
 
 	inline public static function toCollection<T>(iterator : Iterator<T>) : Collection<T> {
 		var p = iterator;
-		return CollectionsUtil.toCollection(toArray(p));
+		return CollectionUtil.toCollection(toArray(p));
 	}
 
 	inline public static function toList<T>(iterator : Iterator<T>) : List<T> {

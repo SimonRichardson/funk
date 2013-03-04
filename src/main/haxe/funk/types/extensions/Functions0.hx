@@ -32,8 +32,4 @@ class Functions0 {
 			return func();
 		};
 	}
-
-	public static function wait(func : Function0<Void>, ?async : Async0 = null) : Async0 {
-		return new Async0(func).add(async.toOption());
-	}
 }

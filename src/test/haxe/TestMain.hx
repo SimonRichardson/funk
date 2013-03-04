@@ -4,14 +4,7 @@ import massive.munit.client.HTTPClient;
 import massive.munit.client.JUnitReportClient;
 import massive.munit.TestRunner;
 
-import suites.ActorsSuite;
 import suites.CollectionsSuite;
-import suites.IocSuite;
-import suites.IoSuite;
-import suites.NetSuite;
-import suites.PromiseSuite;
-import suites.ReactiveSuite;
-import suites.SignalSuite;
 import suites.TypesSuite;
 
 #if js
@@ -37,14 +30,7 @@ class TestMain {
 
         var suites = new Array<Class<massive.munit.TestSuite>>();
 
-        suites.push(ActorsSuite);
         suites.push(CollectionsSuite);
-        suites.push(IocSuite);
-        suites.push(IoSuite);
-        suites.push(NetSuite);
-        suites.push(PromiseSuite);
-        suites.push(ReactiveSuite);
-        suites.push(SignalSuite);
         suites.push(TypesSuite);
 
         #if MCOVER

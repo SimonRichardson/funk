@@ -1,7 +1,6 @@
 package funk.collections.immutable;
 
 import funk.collections.immutable.List;
-import funk.collections.immutable.extensions.Lists;
 import haxe.ds.Option;
 import funk.types.Tuple2;
 import funk.types.extensions.Options;

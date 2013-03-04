@@ -1,21 +1,15 @@
 package funk.collections;
 
-import funk.collections.Collection;
-import funk.collections.extensions.Collections;
 import haxe.ds.Option;
 import funk.types.Tuple2;
-import funk.types.extensions.Options;
-import funk.types.extensions.Tuples2;
-import massive.munit.Assert;
-import unit.Asserts;
 
-using massive.munit.Assert;
-using funk.collections.extensions.Collections;
+using funk.collections.Collection;
 using funk.types.extensions.Options;
 using funk.types.extensions.Tuples2;
+using massive.munit.Assert;
 using unit.Asserts;
 
-class CollectionsTestBase {
+class CollectionTestBase {
 
 	public var alpha : Collection<String>;
 
@@ -54,7 +48,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_calling_toString_on_a_complex_list__should_return_valid_string() {
-		complex.toString(function (x) {
+		CollectionTypes.toString(complex, function (x) {
 			return x.toString();
 		}).areEqual('$name($name(1, 2, 3), $name(4, 5), $name(6), $name(7, 8, 9))');
 	}
@@ -1101,7 +1095,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_zip__should_calling_toString() : Void {
-		actual.zip(other).toString(function(x) {
+		CollectionTypes.toString(actual.zip(other), function(x) {
 			return x.toString();
 		}).areEqual('$name((1, 6), (2, 7), (3, 8), (4, 9))');
 	}
@@ -1154,7 +1148,7 @@ class CollectionsTestBase {
 
 	@Test
 	public function when_zipWithIndex__should_be_equal_to_nil() : Void {
-		actual.zipWithIndex().toString(function (tuple) {
+		CollectionTypes.toString(actual.zipWithIndex(), function (tuple) {
 			return tuple.toString();
 		}).areEqual('$name((1, 0), (2, 1), (3, 2), (4, 3), (5, 4))');
 	}
