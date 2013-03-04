@@ -5,7 +5,7 @@ import funk.types.Either;
 import funk.types.Function1;
 import funk.types.Predicate2;
 import haxe.ds.Option;
-import funk.types.extensions.Attempts;
+import funk.types.Attempt;
 import funk.types.extensions.Eithers;
 import funk.types.extensions.Options;
 
@@ -42,7 +42,7 @@ class Anys {
         } else if(Std.is(value, Option)) {
         	Options.toBool(cast value);
         } else if(Std.is(value, Attempt)) {
-        	Attempts.toBool(cast value);
+        	AttemptTypes.toBool(cast value);
         } else if(Std.is(value, Either)) {
         	Eithers.toBool(cast value);
         } else {

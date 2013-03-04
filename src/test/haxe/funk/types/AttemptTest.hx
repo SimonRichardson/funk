@@ -1,17 +1,11 @@
 package funk.types;
 
 import funk.Funk;
-import funk.types.Attempt;
-import funk.types.Attempt;
 import haxe.ds.Option;
-import funk.types.extensions.Attempts;
-import funk.types.extensions.Attempts;
-import funk.types.extensions.Options;
 import massive.munit.Assert;
 
-using funk.types.extensions.Attempts;
-using funk.types.extensions.Attempts;
 using funk.types.extensions.Options;
+using funk.types.Attempt;
 using massive.munit.Assert;
 
 class AttemptTest {
@@ -153,7 +147,7 @@ class AttemptTest {
 
 	@Test
 	public function should_calling_toOption_on_success_return_valid_Option() {
-		Success(1).toOption().areEqual(Some(Success(1)));
+		Success(1).toOption().areEqual(Some(1));
 	}
 
 	@Test
@@ -164,7 +158,7 @@ class AttemptTest {
 	@Test
 	public function should_calling_toOption_on_success_return_Some_value() {
 		var value = {};
-		Success(value).toOption().get().areEqual(Success(value));
+		Success(value).toOption().areEqual(Some(value));
 	}
 
 	@Test
