@@ -4,6 +4,7 @@ import funk.Funk;
 import funk.types.Function0;
 import funk.types.Function1;
 import haxe.ds.Option;
+import funk.types.extensions.EnumValues;
 import funk.types.extensions.Strings;
 
 using funk.collections.Collection;
@@ -22,34 +23,32 @@ class ListUtil {
 	}
 
 	public static function toList<T1, T2>(any : T1) : List<T2> {
-		return if (Std.is(any, List)) {
-			cast any;
-		} else {
-			var result = switch(Type.typeof(any)) {
-				case TObject:
-					if (Std.is(any, Array)) {
-						arrayToList(cast any);
-					} else if (Std.is(any, String)) {
-						stringToList(cast any);
-					} else {
-						anyToList(cast any);
-					}
-				case TClass(c):
-					if (c == Array) {
-						arrayToList(cast any);
-					} else if (c == String) {
-						stringToList(cast any);
-					} else {
-						anyToList(cast any);
-					}
-				default:
-					anyToList(cast any);
-			}
-			if (!Std.is(result, List)) {
-				throw "fuck a duck";
-			}
-			cast result;
+		var result = Nil;
+		switch(Type.typeof(any)) {
+			case TObject:
+				if (Std.is(any, Array)) {
+					result = arrayToList(cast any);
+				} else if (Std.is(any, String)) {
+					result = stringToList(cast any);
+				}
+			case TClass(c):
+				if (c == Array) {
+					result = arrayToList(cast any);
+				} else if (c == String) {
+					result = stringToList(cast any);
+				}
+			case TEnum(e):
+				if (e == ListType) {
+					result = cast any;
+				}
+			default:
 		}
+
+		if (result.isEmpty()) {
+			result = anyToList(cast any);
+		}
+
+		return cast result;
 	}
 
 	inline private static function anyToList<T>(any : T) : List<T> {

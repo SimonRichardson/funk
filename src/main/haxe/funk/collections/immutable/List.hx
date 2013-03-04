@@ -53,7 +53,8 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
     }
 
     @:to
-    inline public static function toFoldable<T>(list : List<T>) : Foldable<T> {
+    inline public function toFoldable<T>() : Foldable<T> {
+        var list : List<T> = this;
         var foldable : Foldable<T> = {
             foldLeft: function(value : T, func : Function2<T, T, T>) {
                 return ListTypes.foldLeft(list, value, func);
@@ -66,7 +67,8 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
     }
 
     @:to
-    inline public static function toReducible<T>(list : List<T>) : Reducible<T> {
+    inline public function toReducible<T>() : Reducible<T> {
+        var list : List<T> = this;
         var reducible : Reducible<T> = {
             reduceLeft: function(func : Function2<T, T, T>) {
                 return ListTypes.reduceLeft(list, func);
@@ -729,7 +731,7 @@ class ListTypes {
     }
 
     inline public static function iterator<T>(list : List<T>) : Iterator<T> {
-        return new ListInstanceImplIterator(list);
+        return iterable(list).iterator();
     }
 
     inline public static function toString<T>(list : List<T>, ?func : Function1<T, String>) : String {
@@ -739,10 +741,10 @@ class ListTypes {
                 var mapped : Collection<String> = CollectionTypes.map(collection(p), function(value) {
                     return Anys.toString(value, func);
                 });
-
-                'List(' + CollectionTypes.foldLeftWithIndex(mapped, '', function(a, b, index) {
-                    return (index < 1) ? b : a + ', ' + b;
-                }).get() + ')';
+                var folded : Option<String> = CollectionTypes.foldLeftWithIndex(mapped, '', function(a, b, index) {
+                    return index < 1 ? b : '$a, $b';
+                });
+                'List(${folded.get()})';
             case _: 'Nil';
         }
     }
@@ -763,20 +765,20 @@ private class ListInstanceImpl<T> {
         _knownSize = false;
     }
 
-    public function productArity() : Int {
-        return size();
-    }
-
-    public function productPrefix() : String {
-        return size() > 0 ? 'List' : 'Nil';
-    }
-
-    public function productElement(index : Int) : Option<T> {
-        return ListTypes.get(_list, index);
-    }
-
     public function iterator() : Iterator<T> {
-        return new ListInstanceImplIterator<T>(_list);
+        var list = _list;
+        return {
+            hasNext: function() return ListTypes.nonEmpty(list),
+            next: function() {
+                return if (ListTypes.nonEmpty(list)) {
+                    var value = ListTypes.head(list);
+                    list = ListTypes.tail(list);
+                    value;
+                } else {
+                    Funk.error(NoSuchElementError);
+                }
+            }
+        };
     }
 
     public function size() : Int {
@@ -790,27 +792,3 @@ private class ListInstanceImpl<T> {
         return _size;
     }
 }
-
-private class ListInstanceImplIterator<T> {
-
-    private var _list : List<T>;
-
-    public function new(list : List<T>) {
-        _list = list;
-    }
-
-    public function hasNext() : Bool {
-        return ListTypes.nonEmpty(_list);
-    }
-
-    public function next() : T {
-        return if (ListTypes.nonEmpty(_list)) {
-            var value = ListTypes.head(_list);
-            _list = ListTypes.tail(_list);
-            value;
-        } else {
-            Funk.error(NoSuchElementError);
-        }
-    }
-}
-

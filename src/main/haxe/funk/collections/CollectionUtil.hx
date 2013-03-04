@@ -5,8 +5,8 @@ import funk.Funk;
 import funk.collections.Collection;
 import funk.types.extensions.Strings;
 
-using Lambda;
 using funk.collections.immutable.List;
+using Lambda;
 
 class CollectionUtil {
 
@@ -15,7 +15,7 @@ class CollectionUtil {
 	inline private static var REFLECT_NAME : String = '__reflect__';
 
 	inline public static function zero<T>() : CollectionType<T> {
-		// TODO (Simon) : We could optimise this.
+		// TODO (Simon) : We could optimize this.
 		return toCollection([]);
 	}
 

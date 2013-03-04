@@ -2,9 +2,6 @@ package funk.types;
 
 import funk.types.Either;
 import haxe.ds.Option;
-import funk.types.extensions.Eithers;
-import funk.types.extensions.Options;
-import massive.munit.Assert;
 
 using funk.types.extensions.Eithers;
 using funk.types.extensions.Options;

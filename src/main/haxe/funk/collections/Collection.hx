@@ -35,7 +35,8 @@ abstract Collection<T>(CollectionType<T>) from CollectionType<T> to CollectionTy
     }
 
     @:to
-    inline public static function toFoldable<T>(collection : Collection<T>) : Foldable<T> {
+    inline public function toFoldable<T>() : Foldable<T> {
+        var collection : Collection<T> = this;
         var foldable : Foldable<T> = {
             foldLeft: function(value : T, func : Function2<T, T, T>) {
                 return CollectionTypes.foldLeft(collection, value, func);
@@ -48,7 +49,8 @@ abstract Collection<T>(CollectionType<T>) from CollectionType<T> to CollectionTy
     }
 
     @:to
-    inline public static function toReducible<T>(collection : Collection<T>) : Reducible<T> {
+    inline public function toReducible<T>() : Reducible<T> {
+        var collection : Collection<T> = this;
         var reducible : Reducible<T> = {
             reduceLeft: function(func : Function2<T, T, T>) {
                 return CollectionTypes.reduceLeft(collection, func);
@@ -196,7 +198,8 @@ class CollectionTypes {
         var col = collection;
         var mapped = [];
         for(item in col.iterator()) {
-            mapped = mapped.concat(func(item).iterator().toArray());
+            var iterator = func(item).iterator();
+            mapped = mapped.concat(iterator.toArray());
         }
         return CollectionUtil.toCollection(mapped);
     }
