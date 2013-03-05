@@ -1,13 +1,9 @@
 package funk.collections.immutable;
 
-import funk.types.Tuple2;
-import funk.types.extensions.Tuples2;
-import massive.munit.Assert;
-
 using massive.munit.Assert;
-using funk.collections.immutable.List;
 using funk.types.Option;
-using funk.types.extensions.Tuples2;
+using funk.types.Tuple2;
+using funk.collections.immutable.List;
 
 class ListTestBase {
 
@@ -159,7 +155,7 @@ class ListTestBase {
 
 	@Test
 	public function when_tailOption__should_be_Some_2_3_4() : Void {
-		actual.tailOption().toString(function(value : List<Int>) {
+		OptionTypes.toString(actual.tailOption(), function(value : List<Int>) {
 			return value.toString();
 		}).areEqual('Some($name(2, 3, 4, 5))');
 	}
@@ -753,9 +749,9 @@ class ListTestBase {
 
 	@Test
 	public function when_partition__should_return_a_Tuple2() : Void {
-		actual.partition(function(value) {
+		Tuple2Types.toString(actual.partition(function(value) {
 			return value % 2 == 0;
-		}).toString(function (x) {
+		}), function (x) {
 			return x.toString();
 		}, function (x) {
 			return x.toString();

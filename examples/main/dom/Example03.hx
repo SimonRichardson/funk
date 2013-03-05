@@ -13,7 +13,7 @@ import support.HtmlDivElement;
 using funk.collections.immutable.List;
 using funk.reactive.events.MouseEvents;
 using funk.reactive.extensions.Streams;
-using funk.types.extensions.Tuples2;
+using funk.types.Tuple2;
 using support.HtmlWildcards;
 
 class Example03 {

@@ -9,7 +9,7 @@ import funk.types.Wildcard;
 import support.HtmlDivElement;
 
 using funk.collections.immutable.List;
-using funk.types.extensions.Tuples2;
+using funk.types.Tuple2;
 using support.HtmlWildcards;
 
 class Example01 {

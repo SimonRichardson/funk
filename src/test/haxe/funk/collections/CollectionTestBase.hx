@@ -1,12 +1,10 @@
 package funk.collections;
 
-import funk.types.Tuple2;
-
-using funk.collections.Collection;
 using funk.types.Option;
-using funk.types.extensions.Tuples2;
+using funk.types.Tuple2;
 using massive.munit.Assert;
 using unit.Asserts;
+using funk.collections.Collection;
 
 class CollectionTestBase {
 
@@ -168,7 +166,7 @@ class CollectionTestBase {
 
 	@Test
 	public function when_tailOption__should_be_Some_2_3_4() : Void {
-		actual.tailOption().toString(function(value) {
+		OptionTypes.toString(actual.tailOption(), function(value) {
 			return value.toString();
 		}).areEqual('Some($name(2, 3, 4, 5))');
 	}
@@ -762,9 +760,9 @@ class CollectionTestBase {
 
 	@Test
 	public function when_partition__should_return_a_Tuple2() : Void {
-		actual.partition(function(value) {
+		Tuple2Types.toString(actual.partition(function(value) {
 			return value % 2 == 0;
-		}).toString(function (x) {
+		}), function (x) {
 			return x.toString();
 		}, function (x) {
 			return x.toString();

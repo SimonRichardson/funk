@@ -7,6 +7,9 @@ import funk.types.Predicate2;
 import funk.types.Option;
 import funk.types.Attempt;
 
+using funk.types.extensions.Reflects;
+
+// TODO (Simon) : Consider moving this to wildcard.
 class Anys {
 
 	public static function equals<T1, T2>(value0 : T1, value1 : T2, ?func : Predicate2<T1, T2>) : Bool {
@@ -49,6 +52,17 @@ class Anys {
 	}
 
 	public static function toString<T>(value : T, ?func : Function1<T, String>) : String {
-		return toBool(func) ? func(value) : Std.string(value);
+		return if(toBool(func)) {
+			func(value);
+		} else {
+			Std.string(value);
+			/**
+			if (value.hasMethod('toString')) {
+				value.callMethod('toString');
+			} else {
+				Std.string(value);
+			}
+			*/
+		}
 	}
 }

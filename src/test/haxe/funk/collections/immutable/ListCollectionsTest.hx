@@ -9,7 +9,8 @@ class ListCollectionsTest extends CollectionTestBase {
 
 	@Before
 	public function setup() : Void {
-		alpha = 'abcde'.toList().collection();
+		var list : List<String> = "abcde".toList();
+		alpha = list.collection();
 
 		actual = [1, 2, 3, 4, 5].toList().collection();
 		actualTotal = 5;

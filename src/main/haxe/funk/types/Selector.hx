@@ -1,15 +1,13 @@
 package funk.types;
 
 import funk.Funk;
-import funk.collections.immutable.Map;
 import funk.types.Function1;
-import funk.types.Tuple2;
 
 using funk.collections.immutable.List;
 using funk.collections.immutable.ListUtil;
 using funk.types.extensions.Anys;
 using funk.types.Option;
-using funk.types.extensions.Tuples2;
+using funk.types.Tuple2;
 
 class Selector {
 
@@ -68,13 +66,13 @@ enum Value {
 
 private class LexerPatterns {
 
-	public static var patterns : Map<String, Function1<String, Token>>;
+	public var patterns : List<Tuple2<String, Function1<String, Token>>>;
 
 	/**
 	 * Low level caching, so we don't have to generate these every time the lexer is invoked
 	 */
-	private static function __init__() {
-		var list = Nil;
+	public function new() {
+		var list : List<Tuple2<String, Function1<String, Token>>> = Nil;
 		list = list.prepend(tuple2("\\s*", function(value) {
 			return WhiteSpace;
 		}));
@@ -114,19 +112,19 @@ private class LexerPatterns {
 		list = list.prepend(tuple2("-?[1-9][0-9]*", function(value) {
 			return Const(Integer(Std.parseInt(value)));
 		}));
-		list = list.prepend(tuple2("\\.[a-zA-Z0-9\\-\\_]*", function(value){
+		list = list.prepend(tuple2("\\.[a-zA-Z0-9\\-\\_]*", function(value : String){
 			return Const(ClassName(value.substr(1)));
 		}));
-		list = list.prepend(tuple2("#[a-zA-Z0-9\\-\\_]*", function(value){
+		list = list.prepend(tuple2("#[a-zA-Z0-9\\-\\_]*", function(value : String){
 			return Const(Ident(value.substr(1)));
 		}));
-		list = list.prepend(tuple2(":[a-zA-Z0-9\\-\\_]*", function(value){
+		list = list.prepend(tuple2(":[a-zA-Z0-9\\-\\_]*", function(value : String){
 			return Const(Accessor(value.substr(1)));
 		}));
 		list = list.prepend(tuple2("[a-zA-Z0-9\\-\\_]*", function(value) {
 			return Const(Tag(value));
 		}));
-		list = list.prepend(tuple2("(\".*?\")|('.*?')", function(value) {
+		list = list.prepend(tuple2("(\".*?\")|('.*?')", function(value : String) {
 			return Const(Word(value.substr(1, value.length - 2)));
 		}));
 
@@ -140,9 +138,13 @@ private class Lexer {
 
 	private var _index : Int;
 
+	private var _patterns : LexerPatterns;
+
 	public function new(source : String) {
 		_index = 0;
 		_source = source;
+
+		_patterns = new LexerPatterns();
 	}
 
 	public function hasNext() : Bool {
@@ -154,7 +156,7 @@ private class Lexer {
 			var substr = _source.substr(_index++);
 
 			var token = None;
-			LexerPatterns.patterns.find(function(tuple) {
+			_patterns.patterns.find(function(tuple) {
 				var ereg = new EReg("^" + tuple._1(), "");
 				var result = false;
 				if(ereg.match(substr)) {
@@ -191,7 +193,7 @@ private class Parser {
 		var list = Nil;
 		while(_lexer.hasNext()) {
 			var expr = matchToken(next());
-			if (expr.toBool()) {
+			if (Anys.toBool(expr)) {
 				if (_bracket != 0) {
 					Funk.error(IllegalOperationError("Bracket mismatch; extra left ( found."));
 				}
@@ -212,7 +214,7 @@ private class Parser {
 	private function matchToken(opt : Option<Token>) : Expr {
 		var fold = function (value : Value) {
 			var token = if (hasNext()) matchToken(next()) else null;
-			return token.toBool() ? EPropBlock(value, token) : EProp(value);
+			return Anys.toBool(token) ? EPropBlock(value, token) : EProp(value);
 		};
 		var openBlock = function () {
 			_bracket++;
@@ -245,7 +247,6 @@ private class Parser {
 							case Word(value): fold(Word(value));
 						}
 					case Gt: fold(Child);
-					case Comma: null;
 					case LeftBracket: openBlock();
 					case RightBracket:
 						closeBlock();
@@ -254,13 +255,12 @@ private class Parser {
 						}
 					case Plus: fold(Next);
 					case Star: fold(All);
-					case SemiColon: null;
 					case Tilde: fold(Sibling);
 					case WhiteSpace: matchToken(next());
 					case Unknown: Funk.error(IllegalOperationError("Unknown token"));
-					case Eof: null;
+					case _: null;
 				}
-			case None: null;
+			case _: null;
 		}
 	}
 }

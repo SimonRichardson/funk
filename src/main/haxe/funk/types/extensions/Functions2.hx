@@ -4,10 +4,9 @@ import funk.Funk;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function2;
-import funk.types.Tuple2;
 
 using funk.types.Option;
-using funk.types.extensions.Tuples2;
+using funk.types.Tuple2;
 
 private typedef Curry2<T1, T2, R> = Function1<T1, Function1<T2, R>>;
 

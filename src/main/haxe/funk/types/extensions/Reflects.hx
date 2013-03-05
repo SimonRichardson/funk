@@ -23,6 +23,10 @@ class Reflects {
 		return Type.getInstanceFields(value).indexOf(methodName) >= 0;
 	}
 
+    public static function callMethod<T, R>(value : T, methodName : String, ?args : Array<Dynamic> = null) : R {
+        return Reflect.callMethod(value, Reflect.field(value, methodName), Anys.toBool(args) ? args : []);
+    }
+
 	public static function createEmptyInstance<T>(type : Class<T>) : T {
 		return createInstance(type, []);
 	}

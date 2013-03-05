@@ -24,6 +24,7 @@ class ListUtil {
 
 	public static function toList<T1, T2>(any : T1) : List<T2> {
 		var result = Nil;
+
 		switch(Type.typeof(any)) {
 			case TObject:
 				if (Std.is(any, Array)) {
@@ -31,17 +32,17 @@ class ListUtil {
 				} else if (Std.is(any, String)) {
 					result = stringToList(cast any);
 				}
+			case TEnum(e):
+				if (e == ListType) {
+					result = cast any;
+				}
 			case TClass(c):
 				if (c == Array) {
 					result = arrayToList(cast any);
 				} else if (c == String) {
 					result = stringToList(cast any);
 				}
-			case TEnum(e):
-				if (e == ListType) {
-					result = cast any;
-				}
-			default:
+			case _:
 		}
 
 		if (result.isEmpty()) {
@@ -51,11 +52,11 @@ class ListUtil {
 		return cast result;
 	}
 
-	inline private static function anyToList<T>(any : T) : List<T> {
+	private static function anyToList<T>(any : T) : List<T> {
 		return Nil.append(any);
 	}
 
-	inline private static function arrayToList<T>(array : Array<T>) : List<T> {
+	private static function arrayToList<T>(array : Array<T>) : List<T> {
 		var list = Nil;
 
 		for (item in array) {
@@ -65,11 +66,13 @@ class ListUtil {
 		return list;
 	}
 
-	inline private static function stringToList<T>(string : String) : List<String> {
-		var list = Nil;
+	private static function stringToList<T>(string : String) : List<String> {
+		var list : List<String> = Nil;
 
 		for (item in Strings.iterator(string)) {
-			list = list.append(item);
+			var string : String = item;
+			
+			list = list.append(string);
 		}
 
 		return list;

@@ -1,9 +1,7 @@
 package funk.types;
 
-import funk.types.Wildcard;
-
 using funk.collections.immutable.List;
-using funk.types.extensions.Wildcards;
+using funk.types.Wildcard;
 using massive.munit.Assert;
 
 class WildcardTest {

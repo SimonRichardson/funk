@@ -13,7 +13,7 @@ class Lazys {
 		return function() {	
 			return switch(value) {
 				case Some(value): value;
-				case None:
+				case _:
 					value = Some(func());
 					value.get();
 			};

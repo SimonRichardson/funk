@@ -10,7 +10,7 @@ import support.CanvasPainter;
 import support.Layer;
 
 using funk.collections.immutable.List;
-using funk.types.extensions.Tuples2;
+using funk.types.Tuple2;
 using support.HtmlWildcards;
 
 class Example03 {

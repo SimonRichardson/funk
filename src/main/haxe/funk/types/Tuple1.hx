@@ -1,8 +1,6 @@
 package funk.types;
 
-import funk.Funk;
 import funk.types.extensions.Anys;
-import funk.types.Predicate2;
 
 enum Tuple1Type<T1> {
 	tuple1(t1 : T1);

@@ -1,10 +1,9 @@
 package funk.types;
 
 import funk.types.Predicate2;
-import funk.types.Tuple4;
 
-using funk.types.extensions.Tuples4;
 using funk.types.Option;
+using funk.types.Tuple4;
 using massive.munit.Assert;
 
 class Tuple4Test {

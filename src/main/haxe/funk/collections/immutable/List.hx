@@ -3,7 +3,6 @@ package funk.collections.immutable;
 import funk.Funk;
 import funk.collections.Collection;
 import funk.collections.immutable.List;
-import funk.collections.immutable.Map;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Option;
@@ -341,7 +340,7 @@ class ListTypes {
             None;
         } else {
 
-            var result = None;
+            var result : Option<T> = None;
             while (nonEmpty(p)) {
                 if (index == 0) {
                     result = headOption(p);
@@ -512,7 +511,7 @@ class ListTypes {
         return reverse(stack);
     }
 
-    inline public static function zip<T1, T2>(list : List<T1>, other : List<T2>) : Map<T1, T2> {
+    inline public static function zip<T1, T2>(list : List<T1>, other : List<T2>) : List<Tuple2<T1, T2>> {
         var p = list;
         var amount = Std.int(Math.min(size(p), size(other)));
 
@@ -522,7 +521,8 @@ class ListTypes {
 
             var stack = Nil;
             for (i in 0...amount) {
-                stack = prepend(stack, tuple2(head(p), head(other)));
+                var tuple : Tuple2<T1, T2> = tuple2(head(p), head(other));
+                stack = prepend(stack, tuple);
                 p = tail(p);
                 other = tail(other);
             }
@@ -530,7 +530,6 @@ class ListTypes {
             reverse(stack);
         }
     }
-
 
     inline public static function append<T>(list : List<T>, item : T) : List<T> {
         var p = list;
@@ -597,14 +596,14 @@ class ListTypes {
 
     inline public static function headOption<T>(list : List<T>) : Option<T> {
         var p = list;
-        return if (null == p) {
-            None;
-        } else {
-            switch(p) {
+        var result : Option<T> = None;
+        if (p != null) {
+            result = switch(p) {
                 case Cons(head, _): Some(head);
                 case _: None;
             }
         }
+        return result;
     }
 
     inline public static function tail<T>(list : List<T>) : List<T> {
@@ -632,18 +631,15 @@ class ListTypes {
     }
 
     inline public static function reverse<T>(list : List<T>) : List<T> {
-        var p = list;
-        var stack = Nil;
-        var valid = true;
-        while(valid) {
-            switch(p) {
-                case Nil: valid = false;
-                case Cons(head, tail):
-                    stack = Cons(head, stack);
-                    p = tail;
+        // Note (Simon) : We do it this way because as3 gets very confused about using.
+        function recursive(p, stack) {
+            return switch(p) {
+                case Cons(head, tail): recursive(tail, Cons(head, stack));
+                case _: stack;
             }
         }
-        return stack;
+
+        return recursive(list, Nil);
     }
 
     inline public static function size<T>(list : List<T>) : Int {
@@ -693,7 +689,9 @@ class ListTypes {
         for (i in 0...amount) {
             var h = head(p);
             p = tail(p);
-            stack = prepend(stack, tuple2(h, i));
+
+            var tuple : Tuple2<T, Int> = tuple2(h, i);
+            stack = prepend(stack, tuple);
         }
 
         return reverse(stack);

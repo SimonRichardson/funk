@@ -1,15 +1,10 @@
 package funk.types;
 
-import Type;
 import funk.types.Function0;
-import funk.types.Tuple5;
-import funk.types.extensions.Functions5;
-import funk.types.extensions.Tuples5;
-import massive.munit.Assert;
 
 using Type;
 using funk.types.extensions.Functions5;
-using funk.types.extensions.Tuples5;
+using funk.types.Tuple5;
 using massive.munit.Assert;
 
 class Function5Test {

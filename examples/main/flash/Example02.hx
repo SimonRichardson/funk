@@ -11,7 +11,7 @@ import funk.types.Pass;
 import funk.types.Wildcard;
 
 using funk.collections.immutable.List;
-using funk.types.extensions.Tuples2;
+using funk.types.Tuple2;
 
 class Example02 extends Sprite {
 

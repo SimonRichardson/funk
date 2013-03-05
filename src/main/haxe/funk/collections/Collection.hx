@@ -398,7 +398,11 @@ class CollectionTypes {
                 right.push(i);
             }
         }
-        return tuple2(CollectionUtil.toCollection(left), CollectionUtil.toCollection(right));
+
+        var leftCol : Collection<T> = CollectionUtil.toCollection(left);
+        var rightCol : Collection<T> = CollectionUtil.toCollection(right);
+
+        return tuple2(leftCol, rightCol);
     }
 
     inline public static function reduceLeft<T>(collection : Collection<T>, func : Function2<T, T, T>) : Option<T> {

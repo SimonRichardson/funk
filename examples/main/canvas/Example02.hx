@@ -12,7 +12,7 @@ import support.Layer;
 import support.CanvasContext;
 
 using funk.collections.immutable.List;
-using funk.types.extensions.Tuples2;
+using funk.types.Tuple2;
 using support.HtmlWildcards;
 
 class Example02 {
