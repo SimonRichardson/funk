@@ -6,18 +6,16 @@ import funk.collections.immutable.List;
 import funk.collections.immutable.Map;
 import funk.types.Function1;
 import funk.types.Function2;
-import haxe.ds.Option;
+import funk.types.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.extensions.Anys;
-import funk.types.extensions.Iterators;
-import funk.types.extensions.Options;
 
 using funk.types.Foldable;
 using funk.types.Reducible;
 using funk.types.extensions.Iterators;
-using funk.types.extensions.Options;
+using funk.types.Option;
 
 enum ListType<T> {
 	Nil;

@@ -1,6 +1,6 @@
 package funk.types;
 
-using haxe.ds.Option;
+using funk.types.Option;
 
 typedef ReducibleType<T> = {
     function reduceLeft(func : Function2<T, T, T>) : Option<T>;

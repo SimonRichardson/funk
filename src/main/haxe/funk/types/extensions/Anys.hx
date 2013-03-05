@@ -4,10 +4,8 @@ import funk.types.Attempt;
 import funk.types.Either;
 import funk.types.Function1;
 import funk.types.Predicate2;
-import haxe.ds.Option;
+import funk.types.Option;
 import funk.types.Attempt;
-import funk.types.extensions.Eithers;
-import funk.types.extensions.Options;
 
 class Anys {
 
@@ -40,11 +38,11 @@ class Anys {
         } else if(Std.is(value, String)) {
             Strings.isNonEmpty(cast value);
         } else if(Std.is(value, Option)) {
-        	Options.toBool(cast value);
+        	OptionTypes.toBool(cast value);
         } else if(Std.is(value, Attempt)) {
         	AttemptTypes.toBool(cast value);
         } else if(Std.is(value, Either)) {
-        	Eithers.toBool(cast value);
+        	EitherTypes.toBool(cast value);
         } else {
 			true;
 		}

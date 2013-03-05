@@ -1,13 +1,9 @@
 package funk.types;
 
 import funk.types.Tuple2;
-import haxe.ds.Option;
-import funk.types.extensions.Tuples2;
-import funk.types.extensions.Options;
-import massive.munit.Assert;
 
 using funk.types.extensions.Tuples2;
-using funk.types.extensions.Options;
+using funk.types.Option;
 using massive.munit.Assert;
 
 class Tuple2Test {

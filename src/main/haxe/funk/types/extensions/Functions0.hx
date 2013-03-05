@@ -3,9 +3,8 @@ package funk.types.extensions;
 import funk.Funk;
 import funk.types.Function0;
 import funk.types.Function1;
-import haxe.ds.Option;
 
-using funk.types.extensions.Options;
+using funk.types.Option;
 
 class Functions0 {
 

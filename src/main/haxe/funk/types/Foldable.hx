@@ -1,6 +1,6 @@
 package funk.types;
 
-using haxe.ds.Option;
+using funk.types.Option;
 
 typedef FoldableType<T> = {
     function foldLeft(value : T, func : Function2<T, T, T>) : Option<T>;

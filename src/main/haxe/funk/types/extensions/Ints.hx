@@ -41,25 +41,4 @@ class Ints {
 		};
 		return iterator;
 	}
-
-	public static function lazyRange(start : Int, end : Int) : Function0<Iterator<Function0<Int>>> {
-		var assending = start >= end;
-		return function () {
-			var iterator = {
-				hasNext: function() {
-					return assending ? start < end : start > end;
-				},
-				next: null
-			};
-			iterator.next = function() {
-				return function() {
-					if (!iterator.hasNext()) {
-						throw Errors.NoSuchElementError;
-					}
-					return assending ? start++ : start--;
-				}
-			};
-			return iterator;
-		};
-	}
 }

@@ -2,13 +2,9 @@ package funk.types;
 
 import funk.types.Predicate2;
 import funk.types.Tuple4;
-import haxe.ds.Option;
-import funk.types.extensions.Tuples4;
-import funk.types.extensions.Options;
-import massive.munit.Assert;
 
 using funk.types.extensions.Tuples4;
-using funk.types.extensions.Options;
+using funk.types.Option;
 using massive.munit.Assert;
 
 class Tuple4Test {

@@ -58,28 +58,4 @@ class Floats {
 		};
 		return iterator;
 	}
-
-	public static function lazyRange(	start : Float,
-										end : Float,
-										?step : Null<Float> = 1.0
-										) : Function0<Iterator<Function0<Float>>> {
-		var assending = start >= end;
-		return function () {
-			var iterator = {
-				hasNext: function() {
-					return assending ? start < end : start > end;
-				},
-				next: null
-			};
-			iterator.next = function() {
-				return function() {
-					if (!iterator.hasNext()) {
-						throw Errors.NoSuchElementError;
-					}
-					return assending ? start += step : start -= step;
-				}
-			};
-			return iterator;
-		};
-	}
 }

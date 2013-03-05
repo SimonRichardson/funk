@@ -3,13 +3,12 @@ package funk.types;
 import funk.Funk;
 import funk.collections.immutable.Map;
 import funk.types.Function1;
-import haxe.ds.Option;
 import funk.types.Tuple2;
 
 using funk.collections.immutable.List;
 using funk.collections.immutable.ListUtil;
 using funk.types.extensions.Anys;
-using funk.types.extensions.Options;
+using funk.types.Option;
 using funk.types.extensions.Tuples2;
 
 class Selector {

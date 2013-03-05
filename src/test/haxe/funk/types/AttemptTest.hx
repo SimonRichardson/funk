@@ -1,10 +1,9 @@
 package funk.types;
 
 import funk.Funk;
-import haxe.ds.Option;
 import massive.munit.Assert;
 
-using funk.types.extensions.Options;
+using funk.types.Option;
 using funk.types.Attempt;
 using massive.munit.Assert;
 

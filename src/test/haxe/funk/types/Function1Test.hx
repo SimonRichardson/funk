@@ -2,14 +2,10 @@ package funk.types;
 
 import Type;
 import funk.types.Function0;
-import funk.types.Tuple1;
-import funk.types.extensions.Functions1;
-import funk.types.extensions.Tuples1;
-import massive.munit.Assert;
 
 using Type;
 using funk.types.extensions.Functions1;
-using funk.types.extensions.Tuples1;
+using funk.types.Tuple1;
 using massive.munit.Assert;
 
 class Function1Test {

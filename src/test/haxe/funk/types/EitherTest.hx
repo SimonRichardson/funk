@@ -1,10 +1,7 @@
 package funk.types;
 
-import funk.types.Either;
-import haxe.ds.Option;
-
-using funk.types.extensions.Eithers;
-using funk.types.extensions.Options;
+using funk.types.Option;
+using funk.types.Either;
 using massive.munit.Assert;
 
 class EitherTest {

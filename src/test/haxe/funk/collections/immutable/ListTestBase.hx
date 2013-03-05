@@ -1,14 +1,12 @@
 package funk.collections.immutable;
 
-import haxe.ds.Option;
 import funk.types.Tuple2;
-import funk.types.extensions.Options;
 import funk.types.extensions.Tuples2;
 import massive.munit.Assert;
 
 using massive.munit.Assert;
 using funk.collections.immutable.List;
-using funk.types.extensions.Options;
+using funk.types.Option;
 using funk.types.extensions.Tuples2;
 
 class ListTestBase {

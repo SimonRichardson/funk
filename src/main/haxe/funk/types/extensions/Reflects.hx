@@ -1,7 +1,7 @@
 package funk.types.extensions;
 
 import funk.Funk;
-import haxe.ds.Option;
+import funk.types.Option;
 
 using Lambda;
 

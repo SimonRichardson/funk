@@ -2,14 +2,14 @@ package funk.types;
 
 import funk.Funk;
 import funk.types.Attempt;
+import funk.types.Either;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Predicate2;
-import haxe.ds.Option;
 import funk.types.extensions.Anys;
 
 using funk.types.extensions.Bools;
-using funk.types.extensions.Options;
+using funk.types.Option;
 
 enum AttemptType<T> {
     Success(value : T);
@@ -20,6 +20,11 @@ abstract Attempt<T>(AttemptType<T>) from AttemptType<T> to AttemptType<T> {
 
     inline function new(attempt : AttemptType<T>) {
         this = attempt;
+    }
+
+    @:from
+    inline public static function fromValue<T>(value : T) : Attempt<T> {
+        return AttemptTypes.toAttempt(value);
     }
 
     @:to
@@ -48,14 +53,14 @@ class AttemptTypes {
 
     public static function success<T>(attempt : Attempt<T>) : Option<T> {
         return switch(attempt) {
-            case Success(value): Options.toOption(value);
+            case Success(value): OptionTypes.toOption(value);
             case _: None;
         }
     }
 
     public static function failure<T>(attempt : Attempt<T>) : Option<Errors> {
         return switch(attempt) {
-            case Failure(value): Options.toOption(value);
+            case Failure(value): OptionTypes.toOption(value);
             case _: None;
         }
     }

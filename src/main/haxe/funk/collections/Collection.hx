@@ -6,7 +6,6 @@ import funk.types.Function3;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
 import funk.types.Tuple2;
-import haxe.ds.Option;
 
 using funk.collections.Collection.CollectionTypes;
 using funk.collections.CollectionUtil;
@@ -14,7 +13,7 @@ using funk.types.Foldable;
 using funk.types.Reducible;
 using funk.types.extensions.Anys;
 using funk.types.extensions.Iterators;
-using funk.types.extensions.Options;
+using funk.types.Option;
 
 typedef CollectionType<T> = {> Iterable<T>,
 	function size() : Int;

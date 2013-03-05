@@ -1,13 +1,7 @@
 package funk.types;
 
-import funk.types.Either;
-import haxe.ds.Option;
-import funk.types.extensions.Eithers;
-import funk.types.extensions.Options;
-import massive.munit.Assert;
-
-using funk.types.extensions.Eithers;
-using funk.types.extensions.Options;
+using funk.types.Either;
+using funk.types.Option;
 using massive.munit.Assert;
 
 class OptionTest {
@@ -133,19 +127,19 @@ class OptionTest {
 
     @Test
     public function when_toEither_on_None_should_return_Either() {
-        Options.toEither(None, function(){
+        OptionTypes.toEither(None, function(){
             return false;
         }).areEqual(Left(false));
     }
 
     @Test
     public function when_toOption_on_null_should_return_Option() {
-        Options.toOption(null).areEqual(None);
+        OptionTypes.toOption(null).areEqual(None);
     }
 
     @Test
     public function when_toOption_on_null_should_return_None() {
-        Options.toOption(null).isEmpty().isTrue();
+        OptionTypes.toOption(null).isEmpty().isTrue();
     }
 
     @Test
@@ -261,12 +255,14 @@ class OptionTest {
     @Test
     public function should_calling_flatten_on_Some_return_Some_with_instance() {
         var value = {};
-        Some(Some(value)).flatten().areEqual(Some(value));
+        var option0 : Option<Dynamic> = Some(value);
+        Some(option0).flatten().areEqual(Some(value));
     }
 
     @Test
     public function should_calling_flatten_on_Some_return_None() {
-        Some(None).flatten().areEqual(None);
+        var option0 : Option<Dynamic> = None;
+        Some(option0).flatten().areEqual(None);
     }
 
     @Test
@@ -443,28 +439,18 @@ class OptionTest {
 
     @Test
     public function when_toEither_on_Some_should_return_Either() {
-        Options.toEither(Some(true), function(){
+        OptionTypes.toEither(Some(true), function(){
             return false;
         }).areEqual(Right(true));
     }
 
     @Test
     public function when_toOption_on_true_should_return_Option() {
-        Options.toOption(true).areEqual(Some(true));
+        OptionTypes.toOption(true).areEqual(Some(true));
     }
 
     @Test
     public function when_toOption_on_true_should_return_Some() {
-        Options.toOption(true).isDefined().isTrue();
-    }
-
-    @Test
-    public function when_pure_on_null_should_return_Some() {
-        Options.pure(null).areEqual(Some(null));
-    }
-
-    @Test
-    public function when_pure_on_true_should_return_Some() {
-        Options.pure(true).areEqual(Some(true));
+        OptionTypes.toOption(true).isDefined().isTrue();
     }
 }

@@ -1,6 +1,6 @@
 package funk.types;
 
-using haxe.ds.Option;
+using funk.types.Option;
 using funk.types.Foldable;
 using massive.munit.Assert;
 

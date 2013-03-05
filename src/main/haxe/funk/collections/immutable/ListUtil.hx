@@ -3,7 +3,7 @@ package funk.collections.immutable;
 import funk.Funk;
 import funk.types.Function0;
 import funk.types.Function1;
-import haxe.ds.Option;
+import funk.types.Option;
 import funk.types.extensions.EnumValues;
 import funk.types.extensions.Strings;
 

@@ -1,6 +1,6 @@
 package funk.types;
 
-import haxe.ds.Option;
+import funk.types.Option;
 
 typedef Product<T> = {> Iterable<T>,
 

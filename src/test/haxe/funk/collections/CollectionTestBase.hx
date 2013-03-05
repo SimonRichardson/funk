@@ -1,10 +1,9 @@
 package funk.collections;
 
-import haxe.ds.Option;
 import funk.types.Tuple2;
 
 using funk.collections.Collection;
-using funk.types.extensions.Options;
+using funk.types.Option;
 using funk.types.extensions.Tuples2;
 using massive.munit.Assert;
 using unit.Asserts;

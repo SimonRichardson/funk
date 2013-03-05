@@ -5,9 +5,8 @@ import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function4;
 import funk.types.Tuple4;
-import haxe.ds.Option;
 
-using funk.types.extensions.Options;
+using funk.types.Option;
 using funk.types.extensions.Tuples4;
 
 private typedef Curry4<T1, T2, T3, T4, R> = Function1<T1, Function1<T2, Function1<T3, Function1<T4, R>>>>;
