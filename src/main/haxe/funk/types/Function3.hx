@@ -5,17 +5,7 @@ using funk.types.Function1;
 using funk.types.Option;
 using funk.types.Tuple3;
 
-typedef Function3Type<T1, T2, T3, R> = T1 -> T2 -> T3 -> R;
-
-abstract Function3<T1, T2, T3, R>(Function3Type<T1, T2, T3, R>)
-                                                        from Function3Type<T1, T2, T3, R>
-                                                        to Function3Type<T1, T2, T3, R>
-                                                        {
-
-    inline function new(function : Function3Type<T1, T2, T3, R>) {
-        this = function;
-    }
-}
+typedef Function3<T1, T2, T3, R> = T1 -> T2 -> T3 -> R;
 
 private typedef Curry3<T1, T2, T3, R> = Function1<T1, Function1<T2, Function1<T3, R>>>;
 
@@ -73,7 +63,7 @@ class Function3Types {
 
     public static function untuple<T1, T2, T3, R>(  func : Function3<T1, T2, T3, R>
                                                     ) : Function1<Tuple3<T1, T2, T3>, R> {
-        return function(tuple) {
+        return function(tuple : Tuple3<T1, T2, T3>) {
             return func(tuple._1(), tuple._2(), tuple._3());
         };
     }

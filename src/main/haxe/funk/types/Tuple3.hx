@@ -12,6 +12,18 @@ abstract Tuple3<T1, T2, T3>(Tuple3Type<T1, T2, T3>) from Tuple3Type<T1, T2, T3> 
 		this = tuple;
 	}
 
+	inline public function _1() : T1 {
+		return Tuple3Types._1(this);
+	}
+
+	inline public function _2() : T2 {
+		return Tuple3Types._2(this);
+	}
+
+	inline public function _3() : T3 {
+		return Tuple3Types._3(this);
+	}
+
 	@:to
 	inline public static function toString<T1, T2, T3>(tuple : Tuple3Type<T1, T2, T3>) : String {
 		return Tuple3Types.toString(tuple);

@@ -5,17 +5,7 @@ using funk.types.Function1;
 using funk.types.Option;
 using funk.types.Tuple4;
 
-typedef Function4Type<T1, T2, T3, T4, R> = T1 -> T2 -> T3 -> T4 -> R;
-
-abstract Function4<T1, T2, T3, T4, R>(Function4Type<T1, T2, T3, T4, R>)
-                                                        from Function4Type<T1, T2, T3, T4, R>
-                                                        to Function4Type<T1, T2, T3, T4, R>
-                                                        {
-
-    inline function new(function : Function4Type<T1, T2, T3, T4, R>) {
-        this = function;
-    }
-}
+typedef Function4<T1, T2, T3, T4, R> = T1 -> T2 -> T3 -> T4 -> R;
 
 private typedef Curry4<T1, T2, T3, T4, R> = Function1<T1, Function1<T2, Function1<T3, Function1<T4, R>>>>;
 
@@ -89,7 +79,7 @@ class Function4Types {
 
     public static function untuple<T1, T2, T3, T4, R>(  func : Function4<T1, T2, T3, T4, R>
                                                         ) : Function1<Tuple4<T1, T2, T3, T4>, R> {
-        return function(tuple) {
+        return function(tuple : Tuple4<T1, T2, T3, T4>) {
             return func(tuple._1(), tuple._2(), tuple._3(), tuple._4());
         };
     }

@@ -1,12 +1,7 @@
 package funk.types;
 
-import Type;
-import funk.types.Function0;
-import funk.types.extensions.Functions0;
-import massive.munit.Assert;
-
 using Type;
-using funk.types.extensions.Functions0;
+using funk.types.Function0;
 using massive.munit.Assert;
 
 class Function0Test {
@@ -45,14 +40,11 @@ class Function0Test {
 	public function when_calling_flatMap__should_call_function() : Void {
 		var a = function() { return false; };
 
-		/**
-		 * FIXME (Simon) : This is broken in the latest release of haxe.
 		a.flatMap(function(value) {
 			return function() {
 				return !value;
 			};
 		})();
-		*/
 	}
 
 	@Test

@@ -12,6 +12,10 @@ abstract Tuple1<T1>(Tuple1Type<T1>) from Tuple1Type<T1> to Tuple1Type<T1> {
 		this = tuple;
 	}
 
+	inline public function _1() : T1 {
+		return Tuple1Types._1(this);
+	}
+
 	@:to
 	inline public static function toString<T1>(tuple : Tuple1Type<T1>) : String {
 		return Tuple1Types.toString(tuple);

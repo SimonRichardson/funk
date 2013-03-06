@@ -14,7 +14,7 @@ class Anys {
 
 	public static function equals<T1, T2>(value0 : T1, value1 : T2, ?func : Predicate2<T1, T2>) : Bool {
 		if (func == null) {
-			func = function (a, b) {
+			func = function(a, b) {
 				var type0 = Type.typeof(a);
 				var type1 = Type.typeof(b);
 				if (Type.enumEq(type0, type1)) {

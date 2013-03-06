@@ -4,14 +4,7 @@ using funk.types.Function0;
 using funk.types.Option;
 using funk.types.Tuple1;
 
-typedef Function1Type<T1, R> = T1 -> R;
-
-abstract Function1<T1, R>(Function1Type<T1, R>) from Function1Type<T1, R> to Function1Type<T1, R> {
-
-    inline function new(function : Function1Type<T1, R>) {
-        this = function;
-    }
-}
+typedef Function1<T1, R> = T1 -> R;
 
 class Function1Types {
 
@@ -44,7 +37,7 @@ class Function1Types {
     }
 
     public static function untuple<T1, R>(func : Function1<T1, R>) : Function1<Tuple1<T1>, R> {
-        return function(tuple) {
+        return function(tuple : Tuple1<T1>) {
             return func(tuple._1());
         };
     }

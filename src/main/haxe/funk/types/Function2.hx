@@ -5,14 +5,7 @@ using funk.types.Function1;
 using funk.types.Option;
 using funk.types.Tuple2;
 
-typedef Function2Type<T1, T2, R> = T1 -> T2 -> R;
-
-abstract Function2<T1, T2, R>(Function2Type<T1, T2, R>) from Function2Type<T1, T2, R> to Function2Type<T1, T2, R> {
-
-    inline function new(function : Function2Type<T1, T2, R>) {
-        this = function;
-    }
-}
+typedef Function2<T1, T2, R> = T1 -> T2 -> R;
 
 private typedef Curry2<T1, T2, R> = Function1<T1, Function1<T2, R>>;
 
@@ -31,7 +24,7 @@ class Function2Types {
     }
 
     public static function flip<T1, T2, R>(func : Function2<T1, T2, R>) : Function2<T2, T1, R> {
-        return function (value2, value1) {
+        return function(value2, value1) {
             return func(value1, value2);
         };
     }
@@ -67,7 +60,7 @@ class Function2Types {
     }
 
     public static function untuple<T1, T2, R>(func : Function2<T1, T2, R>) : Function1<Tuple2<T1, T2>, R> {
-        return function(tuple) {
+        return function(tuple : Tuple2<T1, T2>) {
             return func(tuple._1(), tuple._2());
         };
     }

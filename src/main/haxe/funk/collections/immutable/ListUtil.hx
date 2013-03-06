@@ -12,8 +12,8 @@ using funk.collections.immutable.List;
 
 class ListUtil {
 
-	public static function fill<T>(amount : Int) : Function1<Void -> T, List<T>> {
-		return function (func : Void -> T) : List<T> {
+	public static function fill<T>(amount : Int) : Function1<Function0<T>, List<T>> {
+		return function (func : Function0<T>) : List<T> {
 			var list = Nil;
 			while(--amount > -1) {
 				list = list.prepend(func());

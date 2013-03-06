@@ -605,7 +605,7 @@ class ListTestBase {
 
 	@Test
 	public function when_foldLeft__should_foldLeft_should_return_abcde() : Void {
-		alpha.foldLeft('', function (a, b) {
+		alpha.foldLeft('', function(a, b) {
 			return a + b;
 		}).areEqual(Some('abcde'));
 	}

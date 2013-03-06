@@ -1,10 +1,7 @@
 package funk.types;
 
-import Type;
-import funk.types.Function0;
-
 using Type;
-using funk.types.extensions.Functions1;
+using funk.types.Function1;
 using funk.types.Tuple1;
 using massive.munit.Assert;
 
@@ -59,17 +56,14 @@ class Function1Test {
 
 	@xTest
 	public function when_calling_uncurry__should_call_function() : Void {
-		/**
-		 * FIXME (Simon) : This is broken in the latest release of haxe.
 		var called = false;
 		var a = function(value) {
 			return function () {
 				called = true;
 				return value;
 			}
-		}.uncurry();
+		}.uncurry()(1);
 		called.isTrue();
-		*/
 	}
 
 	@Test

@@ -3,14 +3,7 @@ package funk.types;
 using funk.types.Function1;
 using funk.types.Option;
 
-typedef Function0Type<R> = Void -> R;
-
-abstract Function0<R>(Function0Type<R>) from Function0Type<R> to Function0Type<R> {
-
-    inline function new(function : Function0Type<R>) {
-        this = function;
-    }
-}
+typedef Function0<R> = Void -> R;
 
 class Function0Types {
 

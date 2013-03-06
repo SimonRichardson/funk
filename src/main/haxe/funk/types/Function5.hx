@@ -5,17 +5,7 @@ using funk.types.Function1;
 using funk.types.Option;
 using funk.types.Tuple5;
 
-typedef Function5Type<T1, T2, T3, T4, T5, R> = T1 -> T2 -> T3 -> T4 -> T5 -> R;
-
-abstract Function5<T1, T2, T3, T4, T5, R>(Function5Type<T1, T2, T3, T4, T5, R>)
-                                                        from Function5Type<T1, T2, T3, T4, T5, R>
-                                                        to Function5Type<T1, T2, T3, T4, T5, R>
-                                                        {
-
-    inline function new(function : Function5Type<T1, T2, T3, T4, T5, R>) {
-        this = function;
-    }
-}
+typedef Function5<T1, T2, T3, T4, T5, R> = T1 -> T2 -> T3 -> T4 -> T5 -> R;
 
 private typedef Curry5<T1, T2, T3, T4, T5, R> = Function1<T1, Function1<T2, Function1<T3, Function1<T4, Function1<T5, R>>>>>;
 
@@ -101,7 +91,7 @@ class Function5Types {
 
     public static function untuple<T1, T2, T3, T4, T5, R>(  func : Function5<T1, T2, T3, T4, T5, R>
                                                             ) : Function1<Tuple5<T1, T2, T3, T4, T5>, R> {
-        return function(tuple) {
+        return function(tuple : Tuple5<T1, T2, T3, T4, T5>) {
             return func(tuple._1(), tuple._2(), tuple._3(), tuple._4(), tuple._5());
         };
     }

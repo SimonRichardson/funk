@@ -15,6 +15,22 @@ abstract Tuple4<T1, T2, T3, T4>(Tuple4Type<T1, T2, T3, T4>)
 		this = tuple;
 	}
 
+	inline public function _1() : T1 {
+		return Tuple4Types._1(this);
+	}
+
+	inline public function _2() : T2 {
+		return Tuple4Types._2(this);
+	}
+
+	inline public function _3() : T3 {
+		return Tuple4Types._3(this);
+	}
+
+	inline public function _4() : T4 {
+		return Tuple4Types._4(this);
+	}
+
 	@:to
 	inline public static function toString<T1, T2, T3, T4>(tuple : Tuple4Type<T1, T2, T3, T4>) : String {
 		return Tuple4Types.toString(tuple);

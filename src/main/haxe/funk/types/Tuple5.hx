@@ -15,6 +15,26 @@ abstract Tuple5<T1, T2, T3, T4, T5>(Tuple5Type<T1, T2, T3, T4, T5>)
 		this = tuple;
 	}
 
+	inline public function _1() : T1 {
+		return Tuple5Types._1(this);
+	}
+
+	inline public function _2() : T2 {
+		return Tuple5Types._2(this);
+	}
+
+	inline public function _3() : T3 {
+		return Tuple5Types._3(this);
+	}
+
+	inline public function _4() : T4 {
+		return Tuple5Types._4(this);
+	}
+
+	inline public function _5() : T5 {
+		return Tuple5Types._5(this);
+	}
+
 	@:to
 	inline public static function toString<T1, T2, T3, T4, T5>(tuple : Tuple5Type<T1, T2, T3, T4, T5>) : String {
 		return Tuple5Types.toString(tuple);
