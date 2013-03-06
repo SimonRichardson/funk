@@ -1,12 +1,7 @@
 package funk.types;
 
-import Type;
-import funk.types.Predicate0;
-import funk.types.extensions.Predicates4;
-import massive.munit.Assert;
-
 using Type;
-using funk.types.extensions.Predicates4;
+using funk.types.Predicate4;
 using massive.munit.Assert;
 
 class Predicate4Test {

@@ -1,12 +1,7 @@
 package funk.types;
 
-import Type;
-import funk.types.Lazy;
-import funk.types.extensions.Lazys;
-import massive.munit.Assert;
-
 using Type;
-using funk.types.extensions.Lazys;
+using funk.types.Lazy;
 using massive.munit.Assert;
 
 class LazyTest {
