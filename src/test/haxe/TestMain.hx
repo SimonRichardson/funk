@@ -6,6 +6,7 @@ import massive.munit.TestRunner;
 
 import suites.CollectionsSuite;
 import suites.FoldablesSuite;
+import suites.ReactiveSuite;
 import suites.TypesSuite;
 
 #if js
@@ -33,6 +34,7 @@ class TestMain {
 
         suites.push(CollectionsSuite);
         suites.push(FoldablesSuite);
+        suites.push(ReactiveSuite);
         suites.push(TypesSuite);
 
         #if MCOVER
