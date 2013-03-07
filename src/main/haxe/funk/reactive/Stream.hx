@@ -1,17 +1,19 @@
 package funk.reactive;
 
-import funk.reactive.Pulse;
 import funk.reactive.Propagation;
 import funk.reactive.Stream;
+import funk.reactive.Process;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Predicate2;
 
-using funk.collections.Collection;
-using funk.collections.immutable.List;
 using funk.types.Option;
+using funk.collections.Collection;
+using funk.collections.CollectionUtil;
+using funk.collections.immutable.List;
 using funk.types.Tuple2;
+using funk.reactive.Pulse;
 
 class Stream<T> {
 
@@ -169,7 +171,7 @@ class StreamTypes {
             }, behaviour.value());
 
             return Negate;
-        }, Some(CollectionsUtil.toCollection(stream)));
+        }, Some(CollectionUtil.toCollection(stream)));
 
         return out;
     }
@@ -205,7 +207,7 @@ class StreamTypes {
             out.dispatchWithDelay(pulse.value(), behaviour.value());
 
             return Negate;
-        }, Some(CollectionsUtil.toCollection(stream)));
+        }, Some(CollectionUtil.toCollection(stream)));
 
         return out;
     }
@@ -232,7 +234,7 @@ class StreamTypes {
             });
 
             return Negate;
-        }, Some(CollectionsUtil.toCollection(stream)));
+        }, Some(CollectionUtil.toCollection(stream)));
 
         return out;
     }
@@ -242,7 +244,7 @@ class StreamTypes {
             func(pulse.value());
 
             return Negate;
-        }, Some(CollectionsUtil.toCollection(stream)));
+        }, Some(CollectionUtil.toCollection(stream)));
 
         return stream;
     }
@@ -256,7 +258,7 @@ class StreamTypes {
     public static function map<T1, T2>(stream : Stream<T1>, func : Function1<T1, T2>) : Stream<T2> {
         return create(function(pulse : Pulse<T1>) : Propagation<T2> {
             return Propagate(pulse.map(func));
-        }, Some(CollectionsUtil.toCollection(stream)));
+        }, Some(CollectionUtil.toCollection(stream)));
     }
 
     public static function merge<T>(streams : Collection<Stream<T>>) : Stream<T> {
@@ -271,7 +273,7 @@ class StreamTypes {
         var sent = false;
         var stream = create(function(pulse : Pulse<T>) {
             return if (sent) {
-                Funk.error(Errors.IllegalOperationError("Received a value that wasn't expected " + pulse.value));
+                Funk.error(IllegalOperationError("Received a value that wasn't expected " + pulse.value));
                 Negate;
             } else {
                 sent = true;
@@ -322,7 +324,7 @@ class StreamTypes {
             } else {
                 Propagate(pulse.withValue(queue.shift()));
             }
-        }, Some(CollectionsUtil.toCollection(stream)));
+        }, Some(CollectionUtil.toCollection(stream)));
     }
 
     public static function startsWith<T>(stream : Stream<T>, value : T) : Behaviour<T> {
@@ -342,7 +344,7 @@ class StreamTypes {
             } else {
                 Negate;
             }
-        }, Some(CollectionsUtil.toCollection(stream)));
+        }, Some(CollectionUtil.toCollection(stream)));
     }
 
     public static function timer(time : Behaviour<Float>) : Stream<Float> {
@@ -385,7 +387,7 @@ class StreamTypes {
 
     public static function zero<T>() : Stream<T> {
         return create(function(pulse : Pulse<T>) : Propagation<T> {
-                Funk.error(Errors.IllegalOperationError("Received a value that wasn't expected " + pulse.value()));
+                Funk.error(IllegalOperationError("Received a value that wasn't expected " + pulse.value()));
                 return Negate;
             }, None);
     }
@@ -425,7 +427,7 @@ class StreamTypes {
             value = pulse.value().toOption();
 
             return Negate;
-        }, Some(CollectionsUtil.toCollection(stream0)));
+        }, Some(CollectionUtil.toCollection(stream0)));
 
         return create(function(pulse : Pulse<T2>) : Propagation<R> {
             return if (guarded(time, pulse.time())) {
@@ -433,7 +435,7 @@ class StreamTypes {
             } else {
                 Negate;
             }
-        }, Some(CollectionsUtil.toCollection(stream1)));
+        }, Some(CollectionUtil.toCollection(stream1)));
     }
 }
 

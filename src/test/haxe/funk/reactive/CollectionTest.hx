@@ -3,10 +3,10 @@ package funk.reactive;
 import funk.reactive.Behaviour;
 import massive.munit.util.Timer;
 
+using funk.types.Option;
 using funk.collections.Collection;
 using funk.collections.CollectionUtil;
 using funk.reactive.Stream;
-using funk.types.Option;
 using massive.munit.Assert;
 using unit.Asserts;
 

@@ -2,7 +2,7 @@ package funk.reactive;
 
 import funk.Funk;
 import funk.types.Function0;
-import haxe.ds.Option;
+import funk.types.Option;
 import haxe.PosInfos;
 
 #if neko

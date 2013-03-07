@@ -17,11 +17,13 @@ class StreamValues<T> {
     }
 
     public function iterator() : Iterator<T> {
-        return getList().iterator();
+        var list : List<T> = getList();
+        return list.iterator();
     }
 
     public function size() : Int {
-        return getList().size();
+        var list : List<T> = getList();
+        return list.size();
     }
 
     inline private function getList() : Function0<List<T>> {

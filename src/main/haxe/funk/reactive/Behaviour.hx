@@ -24,6 +24,9 @@ class Behaviour<T> {
 		_value = value;
 		_pulse = pulse;
 
+		var array : Array<Stream<T>> = [stream.steps()];
+		var collection : Collection<Stream<T>> = array.toCollection();
+
 		_stream = StreamTypes.create(function(pulse : Pulse<T>) : Propagation<T> {
 			var prop = _pulse(pulse);
 			switch(prop) {
@@ -32,7 +35,7 @@ class Behaviour<T> {
 				case Negate:
 			}
 			return prop;
-		}, Some([stream.steps()].toCollection()));
+		}, Some(collection));
 	}
 
 	public function stream() : Stream<T> {
@@ -101,11 +104,15 @@ class BehaviourTypes {
 												that : Behaviour<E1>,
 												func : Function2<T, E1, E2>
 												) : Behaviour<E2> {
-		var sources : Array<Dynamic> = [behaviour, that];
+
+		var array : Array<Behaviour<Dynamic>> = [behaviour, that];
+		var sources : Collection<Behaviour<Dynamic>> = array.toCollection();
+		var option : Option<Behaviour<Dynamic>> = Some(sources);
+
 		var stream = StreamTypes.create(function(pulse : Pulse<E1>) : Propagation<E2> {
 			var result = func(behaviour.value(), that.value());
 			return Propagate(pulse.withValue(result));
-		}, Some(sources.toCollection()));
+		}, option);
 
 		return stream.startsWith(func(behaviour.value(), that.value()));
 	}

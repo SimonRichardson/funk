@@ -18,7 +18,7 @@ class StreamTypesTest extends ProcessAsyncBase {
 	override public function setup() {
 		super.setup();
 
-		stream = StreamTypes.random(Behaviours.constant(1.0));
+		stream = StreamTypes.random(BehaviourTypes.constant(1.0));
 	}
 
 	@After

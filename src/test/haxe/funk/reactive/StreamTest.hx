@@ -1,10 +1,10 @@
 package funk.reactive;
 
-using funk.collections.Collection;
 using funk.reactive.Behaviour;
-using funk.reactive.Stream;
-using funk.types.Option;
 using funk.types.Tuple2;
+using funk.types.Option;
+using funk.collections.Collection;
+using funk.reactive.Stream;
 using massive.munit.Assert;
 using unit.Asserts;
 

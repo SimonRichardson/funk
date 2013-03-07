@@ -4,11 +4,12 @@ import funk.collections.CollectionTestBase;
 import funk.reactive.StreamValues;
 
 using massive.munit.Assert;
+using funk.types.Option;
+using funk.types.Tuple2;
+
 using funk.collections.Collection;
 using funk.collections.CollectionUtil;
 using funk.collections.immutable.List;
-using funk.types.Option;
-using funk.types.Tuple2;
 using unit.Asserts;
 
 class StreamValuesTest extends CollectionTestBase {
@@ -19,7 +20,7 @@ class StreamValuesTest extends CollectionTestBase {
 
 	@Before
 	public function setup():Void {
-		var alphaList = Nil;
+		var alphaList : List<String> = Nil;
 		var alphaStream = new StreamValues(Some(function() return alphaList));
 		alphaList = alphaList.append('a');
 		alphaList = alphaList.append('b');
@@ -47,7 +48,7 @@ class StreamValuesTest extends CollectionTestBase {
 					[7, 8, 9].toCollection()
 					].toCollection();
 
-		var otherList = Nil;
+		var otherList : List<Int> = Nil;
 		var otherStream = new StreamValues(Some(function() return otherList));
 		otherList = otherList.append(6);
 		otherList = otherList.append(7);
