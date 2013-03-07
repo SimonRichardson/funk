@@ -22,6 +22,7 @@
 -lib hamcrest
 -D test
 -D net
+-D dump=pretty
 
 # as3
 

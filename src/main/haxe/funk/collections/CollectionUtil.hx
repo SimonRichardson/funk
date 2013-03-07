@@ -16,10 +16,10 @@ class CollectionUtil {
 
 	inline public static function zero<T>() : CollectionType<T> {
 		var core : Array<T> = [];
-		return toCollection({
+		return {
 			iterator: function() return core.iterator(),
 			size: function() return core.length
-		});
+		};
 	}
 
 	public static function toCollection<T, R>(x : T) : CollectionType<R> {

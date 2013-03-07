@@ -13,3 +13,4 @@
 *_test.*
 .temp
 bin/*
+dump/*

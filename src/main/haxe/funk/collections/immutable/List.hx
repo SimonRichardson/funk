@@ -13,7 +13,6 @@ import funk.types.extensions.Anys;
 
 using funk.types.Foldable;
 using funk.types.Reducible;
-using funk.types.extensions.Iterators;
 using funk.types.Option;
 
 enum ListType<T> {
@@ -84,13 +83,13 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
 
     @:to
     inline public static function toArray<T>(list : ListType<T>) : Array<T> {
-        return ListTypes.iterator(list).toArray();
-    }
-
-    @:from
-    inline public static function fromIterator<T>(iterator : Iterator<T>) : List<T> {
-        return ListTypes.prependIterator(Nil, iterator);
-    }
+        var stack = [];
+        var p = ListTypes.iterator(list);
+        for(i in p) {
+            stack.push(i);
+        }
+        return stack;
+    }    
 
     @:to
     inline public static function toCollection<T>(list : ListType<T>) : Collection<T> {
@@ -555,8 +554,11 @@ class ListTypes {
     }
 
     inline public static function appendIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
-        var p = list;
-        return appendAll(p, iterator.toList());
+        var result : List<T> = Nil;
+        while(iterator.hasNext()) {
+            result = Cons(iterator.next(), result);
+        }
+        return result;
     }
 
     inline public static function appendIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
@@ -582,8 +584,11 @@ class ListTypes {
     }
 
     inline public static function prependIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
-        var p = list;
-        return prependAll(p, iterator.toList());
+        var result : List<T> = Nil;
+        while(iterator.hasNext()) {
+            result = Cons(iterator.next(), result);
+        }
+        return result;
     }
 
     inline public static function prependIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {

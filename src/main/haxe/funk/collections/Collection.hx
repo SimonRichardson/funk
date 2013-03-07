@@ -9,10 +9,10 @@ import funk.types.Tuple2;
 
 using funk.collections.Collection.CollectionTypes;
 using funk.collections.CollectionUtil;
+using funk.collections.IteratorUtil;
 using funk.types.Foldable;
 using funk.types.Reducible;
 using funk.types.extensions.Anys;
-using funk.types.extensions.Iterators;
 using funk.types.Option;
 
 typedef CollectionType<T> = {> Iterable<T>,
@@ -71,12 +71,12 @@ abstract Collection<T>(CollectionType<T>) from CollectionType<T> to CollectionTy
 
     @:to
     inline public static function toArray<T>(collection : CollectionType<T>) : Array<T> {
-        return collection.iterator().toArray();
-    }
-
-    @:from
-    inline public static function fromIterator<T>(iterator : Iterator<T>) : Collection<T> {
-        return CollectionTypes.appendIterator(CollectionUtil.zero(), iterator);
+        var array = [];
+        var iterator = collection.iterator();
+        while(iterator.hasNext()) {
+            array.push(iterator.next());
+        }
+        return array;
     }
 
     @:to
@@ -311,8 +311,8 @@ class CollectionTypes {
                                                 value : T,
                                                 func : Function2<T, T, T>
                                                 ) : Option<T> {
-        var col = collection;
-        for(item in col.iterator().reverse()) {
+        var col = reverse(collection);
+        for(item in col.iterator()) {
             value = func(value, item);
         }
         return Some(value);
@@ -323,8 +323,8 @@ class CollectionTypes {
                                                             func : Function3<T, T, Int, T>
                                                             ) : Option<T> {
         var index = 0;
-        var col = collection;
-        for(item in col.iterator().reverse()) {
+        var col = reverse(collection);
+        for(item in col.iterator()) {
             value = func(value, item, index++);
         }
         return Some(value);
@@ -350,7 +350,7 @@ class CollectionTypes {
 
     inline public static function get<T>(collection : Collection<T>, index : Int) : Option<T> {
         var col = collection;
-        return if (index < 0 || index > col.size()) {
+        return if (index < 0) {
             None;
         } else {
 
@@ -432,7 +432,7 @@ class CollectionTypes {
             None;
         } else {
 
-            var iterator = col.iterator().reverse();
+            var iterator = reverse(collection).iterator();
             var value = iterator.next();
             for (i in iterator) {
                 value = func(value, i);
@@ -472,7 +472,7 @@ class CollectionTypes {
             col;
         } else {
 
-            var iterator = col.iterator().reverse();
+            var iterator = reverse(collection).iterator();
 
             var stack = [];
             for (i in 0...amount) {
@@ -596,7 +596,11 @@ class CollectionTypes {
         } else {
             var iterator : Iterator<T> = col.iterator();
             iterator.next();
-            iterator;
+            var array = iterator.toArray();
+            {
+                iterator: function() return array.iterator(),
+                size: function() return array.length
+            }
         }
     }
 
@@ -612,7 +616,17 @@ class CollectionTypes {
 
     inline public static function reverse<T>(collection : Collection<T>) : Collection<T> {
         var col = collection;
-        return col.iterator().reverse();
+
+        var result = [];
+        var iterator = collection.iterator();
+        while(iterator.hasNext()) {
+            result.unshift(iterator.next());
+        }
+
+        return {
+            iterator: function() return result.iterator(),
+            size: function() return result.length
+        }
     }
 
     inline public static function size<T>(collection : Collection<T>) : Int {
