@@ -5,7 +5,7 @@ import funk.types.Function1;
 
 using funk.collections.immutable.List;
 using funk.collections.immutable.ListUtil;
-using funk.types.extensions.Anys;
+using funk.types.Any;
 using funk.types.Option;
 using funk.types.Tuple2;
 
@@ -225,7 +225,7 @@ private class Parser {
 		var list = Nil;
 		while(_lexer.hasNext()) {
 			var expr = matchToken(next());
-			if (Anys.toBool(expr)) {
+			if (AnyTypes.toBool(expr)) {
 				if (_bracket != 0) {
 					Funk.error(IllegalOperationError("Bracket mismatch; extra left ( found."));
 				}
@@ -246,7 +246,7 @@ private class Parser {
 	private function matchToken(opt : Option<Token>) : Expr {
 		var fold = function (value : Value) {
 			var token = if (hasNext()) matchToken(next()) else null;
-			return Anys.toBool(token) ? EPropBlock(value, token) : EProp(value);
+			return AnyTypes.toBool(token) ? EPropBlock(value, token) : EProp(value);
 		};
 		var openBlock = function () {
 			_bracket++;

@@ -1,4 +1,4 @@
-package funk.types.extensions;
+package funk.types;
 
 import funk.types.Attempt;
 import funk.types.Either;
@@ -6,11 +6,11 @@ import funk.types.Function1;
 import funk.types.Predicate2;
 import funk.types.Option;
 import funk.types.Attempt;
+import funk.types.extensions.Strings;
 
-using funk.types.extensions.Reflects;
+typedef Any<T> = T;
 
-// TODO (Simon) : Consider moving this to wildcard.
-class Anys {
+class AnyTypes {
 
 	public static function equals<T1, T2>(value0 : T1, value1 : T2, ?func : Predicate2<T1, T2>) : Bool {
 		if (func == null) {
@@ -52,17 +52,6 @@ class Anys {
 	}
 
 	public static function toString<T>(value : T, ?func : Function1<T, String>) : String {
-		return if(toBool(func)) {
-			func(value);
-		} else {
-			Std.string(value);
-			/**
-			if (value.hasMethod('toString')) {
-				value.callMethod('toString');
-			} else {
-				Std.string(value);
-			}
-			*/
-		}
+		return toBool(func) ? func(value) : Std.string(value);
 	}
 }

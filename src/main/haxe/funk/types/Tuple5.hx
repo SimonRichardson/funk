@@ -1,6 +1,6 @@
 package funk.types;
 
-import funk.types.extensions.Anys;
+import funk.types.Any;
 
 enum Tuple5Type<T1, T2, T3, T4, T5> {
 	tuple5(t1 : T1, t2 : T2, t3 : T3, t4 : T4, t5 : T5);
@@ -75,9 +75,9 @@ class Tuple5Types {
 			case tuple5(t1_0, t2_0, t3_0, t4_0, t5_0):
 				switch (b) {
 					case tuple5(t1_1, t2_1, t3_1, t4_1, t5_1):
-						Anys.equals(t1_0, t1_1, func1) && Anys.equals(t2_0, t2_1, func2) &&
-							Anys.equals(t3_0, t3_1, func3) && Anys.equals(t4_0, t4_1, func4) &&
-								Anys.equals(t5_0, t5_1, func5);
+						AnyTypes.equals(t1_0, t1_1, func1) && AnyTypes.equals(t2_0, t2_1, func2) &&
+							AnyTypes.equals(t3_0, t3_1, func3) && AnyTypes.equals(t4_0, t4_1, func4) &&
+								AnyTypes.equals(t5_0, t5_1, func5);
 					case _: false;
 				}
 			case _: false;
@@ -85,7 +85,7 @@ class Tuple5Types {
 	}
 
 	public static function join<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : String {
-		return '${Anys.toString(_1(tuple))}${Anys.toString(_2(tuple))}${Anys.toString(_3(tuple))}${Anys.toString(_4(tuple))}${Anys.toString(_5(tuple))}';
+		return '${AnyTypes.toString(_1(tuple))}${AnyTypes.toString(_2(tuple))}${AnyTypes.toString(_3(tuple))}${AnyTypes.toString(_4(tuple))}${AnyTypes.toString(_5(tuple))}';
 	}
 
 
@@ -100,6 +100,6 @@ class Tuple5Types {
 															?func3 : Function1<T4, String>,
 															?func4 : Function1<T5, String>
 															) : String {
-		return '(${Anys.toString(_1(tuple), func0)}, ${Anys.toString(_2(tuple), func1)}, ${Anys.toString(_3(tuple), func2)}, ${Anys.toString(_4(tuple), func3)}, ${Anys.toString(_5(tuple), func4)})';
+		return '(${AnyTypes.toString(_1(tuple), func0)}, ${AnyTypes.toString(_2(tuple), func1)}, ${AnyTypes.toString(_3(tuple), func2)}, ${AnyTypes.toString(_4(tuple), func3)}, ${AnyTypes.toString(_5(tuple), func4)})';
 	}
 }

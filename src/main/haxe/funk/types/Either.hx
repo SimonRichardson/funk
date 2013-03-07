@@ -6,7 +6,7 @@ import funk.types.Either;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Predicate2;
-import funk.types.extensions.Anys;
+import funk.types.Any;
 
 using funk.types.Option;
 
@@ -152,12 +152,12 @@ class EitherTypes {
 		return switch (a) {
 			case Left(left0):
 				switch (b) {
-					case Left(left1): Anys.equals(left0, left1, funcLeft);
+					case Left(left1): AnyTypes.equals(left0, left1, funcLeft);
 					case _: false;
 				}
 			case Right(right0):
 				switch (b) {
-					case Right(right1): Anys.equals(right0, right1, funcRight);
+					case Right(right1): AnyTypes.equals(right0, right1, funcRight);
 					case _: false;
 				}
 			case _: false;
@@ -186,15 +186,15 @@ class EitherTypes {
 	}
 
 	public static function toEither<T>(any : Null<T>) : Either<T, T> {
-		return Anys.toBool(any) ? Right(any) : Left(any);
+		return AnyTypes.toBool(any) ? Right(any) : Left(any);
 	}
 
 	public static function toString<T1, T2>(	either : Either<T1, T2>,
 												?funcLeft : Function1<T1, String>,
 												?funcRight : Function1<T2, String>) : String {
 		return switch (either) {
-			case Left(value): 'Left(${Anys.toString(value, funcLeft)})';
-			case Right(value): 'Right(${Anys.toString(value, funcRight)})';
+			case Left(value): 'Left(${AnyTypes.toString(value, funcLeft)})';
+			case Right(value): 'Right(${AnyTypes.toString(value, funcRight)})';
 			case _: 'Left(Invalid)';
 		}
 	}

@@ -12,7 +12,7 @@ using funk.collections.CollectionUtil;
 using funk.collections.IteratorUtil;
 using funk.types.Foldable;
 using funk.types.Reducible;
-using funk.types.extensions.Anys;
+using funk.types.Any;
 using funk.types.Option;
 
 typedef CollectionType<T> = {> Iterable<T>,
@@ -91,7 +91,7 @@ class CollectionTypes {
         var result = false;
         var col = collection;
         for(item in col.iterator()) {
-            if (Anys.equals(item, value, func)) {
+            if (AnyTypes.equals(item, value, func)) {
                 result = true;
                 break;
             }
@@ -372,7 +372,7 @@ class CollectionTypes {
         var col = collection;
         var result = -1;
         for (i in col.iterator()) {
-            if (Anys.equals(i, value)) {
+            if (AnyTypes.equals(i, value)) {
                 result = index;
                 break;
             }
@@ -700,7 +700,7 @@ class CollectionTypes {
         return if (size(col) < 1) {
             "Collection";
         } else {
-            var mapped : Collection<String> = map(col, function(value) return Anys.toString(value, func));
+            var mapped : Collection<String> = map(col, function(value) return AnyTypes.toString(value, func));
             var folded : Option<String> = foldLeftWithIndex(mapped, '', function(a, b, index) return (index < 1) ? b : '$a, $b');
             'Collection(${folded.get()})';
         }

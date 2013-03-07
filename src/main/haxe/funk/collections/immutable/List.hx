@@ -9,7 +9,7 @@ import funk.types.Option;
 import funk.types.Predicate1;
 import funk.types.Predicate2;
 import funk.types.Tuple2;
-import funk.types.extensions.Anys;
+import funk.types.Any;
 
 using funk.types.Foldable;
 using funk.types.Reducible;
@@ -364,7 +364,7 @@ class ListTypes {
         var p = list;
         var result = -1;
         while (nonEmpty(p)) {
-            if (Anys.equals(head(p), value)) {
+            if (AnyTypes.equals(head(p), value)) {
                 result = index;
                 break;
             }
@@ -745,7 +745,7 @@ class ListTypes {
         return switch(p) {
             case Cons(_, _):
                 var mapped : Collection<String> = CollectionTypes.map(collection(p), function(value) {
-                    return Anys.toString(value, func);
+                    return AnyTypes.toString(value, func);
                 });
                 var folded : Option<String> = CollectionTypes.foldLeftWithIndex(mapped, '', function(a, b, index) {
                     return index < 1 ? b : '$a, $b';

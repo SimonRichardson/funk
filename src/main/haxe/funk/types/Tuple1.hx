@@ -1,6 +1,6 @@
 package funk.types;
 
-import funk.types.extensions.Anys;
+import funk.types.Any;
 
 enum Tuple1Type<T1> {
 	tuple1(t1 : T1);
@@ -32,7 +32,7 @@ class Tuple1Types {
 		return switch (a) {
 			case tuple1(t1_0):
 				switch (b) {
-					case tuple1(t1_1): Anys.equals(t1_0, t1_1, func);
+					case tuple1(t1_1): AnyTypes.equals(t1_0, t1_1, func);
 					case _: false;
 				}
 			case _: false;
@@ -40,7 +40,7 @@ class Tuple1Types {
 	}
 
 	public static function join<T1>(tuple : Tuple1<T1>) : String {
-		return '${Anys.toString(_1(tuple))}';
+		return '${AnyTypes.toString(_1(tuple))}';
 	}
 
 
@@ -49,7 +49,7 @@ class Tuple1Types {
 	}
 
 	public static function toString<T1>(tuple : Tuple1<T1>, ?func0 : Function1<T1, String>) : String {
-		return '(${Anys.toString(_1(tuple), func0)})';
+		return '(${AnyTypes.toString(_1(tuple), func0)})';
 	}
 }
 

@@ -6,7 +6,7 @@ import funk.types.Either;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Predicate2;
-import funk.types.extensions.Anys;
+import funk.types.Any;
 
 using funk.types.extensions.Bools;
 using funk.types.Option;
@@ -152,12 +152,12 @@ class AttemptTypes {
         return switch (a) {
             case Success(left0):
                 switch (b) {
-                    case Success(left1): Anys.equals(left0, left1, funcSuccess);
+                    case Success(left1): AnyTypes.equals(left0, left1, funcSuccess);
                     case _: false;
                 }
             case Failure(right0):
                 switch (b) {
-                    case Failure(right1): Anys.equals(right0, right1, funcFailure);
+                    case Failure(right1): AnyTypes.equals(right0, right1, funcFailure);
                     case _: false;
                 }
             case _: false;
@@ -187,15 +187,15 @@ class AttemptTypes {
     }
 
     public static function toAttempt<T>(any : Null<T>) : Attempt<T> {
-        return Anys.toBool(any).not() ? Failure(Error("Failure")) : Success(any);
+        return AnyTypes.toBool(any).not() ? Failure(Error("Failure")) : Success(any);
     }
 
     inline public static function toString<T>( attempt : Attempt<T>,
                                         ?funcSuccess : Function1<T, String>,
                                         ?funcFailure : Function1<Errors, String>) : String {
         return switch (attempt) {
-            case Success(value): 'Success(${Anys.toString(value, funcSuccess)})';
-            case Failure(value): 'Failure(${Anys.toString(value, funcFailure)})';
+            case Success(value): 'Success(${AnyTypes.toString(value, funcSuccess)})';
+            case Failure(value): 'Failure(${AnyTypes.toString(value, funcFailure)})';
             case _: 'Failure(Invalid)';
         }
     }

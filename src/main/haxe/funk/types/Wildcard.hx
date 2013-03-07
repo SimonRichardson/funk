@@ -4,7 +4,7 @@ import funk.collections.Collection;
 import funk.collections.CollectionUtil;
 import funk.collections.immutable.List;
 import funk.collections.immutable.ListUtil;
-import funk.types.extensions.Anys;
+import funk.types.Any;
 import funk.types.Wildcard;
 
 enum WildcardType {
@@ -26,7 +26,7 @@ abstract Wildcard(WildcardType) from WildcardType to WildcardType {
 class WildcardTypes {
 
     public static function toBoolean<T>(wildcard : Wildcard, x : Null<T>) : Bool {
-        return Anys.toBool(x);
+        return AnyTypes.toBool(x);
     }
 
     public static function toCollection<T>(wildcard : Wildcard, x : T) : Collection<T> {
@@ -42,7 +42,7 @@ class WildcardTypes {
     }
 
     public static function toString<T>(wildcard : Wildcard, x : T) : String {
-        return Anys.toString(x);
+        return AnyTypes.toString(x);
     }
 
     public static function toUpperCase<T>(wildcard : Wildcard, x : T) : String {
@@ -86,11 +86,11 @@ class WildcardTypes {
     }
 
     public static function equal_<T1, T2>(wildcard : Wildcard, a : T1, b : T2) : Bool {
-        return Anys.equals(a, b);
+        return AnyTypes.equals(a, b);
     }
 
     public static function notEqual_<T1, T2>(wildcard : Wildcard, a : T1, b : T2) : Bool {
-        return !Anys.equals(a, b);
+        return !AnyTypes.equals(a, b);
     }
 
     public static function binaryAnd_(wildcard : Wildcard, a : Int, b : Int) : Int {

@@ -1,6 +1,6 @@
 package funk.types;
 
-import funk.types.extensions.Anys;
+import funk.types.Any;
 
 enum Tuple2Type<T1, T2> {
 	tuple2(t1 : T1, t2 : T2);
@@ -51,7 +51,7 @@ class Tuple2Types {
 		return switch (a) {
 			case tuple2(t1_0, t2_0):
 				switch (b) {
-					case tuple2(t1_1, t2_1): Anys.equals(t1_0, t1_1, func1) && Anys.equals(t2_0, t2_1, func2);
+					case tuple2(t1_1, t2_1): AnyTypes.equals(t1_0, t1_1, func1) && AnyTypes.equals(t2_0, t2_1, func2);
 					case _: false;
 				}
 			case _: false;
@@ -59,7 +59,7 @@ class Tuple2Types {
 	}
 
 	public static function join<T1, T2>(tuple : Tuple2<T1, T2>) : String {
-		return '${Anys.toString(_1(tuple))}${Anys.toString(_2(tuple))}';
+		return '${AnyTypes.toString(_1(tuple))}${AnyTypes.toString(_2(tuple))}';
 	}
 
 	public static function toArray<T1, T2>(tuple : Tuple2<T1, T2>) : Array<Dynamic> {
@@ -70,7 +70,7 @@ class Tuple2Types {
 												?func0 : Function1<T1, String>,
 												?func1 : Function1<T2, String>
 												) : String {
-		return '(${Anys.toString(_1(tuple), func0)}, ${Anys.toString(_2(tuple), func1)})';
+		return '(${AnyTypes.toString(_1(tuple), func0)}, ${AnyTypes.toString(_2(tuple), func1)})';
 	}
 }
 

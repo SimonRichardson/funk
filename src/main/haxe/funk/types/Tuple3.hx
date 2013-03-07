@@ -1,6 +1,6 @@
 package funk.types;
 
-import funk.types.extensions.Anys;
+import funk.types.Any;
 
 enum Tuple3Type<T1, T2, T3> {
 	tuple3(t1 : T1, t2 : T2, t3 : T3);
@@ -54,8 +54,8 @@ class Tuple3Types {
 			case tuple3(t1_0, t2_0, t3_0):
 				switch (b) {
 					case tuple3(t1_1, t2_1, t3_1):
-						Anys.equals(t1_0, t1_1, func1) && Anys.equals(t2_0, t2_1, func2) &&
-							Anys.equals(t3_0, t3_1, func3);
+						AnyTypes.equals(t1_0, t1_1, func1) && AnyTypes.equals(t2_0, t2_1, func2) &&
+							AnyTypes.equals(t3_0, t3_1, func3);
 					case _: false;
 				}
 			case _: false;
@@ -63,7 +63,7 @@ class Tuple3Types {
 	}
 
 	public static function join<T1, T2, T3>(tuple : Tuple3<T1, T2, T3>) : String {
-		return '${Anys.toString(_1(tuple))}${Anys.toString(_2(tuple))}${Anys.toString(_3(tuple))}';
+		return '${AnyTypes.toString(_1(tuple))}${AnyTypes.toString(_2(tuple))}${AnyTypes.toString(_3(tuple))}';
 	}
 
 	public static function toArray<T1, T2, T3>(tuple : Tuple3<T1, T2, T3>) : Array<Dynamic> {
@@ -75,6 +75,6 @@ class Tuple3Types {
 													?func1 : Function1<T2, String>,
 													?func2 : Function1<T3, String>
 													) : String {
-		return '(${Anys.toString(_1(tuple), func0)}, ${Anys.toString(_2(tuple), func1)}, ${Anys.toString(_3(tuple), func2)})';
+		return '(${AnyTypes.toString(_1(tuple), func0)}, ${AnyTypes.toString(_2(tuple), func1)}, ${AnyTypes.toString(_3(tuple), func2)})';
 	}
 }

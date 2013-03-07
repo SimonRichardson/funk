@@ -1,7 +1,7 @@
 package funk.types;
 
 import funk.Funk;
-import funk.types.extensions.Anys;
+import funk.types.Any;
 import funk.types.Attempt;
 import funk.types.Either;
 import funk.types.Function0;
@@ -158,12 +158,12 @@ class OptionTypes {
 	}
 
 	public static function toOption<T>(any : Null<T>) : Option<T> {
-		return Anys.toBool(any) ? Some(any) : None;
+		return AnyTypes.toBool(any) ? Some(any) : None;
 	}
 
 	public static function toString<T>(option : Option<T>, ?func : Function1<T, String>) : String {
 		return switch (option) {
-			case Some(value): 'Some(${Anys.toString(value, func)})';
+			case Some(value): 'Some(${AnyTypes.toString(value, func)})';
 			case _: 'None';
 		}
 	}
