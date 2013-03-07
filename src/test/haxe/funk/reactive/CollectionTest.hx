@@ -1,30 +1,20 @@
 package funk.reactive;
 
-import funk.collections.extensions.Collections;
-import funk.collections.extensions.CollectionsUtil;
-import funk.reactive.extensions.Behaviours;
-import funk.reactive.extensions.CollectionsUtil;
-import funk.reactive.extensions.Streams;
-import haxe.ds.Option;
-import funk.types.extensions.Options;
-import massive.munit.Assert;
+import funk.reactive.Behaviour;
 import massive.munit.util.Timer;
-import unit.Asserts;
 
-using funk.collections.extensions.Collections;
-using funk.collections.extensions.CollectionsUtil;
-using funk.reactive.extensions.Streams;
-using funk.types.extensions.Options;
+using funk.collections.Collection;
+using funk.collections.CollectionUtil;
+using funk.reactive.Stream;
+using funk.types.Option;
 using massive.munit.Assert;
 using unit.Asserts;
 
-private typedef ColUtil = funk.reactive.extensions.CollectionsUtil;
-
-class CollectionsTest extends ProcessAsyncBase {
+class CollectionTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_an_empty_stream__should_size_be_zero() : Void {
-		var stream = ColUtil.toStream([].toCollection(), Behaviours.constant(1));
+		var stream = CollectionUtil.toStream([].toCollection(), BehaviourTypes.constant(1));
 		var values = stream.values();
 
 		advanceProcessBy(1, false);
@@ -34,7 +24,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_an_empty_stream__should_calling_emitWithDelay_throw_error() : Void {
-		var stream = ColUtil.toStream([].toCollection(), Behaviours.constant(1));
+		var stream = CollectionUtil.toStream([].toCollection(), BehaviourTypes.constant(1));
 		var values = stream.values();
 
 		var called = try {
@@ -53,7 +43,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_calling_emitWithDelay() : Void {
-		var stream = ColUtil.toStream([1, 2].toCollection(), Behaviours.constant(1));
+		var stream = CollectionUtil.toStream([1, 2].toCollection(), BehaviourTypes.constant(1));
 		var values = stream.values();
 
 		stream.dispatchWithDelay(3, 1);
@@ -65,7 +55,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_calling_first_value_be_1() : Void {
-		var stream = ColUtil.toStream([1, 2].toCollection(), Behaviours.constant(1));
+		var stream = CollectionUtil.toStream([1, 2].toCollection(), BehaviourTypes.constant(1));
 		var values = stream.values();
 
 		advanceProcessBy(1);
@@ -75,7 +65,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_calling_second_value_be_2() : Void {
-		var stream = ColUtil.toStream([1, 2].toCollection(), Behaviours.constant(1));
+		var stream = CollectionUtil.toStream([1, 2].toCollection(), BehaviourTypes.constant(1));
 		var values = stream.values();
 
 		advanceProcessByWithIncrements(1, 2);
@@ -85,7 +75,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_stream_length_be_1_after_first_iteration() : Void {
-		var stream = ColUtil.toStream([1, 2].toCollection(), Behaviours.constant(1));
+		var stream = CollectionUtil.toStream([1, 2].toCollection(), BehaviourTypes.constant(1));
 		var values = stream.values();
 
 		advanceProcessBy(1);
@@ -95,7 +85,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_stream_length_be_2_after_second_iteration() : Void {
-		var stream = ColUtil.toStream([1, 2].toCollection(), Behaviours.constant(1));
+		var stream = CollectionUtil.toStream([1, 2].toCollection(), BehaviourTypes.constant(1));
 		var values = stream.values();
 
 		advanceProcessByWithIncrements(1, 2);
@@ -105,7 +95,7 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_stream_length_be_10_after_tenth_iteration() : Void {
-		var stream = ColUtil.toStream([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].toCollection(), Behaviours.constant(1));
+		var stream = CollectionUtil.toStream([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].toCollection(), BehaviourTypes.constant(1));
 		var values = stream.values();
 
 		advanceProcessByWithIncrements(1, 10);
@@ -115,9 +105,9 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_merging_streams_equal_result() : Void {
-		var stream = ColUtil.toStream([1, 2, 3, 4].toCollection(), Behaviours.constant(1));
-		var streams = [stream, stream.delay(Behaviours.constant(5))].toCollection();
-		var merged = Streams.merge(streams).values();
+		var stream = CollectionUtil.toStream([1, 2, 3, 4].toCollection(), BehaviourTypes.constant(1));
+		var streams = [stream, stream.delay(BehaviourTypes.constant(5))].toCollection();
+		var merged = StreamTypes.merge(streams).values();
 
 		advanceProcessByWithIncrements(1, 4);
 		advanceProcessBy(5);
@@ -127,8 +117,8 @@ class CollectionsTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream_from_a_collection__should_calm_not_allow_events_through() : Void {
-		var stream = ColUtil.toStream([1, 2, 3, 4].toCollection(), Behaviours.constant(1));
-		var calmed = stream.calm(Behaviours.constant(5)).values();
+		var stream = CollectionUtil.toStream([1, 2, 3, 4].toCollection(), BehaviourTypes.constant(1));
+		var calmed = stream.calm(BehaviourTypes.constant(5)).values();
 
 		advanceProcessByWithIncrements(1, 4);
 

@@ -3,6 +3,7 @@ package funk.reactive;
 import funk.reactive.Pulse;
 import funk.reactive.Propagation;
 import funk.reactive.Stream;
+import funk.types.Function0;
 
 using funk.collections.immutable.List;
 using funk.types.Option;

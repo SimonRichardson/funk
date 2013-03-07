@@ -1,16 +1,10 @@
 package funk.reactive;
 
-import funk.collections.Collection;
-import haxe.ds.Option;
-import funk.types.Tuple2;
-import funk.types.extensions.Tuples2;
-import massive.munit.Assert;
-import unit.Asserts;
-
-using funk.collections.extensions.Collections;
-using funk.reactive.extensions.Behaviours;
-using funk.reactive.extensions.Streams;
-using funk.types.extensions.Tuples2;
+using funk.collections.Collection;
+using funk.reactive.Behaviour;
+using funk.reactive.Stream;
+using funk.types.Option;
+using funk.types.Tuple2;
 using massive.munit.Assert;
 using unit.Asserts;
 
@@ -22,7 +16,7 @@ class StreamTest extends ProcessAsyncBase {
 	override public function setup() {
 		super.setup();
 
-		stream = Streams.identity(None);
+		stream = StreamTypes.identity(None);
 	}
 
 	@After
@@ -126,9 +120,9 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_calling_flatMap_with_3_streams_emit_first_stream_with_123() : Void {
-		var stream0 = Streams.identity(None);
-		var stream1 = Streams.identity(None);
-		var stream2 = Streams.identity(None);
+		var stream0 = StreamTypes.identity(None);
+		var stream1 = StreamTypes.identity(None);
+		var stream2 = StreamTypes.identity(None);
 
 		var bound = stream.flatMap(function(x) {
 			return switch(x) {
@@ -149,9 +143,9 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_calling_flatMap_with_3_streams_emit_third_stream_with_789() : Void {
-		var stream0 = Streams.identity(None);
-		var stream1 = Streams.identity(None);
-		var stream2 = Streams.identity(None);
+		var stream0 = StreamTypes.identity(None);
+		var stream1 = StreamTypes.identity(None);
+		var stream2 = StreamTypes.identity(None);
 
 		var bound = stream.flatMap(function(x) {
 			return switch(x) {
@@ -172,9 +166,9 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_calling_flatMap_with_3_streams_emit_on_stream_but_not_on_mapped() : Void {
-		var stream0 = Streams.identity(None);
-		var stream1 = Streams.identity(None);
-		var stream2 = Streams.identity(None);
+		var stream0 = StreamTypes.identity(None);
+		var stream1 = StreamTypes.identity(None);
+		var stream2 = StreamTypes.identity(None);
 
 		var bound = stream.flatMap(function(x) {
 			return switch(x) {
@@ -261,7 +255,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_calm_not_allow_events_through_if_time_is_less_than_calm_amount() : Void {
-		var calmed = stream.calm(Behaviours.constant(2)).values();
+		var calmed = stream.calm(BehaviourTypes.constant(2)).values();
 
 		for(i in 0...4) {
 			stream.dispatch(i);
@@ -274,7 +268,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_calm_allow_last_event_through_if_time_is_greater_than_calm_amount() : Void {
-		var calmed = stream.calm(Behaviours.constant(1)).values();
+		var calmed = stream.calm(BehaviourTypes.constant(1)).values();
 
 		for(i in 0...4) {
 			stream.dispatch(i);
@@ -287,7 +281,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_allow_events_through_after_calm() : Void {
-		var calmed = stream.calm(Behaviours.constant(1)).values();
+		var calmed = stream.calm(BehaviourTypes.constant(1)).values();
 
 		for(i in 0...4) {
 			stream.dispatch(i);
@@ -306,7 +300,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_allow_first_events_through_but_not_delayed_events() : Void {
-		var calmed = stream.calm(Behaviours.constant(1)).values();
+		var calmed = stream.calm(BehaviourTypes.constant(1)).values();
 
 		for(i in 0...4) {
 			stream.dispatch(i);
@@ -323,7 +317,7 @@ class StreamTest extends ProcessAsyncBase {
 
 	@Test
 	public function when_creating_a_stream__should_allow_events_through_after_calm_using_emitWithDelay_which_is_higher_than_the_calm_amount() : Void {
-		var calmed = stream.calm(Behaviours.constant(1)).values();
+		var calmed = stream.calm(BehaviourTypes.constant(1)).values();
 
 		for(i in 0...4) {
 			stream.dispatch(i);

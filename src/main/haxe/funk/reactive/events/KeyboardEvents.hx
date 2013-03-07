@@ -2,7 +2,6 @@ package funk.reactive.events;
 
 import funk.reactive.events.Events;
 import funk.reactive.Stream;
-import funk.reactive.extensions.Streams;
 
 #if js
 import js.Browser;

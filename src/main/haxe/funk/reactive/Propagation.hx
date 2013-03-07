@@ -1,5 +1,7 @@
 package funk.reactive;
 
+import funk.types.Function1;
+
 enum Propagation<T> {
 	Negate;
     Propagate(value: Pulse<T>);

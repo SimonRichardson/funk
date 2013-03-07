@@ -7,7 +7,7 @@ import funk.types.Wildcard;
 
 using funk.collections.immutable.List;
 using funk.reactive.events.MouseEvents;
-using funk.reactive.extensions.Streams;
+using funk.reactive.Stream;
 
 class HtmlWildcards {
 

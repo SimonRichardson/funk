@@ -10,7 +10,7 @@ import funk.types.Wildcard;
 import support.HtmlDivElement;
 
 using funk.reactive.events.MouseEvents;
-using funk.reactive.extensions.Streams;
+using funk.reactive.Stream;
 
 class HtmlWildcards {
 

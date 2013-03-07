@@ -12,7 +12,7 @@ import support.HtmlDivElement;
 
 using funk.collections.immutable.List;
 using funk.reactive.events.MouseEvents;
-using funk.reactive.extensions.Streams;
+using funk.reactive.Stream;
 using funk.types.Tuple2;
 using support.HtmlWildcards;
 

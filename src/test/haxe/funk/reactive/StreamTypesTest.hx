@@ -1,16 +1,16 @@
 package funk.reactive;
 
 import funk.reactive.Stream;
-import funk.reactive.extensions.Behaviours;
-import funk.reactive.extensions.Streams;
+import funk.reactive.Behaviour;
+import funk.reactive.Stream;
 import massive.munit.Assert;
 import unit.Asserts;
 
-using funk.reactive.extensions.Streams;
+using funk.reactive.Stream;
 using massive.munit.Assert;
 using unit.Asserts;
 
-class StreamsTest extends ProcessAsyncBase {
+class StreamTypesTest extends ProcessAsyncBase {
 
 	private var stream : Stream<Dynamic>;
 
@@ -18,7 +18,7 @@ class StreamsTest extends ProcessAsyncBase {
 	override public function setup() {
 		super.setup();
 
-		stream = Streams.random(Behaviours.constant(1.0));
+		stream = StreamTypes.random(Behaviours.constant(1.0));
 	}
 
 	@After

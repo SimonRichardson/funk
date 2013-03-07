@@ -1,16 +1,16 @@
 package funk.reactive;
 
 import funk.types.Function1;
-import haxe.ds.Option;
+import funk.types.Function2;
+import funk.types.Option;
 import funk.reactive.Propagation;
 import funk.reactive.Pulse;
-import funk.reactive.extensions.Pulses;
-import funk.reactive.extensions.Streams;
-import funk.collections.extensions.CollectionsUtil;
 
-using funk.reactive.extensions.Pulses;
-using funk.reactive.extensions.Streams;
-using funk.collections.extensions.CollectionsUtil;
+using funk.reactive.Pulse;
+using funk.reactive.Stream;
+using funk.collections.Collection;
+using funk.collections.CollectionUtil;
+using funk.types.Tuple2;
 
 class Behaviour<T> {
 
@@ -24,7 +24,7 @@ class Behaviour<T> {
 		_value = value;
 		_pulse = pulse;
 
-		_stream = Streams.create(function(pulse : Pulse<T>) : Propagation<T> {
+		_stream = StreamTypes.create(function(pulse : Pulse<T>) : Propagation<T> {
 			var prop = _pulse(pulse);
 			switch(prop) {
 				case Propagate(value):
@@ -47,7 +47,7 @@ class Behaviour<T> {
 class BehaviourTypes {
 
 	public static function constant<T>(value: T): Behaviour<T> {
-		return Streams.identity(None).startsWith(value);
+		return StreamTypes.identity(None).startsWith(value);
 	}
 
 	public static function dispatch<T>(behaviour : Behaviour<T>, value : T) : Void {
@@ -68,7 +68,7 @@ class BehaviourTypes {
 	}
 
 	public static function sample(behaviour : Behaviour<Float>) : Behaviour<Float> {
-		return Streams.timer(behaviour).startsWith(Process.stamp());
+		return StreamTypes.timer(behaviour).startsWith(Process.stamp());
 	}
 
 	public static  function values<T>(behaviour : Behaviour<T>) : Collection<T> {
@@ -89,7 +89,7 @@ class BehaviourTypes {
 			});
       	}
 
-		var stream = Streams.create(function(pulse) {
+		var stream = StreamTypes.create(function(pulse) {
 				return Propagate(pulse.withValue(mapToValue()));
 			}, Some(behaviours.map(function(behaviour) {
 				return behaviour.stream();
@@ -102,7 +102,7 @@ class BehaviourTypes {
 												func : Function2<T, E1, E2>
 												) : Behaviour<E2> {
 		var sources : Array<Dynamic> = [behaviour, that];
-		var stream = Streams.create(function(pulse : Pulse<E1>) : Propagation<E2> {
+		var stream = StreamTypes.create(function(pulse : Pulse<E1>) : Propagation<E2> {
 			var result = func(behaviour.value(), that.value());
 			return Propagate(pulse.withValue(result));
 		}, Some(sources.toCollection()));

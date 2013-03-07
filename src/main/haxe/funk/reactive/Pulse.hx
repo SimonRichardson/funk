@@ -1,6 +1,6 @@
 package funk.reactive;
 
-import funk.Funk;
+import funk.types.Function1;
 
 enum Pulse<T> {
 	Pulse(time : Float, value : T);

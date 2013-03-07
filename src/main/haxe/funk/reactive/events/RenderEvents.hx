@@ -1,7 +1,6 @@
 package funk.reactive.events;
 
 import funk.reactive.events.Events;
-import funk.reactive.Stream;
 import funk.types.Function0;
 import funk.types.Function1;
 
@@ -14,7 +13,7 @@ import flash.events.EventDispatcher;
 import flash.events.KeyboardEvent;
 #end
 
-using funk.reactive.extensions.Streams;
+using funk.reactive.Stream;
 
 #if js
 private typedef Event = js.html.Event;
@@ -46,7 +45,7 @@ class RenderEvents {
     }
 
     private static function customEvent(type : String) : Stream<Event> {
-        var stream = Streams.identity(None);
+        var stream = StreamTypes.identity(None);
 
         var win = Browser.window;
         var document = win.document;

@@ -3,9 +3,15 @@ package funk.reactive;
 import funk.reactive.Pulse;
 import funk.reactive.Propagation;
 import funk.reactive.Stream;
-import funk.signals.Signal0;
 import funk.types.Function0;
 import funk.types.Function1;
+import funk.types.Function2;
+import funk.types.Predicate2;
+
+using funk.collections.Collection;
+using funk.collections.immutable.List;
+using funk.types.Option;
+using funk.types.Tuple2;
 
 class Stream<T> {
 
@@ -19,7 +25,7 @@ class Stream<T> {
 
 	private var _listeners : Array<Stream<T>>;
 
-    private var _finishedListeners : Signal0;
+    private var _finishedListeners : List<Function0<Void>>;
 
 	public function new(propagator : Function1<Pulse<T>, Propagation<T>>) {
 		_rank = Rank.next();
@@ -28,7 +34,7 @@ class Stream<T> {
 
         _weakRef = false;
 
-        _finishedListeners = new Signal0();
+        _finishedListeners = Nil;
 	}
 
     public function attach(listener : Stream<T>) : Void {
@@ -118,7 +124,9 @@ class Stream<T> {
         if(_weakRef) {
             func();
         } else {
-            _finishedListeners.add(func);
+            if (_finishedListeners.indexOf(func) < 0) {
+                _finishedListeners = _finishedListeners.prepend(func);
+            }
         }
     }
 
@@ -131,8 +139,8 @@ class Stream<T> {
             _weakRef = value;
 
             if(_weakRef) {
-                _finishedListeners.dispatch();
-                _finishedListeners.removeAll();
+                _finishedListeners.foreach(function(func) func());
+                _finishedListeners = Nil;
             }
         }
 

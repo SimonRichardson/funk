@@ -2,7 +2,6 @@ package funk.reactive.events;
 
 import funk.reactive.Propagation;
 import funk.reactive.Stream;
-import funk.reactive.extensions.Streams;
 import funk.types.Function1;
 
 #if js
@@ -24,7 +23,7 @@ class Events {
                                                 type : String,
                                                 ?useCapture : Bool = false
                                                 ) : Stream<T> {
-        var stream = Streams.identity(None);
+        var stream = StreamTypes.identity(None);
 
         var method = function (event) {
             stream.dispatch(event);

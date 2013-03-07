@@ -7,7 +7,7 @@ import js.html.Event;
 import funk.reactive.events.RenderEvents;
 
 using funk.collections.immutable.List;
-using funk.reactive.extensions.Streams;
+using funk.reactive.Stream;
 
 class CanvasPainter {
 

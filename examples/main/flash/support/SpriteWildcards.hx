@@ -7,7 +7,7 @@ import funk.types.Function1;
 import funk.types.Wildcard;
 
 using funk.reactive.events.MouseEvents;
-using funk.reactive.extensions.Streams;
+using funk.reactive.Stream;
 
 class SpriteWildcards {
 

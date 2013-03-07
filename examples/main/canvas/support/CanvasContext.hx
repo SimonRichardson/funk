@@ -7,7 +7,7 @@ import funk.reactive.events.RenderEvents;
 import support.CanvasCommands;
 
 using funk.collections.immutable.List;
-using funk.reactive.extensions.Streams;
+using funk.reactive.Stream;
 
 class CanvasContext {
 

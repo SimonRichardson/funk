@@ -3,18 +3,12 @@ package funk.reactive.behaviours;
 import funk.Funk;
 import funk.reactive.Behaviour;
 import funk.reactive.Propagation;
-import funk.reactive.extensions.Behaviours;
-import funk.reactive.extensions.Propagations;
-import funk.reactive.extensions.Streams;
 import funk.reactive.streams.StreamBool;
-import funk.signals.Signal0;
-import funk.types.Tuple2;
-import funk.types.extensions.Tuples2;
+import funk.types.Tuple1;
 
-using funk.reactive.extensions.Streams;
-using funk.reactive.extensions.Behaviours;
+using funk.reactive.Stream;
+using funk.reactive.Behaviour;
 using funk.reactive.streams.StreamBool;
-using funk.types.extensions.Tuples2;
 
 class BehaviourInt {
 

@@ -12,7 +12,7 @@ import funk.types.Wildcard;
 using funk.collections.immutable.List;
 using funk.types.Tuple2;
 using funk.reactive.events.MouseEvents;
-using funk.reactive.extensions.Streams;
+using funk.reactive.Stream;
 using support.SpriteWildcards;
 
 class Example03 extends Sprite {
