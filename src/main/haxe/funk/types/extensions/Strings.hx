@@ -4,14 +4,6 @@ import funk.Funk;
 
 class Strings {
 
-	public static function box(value : String) : String {
-		return new String(value.toString());
-	}
-
-	public static function unbox(value : String) : String {
-		return value.toString();
-	}
-
 	public static function isEmpty(value : String) : Bool {
 		return value == null || value.length < 1;
 	}
@@ -71,7 +63,7 @@ class Strings {
 				return if (index < value.length) {
 					value.substr(index++, 1);
 				} else {
-					Funk.error(Errors.NoSuchElementError);
+					Funk.error(NoSuchElementError);
 				}
 			}
 		};

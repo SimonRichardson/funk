@@ -74,6 +74,11 @@ abstract Collection<T>(CollectionType<T>) from CollectionType<T> to CollectionTy
         return collection.iterator().toArray();
     }
 
+    @:from
+    inline public static function fromIterator<T>(iterator : Iterator<T>) : Collection<T> {
+        return CollectionTypes.appendIterator(CollectionUtil.zero(), iterator);
+    }
+
     @:to
     inline public static function toString<T>(collection : CollectionType<T>) : String {
         return CollectionTypes.toString(collection);
@@ -589,9 +594,9 @@ class CollectionTypes {
         return if (col.size() < 1) {
             CollectionUtil.zero();
         } else {
-            var iterator = col.iterator();
+            var iterator : Iterator<T> = col.iterator();
             iterator.next();
-            Iterators.toCollection(iterator);
+            iterator;
         }
     }
 
@@ -607,7 +612,7 @@ class CollectionTypes {
 
     inline public static function reverse<T>(collection : Collection<T>) : Collection<T> {
         var col = collection;
-        return Iterators.toCollection(col.iterator().reverse());
+        return col.iterator().reverse();
     }
 
     inline public static function size<T>(collection : Collection<T>) : Int {

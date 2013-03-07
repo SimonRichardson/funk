@@ -15,8 +15,11 @@ class CollectionUtil {
 	inline private static var REFLECT_NAME : String = '__reflect__';
 
 	inline public static function zero<T>() : CollectionType<T> {
-		// TODO (Simon) : We could optimize this.
-		return toCollection([]);
+		var core : Array<T> = [];
+		return toCollection({
+			iterator: function() return core.iterator(),
+			size: function() return core.length
+		});
 	}
 
 	public static function toCollection<T, R>(x : T) : CollectionType<R> {

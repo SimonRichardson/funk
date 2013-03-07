@@ -23,10 +23,6 @@ class Iterators {
 		return stack;
 	}
 
-	inline public static function toCollection<T>(iterator : Iterator<T>) : Collection<T> {
-		return CollectionUtil.toCollection(toArray(iterator));
-	}
-
 	inline public static function toList<T>(iterator : Iterator<T>) : List<T> {
 		return ListUtil.toList(toArray(iterator));
 	}

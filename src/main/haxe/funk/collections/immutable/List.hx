@@ -87,6 +87,11 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
         return ListTypes.iterator(list).toArray();
     }
 
+    @:from
+    inline public static function fromIterator<T>(iterator : Iterator<T>) : List<T> {
+        return ListTypes.prependIterator(Nil, iterator);
+    }
+
     @:to
     inline public static function toCollection<T>(list : ListType<T>) : Collection<T> {
         return ListTypes.collection(list);
