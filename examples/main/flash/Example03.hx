@@ -11,8 +11,8 @@ import funk.types.Wildcard;
 
 using funk.collections.immutable.List;
 using funk.types.Tuple2;
-using funk.reactive.events.MouseEvents;
-using funk.reactive.Stream;
+using funk.reactives.events.MouseEvents;
+using funk.reactives.Stream;
 using support.SpriteWildcards;
 
 class Example03 extends Sprite {

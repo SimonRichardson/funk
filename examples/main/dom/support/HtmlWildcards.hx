@@ -9,8 +9,8 @@ import funk.types.Function1;
 import funk.types.Wildcard;
 import support.HtmlDivElement;
 
-using funk.reactive.events.MouseEvents;
-using funk.reactive.Stream;
+using funk.reactives.events.MouseEvents;
+using funk.reactives.Stream;
 
 class HtmlWildcards {
 

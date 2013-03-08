@@ -4,10 +4,10 @@ import js.Browser;
 import js.html.CanvasElement;
 import js.html.CanvasRenderingContext2D;
 import js.html.Event;
-import funk.reactive.events.RenderEvents;
+import funk.reactives.events.RenderEvents;
 
 using funk.collections.immutable.List;
-using funk.reactive.Stream;
+using funk.reactives.Stream;
 
 class CanvasPainter {
 

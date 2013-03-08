@@ -6,9 +6,9 @@ import funk.collections.Collection;
 import funk.types.extensions.Strings;
 import funk.types.Function0;
 import funk.types.Option;
-import funk.reactive.Behaviour;
-import funk.reactive.Process;
-import funk.reactive.Stream;
+import funk.reactives.Behaviour;
+import funk.reactives.Process;
+import funk.reactives.Stream;
 
 using funk.collections.immutable.List;
 using Lambda;
