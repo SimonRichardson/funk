@@ -9,6 +9,7 @@ import funk.reactive.StreamValuesTest;
 
 import funk.reactive.events.EventsTest;
 import funk.reactive.events.KeyboardEventsTest;
+import funk.reactive.events.MouseEventsTest;
 
 class ReactiveSuite extends TestSuite {
 
@@ -22,5 +23,6 @@ class ReactiveSuite extends TestSuite {
 
 		add(funk.reactive.events.EventsTest);
 		add(funk.reactive.events.KeyboardEventsTest);
+		add(funk.reactive.events.MouseEventsTest);
 	}
 }

@@ -28,7 +28,7 @@ class KeyboardEventsTest extends EventsBase {
 			called = true;
 		});
 
-		dispatchEventKeyDown();
+		dispatchEvent(KeyboardEventTypes.toString(KeyDown));
 
 		called.isTrue();
 	}
@@ -42,7 +42,7 @@ class KeyboardEventsTest extends EventsBase {
 		});
 		events.finish();
 
-		dispatchEventKeyDown();
+		dispatchEvent(KeyboardEventTypes.toString(KeyDown));
 
 		called.isFalse();
 	}
@@ -55,7 +55,7 @@ class KeyboardEventsTest extends EventsBase {
 			called = true;
 		});
 
-		dispatchEventKeyUp();
+		dispatchEvent(KeyboardEventTypes.toString(KeyUp));
 
 		called.isTrue();
 	}
@@ -69,7 +69,7 @@ class KeyboardEventsTest extends EventsBase {
 		});
 		events.finish();
 
-		dispatchEventKeyUp();
+		dispatchEvent(KeyboardEventTypes.toString(KeyUp));
 
 		called.isFalse();
 	}
@@ -84,14 +84,6 @@ class KeyboardEventsTest extends EventsBase {
 		#end
 
 		return event;
-	}
-
-	private function dispatchEventKeyDown() {
-		dispatchEvent(KeyboardEventTypes.toString(KeyDown));
-	}
-
-	private function dispatchEventKeyUp() {
-		dispatchEvent(KeyboardEventTypes.toString(KeyUp));
 	}
 }
 #else
