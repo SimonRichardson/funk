@@ -7,6 +7,8 @@ import funk.reactive.StreamTest;
 import funk.reactive.StreamTypesTest;
 import funk.reactive.StreamValuesTest;
 
+import funk.reactive.events.EventsTest;
+
 class ReactiveSuite extends TestSuite {
 
 	public function new() {
@@ -16,5 +18,7 @@ class ReactiveSuite extends TestSuite {
 		add(funk.reactive.StreamTest);
 		add(funk.reactive.StreamTypesTest);
 		add(funk.reactive.StreamValuesTest);
+
+		add(funk.reactive.events.EventsTest);
 	}
 }
