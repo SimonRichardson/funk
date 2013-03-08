@@ -3,6 +3,8 @@ package funk.reactive.events;
 import funk.reactive.events.Events;
 import funk.types.Function0;
 import funk.types.Function1;
+import funk.types.Any;
+import funk.types.Option;
 
 #if js
 import js.Browser;

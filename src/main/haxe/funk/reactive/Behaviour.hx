@@ -24,8 +24,7 @@ class Behaviour<T> {
 		_value = value;
 		_pulse = pulse;
 
-		var array : Array<Stream<T>> = [stream.steps()];
-		var collection : Collection<Stream<T>> = array.toCollection();
+		var collection : Collection<Stream<T>> = [stream.steps()].toCollection();
 
 		_stream = StreamTypes.create(function(pulse : Pulse<T>) : Propagation<T> {
 			var prop = _pulse(pulse);
@@ -35,7 +34,7 @@ class Behaviour<T> {
 				case Negate:
 			}
 			return prop;
-		}, Some(collection));
+		}, collection);
 	}
 
 	public function stream() : Stream<T> {
@@ -80,7 +79,8 @@ class BehaviourTypes {
 
 	public static function zip<T1, T2>(behaviour : Behaviour<T1>, that : Behaviour<T2>) : Behaviour<Tuple2<T1, T2>> {
 		return zipWith(behaviour, that, function(a, b) {
-			return tuple2(a, b);
+			var tuple : Tuple2<T1, T2> = tuple2(a, b);
+			return tuple;
 		});
 	}
 
@@ -92,11 +92,14 @@ class BehaviourTypes {
 			});
       	}
 
+      	var sources : Collection<Stream<T>> = behaviours.map(function(behaviour) {
+			return behaviour.stream();
+		});
+
 		var stream = StreamTypes.create(function(pulse) {
 				return Propagate(pulse.withValue(mapToValue()));
-			}, Some(behaviours.map(function(behaviour) {
-				return behaviour.stream();
-			}).toCollection()));
+		}, sources);
+
 		return stream.startsWith(mapToValue());
 	}
 
@@ -106,13 +109,16 @@ class BehaviourTypes {
 												) : Behaviour<E2> {
 
 		var array : Array<Behaviour<Dynamic>> = [behaviour, that];
-		var sources : Collection<Behaviour<Dynamic>> = array.toCollection();
-		var option : Option<Behaviour<Dynamic>> = Some(sources);
+		var behaviours : Collection<Behaviour<Dynamic>> = array.toCollection();
+
+		var sources : Collection<Stream<Dynamic>> = behaviours.map(function(behaviour) {
+			return behaviour.stream();
+		});
 
 		var stream = StreamTypes.create(function(pulse : Pulse<E1>) : Propagation<E2> {
 			var result = func(behaviour.value(), that.value());
 			return Propagate(pulse.withValue(result));
-		}, option);
+		}, cast sources);
 
 		return stream.startsWith(func(behaviour.value(), that.value()));
 	}

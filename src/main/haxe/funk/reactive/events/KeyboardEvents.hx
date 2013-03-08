@@ -1,5 +1,6 @@
 package funk.reactive.events;
 
+import funk.types.Any;
 import funk.reactive.events.Events;
 import funk.reactive.Stream;
 

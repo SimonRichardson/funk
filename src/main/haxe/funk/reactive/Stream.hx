@@ -152,6 +152,10 @@ class Stream<T> {
 
 class StreamTypes {
 
+    private static function toCollection<T>(stream : Stream<T>) : Collection<Stream<T>> {
+        return [stream].toCollection();
+    }
+
     public static function bindTo<T, E>(func : Function1<T, Void>, stream : Stream<E>) : Stream<E> {
         stream.foreach(function(v) {
             func(cast v);
@@ -171,7 +175,7 @@ class StreamTypes {
             }, behaviour.value());
 
             return Negate;
-        }, Some(CollectionUtil.toCollection(stream)));
+        }, toCollection(stream));
 
         return out;
     }
@@ -184,19 +188,17 @@ class StreamTypes {
 
     @:noUsing
     public static function create<T1, T2>(  pulse: Function1<Pulse<T1>, Propagation<T2>>,
-                                            sources: Option<Collection<Stream<T1>>>
+                                            sources: Collection<Stream<T1>>
                                             ) : Stream<T2> {
         var stream = new Stream<T2>(cast pulse);
 
-        sources.foreach(function(collection){
-            collection.foreach(function (source : Stream<T1>) {
-                switch(source.toOption()) {
-                    case Some(val): val.attach(cast stream);
-                    case None:
-                }
-            });
+        sources.foreach(function (source : Stream<T1>) {
+            switch(source.toOption()) {
+                case Some(val): val.attach(cast stream);
+                case None:
+            }
         });
-
+    
         return stream;
     }
 
@@ -204,10 +206,10 @@ class StreamTypes {
         var out : Stream<T> = identity(None);
 
         create(function(pulse : Pulse<T>) : Propagation<T> {
-            out.dispatchWithDelay(pulse.value(), behaviour.value());
+            StreamTypes.dispatchWithDelay(out, pulse.value(), behaviour.value());
 
             return Negate;
-        }, Some(CollectionUtil.toCollection(stream)));
+        }, toCollection(stream));
 
         return out;
     }
@@ -234,7 +236,7 @@ class StreamTypes {
             });
 
             return Negate;
-        }, Some(CollectionUtil.toCollection(stream)));
+        }, toCollection(stream));
 
         return out;
     }
@@ -244,7 +246,7 @@ class StreamTypes {
             func(pulse.value());
 
             return Negate;
-        }, Some(CollectionUtil.toCollection(stream)));
+        }, toCollection(stream));
 
         return stream;
     }
@@ -252,13 +254,13 @@ class StreamTypes {
     public static function identity<T>(sources: Option<Collection<Stream<T>>>) : Stream<T> {
         return create(function(pulse) {
                 return Propagate(pulse);
-            }, sources);
+            }, sources.getOrElse(function() return CollectionUtil.zero()));
     }
 
     public static function map<T1, T2>(stream : Stream<T1>, func : Function1<T1, T2>) : Stream<T2> {
         return create(function(pulse : Pulse<T1>) : Propagation<T2> {
             return Propagate(pulse.map(func));
-        }, Some(CollectionUtil.toCollection(stream)));
+        }, toCollection(stream));
     }
 
     public static function merge<T>(streams : Collection<Stream<T>>) : Stream<T> {
@@ -279,7 +281,7 @@ class StreamTypes {
                 sent = true;
                 Propagate(pulse);
             }
-        }, None);
+        }, CollectionUtil.zero());
 
         stream.dispatch(value);
 
@@ -288,7 +290,7 @@ class StreamTypes {
 
     public static function random(time : Behaviour<Float>) : Stream<Float> {
         var timerStream : Stream<Float> = timer(time);
-        var mapStream : Stream<Float> = timerStream.map(function(value) {
+        var mapStream : Stream<Float> = map(timerStream, function(value) {
             return Math.random();
         });
         mapStream.whenFinishedDo(function() : Void {
@@ -303,7 +305,7 @@ class StreamTypes {
         var angle : Float = Math.PI * 2 / resolution;
 
         var timerStream : Stream<Float> = timer(time);
-        var mapStream : Stream<Float> = timerStream.map(function(value) {
+        var mapStream : Stream<Float> = map(timerStream, function(value) {
             return Math.sin(Process.stamp() + angle);
         });
         mapStream.whenFinishedDo(function() : Void {
@@ -324,7 +326,7 @@ class StreamTypes {
             } else {
                 Propagate(pulse.withValue(queue.shift()));
             }
-        }, Some(CollectionUtil.toCollection(stream)));
+        }, toCollection(stream));
     }
 
     public static function startsWith<T>(stream : Stream<T>, value : T) : Behaviour<T> {
@@ -344,7 +346,7 @@ class StreamTypes {
             } else {
                 Negate;
             }
-        }, Some(CollectionUtil.toCollection(stream)));
+        }, toCollection(stream));
     }
 
     public static function timer(time : Behaviour<Float>) : Stream<Float> {
@@ -389,18 +391,20 @@ class StreamTypes {
         return create(function(pulse : Pulse<T>) : Propagation<T> {
                 Funk.error(IllegalOperationError("Received a value that wasn't expected " + pulse.value()));
                 return Negate;
-            }, None);
+            }, CollectionUtil.zero());
     }
 
     public static function zip<T1, T2>(stream0 : Stream<T1>, stream1 : Stream<T2>) : Stream<Tuple2<T1, T2>> {
         return zipWith(stream0, stream1, function (a, b) {
-            return tuple2(a, b);
+            var tuple : Tuple2<T1, T2> = tuple2(a, b);
+            return tuple;
         });
     }
 
     public static function zipAny<T1, T2>(stream0 : Stream<T1>, stream1 : Stream<T2>) : Stream<Tuple2<T1, T2>> {
         return zipWith(stream0, stream1, function (a, b) {
-            return tuple2(a, b);
+            var tuple : Tuple2<T1, T2> = tuple2(a, b);
+            return tuple;
         }, function (t0, t1) {
             return true;
         });
@@ -427,7 +431,7 @@ class StreamTypes {
             value = pulse.value().toOption();
 
             return Negate;
-        }, Some(CollectionUtil.toCollection(stream0)));
+        }, toCollection(stream0));
 
         return create(function(pulse : Pulse<T2>) : Propagation<R> {
             return if (guarded(time, pulse.time())) {
@@ -435,7 +439,7 @@ class StreamTypes {
             } else {
                 Negate;
             }
-        }, Some(CollectionUtil.toCollection(stream1)));
+        }, toCollection(stream1));
     }
 }
 

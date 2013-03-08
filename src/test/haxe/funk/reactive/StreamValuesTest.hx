@@ -26,6 +26,7 @@ class StreamValuesTest extends CollectionTestBase {
 		alphaList = alphaList.append('b');
 		alphaList = alphaList.append('c');
 		alphaList = alphaList.append('d');
+		alphaList = alphaList.append('e');
 
 		alpha = alphaStream;
 

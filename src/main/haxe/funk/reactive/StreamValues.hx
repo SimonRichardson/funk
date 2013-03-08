@@ -26,11 +26,11 @@ class StreamValues<T> {
         return list.size();
     }
 
-    inline private function getList() : Function0<List<T>> {
+    inline private function getList() : List<T> {
         return _lazyOption.getOrElse(function() {
             return function() {
                 return Nil;
             }
-        });
+        })();
     }
 }

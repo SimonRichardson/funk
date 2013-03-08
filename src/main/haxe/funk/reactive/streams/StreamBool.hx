@@ -1,12 +1,10 @@
 package funk.reactive.streams;
 
 import funk.reactive.Propagation;
-import funk.reactive.Pulse;
-import funk.reactive.Stream;
 import funk.types.Option;
 
 using funk.collections.CollectionUtil;
-using funk.reactive.extensions.Pulses;
+using funk.reactive.Pulse;
 using funk.reactive.Stream;
 
 class StreamBool {
@@ -38,7 +36,7 @@ class StreamBool {
 			value = pulse.value();
 
 			return Negate;
-		}, Some([stream].toCollection()));
+		}, [stream].toCollection());
 
 		return StreamTypes.create(function(pulse : Pulse<T>) : Propagation<T> {
 			return if(value && (time == pulse.time())) {
@@ -46,7 +44,7 @@ class StreamBool {
 			} else {
 				Negate;
 			}
-		}, Some([block].toCollection()));
+		}, [block].toCollection());
 	}
 
 	public static function ifThenElse<T>(	stream : Stream<Bool>,
@@ -60,7 +58,7 @@ class StreamBool {
 			value = pulse.value();
 
 			return Negate;
-		}, Some([stream].toCollection()));
+		}, [stream].toCollection());
 
 		return StreamTypes.merge([
 			StreamTypes.create(function(pulse : Pulse<T>) : Propagation<T> {
@@ -69,13 +67,13 @@ class StreamBool {
 				} else {
 					Negate;
 				}
-			}, Some([thenBlock].toCollection())),
+			}, [thenBlock].toCollection()),
 			StreamTypes.create(function(pulse : Pulse<T>) : Propagation<T> {
 				return if(!value && (time == pulse.time())) {
 					Propagate(pulse);
 				} else {
 					Negate;
 				}
-			}, Some([elseBlock].toCollection()))].toCollection());
+			}, [elseBlock].toCollection())].toCollection());
 	}
 }
