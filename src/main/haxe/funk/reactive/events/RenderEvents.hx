@@ -38,44 +38,99 @@ class RenderEvents {
         return Events.event(stage, RenderEventTypes.toString(Render));
     }
     #elseif js
-    public static function enterFrame() : Stream<Event> {
-        return customEvent(RenderEventTypes.toString(EnterFrame));
+    public static function enterFrame(target : RenderTarget) : Stream<Event> {
+        return Events.event(cast target, RenderEventTypes.toString(EnterFrame));
     }
 
-    public static function render() : Stream<Event> {
-        return customEvent(RenderEventTypes.toString(Render));
-    }
-
-    private static function customEvent(type : String) : Stream<Event> {
-        var stream = StreamTypes.identity(None);
-
-        var win = Browser.window;
-        var document = win.document;
-        var finished = false;
-
-        var tick : Function1<Float, Bool> = null;
-        tick = function(value) {
-            var event = document.createEvent('Event');
-            event.initEvent(type, false, false);
-
-            stream.dispatch(event);
-
-            if (!finished) {
-                win.requestAnimationFrame(tick);
-            }
-            return true;
-        };
-
-        win.requestAnimationFrame(tick);
-
-        stream.whenFinishedDo(function () {
-            finished = true;
-        });
-
-        return stream;
+    public static function render(target : RenderTarget) : Stream<Event> {
+        return Events.event(cast target, RenderEventTypes.toString(Render));
     }
     #end
 }
+
+#if js 
+class RenderTarget {
+
+    private var _tick : Function1<Float, Bool>;
+
+    private var _listeners : Map<String, Array<Function1<Event, Void>>>;
+
+    private var _running : Bool;
+
+    public function new(type : String) {
+        _listeners = new Map();
+        _running = false;
+
+        var win = Browser.window;
+        var document = win.document;
+
+        _tick = function(value) {
+            var event = document.createEvent('Event');
+            event.initEvent(type, false, false);
+
+            dispatchEvent(event);
+
+            if (!_running) {
+                win.requestAnimationFrame(_tick);
+            }
+            return true;
+        };
+    }
+    
+    public function addEventListener( type : String, listener : Function1<Event, Void>, ?useCapture : Bool ) : Void {
+        if(!_listeners.exists(type)) {
+            _listeners.set(type, [listener]);
+        } else {
+            var listeners = _listeners.get(type);
+            listeners.push(listener);
+        }
+
+        if (!_running) {
+            var win = Browser.window;
+            win.requestAnimationFrame(_tick);
+        }
+    }
+
+    public function removeEventListener( type : String, listener : Function1<Event, Void>, ?useCapture : Bool ) : Void {
+        if(!_listeners.exists(type)) {
+            return;
+        }
+        
+        var listeners = _listeners.get(type);
+        
+        var index = -1;
+        for(i in 0...listeners.length) {
+            if (listeners[i] == listener) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index >= 0) {
+            listeners.splice(index, 1);
+        }
+
+        if (listeners.length < 1) {
+            if (!_listeners.keys().hasNext()) {
+                _running = false;
+            }
+        }
+    }
+
+    public function dispatchEvent(event : Event) : Bool {
+        return if (_listeners.exists(event.type)) {
+            var listeners = _listeners.get(event.type);
+            for(i in 0...listeners.length) {
+                var listener = listeners[i];
+                listener(event);
+            }
+            true;
+        } else {
+            false;
+        }
+    }
+}
+#end
 
 class RenderEventTypes {
 
