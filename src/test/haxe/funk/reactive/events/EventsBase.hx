@@ -29,16 +29,20 @@ class EventsBase {
 	}
 
 	private function dispatchEvent(value : String) {
+		dispatcher.dispatchEvent(createEvent(value));
+	}
+
+	private function createEvent(value : String) {
 		var event = null;
 
 		#if js
 		event = Browser.document.createEvent("Event");
 		event.initEvent(value, false, false);
 		#elseif flash9
-		event = new Event("something");
+		event = new Event(value);
 		#end
 
-		dispatcher.dispatchEvent(event);
+		return event;
 	}
 }
 #end
