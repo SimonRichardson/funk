@@ -1,12 +1,8 @@
 package funk.signals;
 
-import haxe.ds.Option;
-import funk.types.extensions.Options;
 import funk.signals.Signal0;
-import massive.munit.Assert;
-import unit.Asserts;
 
-using funk.types.extensions.Options;
+using funk.types.Option;
 using massive.munit.Assert;
 using unit.Asserts;
 
@@ -33,18 +29,6 @@ class Slot0Test {
 		var slot = new Slot0(signal, listener, false);
 		slot.execute();
 		called.isTrue();
-	}
-
-	@Test
-	public function when_calling_execute_when_disabled__should_not_call_listener() : Void {
-		var called = false;
-		var listener = function() {
-			called = true;
-		};
-		var slot = new Slot0(signal, listener, false);
-		slot.enabled = false;
-		slot.execute();
-		called.isFalse();
 	}
 
 	@Test
@@ -76,6 +60,6 @@ class Slot0Test {
 	public function when_calling_listener__should_return_same_listener() : Void {
 		var listener = function() {};
 		var slot = new Slot0(signal, listener, false);
-		slot.listener.areEqual(listener);
+		slot.getListener().areEqual(listener);
 	}
 }

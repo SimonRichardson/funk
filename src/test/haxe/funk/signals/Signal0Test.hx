@@ -1,11 +1,8 @@
 package funk.signals;
 
-import haxe.ds.Option;
-import funk.types.extensions.Options;
-import massive.munit.Assert;
-import unit.Asserts;
+import funk.signals.Signal0;
 
-using funk.types.extensions.Options;
+using funk.types.Option;
 using massive.munit.Assert;
 using unit.Asserts;
 
@@ -35,7 +32,7 @@ class Signal0Test {
 	@Test
 	public function when_adding_listener__should_return_option_with_same_listener() : Void {
 		var listener = function() {};
-		signal.add(listener).get().listener.areEqual(listener);
+		signal.add(listener).get().getListener().areEqual(listener);
 	}
 
 	@Test
@@ -71,7 +68,7 @@ class Signal0Test {
 	@Test
 	public function when_adding_once_listener__should_return_option_with_same_listener() : Void {
 		var listener = function() {};
-		signal.addOnce(listener).get().listener.areEqual(listener);
+		signal.addOnce(listener).get().getListener().areEqual(listener);
 	}
 
 	@Test

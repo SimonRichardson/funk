@@ -2,10 +2,10 @@ package funk.signals;
 
 import funk.Funk;
 
-using funk.collections.immutable.List;
 using funk.signals.Signal1;
 using funk.types.Function1;
 using funk.types.Option;
+using funk.collections.immutable.List;
 
 class PrioritySignal1<T1> extends Signal1<T1> {
 
@@ -68,7 +68,7 @@ class PrioritySlot1<T1> extends Slot1<T1> {
 		_priority = priority;
 	}
 
-	private function getPriority() : Int {
+	public function getPriority() : Int {
 		return _priority;
 	}
 

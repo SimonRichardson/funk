@@ -1,12 +1,8 @@
 package funk.signals;
 
 import funk.signals.PrioritySignal3;
-import haxe.ds.Option;
-import funk.types.extensions.Options;
-import massive.munit.Assert;
-import unit.Asserts;
 
-using funk.types.extensions.Options;
+using funk.types.Option;
 using massive.munit.Assert;
 using unit.Asserts;
 

@@ -117,7 +117,7 @@ class Slot2<T1, T2> {
 		_signal.remove(getListener());
 	}
 
-	public function getListener() : Function1<T1, Void> {
+	public function getListener() : Function2<T1, T2, Void> {
 		return _listener;
 	}
 
@@ -180,16 +180,16 @@ class Signal2Types {
 
             function check() {
                 if (aa.length > 0 && bb.length > 0) {
-                    Functions2.untuple(signal.dispatch)(func(aa.shift(), bb.shift()));
+                    Function2Types.untuple(signal.dispatch)(func(aa.shift(), bb.shift()));
                 }
             }
 
             a.add(function (value0, value1) {
-                Functions2.tuple(aa.push)(value0, value1);
+                Function2Types.tuple(aa.push)(value0, value1);
                 check();
             });
             b.add(function (value0, value1) {
-                Functions2.tuple(bb.push)(value0, value1);
+                Function2Types.tuple(bb.push)(value0, value1);
                 check();
             });
 
@@ -203,7 +203,7 @@ class Signal2Types {
         var result = new Signal2<T3, T4>();
 
         signal.add(function (value0, value1) {
-            Functions2.untuple(result.dispatch)(func(value0, value1));
+            Function2Types.untuple(result.dispatch)(func(value0, value1));
         });
 
         return result;
