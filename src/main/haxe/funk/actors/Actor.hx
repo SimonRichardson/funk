@@ -23,9 +23,7 @@ class Actor {
         _self = _context;
     }
 
-    public function recieve<T>(message : T) : Void {
-        return null;
-    }
+    dynamic public function recieve<T>(message : T) : Void;
 
     public function self() : ActorRef {
         return null;

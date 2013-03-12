@@ -4,16 +4,33 @@ enum Envelope {
 	Envelope(message : T, sender : ActorRef);
 }
 
+enum SystemMessage {
+    Create;
+    Recreate(cause : Errors);
+    Suspend;
+    Resume;
+    Stop;
+    Link(subject : ActorRef);
+    Unlink(subject : ActorRef);
+    Terminate;
+    Supervise(child : ActorRef);
+    ChildTerminated(child : ActorRef);
+}
+
 class MessageDispatcher {
 
 	private var _id : String;
 
 	public function new() {
-
 	}
 
 	public function createMailbox(actor : ActorCell) : Mailbox {
+	}
 
+	public function systemDispatch(reciever : ActorCell, invocation : SystemMessage) : Void {
+	}
+
+	public function dispatch(reciever : ActorCell, invocation : Envelope) : Void {
 	}
 
 	public function attach(actor : ActorCell) : Void {
@@ -23,14 +40,6 @@ class MessageDispatcher {
 
 	public function detach(actor : ActorCell) : Void {
 		unregister(actor);
-	}
-
-	public function systemDispatch(reciever : ActorCell, invocation : SystemMessage) : Void {
-		
-	}
-
-	public function dispatch(reciever : ActorCell, invocation : Envelope) : Void {
-
 	}
 
 	public function suspend(actor : ActorCell) : Void {

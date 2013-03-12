@@ -18,3 +18,10 @@ class Router extends Actor {
     	}
     }
 }
+
+class NoRouter extends Router {
+
+	public function new() {
+		super();
+	}
+}

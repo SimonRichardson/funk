@@ -1,17 +1,6 @@
 package funk.actors;
 
-enum SystemMessage {
-    Create;
-    Recreate(cause : Errors);
-    Suspend;
-    Resume;
-    Stop;
-    Link(subject : ActorRef);
-    Unlink(subject : ActorRef);
-    Terminate;
-    Supervise(child : ActorRef);
-    ChildTerminated(child : ActorRef);
-}
+
 
 class ActorContext {
 

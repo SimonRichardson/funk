@@ -9,22 +9,22 @@ class Dispatcher extends MessageDispatcher {
 	}
 
 	override public function createMailbox(actor : ActorCell) : Mailbox {
-		return new Mailbox(actor);
+		return new Mailbox(actor, MailboxType.create(actor.context());
 	}
 
-	public function dispatch(receiver : ActorCell, invocation : Envelope) {
+	override public function dispatch(receiver : ActorCell, invocation : Envelope) {
 		var mbox = receiver.mailbox();
 		mbox.enqueue(receiver.self(), invocation);
 		registerForExecution(mbox);
 	}
 
-	public function systemDispatch(receiver : ActorCell, invocation : SystemMessage) {
+	override public function systemDispatch(receiver : ActorCell, invocation : SystemMessage) {
 		var mbox = receiver.mailbox();
 		mbox.systemEnqueue(receiver.self(), invocation);
 		registerForExecution(mbox);
 	}
 
-	private function registerForExecution(mailbox : Mailbox) : Bool {
+	override private function registerForExecution(mailbox : Mailbox) : Bool {
 		return if (mailbox.setAsScheduled()) {
 			try {
 				_executorService.get().execute(mailbox);

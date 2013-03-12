@@ -13,6 +13,14 @@ typedef MessageQueue = {
   function cleanUp(owner: ActorContext, deadLetters: MessageQueue): Void;
 }
 
+class MailboxType {
+
+	public static function create(owner : Option<ActorContext>) : MessageQueue {
+		// TODO (Simon) : Fill this in with different items, depending on the context.
+		return new UnboundedMailbox();
+	}
+}
+
 class Mailbox extends DefaultSystemMessageQueue {
 
 	inline private static var Open : Int = 0;

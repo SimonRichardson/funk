@@ -12,8 +12,12 @@ class ActorSystem {
 
     public function new() {
         _actors = Nil;
+        
+        _scheduler = new DefaultScheduler(function() {
+            return _dispatchers.defaultGlobalDispatcher;
+        });
         _dispatchers = new Dispatchers(_deadLetterMailbox, _scheduler);
-        _scheduler = new DefaultScheduler(_dispatchers.defaultGlobalDispatcher);
+        
     }
 
     public function actorOf(props : Props, name : String) : Promise<ActorRef> {

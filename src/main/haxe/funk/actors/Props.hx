@@ -19,6 +19,7 @@ class Props {
             }
         };
         _dispatcher = "";
+        _router = new NoRouter();
     }
 
     public function creator() : Function1<Void, Actor> return _creator.create;
