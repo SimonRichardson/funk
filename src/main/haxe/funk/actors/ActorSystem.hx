@@ -2,11 +2,14 @@ package funk.actors;
 
 class ActorSystem {
 
-    public function new() {
+    private var _actors : List<Actors>;
 
+    public function new() {
+        _actors = Nil;
     }
 
     public function actorOf(props : Props, name : String) : ActorRef {
+        
         return null;
     }
 

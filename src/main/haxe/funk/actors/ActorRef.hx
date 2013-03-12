@@ -19,6 +19,7 @@ class ActorRef {
     }
 
     public function tell<T>(message : T, sender : ActorRef) : Void {
-
+        // var ref = AnyTypes.toBool(sender) ? sender : system.deadLetters;
+        // dispatcher.dispatch(this, Envelope(message, s)(system))
     }
 }
