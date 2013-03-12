@@ -1,11 +1,15 @@
-package funk.actors;
+package funk.actors.dispatch;
 
-class Dispatcher {
+class Dispatcher extends MessageDispatcher {
 
 	private var _executorService : ExecutorService;
 
 	public function new() {
 		_executorService = new ExecutorService();
+	}
+
+	override public function createMailbox(actor : ActorCell) : Mailbox {
+		return new Mailbox(actor);
 	}
 
 	public function dispatch(receiver : ActorCell, invocation : Envelope) {

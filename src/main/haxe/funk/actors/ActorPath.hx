@@ -1,7 +1,5 @@
 package funk.actors;
 
-typedef Address = Uri;
-
 typedef ActorPath = {
 
     function address() : Address;

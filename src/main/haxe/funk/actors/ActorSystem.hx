@@ -2,22 +2,52 @@ package funk.actors;
 
 class ActorSystem {
 
-    private var _actors : List<Actors>;
+    private var _provider : ActorRefProvider;
+
+    private var _scheduler : Scheduler;
+
+    private var _dispatchers : Dispatchers;
+
+    private var _dispatcher : MessageDispatcher;
 
     public function new() {
         _actors = Nil;
+        _dispatchers = new Dispatchers(_deadLetterMailbox, _scheduler);
+        _scheduler = new DefaultScheduler(_dispatchers.defaultGlobalDispatcher);
     }
 
-    public function actorOf(props : Props, name : String) : ActorRef {
-        
-        return null;
+    public function actorOf(props : Props, name : String) : Promise<ActorRef> {
+        return guardian().ask(CreateChild(props, name));
     }
 
-    public function name() : String {
-        return null;
+    public function start() : Void {
+        _provider.init(this);
+        _provider.terminationFuture().when(function() {
+            stopScheduler();
+        });
+    }
+
+    public function shutdown() : Void {
+        guardian().stop();
+    }
+
+    public function deadLetters() : ActorRef {
+
     }
 
     public function scheduler() : Scheduler {
-        return null;
+        
+    }
+
+    public function dispatcher() : MessageDispatcher {
+
+    }
+
+    inline private function guardian() : InternalActorRef {
+        return _provider.guardian();
+    }
+
+    private function stopScheduler() : Void {
+        _scheduler.close();
     }
 }

@@ -6,7 +6,7 @@ class ActorRef {
 
     }
 
-    public function ask<T>(reciever : ActorRef, message : T) : Future<T> {
+    public function ask<T>(reciever : ActorRef, message : T) : Promise<T> {
 
     }
 
