@@ -1,5 +1,24 @@
 package funk.actors;
 
+typedef ActorContext = {
+
+    function actorOf(props : Props, name : String) : ActorRef;
+
+    function child(name : String) : Option<ActorRef>;
+
+    function children() : List<ActorRef>;
+
+    function parents() : ActorRef;
+
+    function props() : Props;
+
+    function self() : ActorRef;
+
+    function sender() : ActorRef;
+
+    function system() : ActorSystem;
+};
+
 class ActorCell {
 
     private var _actor : Actor;
