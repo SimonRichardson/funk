@@ -1,7 +1,7 @@
 package funk.actors.dispatch;
 
 typedef MessageQueue = {
-  
+
   function enqueue(receiver : ActorRef, handle : Envelope) : Void;
 
   function dequeue() : Envelope;
@@ -119,7 +119,7 @@ class Mailbox extends DefaultSystemMessageQueue {
 		}
 
 		finally();
-	}	
+	}
 
 	private function processAllSystemMessages() {
 		var list = systemDrain();
@@ -137,7 +137,7 @@ class Mailbox extends DefaultSystemMessageQueue {
 				actor.invoke(next);
 				processAllSystemMessages();
 
-				if (left > 1 && 
+				if (left > 1 &&
 					((_dispatcher.isThroughputDeadlineTimeDefined() == false) || (Process.stamp() - deadlineNs < 0))){
 					processMailbox(left - 1, deadlineNs);
 				}
@@ -160,10 +160,54 @@ class Mailbox extends DefaultSystemMessageQueue {
 	}
 }
 
+class DeadLetterQueue {
+
+	private var _deadLetters : ActorRef;
+
+	public function new(deadLetters : ActorRef) {
+		_deadLetters = deadLetters;
+	}
+
+	public function enqueue(receiver : ActorRef, envelope : Envelope) : Void {
+		var sender = envelope.sender();
+		_deadLetters.tell(DeadLetter(envelope.message(), sender, receiver), sender);
+	}
+
+  	public function dequeue() : Envelope return null;
+
+  	public function numberOfMessages() : Int return 0;
+
+  	public function hasMessages() : Bool return false;
+
+  	public function cleanUp(owner: ActorContext, deadLetters: MessageQueue): Void {
+  	}
+}
+
+class DeadLetterMailbox extends Mailbox {
+
+	private var _deadLetters : DeadLetters;
+
+	public function new(deadLetters : ActorRef, queue : DeadLetterQueue) {
+		super(null, queue);
+
+		_deadLetter = deadLetters;
+
+		becomeClosed();
+	}
+
+	override public function systemEnqueue(reciever : ActorRef, handle : List<SystemMessage>) : Void {
+		_deadLetters.tell(DeadLetter(handle, reciever, reciever));
+	}
+
+	override public function systemDrain() : SystemMessage return null;
+
+	override public function hasSystemMessages() : Bool return false;
+}
+
 private typedef SystemMessageQueue = {
-	
+
 	function systemEnqueue(receiver: ActorRef, message: SystemMessage) : Void;
-	
+
 	function systemDrain() : SystemMessage;
 
   	function hasSystemMessages(): Boolean;
@@ -181,8 +225,8 @@ private class DefaultSystemMessageQueue {
 		_queue = _queue.prependAll(messages);
 	}
 
-	public function systemDrain() : SystemMessage {
-		var queue = _mailbox.systemQueue;
+	public function systemDrain() : List<SystemMessage> {
+		var queue = _queue;
 		_queue = Nil;
 		return queue;
 	}
