@@ -18,7 +18,7 @@ class Props {
                 return new Actor();
             }
         };
-        _dispatcher = "";
+        _dispatcher = "default-dispatcher";
         _router = new NoRouter();
     }
 

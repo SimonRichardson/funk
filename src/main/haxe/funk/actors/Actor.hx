@@ -8,6 +8,8 @@ class Actor {
 
     private var _self : ActorRef;
 
+    private var _sender : ActorRef;
+
     public function new() {
         var contextStack = ActorCell.contextStack.get();
 
@@ -20,18 +22,21 @@ class Actor {
         if (AnyTypes.toBool(c)) noContextError();
 
         _context = c;
-        _self = _context;
+        _self = _context.self();
+        _sender = _context.sender();
+
+        ActorCell.contextStack.set(contextStack.push(null));
     }
 
     dynamic public function recieve<T>(message : T) : Void;
 
-    public function self() : ActorRef {
-        return null;
+    public function unhandled<T>(message : T) : Void {
+        // TODO (Simon) : Notify un-handled errors.
     }
 
-    public function sender() : ActorRef {
-        return null;
-    }
+    public function self() : ActorRef return _self;
+
+    public function sender() : ActorRef return _sender;
 
     private function context() : ActorContext {
         return _context;

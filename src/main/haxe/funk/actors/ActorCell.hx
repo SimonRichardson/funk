@@ -12,10 +12,10 @@ class ActorCell {
 
     private var _childrenRefs : List<ActorRef>;
 
+    private var _currentMessage : Envelope;
+
     public function new() {
-        _dispatcher = _system.dispatchers.find(function(value) {
-            return value == props.dispatcher();
-        }).get();
+        _dispatcher = _system.dispatchers.lookup(props.dispatcher());
     }
 
     public function start() {
@@ -37,7 +37,14 @@ class ActorCell {
 
     public function tell<T>(message : T, sender : ActorRef) : Void {
         var ref = AnyTypes.toBool(sender)? sender : _system.deadLetters;
-        _dispatcher.dispatch(this, Envelope(message, ref)(system));
+        _dispatcher.dispatch(this, Envelope(message, ref));
+    }
+
+    public function sender() : ActorRef {
+        return switch(_currentMessage) {
+            case Envelope(msg, sender) if (AnyTypes.toBool(sender)): sender;
+            case _: _system.deadLetters;
+        }
     }
 
     public function newActor() : Actor {
@@ -66,6 +73,10 @@ class ActorCell {
         }
     }
 
+    public function invoke(message : Envelope) {
+        _currentMessage = message;
+    }
+
     private function create() : Void {
         try {
             _actor = newActor();
@@ -77,7 +88,42 @@ class ActorCell {
 
     private function recreate(cause : Errors) : Void {
         switch(cause) {
-            
+            case _: // TODO (Simon) : Work out if we can reboot the actor.
         }
+    }
+
+    private function suspend() : Void if(isNormal()) _dispatcher.suspend(this);
+
+    private function resume() : Void if(isNormal()) _dispatcher.resume(this);
+
+    private function link(subject : ActorRef) : Void {
+        if (!isTerminating()) {
+            // TODO (Simon) : Workout if we need to link
+        }
+    }
+
+    private function unlink(subject : ActorRef) : Void {
+        if (!isTerminating()) {
+            // TODO (Simon) : Workout if we need to link
+        }
+    }
+
+    private function terminated() : Void {
+        children().foreach(function(value) value.stop());
+
+        _dispatcher.detach(this);
+        parent().sendSystemMessage(ChildTerminated(self()));
+        _actor = null;
+    }
+
+    private function supervise(child : ActorRef) : Void {
+        var opt = _childrenRefs.find(function(value) return value == child);
+        if (opt.isEmpty()) {
+            _childrenRefs = _childrenRefs.prepend(child);
+        }
+    }
+
+    private function handChildTerminated(child : ActorRef) : Void {
+        _childrenRefs = _childrenRefs.filterNot(function(value) return value == child);
     }
 }

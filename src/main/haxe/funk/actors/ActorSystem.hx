@@ -16,8 +16,7 @@ class ActorSystem {
         _scheduler = new DefaultScheduler(function() {
             return _dispatchers.defaultGlobalDispatcher;
         });
-        _dispatchers = new Dispatchers(_deadLetterMailbox, _scheduler);
-        
+        _dispatchers = new Dispatchers(_deadLetterMailbox, _scheduler);   
     }
 
     public function actorOf(props : Props, name : String) : Promise<ActorRef> {
