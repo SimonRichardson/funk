@@ -1,6 +1,6 @@
 package funk.actors.dispatch;
 
-enum Envelope {
+enum Envelope<T> {
 	Envelope(message : T, sender : ActorRef);
 }
 
@@ -15,6 +15,10 @@ enum SystemMessage {
     Terminate;
     Supervise(child : ActorRef);
     ChildTerminated(child : ActorRef);
+}
+
+enum UnhandledMessage<T> {
+    UnhandledMessage(message : T, sender : ActorRef, self : ActorRef);
 }
 
 class MessageDispatcher {
@@ -63,7 +67,7 @@ class MessageDispatcher {
 	public function throughput() : Int {
 		return 0;
 	}
-	
+
 	public function throughputDeadlineTime() : Int {
 		return 0;
 	}

@@ -2,14 +2,11 @@ package funk.actors.dispatch;
 
 class Dispatcher extends MessageDispatcher {
 
-	private var _executorService : ExecutorService;
-
 	public function new() {
-		_executorService = new ExecutorService();
 	}
 
 	override public function createMailbox(actor : ActorCell) : Mailbox {
-		return new Mailbox(actor, MailboxType.create(actor.context());
+		return new Mailbox(actor, MailboxType.create(actor.context()));
 	}
 
 	override public function dispatch(receiver : ActorCell, invocation : Envelope) {
@@ -27,9 +24,11 @@ class Dispatcher extends MessageDispatcher {
 	override private function registerForExecution(mailbox : Mailbox) : Bool {
 		return if (mailbox.setAsScheduled()) {
 			try {
-				_executorService.get().execute(mailbox);
+				// TODO (Simon) : We could put this in a Thread.
+				mailbox.run();
 				true;
 			} catch (e : Dynamic) {
+				mailbox.setAsIdle();
 				false;
 			}
 		} else false;

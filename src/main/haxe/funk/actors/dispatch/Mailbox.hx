@@ -21,6 +21,7 @@ class MailboxType {
 	}
 }
 
+@:allow(funk.actors.dispatch.Dispatcher)
 class Mailbox extends DefaultSystemMessageQueue {
 
 	inline private static var Open : Int = 0;

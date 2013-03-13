@@ -31,7 +31,10 @@ class Actor {
     dynamic public function recieve<T>(message : T) : Void;
 
     public function unhandled<T>(message : T) : Void {
-        // TODO (Simon) : Notify un-handled errors.
+        switch(message) {
+            // case Terminated(dead): Funk.Errors(ActorError(dead));
+            case _: context().system().publish(UnhandledMessage(message, sender(), self()));
+        }
     }
 
     public function self() : ActorRef return _self;

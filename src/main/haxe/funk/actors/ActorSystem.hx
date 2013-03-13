@@ -10,7 +10,7 @@ class ActorSystem {
 
     private var _dispatcher : MessageDispatcher;
 
-    private var _eventBus : EventStream;
+    private var _eventStream : EventStream;
 
     public function new(provider : ActorRefProvider) {
         _provider = provider;
@@ -52,6 +52,8 @@ class ActorSystem {
     public function scheduler() : Scheduler return _scheduler;
 
     public function dispatcher() : MessageDispatcher return _dispatchers.defaultGlobalDispatcher;
+
+    public function eventStream() : EventStream return _eventStream;
 
     inline private function guardian() : InternalActorRef return _provider.guardian();
 
