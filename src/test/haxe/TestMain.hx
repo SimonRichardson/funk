@@ -4,10 +4,11 @@ import massive.munit.client.HTTPClient;
 import massive.munit.client.JUnitReportClient;
 import massive.munit.TestRunner;
 
-import suites.ActorsSuite;
+//import suites.ActorsSuite;
 import suites.CollectionsSuite;
 import suites.FuturesSuite;
 import suites.FoldablesSuite;
+import suites.IocSuite;
 import suites.ReactivesSuite;
 import suites.SignalsSuite;
 import suites.TypesSuite;
@@ -35,10 +36,11 @@ class TestMain {
 
         var suites = new Array<Class<massive.munit.TestSuite>>();
 
-        suites.push(ActorsSuite);
+        //suites.push(ActorsSuite);
         suites.push(CollectionsSuite);
         suites.push(FuturesSuite);
         suites.push(FoldablesSuite);
+        suites.push(IocSuite);
         suites.push(ReactivesSuite);
         suites.push(SignalsSuite);
         suites.push(TypesSuite);

@@ -1,10 +1,12 @@
 package funk.types;
 
+import funk.types.Any;
+
 class Pass {
 
-	public static function instanceOf<T>(type : Class<T>) : Function0<T> {
+	public static function instanceOf<T>(type : Class<T>, ?args : Array<Dynamic> = null) : Function0<T> {
 		return function() : T {
-			return createEmptyInstance(type);
+			return createInstance(type, AnyTypes.toBool(args) ? args : []);
 		};
 	}
 
