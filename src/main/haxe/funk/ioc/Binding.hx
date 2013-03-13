@@ -29,7 +29,7 @@ class Binding<T> {
     private var _value : T;
 
     public function new(module : Module) {
-        if (module.toBool()) Funk.error(ArgumentError());
+        if (module.toBool().not()) Funk.error(ArgumentError());
 
         _module = module;
 
@@ -38,8 +38,8 @@ class Binding<T> {
     }
 
     public function to(type : Class<T>, ?func : Function0<Array<Dynamic>>) : Scope {
-        if (type.toBool()) Funk.error(ArgumentError());
-        if (func.toBool()) {
+        if (type.toBool().not()) Funk.error(ArgumentError());
+        if (func.toBool().not()) {
             func = function () {
                 return [];
             };
@@ -52,7 +52,7 @@ class Binding<T> {
     }
 
     public function toInstance(instance : T) : Scope {
-        if (instance.toBool()) Funk.error(ArgumentError());
+        if (instance.toBool().not()) Funk.error(ArgumentError());
 
         _evaluated = false;
         _bindingType = Instance(instance);
@@ -61,7 +61,7 @@ class Binding<T> {
     }
 
     public function toProvider(provider : Class<Provider<T>>) : Scope {
-        if (provider.toBool()) Funk.error(ArgumentError());
+        if (provider.toBool().not()) Funk.error(ArgumentError());
 
         _evaluated = false;
         _bindingType = Provider(provider);

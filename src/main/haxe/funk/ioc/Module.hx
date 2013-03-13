@@ -2,13 +2,13 @@ package funk.ioc;
 
 import funk.Funk;
 
-using funk.collections.immutable.List;
 using funk.ioc.Binding;
 using funk.types.Any;
 using funk.types.Option;
 using funk.types.Function0;
 using funk.types.Predicate2;
 using funk.types.Tuple2;
+using funk.collections.immutable.List;
 
 interface IModule {
 
@@ -66,7 +66,7 @@ class Module implements IModule {
 
     public function bindWith(type : Class<Dynamic>, func : Function0<Array<Dynamic>>) : Binding<Dynamic> {
         if(binds(type)) Funk.error(BindingError('$type is already bound.'));
-        
+
         var binding = new Binding(this);
         binding.to(type, func);
 
@@ -87,7 +87,7 @@ class Module implements IModule {
         });
     }
 
-    public function dispose() : Void {       
+    public function dispose() : Void {
         _map = Nil;
         _initialized = false;
     }
