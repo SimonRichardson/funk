@@ -1,10 +1,13 @@
 package funk.actors.dispatch;
 
+using funk.actors.dispatch.MessageDispatcher;
+using funk.actors.ActorCell;
+
 typedef MessageQueue = {
 
-  function enqueue(receiver : ActorRef, handle : Envelope) : Void;
+  function enqueue<T>(receiver : ActorRef, handle : Envelope<T>) : Void;
 
-  function dequeue() : Envelope;
+  function dequeue<T>() : Envelope<T>;
 
   function numberOfMessages() : Int;
 
@@ -48,9 +51,9 @@ class Mailbox extends DefaultSystemMessageQueue {
 		_status = 0;
 	}
 
-	public function enqueue(reciever : ActorRef, msg : Envelope) : Void _messageQueue.enqueue(reciever, msg);
+	public function enqueue<T>(reciever : ActorRef, msg : Envelope<T>) : Void _messageQueue.enqueue(reciever, msg);
 
-	public function dequeue() : Envelope return _messageQueue.dequeue();
+	public function dequeue<T>() : Envelope<T> return _messageQueue.dequeue();
 
 	public function hasMessages() : Bool return _messageQueue.hasMessages();
 
@@ -86,8 +89,8 @@ class Mailbox extends DefaultSystemMessageQueue {
 	}
 
 	public function setAsScheduled() : Bool {
-		return if (_status <= Suspended) _status = _status | Scheduled; true;
-		else false;
+		return if (_status <= Suspended) { _status = _status | Scheduled; true; }
+		else { false; }
 	}
 
 	public function setAsIdle() : Bool {
@@ -186,7 +189,7 @@ class DeadLetterQueue {
 
 class DeadLetterMailbox extends Mailbox {
 
-	private var _deadLetters : DeadLetters;
+	private var _deadLetters : ActorRef;
 
 	public function new(deadLetters : ActorRef, queue : DeadLetterQueue) {
 		super(null, queue);
@@ -197,7 +200,7 @@ class DeadLetterMailbox extends Mailbox {
 	}
 
 	override public function systemEnqueue(reciever : ActorRef, handle : List<SystemMessage>) : Void {
-		_deadLetters.tell(DeadLetter(handle, reciever, reciever));
+		_deadLetters.tell(DeadLetter(handle, reciever, reciever), _deadLetters.self());
 	}
 
 	override public function systemDrain() : SystemMessage return null;
@@ -211,7 +214,7 @@ private typedef SystemMessageQueue = {
 
 	function systemDrain() : SystemMessage;
 
-  	function hasSystemMessages(): Boolean;
+  	function hasSystemMessages(): Bool;
 }
 
 private class DefaultSystemMessageQueue {

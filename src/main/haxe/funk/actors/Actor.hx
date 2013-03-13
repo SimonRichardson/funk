@@ -1,6 +1,6 @@
 package funk.actors;
 
-import funk.actors.ActorContext;
+using funk.actors.ActorCell;
 
 class Actor {
 

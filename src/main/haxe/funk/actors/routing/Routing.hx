@@ -1,4 +1,4 @@
-package funk.actors;
+package funk.actors.routing;
 
 class Router extends Actor {
 

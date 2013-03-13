@@ -1,5 +1,7 @@
 package funk.actors.dispatch;
 
+using funk.Funk;
+
 enum Envelope<T> {
 	Envelope(message : T, sender : ActorRef);
 }

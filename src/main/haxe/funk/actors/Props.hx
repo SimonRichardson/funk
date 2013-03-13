@@ -1,5 +1,8 @@
 package funk.actors;
 
+using funk.actors.routing.Routing;
+using funk.types.Function1;
+
 typedef Creator = {
     create: Function1<Void, Actor>
 };

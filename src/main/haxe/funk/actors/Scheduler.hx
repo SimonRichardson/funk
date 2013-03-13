@@ -1,5 +1,7 @@
 package funk.actors;
 
+using funk.types.Function1;
+
 typedef Cancellable = {
 
 	function cancel() : Void;
@@ -27,11 +29,11 @@ class DefaultScheduler {
 			_dispatcher().execute(this);
 		}, 1);
 
-		var isCancelled = false;
+		var cancelled = false;
 
 		return {
-			cancel: function() return task.foreach(function(value) { value.stop(); isCancelled = true; });
-			isCancelled: function() return isCancelled;
+			cancel: function() return task.foreach(function(value) { value.stop(); cancelled = true; }),
+			isCancelled: function() return cancelled
 		};
 	}
 
@@ -40,16 +42,16 @@ class DefaultScheduler {
 			_dispatcher().execute(this);
 		}, 1);
 
-		var isCancelled = false;
+		var cancelled = false;
 
 		if (task.isDefined()) {
 			task.stop();
-			isCancelled = true;
+			cancelled = true;
 		}
 
 		return {
-			cancel: function() return task.foreach(function(value) { value.stop(); isCancelled = true; });
-			isCancelled: function() return isCancelled;
+			cancel: function() return task.foreach(function(value) { value.stop(); cancelled = true; }),
+			isCancelled: function() return cancelled
 		};
     }
 }

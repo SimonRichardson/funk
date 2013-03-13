@@ -1,5 +1,7 @@
 package funk.actors;
 
+using funk.types.Option;
+
 typedef ActorContext = {
 
     function actorOf(props : Props, name : String) : ActorRef;
@@ -19,6 +21,7 @@ typedef ActorContext = {
     function system() : ActorSystem;
 };
 
+@:allow(funk.actors.ActorRef)
 class ActorCell {
 
     private var _actor : Actor;
@@ -145,4 +148,6 @@ class ActorCell {
     private function handChildTerminated(child : ActorRef) : Void {
         _childrenRefs = _childrenRefs.filterNot(function(value) return value == child);
     }
+
+    private function childrenRefs() : List<ActorRef> return _childrenRefs;
 }
