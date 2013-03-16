@@ -8,6 +8,7 @@ using funk.types.Function2;
 using funk.types.Predicate0;
 using funk.types.Option;
 using funk.types.Tuple2;
+using funk.types.Unit;
 
 class Signal0 {
 

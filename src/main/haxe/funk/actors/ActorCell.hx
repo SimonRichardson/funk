@@ -1,5 +1,10 @@
 package funk.actors;
 
+import funk.Funk;
+
+using funk.actors.dispatch.Envelope;
+using funk.actors.dispatch.Mailbox;
+using funk.actors.dispatch.MessageDispatcher;
 using funk.types.Option;
 
 typedef ActorContext = {
@@ -52,7 +57,7 @@ class ActorCell {
     public function suspend() : Void _dispatcher.systemDispatch(this, Suspend);
 
     public function resume() : Void _dispatcher.systemDispatch(this, Resume);
-    
+
     public function stop() : Void _dispatcher.systemDispatch(this, Stop);
 
     public function children() : List<ActorRef> return _childrenRefs.children;

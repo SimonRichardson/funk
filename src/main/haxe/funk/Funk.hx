@@ -2,10 +2,6 @@ package funk;
 
 import haxe.PosInfos;
 
-enum Unit {
-	Unit;
-}
-
 enum Errors {
 	Abstract;
 	AbstractMethod;

@@ -1,5 +1,6 @@
 package funk.actors;
 
+using funk.actors.dispatch.MessageDispatcher;
 using funk.types.Function1;
 
 typedef Cancellable = {

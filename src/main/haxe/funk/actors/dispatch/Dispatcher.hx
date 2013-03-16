@@ -1,5 +1,7 @@
 package funk.actors.dispatch;
 
+using funk.actors.dispatch.MessageDispatcher;
+
 class Dispatcher extends MessageDispatcher {
 
 	public function new() {

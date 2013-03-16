@@ -1,5 +1,7 @@
 package funk.actors.event;
 
+using funk.types.Tuple2;
+
 typedef EventBus = {
 
     function subscribe(subscriber : ActorRef) : Bool;
@@ -17,11 +19,11 @@ class LookupClassification {
         _subscribers = Nil;
     }
 
-    public function subscribe(subscriber : ActorRef, to : Class<T>) : Bool {
+    public function subscribe<T>(subscriber : ActorRef, to : Class<T>) : Bool {
         _subscribers = _subscribers.prepend(tuple2(to, subscriber));
     }
 
-    public function unsubscribe(subscriber : ActorRef, ?from : Class<T>) : Bool {
+    public function unsubscribe<T>(subscriber : ActorRef, ?from : Class<T>) : Bool {
         _subscribers = _subscribers.filterNot(function(tuple : Tuple2<Class<ActorRef>, ActorRef>) {
             return (tuple._2() == subscriber && (!AnyTypes.toBool(from) || tuple._1() == from));
         });

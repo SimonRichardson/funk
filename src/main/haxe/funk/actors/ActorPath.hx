@@ -15,7 +15,7 @@ typedef ActorPath = {
     function elements() : List<String>;
 }
 
-class RootActorPath extends ActorPath {
+class RootActorPath {
 
     private var _address : Address;
 

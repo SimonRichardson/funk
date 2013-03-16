@@ -1,5 +1,10 @@
 package funk.actors;
 
+using funk.actors.ActorCell;
+using funk.actors.ActorSystem;
+using funk.futures.Promise;
+using funk.types.Option;
+
 class ActorRef {
 
     private var _actorCell : ActorCell;
@@ -12,7 +17,7 @@ class ActorRef {
     }
 
     public function ask<T>(reciever : ActorRef, message : T) : Promise<T> {
-
+        return null;
     }
 
     public function path() : ActorPath {

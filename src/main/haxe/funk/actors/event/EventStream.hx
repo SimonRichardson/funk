@@ -1,6 +1,7 @@
 package funk.actors.event;
 
-import funk.actors.ActorSystem;
+using funk.actors.ActorSystem;
+using funk.actors.event.EventBus;
 
 class EventStream extends LookupClassification {
 

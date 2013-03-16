@@ -77,3 +77,10 @@ class ActorSystem {
 
     private function stopScheduler() : Void _scheduler.close();
 }
+
+class InternalActorRef extends ActorRef {
+
+    public function new() {
+        super();
+    }
+}

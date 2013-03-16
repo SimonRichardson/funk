@@ -2,12 +2,15 @@ package funk.actors.dispatch;
 
 using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.ActorCell;
+using funk.types.Option;
+using funk.actors.dispatch.Envelope;
+using funk.collections.immutable.List;
 
 typedef MessageQueue = {
 
-  function enqueue<T>(receiver : ActorRef, handle : Envelope<T>) : Void;
+  function enqueue(receiver : ActorRef, handle : Envelope) : Void;
 
-  function dequeue<T>() : Envelope<T>;
+  function dequeue() : Envelope;
 
   function numberOfMessages() : Int;
 
@@ -51,9 +54,9 @@ class Mailbox extends DefaultSystemMessageQueue {
 		_status = 0;
 	}
 
-	public function enqueue<T>(reciever : ActorRef, msg : Envelope<T>) : Void _messageQueue.enqueue(reciever, msg);
+	public function enqueue(reciever : ActorRef, msg : Envelope) : Void _messageQueue.enqueue(reciever, msg);
 
-	public function dequeue<T>() : Envelope<T> return _messageQueue.dequeue();
+	public function dequeue() : Envelope return _messageQueue.dequeue();
 
 	public function hasMessages() : Bool return _messageQueue.hasMessages();
 
@@ -127,7 +130,7 @@ class Mailbox extends DefaultSystemMessageQueue {
 
 	private function processAllSystemMessages() {
 		var list = systemDrain();
-		while(!isClosed() && list.isNonEmpty()) {
+		while(!isClosed() && list.nonEmpty()) {
 			var message = list.head();
 			_actor.systemInvoke(message);
 			list = list.tail();
@@ -154,7 +157,7 @@ class Mailbox extends DefaultSystemMessageQueue {
 			var dlm = actor.system().deadLetterMailbox();
 			if (hasSystemMessages()) {
 				var messages = systemDrain();
-				while(messages.isNonEmpty()) {
+				while(messages.nonEmpty()) {
 					var message = messages.head();
 					dlm.systemEnqueue(actor.self(), message);
 					messages = messages.tail();
@@ -236,7 +239,7 @@ private class DefaultSystemMessageQueue {
 	}
 
 	public function hasSystemMessages() : Bool {
-		return _queue.isNonEmpty();
+		return _queue.nonEmpty();
 	}
 }
 
@@ -254,12 +257,12 @@ private class UnboundedMailbox {
 
   	public function numberOfMessages() : Int return _list.size();
 
-  	public function hasMessages() : Bool return _list.isNonEmpty();
+  	public function hasMessages() : Bool return _list.nonEmpty();
 
   	public function cleanUp(owner: ActorContext, deadLetters: MessageQueue): Void {
   		if (hasMessages()) {
   			var list = _list;
-  			while(list.isNonEmpty()) {
+  			while(list.nonEmpty()) {
   				var head = list.head();
   				deadLetters.enqueue(owner.self(), head);
   				list = list.tail();
