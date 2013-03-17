@@ -23,9 +23,9 @@ class ActorSystemTest {
     }
 }
 
-class MockClass {
+class MockClass extends Actor {
 
     public function new() {
-
+        super();
     }
 }

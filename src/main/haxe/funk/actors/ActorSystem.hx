@@ -1,11 +1,14 @@
 package funk.actors;
 
+import funk.actors.ActorRefProvider;
+
 using funk.actors.dispatch.Dispatcher;
 using funk.actors.dispatch.Dispatchers;
 using funk.actors.dispatch.Mailbox;
 using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.event.EventStream;
 using funk.futures.Promise;
+using funk.types.Any;
 
 class ActorSystem {
 
@@ -38,8 +41,9 @@ class ActorSystem {
         _dispatchers = new Dispatchers(_eventStream, _deadLetterMailbox, _scheduler);
     }
 
-    public static function create(name : String) : Void {
-        return new ActorSystem(name, new ActorRefProvider());
+    public static function create(name : String, ?provider : ActorRefProvider = null) : ActorSystem {
+        var refProvider = AnyTypes.toBool(provider) ? provider : new ActorRefProvider();
+        return new ActorSystem(name, refProvider);
     }
 
     public function child(name : String) : ActorPath return guardian.path().child(name);

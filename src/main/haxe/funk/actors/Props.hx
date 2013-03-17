@@ -15,10 +15,10 @@ class Props {
 
     private var _dispatcher : String;
 
-    public function new() {
+    public function new(actor : Class<Actor>) {
         _creator = {
             function() {
-                return new Actor();
+                return actor();
             }
         };
         _dispatcher = "default-dispatcher";
