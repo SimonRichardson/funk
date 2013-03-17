@@ -161,11 +161,7 @@ class Mailbox extends DefaultSystemMessageQueue {
             var dlm = _actor.system().deadLetterMailbox();
             if (hasSystemMessages()) {
                 var messages = systemDrain();
-                while(messages.nonEmpty()) {
-                    var message = messages.head();
-                    dlm.systemEnqueue(_actor.self(), message);
-                    messages = messages.tail();
-                }
+                dlm.systemEnqueue(_actor.self(), message);
             }
         }
     }

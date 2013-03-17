@@ -1,5 +1,7 @@
 package funk.actors;
 
+import funk.actors.ActorSystem;
+
 using funk.actors.ActorCell;
 
 class Actor {
@@ -41,7 +43,5 @@ class Actor {
 
     public function sender() : ActorRef return _sender;
 
-    private function context() : ActorContext {
-        return _context;
-    }
+    private function context() : ActorContext return _context;
 }

@@ -1,5 +1,6 @@
 package funk.actors;
 
+import funk.actors.ActorSystem;
 import funk.Funk;
 
 using funk.actors.dispatch.Envelope;
@@ -73,6 +74,10 @@ class ActorCell {
             case _: _system.deadLetters;
         }
     }
+
+    public function self() : ActorRef return _actor;
+
+    public function system() : ActorSystem return _system;
 
     public function newActor() : Actor {
         try {

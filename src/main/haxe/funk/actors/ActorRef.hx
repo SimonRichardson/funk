@@ -43,6 +43,8 @@ class ActorRef {
 
     public function provider() return _actorCell.provider();
 
+    public function system() : ActorSystem return _actorCell.system();
+
     public function getChild(names : List<String>) : ActorRef {
         function rec(ref : ActorRef, name : List<String>) : ActorRef {
             return switch(ref) {
