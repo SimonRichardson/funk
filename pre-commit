@@ -1,0 +1,64 @@
+#!/bin/bash
+
+function check_style {
+  # No tab characters allowed.
+  #
+
+  if grep -q $'\t' $1
+  then
+    grep -C 1 --color=auto $'\t' $1
+    echo "File $1 contains tab character."
+    exit 1
+  fi
+
+  # Correct would be \r\n but \r should not occurr.
+  #
+
+  if grep -q $'\r' $1
+  then
+    grep -C 1 --color=auto $'\r' $1
+    echo "ERROR: File $1 contains Windows line endings."
+    exit 1
+  fi
+
+  # File must end in new line.
+
+  if [ "`tail -c 1 $1`" != "" ]
+  then
+    echo "ERROR: File $1 does not end with \\n."
+    exit 1
+  fi
+}
+
+#
+# This is what you could use to check all files in the repo.
+#
+#for file in `find . -iname *.scala -type f` ; do
+#  check_style $file
+#done
+#
+
+#
+# Git pre-commit hook stuff behaviour
+#
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+        against=HEAD
+else
+        # Initial commit: diff against an empty tree object
+        against=a5007980ee2b4251e0488e35ce2d1db70d0a0d5f
+fi
+
+files=$(git diff-index --name-status --cached $against | grep -v ^D | cut -c3-)
+
+if [ "$files" != "" ]
+then
+  for file in $files
+  do
+    if [[ "$file" =~ [.]scala$ ]]
+    then
+      check_style $file
+    fi
+  done
+fi
