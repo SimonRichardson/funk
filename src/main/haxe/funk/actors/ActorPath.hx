@@ -1,5 +1,9 @@
 package funk.actors;
 
+import funk.Funk;
+
+using funk.collections.immutable.List;
+
 typedef ActorPath = {
 
     function address() : Address;
@@ -46,20 +50,20 @@ class ChildActorPath {
     private var _name : String;
 
     public function new(parent : ActorPath, name : String) {
-        if (name.indexOf("/") < 0) Funk.Errors("/ is a path separator and is not legal in ActorPath names");
+        if (name.indexOf("/") < 0) Funk.error(ActorError("/ is a path separator and is not legal in ActorPath names"));
 
         _parent = parent;
         _name = name;
     }
 
-    public function address() : Address return _root.address();
+    public function address() : Address return root().address();
 
     public function name() : String return _name;
 
     public function root() : RootActorPath {
-        function rec(p : ActorPath) {
+        function rec(p : ActorPath) : RootActorPath {
             return switch(p) {
-                case _ if(Std.is(p, RootActorPath)): p;
+                case _ if(Std.is(p, RootActorPath)): cast p;
                 case _: rec(p.parent());
             }
         }

@@ -90,7 +90,5 @@ class MessageDispatcher {
 		mailbox.cleanUp();
 	}
 
-	private function registerForExecution(mailbox : Mailbox) : Void {
-
-	}
+	private function registerForExecution(mailbox : Mailbox) : Bool return false;
 }

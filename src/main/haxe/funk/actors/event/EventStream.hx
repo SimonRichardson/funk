@@ -6,6 +6,7 @@ using funk.actors.event.EventBus;
 class EventStream extends LookupClassification {
 
     public function new() {
+        super();
     }
 
     public static function fromActorSystem(system : ActorSystem) : EventStream {

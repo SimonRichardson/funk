@@ -10,16 +10,16 @@ class AddressTypes {
 
 	public static function hostPort(address : Address) : String {
 		return switch(address) {
-			case Address(protocol, system, host, port): 
+			case Address(_, system, host, port):
 				var sb = new StringBuf();
-				sb.append(system);
+				sb.add(system);
 				if(host.isDefined()) {
-					sb.append("@");
-					sb.append(host.get());
+					sb.add("@");
+					sb.add(host.get());
 				}
 				if (port.isDefined()) {
-					sb.append(":");
-					sb.append(port.get());
+					sb.add(":");
+					sb.add(port.get());
 				}
 				sb.toString();
 		}
@@ -27,11 +27,11 @@ class AddressTypes {
 
 	public static function toString(address : Address) : String {
 		return switch(address) {
-			case Address(protocol, system, host, port): 
+			case Address(protocol, _, _, _):
 				var sb = new StringBuf();
-				sb.append(protocol);
-				sb.append("://");
-				sb.append(hostPort(address));
+				sb.add(protocol);
+				sb.add("://");
+				sb.add(hostPort(address));
 				sb.toString();
 		}
 	}

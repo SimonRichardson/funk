@@ -1,5 +1,6 @@
 package funk.actors.event;
 
+using funk.collections.immutable.List;
 using funk.types.Tuple2;
 
 typedef EventBus = {

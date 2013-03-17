@@ -210,16 +210,16 @@ class DeadLetterMailbox extends Mailbox {
 		_deadLetters.tell(DeadLetter(handle, reciever, reciever), _deadLetters.self());
 	}
 
-	override public function systemDrain() : SystemMessage return null;
+	override public function systemDrain() : List<SystemMessage> return Nil;
 
 	override public function hasSystemMessages() : Bool return false;
 }
 
 private typedef SystemMessageQueue = {
 
-	function systemEnqueue(receiver: ActorRef, message: SystemMessage) : Void;
+	function systemEnqueue(receiver: ActorRef, message: List<SystemMessage>) : Void;
 
-	function systemDrain() : SystemMessage;
+	function systemDrain() : List<SystemMessage>;
 
   	function hasSystemMessages(): Bool;
 }

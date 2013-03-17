@@ -28,7 +28,7 @@ class Actor {
         ActorCell.contextStack.set(contextStack.push(null));
     }
 
-    dynamic public function recieve<T>(message : T) : Void;
+    dynamic public function receive<T>(message : T) : Void {};
 
     public function unhandled<T>(message : T) : Void {
         switch(message) {
