@@ -17,33 +17,33 @@ import flash.events.EventDispatcher;
 #if (js || flash9)
 class EventsTest extends EventsBase {
 
-	
-	@Test
-	public function test_event_is_dispatched() {
-		var called = false;
-		var events = Events.event(dispatcher, "something");
-		events.foreach(function(value) {
-			called = true;
-		});
 
-		dispatchEvent("something");
+    @Test
+    public function test_event_is_dispatched() {
+        var called = false;
+        var events = Events.event(dispatcher, "something");
+        events.foreach(function(value) {
+            called = true;
+        });
 
-		called.isTrue();
-	}
+        dispatchEvent("something");
 
-	@Test
-	public function test_listener_is_removed_after_dispatch() {
-		var called = false;
-		var events = Events.event(dispatcher, "something");
-		events.foreach(function(value) {
-			called = true;
-		});
-		events.finish();
+        called.isTrue();
+    }
 
-		dispatchEvent("something");
+    @Test
+    public function test_listener_is_removed_after_dispatch() {
+        var called = false;
+        var events = Events.event(dispatcher, "something");
+        events.foreach(function(value) {
+            called = true;
+        });
+        events.finish();
 
-		called.isFalse();
-	}
+        dispatchEvent("something");
+
+        called.isFalse();
+    }
 }
 #else
 class EventsTest {

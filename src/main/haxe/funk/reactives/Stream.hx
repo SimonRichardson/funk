@@ -17,27 +17,27 @@ using funk.reactives.Pulse;
 
 class Stream<T> {
 
-	public var weakRef(get_weakRef, set_weakRef) : Bool;
+    public var weakRef(get_weakRef, set_weakRef) : Bool;
 
-	private var _rank : Int;
+    private var _rank : Int;
 
     private var _weakRef : Bool;
 
-	private var _propagator : Function1<Pulse<T>, Propagation<T>>;
+    private var _propagator : Function1<Pulse<T>, Propagation<T>>;
 
-	private var _listeners : Array<Stream<T>>;
+    private var _listeners : Array<Stream<T>>;
 
     private var _finishedListeners : List<Function0<Void>>;
 
-	public function new(propagator : Function1<Pulse<T>, Propagation<T>>) {
-		_rank = Rank.next();
-		_propagator = propagator;
-		_listeners = [];
+    public function new(propagator : Function1<Pulse<T>, Propagation<T>>) {
+        _rank = Rank.next();
+        _propagator = propagator;
+        _listeners = [];
 
         _weakRef = false;
 
         _finishedListeners = Nil;
-	}
+    }
 
     public function attach(listener : Stream<T>) : Void {
         _listeners.push(listener);
@@ -132,7 +132,7 @@ class Stream<T> {
         }
     }
 
-	public function get_weakRef() : Bool {
+    public function get_weakRef() : Bool {
         return _weakRef;
     }
 
@@ -198,7 +198,7 @@ class StreamTypes {
                 case None:
             }
         });
-    
+
         return stream;
     }
 
@@ -446,7 +446,7 @@ class StreamTypes {
 
 private class Rank {
 
-	private static var _value : Int = 0;
+    private static var _value : Int = 0;
 
     public static function last(): Int {
         return _value;

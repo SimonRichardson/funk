@@ -16,8 +16,8 @@ using funk.types.Reducible;
 using funk.types.Option;
 
 enum ListType<T> {
-	Nil;
-	Cons(head : T, tail : List<T>);
+    Nil;
+    Cons(head : T, tail : List<T>);
 }
 
 abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
@@ -89,7 +89,7 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
             stack.push(i);
         }
         return stack;
-    }    
+    }
 
     @:to
     inline public static function toCollection<T>(list : ListType<T>) : Collection<T> {

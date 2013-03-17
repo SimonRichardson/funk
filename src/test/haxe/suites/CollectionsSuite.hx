@@ -8,11 +8,11 @@ import funk.collections.immutable.ListCollectionsTest;
 
 class CollectionsSuite extends TestSuite {
 
-	public function new() {
-		super();
+    public function new() {
+        super();
 
-		add(funk.collections.CollectionTest);
-		add(funk.collections.immutable.ListTest);
-		add(funk.collections.immutable.ListCollectionsTest);
-	}
+        add(funk.collections.CollectionTest);
+        add(funk.collections.immutable.ListTest);
+        add(funk.collections.immutable.ListCollectionsTest);
+    }
 }

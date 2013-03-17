@@ -7,10 +7,10 @@ import funk.futures.PromiseTest;
 
 class FuturesSuite extends TestSuite {
 
-	public function new() {
-		super();
+    public function new() {
+        super();
 
-		add(funk.futures.DeferredTest);
-		add(funk.futures.PromiseTest);
-	}
+        add(funk.futures.DeferredTest);
+        add(funk.futures.PromiseTest);
+    }
 }

@@ -11,117 +11,117 @@ using funk.types.Tuple2;
 
 class Signal1<T1> {
 
-	private var _list : List<Slot1<T1>>;
+    private var _list : List<Slot1<T1>>;
 
-	public function new() {
-		_list = Nil;
-	}
+    public function new() {
+        _list = Nil;
+    }
 
-	public function add(func : Function1<T1, Void>) : Option<Slot1<T1>> {
-		return registerListener(func, false);
-	}
+    public function add(func : Function1<T1, Void>) : Option<Slot1<T1>> {
+        return registerListener(func, false);
+    }
 
-	public function addOnce(func : Function1<T1, Void>) : Option<Slot1<T1>> {
-		return registerListener(func, true);
-	}
+    public function addOnce(func : Function1<T1, Void>) : Option<Slot1<T1>> {
+        return registerListener(func, true);
+    }
 
-	public function remove(func : Function1<T1, Void>) : Option<Slot1<T1>> {
-		var o = _list.find(function(s : Slot1<T1>) : Bool {
-			return Reflect.compareMethods(s.getListener(), func);
-		});
+    public function remove(func : Function1<T1, Void>) : Option<Slot1<T1>> {
+        var o = _list.find(function(s : Slot1<T1>) : Bool {
+            return Reflect.compareMethods(s.getListener(), func);
+        });
 
-		_list = _list.filterNot(function(s : Slot1<T1>) : Bool {
-			return Reflect.compareMethods(s.getListener(), func);
-		});
+        _list = _list.filterNot(function(s : Slot1<T1>) : Bool {
+            return Reflect.compareMethods(s.getListener(), func);
+        });
 
-		return o;
-	}
+        return o;
+    }
 
-	public function removeAll() : Void {
-		_list = Nil;
-	}
+    public function removeAll() : Void {
+        _list = Nil;
+    }
 
-	public function dispatch(value0 : T1) : Void {
-		var slots = _list;
-		while(slots.nonEmpty()) {
-        	slots.head().execute(value0);
-        	slots = slots.tail();
-      	}
-	}
+    public function dispatch(value0 : T1) : Void {
+        var slots = _list;
+        while(slots.nonEmpty()) {
+            slots.head().execute(value0);
+            slots = slots.tail();
+          }
+    }
 
-	private function registerListener(	func : Function1<T1, Void>,
-										once : Bool) : Option<Slot1<T1>> {
+    private function registerListener(    func : Function1<T1, Void>,
+                                        once : Bool) : Option<Slot1<T1>> {
 
-		if(registrationPossible(func, once)) {
-			var slot : Slot1<T1> = new Slot1<T1>(this, func, once);
-			_list = _list.prepend(slot);
-			return Some(slot);
-		}
+        if(registrationPossible(func, once)) {
+            var slot : Slot1<T1> = new Slot1<T1>(this, func, once);
+            _list = _list.prepend(slot);
+            return Some(slot);
+        }
 
-		return _list.find(function(s : Slot1<T1>) : Bool {
-			return Reflect.compareMethods(s.getListener(), func);
-		});
-	}
+        return _list.find(function(s : Slot1<T1>) : Bool {
+            return Reflect.compareMethods(s.getListener(), func);
+        });
+    }
 
-	private function registrationPossible(func : Function1<T1, Void>, once : Bool) : Bool {
-		if(!_list.nonEmpty()) {
-			return true;
-		}
+    private function registrationPossible(func : Function1<T1, Void>, once : Bool) : Bool {
+        if(!_list.nonEmpty()) {
+            return true;
+        }
 
-		var slot = _list.find(function(s : Slot1<T1>) : Bool {
-			return Reflect.compareMethods(s.getListener(), func);
-		});
+        var slot = _list.find(function(s : Slot1<T1>) : Bool {
+            return Reflect.compareMethods(s.getListener(), func);
+        });
 
-		return switch(slot) {
-			case Some(x):
-				if(x.getOnce() != once) {
-					Funk.error(IllegalOperationError('You cannot addOnce() then add() the same " +
-					 "listener without removing the relationship first.'));
-				}
-				false;
-			case _: true;
-		}
-	}
+        return switch(slot) {
+            case Some(x):
+                if(x.getOnce() != once) {
+                    Funk.error(IllegalOperationError('You cannot addOnce() then add() the same " +
+                     "listener without removing the relationship first.'));
+                }
+                false;
+            case _: true;
+        }
+    }
 
-	public function size() : Int {
-		return _list.size();
-	}
+    public function size() : Int {
+        return _list.size();
+    }
 }
 
 class Slot1<T1> {
 
-	private var _listener : Function1<T1, Void>;
+    private var _listener : Function1<T1, Void>;
 
-	private var _signal : Signal1<T1>;
+    private var _signal : Signal1<T1>;
 
-	private var _once : Bool;
+    private var _once : Bool;
 
-	public function new(signal : Signal1<T1>, listener : Function1<T1, Void>, once : Bool) {
-		_signal = signal;
-		_listener = listener;
-		_once = once;
-	}
+    public function new(signal : Signal1<T1>, listener : Function1<T1, Void>, once : Bool) {
+        _signal = signal;
+        _listener = listener;
+        _once = once;
+    }
 
-	public function execute(value0 : T1) : Void {
-		if(getOnce()) {
-			remove();
-		}
+    public function execute(value0 : T1) : Void {
+        if(getOnce()) {
+            remove();
+        }
 
-		var listener = getListener();
-		listener(value0);
-	}
+        var listener = getListener();
+        listener(value0);
+    }
 
-	public function remove() : Void {
-		_signal.remove(getListener());
-	}
+    public function remove() : Void {
+        _signal.remove(getListener());
+    }
 
-	public function getListener() : Function1<T1, Void> {
-		return _listener;
-	}
+    public function getListener() : Function1<T1, Void> {
+        return _listener;
+    }
 
-	public function getOnce() : Bool {
-		return _once;
-	}
+    public function getOnce() : Bool {
+        return _once;
+    }
 }
 
 class Signal1Types {
@@ -201,7 +201,7 @@ class Signal1Types {
 
     public static function zip<T1, T2>(signal0 : Signal1<T1>, signal1 : Signal1<T2>) : Signal1<Tuple2<T1, T2>> {
         return lift(function(value0, value1) {
-        	var tuple : Tuple2<T1, T2> = tuple2(value0, value1);
+            var tuple : Tuple2<T1, T2> = tuple2(value0, value1);
             return tuple;
         })(signal0, signal1);
     }

@@ -27,38 +27,38 @@ import funk.types.WildcardTest;
 
 class TypesSuite extends TestSuite {
 
-	public function new() {
-		super();
+    public function new() {
+        super();
 
-		add(funk.types.AttemptTest);
-		add(funk.types.EitherTest);
+        add(funk.types.AttemptTest);
+        add(funk.types.EitherTest);
 
-		add(funk.types.OptionTest);
+        add(funk.types.OptionTest);
 
-		add(funk.types.Function0Test);
-		add(funk.types.Function1Test);
-		add(funk.types.Function2Test);
-		add(funk.types.Function3Test);
-		add(funk.types.Function4Test);
-		add(funk.types.Function5Test);
+        add(funk.types.Function0Test);
+        add(funk.types.Function1Test);
+        add(funk.types.Function2Test);
+        add(funk.types.Function3Test);
+        add(funk.types.Function4Test);
+        add(funk.types.Function5Test);
 
-		add(funk.types.LazyTest);
+        add(funk.types.LazyTest);
 
-		add(funk.types.Predicate0Test);
-		add(funk.types.Predicate1Test);
-		add(funk.types.Predicate2Test);
-		add(funk.types.Predicate3Test);
-		add(funk.types.Predicate4Test);
-		add(funk.types.Predicate5Test);
+        add(funk.types.Predicate0Test);
+        add(funk.types.Predicate1Test);
+        add(funk.types.Predicate2Test);
+        add(funk.types.Predicate3Test);
+        add(funk.types.Predicate4Test);
+        add(funk.types.Predicate5Test);
 
-		add(funk.types.SelectorTest);
+        add(funk.types.SelectorTest);
 
-		add(funk.types.Tuple1Test);
-		add(funk.types.Tuple2Test);
-		add(funk.types.Tuple3Test);
-		add(funk.types.Tuple4Test);
-		add(funk.types.Tuple5Test);
+        add(funk.types.Tuple1Test);
+        add(funk.types.Tuple2Test);
+        add(funk.types.Tuple3Test);
+        add(funk.types.Tuple4Test);
+        add(funk.types.Tuple5Test);
 
-		add(funk.types.WildcardTest);
-	}
+        add(funk.types.WildcardTest);
+    }
 }

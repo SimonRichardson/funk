@@ -4,9 +4,9 @@ import funk.types.Option;
 
 typedef Product<T> = {> Iterable<T>,
 
-	function productArity() : Int;
+    function productArity() : Int;
 
-	function productPrefix() : String;
+    function productPrefix() : String;
 
-	function productElement(index : Int) : Option<T>;
+    function productElement(index : Int) : Option<T>;
 };

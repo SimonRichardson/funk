@@ -14,17 +14,17 @@ import funk.reactives.events.RenderEventsTest;
 
 class ReactivesSuite extends TestSuite {
 
-	public function new() {
-		super();
+    public function new() {
+        super();
 
-		add(funk.reactives.CollectionTest);
-		add(funk.reactives.StreamTest);
-		add(funk.reactives.StreamTypesTest);
-		add(funk.reactives.StreamValuesTest);
+        add(funk.reactives.CollectionTest);
+        add(funk.reactives.StreamTest);
+        add(funk.reactives.StreamTypesTest);
+        add(funk.reactives.StreamValuesTest);
 
-		add(funk.reactives.events.EventsTest);
-		add(funk.reactives.events.KeyboardEventsTest);
-		add(funk.reactives.events.MouseEventsTest);
-		add(funk.reactives.events.RenderEventsTest);
-	}
+        add(funk.reactives.events.EventsTest);
+        add(funk.reactives.events.KeyboardEventsTest);
+        add(funk.reactives.events.MouseEventsTest);
+        add(funk.reactives.events.RenderEventsTest);
+    }
 }

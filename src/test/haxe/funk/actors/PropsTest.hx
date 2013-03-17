@@ -2,8 +2,8 @@ package funk.actors;
 
 class PropsTest {
 
-	@Test
-	public function test() : Void {
-		
-	}
+    @Test
+    public function test() : Void {
+
+    }
 }

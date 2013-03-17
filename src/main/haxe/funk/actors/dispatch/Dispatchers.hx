@@ -7,14 +7,14 @@ class Dispatchers {
 
     public static var DefaultDispatcherId : String = "funk.actor.default-dispatcher";
 
-	private var _dispatchers : List<MessageDispatcher>;
+    private var _dispatchers : List<MessageDispatcher>;
 
     private var _defaultGlobalDispatcher : MessageDispatcher;
 
-	public function new() {
+    public function new() {
         _dispatchers = Nil;
         _defaultGlobalDispatcher = lookup(DefaultDispatcherId);
-	}
+    }
 
     public function lookup(id : String) : MessageDispatcher {
         var opt = _dispatchers.find(function(value) return value.name() == id);

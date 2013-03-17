@@ -16,7 +16,7 @@ using funk.types.Any;
 using funk.types.Option;
 
 typedef CollectionType<T> = {> Iterable<T>,
-	function size() : Int;
+    function size() : Int;
 };
 
 abstract Collection<T>(CollectionType<T>) from CollectionType<T> to CollectionType<T> {

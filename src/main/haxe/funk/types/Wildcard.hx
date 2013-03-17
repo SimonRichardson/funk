@@ -13,14 +13,14 @@ enum WildcardType {
 
 abstract Wildcard(WildcardType) from WildcardType to WildcardType {
 
-	inline function new(wildcard : WildcardType) {
-		this = wildcard;
-	}
+    inline function new(wildcard : WildcardType) {
+        this = wildcard;
+    }
 
-	@:to
-	inline public static function toString(wildcard : WildcardType) : String {
-		return '_';
-	}
+    @:to
+    inline public static function toString(wildcard : WildcardType) : String {
+        return '_';
+    }
 }
 
 class WildcardTypes {

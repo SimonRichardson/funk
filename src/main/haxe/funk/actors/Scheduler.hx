@@ -6,9 +6,9 @@ using funk.reactives.Process;
 
 typedef Cancellable = {
 
-	function cancel() : Void;
+    function cancel() : Void;
 
-	function isCancelled() : Bool;
+    function isCancelled() : Bool;
 }
 
 typedef Scheduler = {
@@ -20,42 +20,42 @@ typedef Scheduler = {
 
 class DefaultScheduler {
 
-	private var _dispatcher : Function0<MessageDispatcher>;
+    private var _dispatcher : Function0<MessageDispatcher>;
 
-	public function new(dispatcher : Function0<MessageDispatcher>) {
-		_dispatcher = dispatcher;
-	}
+    public function new(dispatcher : Function0<MessageDispatcher>) {
+        _dispatcher = dispatcher;
+    }
 
-	public function schedule<T>(reciever : ActorRef, message : T) : Cancellable {
-		var task = Process.start(function() {
-			var dispatcher = _dispatcher();
-			dispatcher.execute(this);
-		}, 1);
+    public function schedule<T>(reciever : ActorRef, message : T) : Cancellable {
+        var task = Process.start(function() {
+            var dispatcher = _dispatcher();
+            dispatcher.execute(this);
+        }, 1);
 
-		var cancelled = false;
+        var cancelled = false;
 
-		return {
-			cancel: function() return task.foreach(function(value) { value.stop(); cancelled = true; }),
-			isCancelled: function() return cancelled
-		};
-	}
+        return {
+            cancel: function() return task.foreach(function(value) { value.stop(); cancelled = true; }),
+            isCancelled: function() return cancelled
+        };
+    }
 
     public function scheduleOnce<T>(reciever : ActorRef, message : T) : Cancellable {
-    	var task = Process.start(function() {
-			var dispatcher = _dispatcher();
-			dispatcher.execute(this);
-		}, 1);
+        var task = Process.start(function() {
+            var dispatcher = _dispatcher();
+            dispatcher.execute(this);
+        }, 1);
 
-		var cancelled = false;
+        var cancelled = false;
 
-		if (task.isDefined()) {
-			task.stop();
-			cancelled = true;
-		}
+        if (task.isDefined()) {
+            task.stop();
+            cancelled = true;
+        }
 
-		return {
-			cancel: function() return task.foreach(function(value) { value.stop(); cancelled = true; }),
-			isCancelled: function() return cancelled
-		};
+        return {
+            cancel: function() return task.foreach(function(value) { value.stop(); cancelled = true; }),
+            isCancelled: function() return cancelled
+        };
     }
 }

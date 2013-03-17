@@ -217,7 +217,7 @@ class PromiseTypes {
                 case _: deferred.reject(IllegalOperationError());
             }
         });
-        
+
         return promise;
     }
 

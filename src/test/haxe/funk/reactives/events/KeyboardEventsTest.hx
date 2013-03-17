@@ -19,72 +19,72 @@ import flash.events.KeyboardEvent;
 #if (js || flash9)
 class KeyboardEventsTest extends EventsBase {
 
-	
-	@Test
-	public function keyDown_event_is_dispatched() {
-		var called = false;
-		var events = KeyboardEvents.keyDown(dispatcher);
-		events.foreach(function(value) {
-			called = true;
-		});
 
-		dispatchEvent(KeyboardEventTypes.toString(KeyDown));
+    @Test
+    public function keyDown_event_is_dispatched() {
+        var called = false;
+        var events = KeyboardEvents.keyDown(dispatcher);
+        events.foreach(function(value) {
+            called = true;
+        });
 
-		called.isTrue();
-	}
+        dispatchEvent(KeyboardEventTypes.toString(KeyDown));
 
-	@Test
-	public function keyDown_listener_is_removed_after_dispatch() {
-		var called = false;
-		var events = KeyboardEvents.keyDown(dispatcher);
-		events.foreach(function(value) {
-			called = true;
-		});
-		events.finish();
+        called.isTrue();
+    }
 
-		dispatchEvent(KeyboardEventTypes.toString(KeyDown));
+    @Test
+    public function keyDown_listener_is_removed_after_dispatch() {
+        var called = false;
+        var events = KeyboardEvents.keyDown(dispatcher);
+        events.foreach(function(value) {
+            called = true;
+        });
+        events.finish();
 
-		called.isFalse();
-	}
+        dispatchEvent(KeyboardEventTypes.toString(KeyDown));
 
-	@Test
-	public function keyUp_event_is_dispatched() {
-		var called = false;
-		var events = KeyboardEvents.keyUp(dispatcher);
-		events.foreach(function(value) {
-			called = true;
-		});
+        called.isFalse();
+    }
 
-		dispatchEvent(KeyboardEventTypes.toString(KeyUp));
+    @Test
+    public function keyUp_event_is_dispatched() {
+        var called = false;
+        var events = KeyboardEvents.keyUp(dispatcher);
+        events.foreach(function(value) {
+            called = true;
+        });
 
-		called.isTrue();
-	}
+        dispatchEvent(KeyboardEventTypes.toString(KeyUp));
 
-	@Test
-	public function keyUp_listener_is_removed_after_dispatch() {
-		var called = false;
-		var events = KeyboardEvents.keyUp(dispatcher);
-		events.foreach(function(value) {
-			called = true;
-		});
-		events.finish();
+        called.isTrue();
+    }
 
-		dispatchEvent(KeyboardEventTypes.toString(KeyUp));
+    @Test
+    public function keyUp_listener_is_removed_after_dispatch() {
+        var called = false;
+        var events = KeyboardEvents.keyUp(dispatcher);
+        events.foreach(function(value) {
+            called = true;
+        });
+        events.finish();
 
-		called.isFalse();
-	}
+        dispatchEvent(KeyboardEventTypes.toString(KeyUp));
 
-	override private function createEvent(value : String) {
-		var event = null;
+        called.isFalse();
+    }
 
-		#if js
-		event = super.createEvent(value);
-		#elseif flash9
-		event = new KeyboardEvent(value);
-		#end
+    override private function createEvent(value : String) {
+        var event = null;
 
-		return event;
-	}
+        #if js
+        event = super.createEvent(value);
+        #elseif flash9
+        event = new KeyboardEvent(value);
+        #end
+
+        return event;
+    }
 }
 #else
 class KeyboardEventsTest {

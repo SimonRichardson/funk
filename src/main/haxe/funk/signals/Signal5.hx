@@ -13,134 +13,134 @@ using funk.types.Tuple5;
 
 class Signal5<T1, T2, T3, T4, T5> {
 
-	private var _list : List<Slot5<T1, T2, T3, T4, T5>>;
+    private var _list : List<Slot5<T1, T2, T3, T4, T5>>;
 
-	public function new() {
-		_list = Nil;
-	}
+    public function new() {
+        _list = Nil;
+    }
 
-	public function add(	func : Function5<T1, T2, T3, T4, T5, Void>
-							) : Option<Slot5<T1, T2, T3, T4, T5>> {
+    public function add(    func : Function5<T1, T2, T3, T4, T5, Void>
+                            ) : Option<Slot5<T1, T2, T3, T4, T5>> {
 
-		return registerListener(func, false);
-	}
+        return registerListener(func, false);
+    }
 
-	public function addOnce(	func : Function5<T1, T2, T3, T4, T5, Void>
-								) : Option<Slot5<T1, T2, T3, T4, T5>> {
+    public function addOnce(    func : Function5<T1, T2, T3, T4, T5, Void>
+                                ) : Option<Slot5<T1, T2, T3, T4, T5>> {
 
-		return registerListener(func, true);
-	}
+        return registerListener(func, true);
+    }
 
-	public function remove(	func : Function5<T1, T2, T3, T4, T5, Void>
-							) : Option<Slot5<T1, T2, T3, T4, T5>> {
+    public function remove(    func : Function5<T1, T2, T3, T4, T5, Void>
+                            ) : Option<Slot5<T1, T2, T3, T4, T5>> {
 
-		var o = _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-			return Reflect.compareMethods(s.getListener(), func);
-		});
+        var o = _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
+            return Reflect.compareMethods(s.getListener(), func);
+        });
 
-		_list = _list.filterNot(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-			return Reflect.compareMethods(s.getListener(), func);
-		});
+        _list = _list.filterNot(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
+            return Reflect.compareMethods(s.getListener(), func);
+        });
 
-		return o;
-	}
+        return o;
+    }
 
-	public function removeAll() : Void {
-		_list = Nil;
-	}
+    public function removeAll() : Void {
+        _list = Nil;
+    }
 
-	public function dispatch(	value0 : T1,
-								value1 : T2,
-								value2 : T3,
-								value3 : T4,
-								value4 : T5) : Void {
-		var slots = _list;
-		while(slots.nonEmpty()) {
-        	slots.head().execute(value0, value1, value2, value3, value4);
-        	slots = slots.tail();
-      	}
-	}
+    public function dispatch(    value0 : T1,
+                                value1 : T2,
+                                value2 : T3,
+                                value3 : T4,
+                                value4 : T5) : Void {
+        var slots = _list;
+        while(slots.nonEmpty()) {
+            slots.head().execute(value0, value1, value2, value3, value4);
+            slots = slots.tail();
+          }
+    }
 
-	private function registerListener(	func : Function5<T1, T2, T3, T4, T5, Void>,
-										once : Bool) : Option<Slot5<T1, T2, T3, T4, T5>> {
+    private function registerListener(    func : Function5<T1, T2, T3, T4, T5, Void>,
+                                        once : Bool) : Option<Slot5<T1, T2, T3, T4, T5>> {
 
-		if(registrationPossible(func, once)) {
-			var slot : Slot5<T1, T2, T3, T4, T5> = new Slot5<T1, T2, T3, T4, T5>(this, func, once);
-			_list = _list.prepend(slot);
-			return Some(slot);
-		}
+        if(registrationPossible(func, once)) {
+            var slot : Slot5<T1, T2, T3, T4, T5> = new Slot5<T1, T2, T3, T4, T5>(this, func, once);
+            _list = _list.prepend(slot);
+            return Some(slot);
+        }
 
-		return _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-			return Reflect.compareMethods(s.getListener(), func);
-		});
-	}
+        return _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
+            return Reflect.compareMethods(s.getListener(), func);
+        });
+    }
 
-	private function registrationPossible(	func : Function5<T1, T2, T3, T4, T5, Void>,
-											once : Bool) : Bool {
-		if(!_list.nonEmpty()) {
-			return true;
-		}
+    private function registrationPossible(    func : Function5<T1, T2, T3, T4, T5, Void>,
+                                            once : Bool) : Bool {
+        if(!_list.nonEmpty()) {
+            return true;
+        }
 
-		var slot = _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-			return Reflect.compareMethods(s.getListener(), func);
-		});
+        var slot = _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
+            return Reflect.compareMethods(s.getListener(), func);
+        });
 
-		return switch(slot) {
-			case Some(x):
-				if(x.getOnce() != once) {
-					Funk.error(IllegalOperationError('You cannot addOnce() then add() the same " +
-					 "listener without removing the relationship first.'));
-				}
-				false;
-			case _: true;
-		}
-	}
+        return switch(slot) {
+            case Some(x):
+                if(x.getOnce() != once) {
+                    Funk.error(IllegalOperationError('You cannot addOnce() then add() the same " +
+                     "listener without removing the relationship first.'));
+                }
+                false;
+            case _: true;
+        }
+    }
 
-	public function size() : Int {
-		return _list.size();
-	}
+    public function size() : Int {
+        return _list.size();
+    }
 }
 
 class Slot5<T1, T2, T3, T4, T5> {
 
-	private var _listener : Function5<T1, T2, T3, T4, T5, Void>;
+    private var _listener : Function5<T1, T2, T3, T4, T5, Void>;
 
-	private var _signal : Signal5<T1, T2, T3, T4, T5>;
+    private var _signal : Signal5<T1, T2, T3, T4, T5>;
 
-	private var _once : Bool;
+    private var _once : Bool;
 
-	public function new(	signal : Signal5<T1, T2, T3, T4, T5>,
-							listener : Function5<T1, T2, T3, T4, T5, Void>,
-							once : Bool) {
-		_signal = signal;
-		_listener = listener;
-		_once = once;
-	}
+    public function new(    signal : Signal5<T1, T2, T3, T4, T5>,
+                            listener : Function5<T1, T2, T3, T4, T5, Void>,
+                            once : Bool) {
+        _signal = signal;
+        _listener = listener;
+        _once = once;
+    }
 
-	public function execute(	value0 : T1,
-								value1 : T2,
-								value2 : T3,
-								value3 : T4,
-								value4 : T5) : Void {
-		if(getOnce()) {
-			remove();
-		}
+    public function execute(    value0 : T1,
+                                value1 : T2,
+                                value2 : T3,
+                                value3 : T4,
+                                value4 : T5) : Void {
+        if(getOnce()) {
+            remove();
+        }
 
-		var listener = getListener();
-		listener(value0, value1, value2, value3, value4);
-	}
+        var listener = getListener();
+        listener(value0, value1, value2, value3, value4);
+    }
 
-	public function remove() : Void {
-		_signal.remove(getListener());
-	}
+    public function remove() : Void {
+        _signal.remove(getListener());
+    }
 
-	public function getListener() : Function5<T1, T2, T3, T4, T5, Void> {
-		return _listener;
-	}
+    public function getListener() : Function5<T1, T2, T3, T4, T5, Void> {
+        return _listener;
+    }
 
-	public function getOnce() : Bool {
-		return _once;
-	}
+    public function getOnce() : Bool {
+        return _once;
+    }
 }
 
 class Signal5Types {

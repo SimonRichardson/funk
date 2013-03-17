@@ -18,96 +18,96 @@ import flash.events.EventDispatcher;
 #if (js || flash9)
 class RenderEventsTest extends EventsBase {
 
-	
-	@Test
-	public function render_event_is_dispatched() {
-		var called = false;
-		
-		#if flash9
-		var stage = flash.Lib.current.stage;
-		dispatcher = stage;
-		var events = RenderEvents.render(stage);
-		#else
-		var target = new RenderTarget(RenderEventTypes.toString(Render));
-		dispatcher = cast target;
-		var events = RenderEvents.render(target);
-		#end
 
-		events.foreach(function(value) {
-			called = true;
-		});
+    @Test
+    public function render_event_is_dispatched() {
+        var called = false;
 
-		dispatchEvent(RenderEventTypes.toString(Render));
+        #if flash9
+        var stage = flash.Lib.current.stage;
+        dispatcher = stage;
+        var events = RenderEvents.render(stage);
+        #else
+        var target = new RenderTarget(RenderEventTypes.toString(Render));
+        dispatcher = cast target;
+        var events = RenderEvents.render(target);
+        #end
 
-		called.isTrue();
-	}
+        events.foreach(function(value) {
+            called = true;
+        });
 
-	@Test
-	public function render_listener_is_removed_after_dispatch() {
-		var called = false;
+        dispatchEvent(RenderEventTypes.toString(Render));
 
-		#if flash9
-		var stage = flash.Lib.current.stage;
-		dispatcher = stage;
-		var events = RenderEvents.render(stage);
-		#else
-		var target = new RenderTarget(RenderEventTypes.toString(Render));
-		dispatcher = cast target;
-		var events = RenderEvents.render(target);
-		#end
+        called.isTrue();
+    }
 
-		events.foreach(function(value) {
-			called = true;
-		});
-		events.finish();
+    @Test
+    public function render_listener_is_removed_after_dispatch() {
+        var called = false;
 
-		dispatchEvent(RenderEventTypes.toString(Render));
+        #if flash9
+        var stage = flash.Lib.current.stage;
+        dispatcher = stage;
+        var events = RenderEvents.render(stage);
+        #else
+        var target = new RenderTarget(RenderEventTypes.toString(Render));
+        dispatcher = cast target;
+        var events = RenderEvents.render(target);
+        #end
 
-		called.isFalse();
-	}
+        events.foreach(function(value) {
+            called = true;
+        });
+        events.finish();
 
-	@Test
-	public function enterFrame_event_is_dispatched() {
-		var called = false;
-		
-		#if flash9
-		var events = RenderEvents.enterFrame(dispatcher);
-		#else
-		var target = new RenderTarget(RenderEventTypes.toString(EnterFrame));
-		dispatcher = cast target;
-		var events = RenderEvents.enterFrame(target);
-		#end
+        dispatchEvent(RenderEventTypes.toString(Render));
 
-		events.foreach(function(value) {
-			called = true;
-		});
+        called.isFalse();
+    }
 
-		dispatchEvent(RenderEventTypes.toString(EnterFrame));
+    @Test
+    public function enterFrame_event_is_dispatched() {
+        var called = false;
 
-		called.isTrue();
-	}
+        #if flash9
+        var events = RenderEvents.enterFrame(dispatcher);
+        #else
+        var target = new RenderTarget(RenderEventTypes.toString(EnterFrame));
+        dispatcher = cast target;
+        var events = RenderEvents.enterFrame(target);
+        #end
 
-	@Test
-	public function enterFrame_listener_is_removed_after_dispatch() {
-		var called = false;
-		
-		#if flash9
-		var events = RenderEvents.enterFrame(dispatcher);
-		#else
-		var target = new RenderTarget(RenderEventTypes.toString(EnterFrame));
-		dispatcher = cast target;
-		var events = RenderEvents.enterFrame(target);
-		#end
+        events.foreach(function(value) {
+            called = true;
+        });
 
-		events.foreach(function(value) {
-			called = true;
-		});
-		events.finish();
+        dispatchEvent(RenderEventTypes.toString(EnterFrame));
 
-		dispatchEvent(RenderEventTypes.toString(EnterFrame));
+        called.isTrue();
+    }
 
-		called.isFalse();
-	}
+    @Test
+    public function enterFrame_listener_is_removed_after_dispatch() {
+        var called = false;
+
+        #if flash9
+        var events = RenderEvents.enterFrame(dispatcher);
+        #else
+        var target = new RenderTarget(RenderEventTypes.toString(EnterFrame));
+        dispatcher = cast target;
+        var events = RenderEvents.enterFrame(target);
+        #end
+
+        events.foreach(function(value) {
+            called = true;
+        });
+        events.finish();
+
+        dispatchEvent(RenderEventTypes.toString(EnterFrame));
+
+        called.isFalse();
+    }
 }
 #else
 class RenderEventsTest {

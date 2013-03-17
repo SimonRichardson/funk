@@ -33,7 +33,7 @@ function check_style {
 #
 # This is what you could use to check all files in the repo.
 #
-#for file in `find . -iname *.scala -type f` ; do
+#for file in `find . -iname *.hx -type f` ; do
 #  check_style $file
 #done
 #
@@ -44,7 +44,7 @@ function check_style {
 
 if git rev-parse --verify HEAD >/dev/null 2>&1
 then
-        against=HEAD
+        against=a5007980ee2b4251e0488e35ce2d1db70d0a0d5f
 else
         # Initial commit: diff against an empty tree object
         against=a5007980ee2b4251e0488e35ce2d1db70d0a0d5f
@@ -52,11 +52,13 @@ fi
 
 files=$(git diff-index --name-status --cached $against | grep -v ^D | cut -c3-)
 
+echo $files
+
 if [ "$files" != "" ]
 then
   for file in $files
   do
-    if [[ "$file" =~ [.]scala$ ]]
+    if [[ "$file" =~ [.]hx$ ]]
     then
       check_style $file
     fi

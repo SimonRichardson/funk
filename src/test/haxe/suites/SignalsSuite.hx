@@ -23,28 +23,28 @@ import funk.signals.PrioritySignal5Test;
 
 class SignalsSuite extends TestSuite {
 
-	public function new() {
-		super();
+    public function new() {
+        super();
 
-		add(funk.signals.Slot0Test);
-		add(funk.signals.Slot1Test);
-		add(funk.signals.Slot2Test);
-		add(funk.signals.Slot3Test);
-		add(funk.signals.Slot4Test);
-		add(funk.signals.Slot5Test);
+        add(funk.signals.Slot0Test);
+        add(funk.signals.Slot1Test);
+        add(funk.signals.Slot2Test);
+        add(funk.signals.Slot3Test);
+        add(funk.signals.Slot4Test);
+        add(funk.signals.Slot5Test);
 
-		add(funk.signals.Signal0Test);
-		add(funk.signals.Signal1Test);
-		add(funk.signals.Signal2Test);
-		add(funk.signals.Signal3Test);
-		add(funk.signals.Signal4Test);
-		add(funk.signals.Signal5Test);
+        add(funk.signals.Signal0Test);
+        add(funk.signals.Signal1Test);
+        add(funk.signals.Signal2Test);
+        add(funk.signals.Signal3Test);
+        add(funk.signals.Signal4Test);
+        add(funk.signals.Signal5Test);
 
-		add(funk.signals.PrioritySignal0Test);
-		add(funk.signals.PrioritySignal1Test);
-		add(funk.signals.PrioritySignal2Test);
-		add(funk.signals.PrioritySignal3Test);
-		add(funk.signals.PrioritySignal4Test);
-		add(funk.signals.PrioritySignal5Test);
-	}
+        add(funk.signals.PrioritySignal0Test);
+        add(funk.signals.PrioritySignal1Test);
+        add(funk.signals.PrioritySignal2Test);
+        add(funk.signals.PrioritySignal3Test);
+        add(funk.signals.PrioritySignal4Test);
+        add(funk.signals.PrioritySignal5Test);
+    }
 }

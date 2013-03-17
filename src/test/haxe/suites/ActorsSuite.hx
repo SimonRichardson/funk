@@ -6,9 +6,9 @@ import funk.actors.ActorSystemTest;
 
 class ActorsSuite extends TestSuite {
 
-	public function new() {
-		super();
+    public function new() {
+        super();
 
-		add(funk.actors.ActorSystemTest);
-	}
+        add(funk.actors.ActorSystemTest);
+    }
 }
