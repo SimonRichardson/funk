@@ -2,6 +2,7 @@ package funk.actors.dispatch;
 
 using funk.actors.dispatch.MessageDispatcher;
 
+@:allow(funk.actors.dispatch)
 class Dispatcher extends MessageDispatcher {
 
 	public function new() {

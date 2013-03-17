@@ -19,6 +19,7 @@ enum UnhandledMessage<T> {
     UnhandledMessage(message : T, sender : ActorRef, self : ActorRef);
 }
 
+@:allow(funk.actors.dispatch)
 class MessageDispatcher {
 
 	private var _id : String;

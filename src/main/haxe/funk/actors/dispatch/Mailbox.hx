@@ -2,6 +2,8 @@ package funk.actors.dispatch;
 
 using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.ActorCell;
+using funk.reactives.Process;
+using funk.types.Any;
 using funk.types.Option;
 using funk.actors.dispatch.Envelope;
 using funk.collections.immutable.List;
@@ -47,6 +49,8 @@ class Mailbox extends DefaultSystemMessageQueue {
 	private var _status : Int;
 
 	public function new(actor : ActorCell, messageQueue : MessageQueue) {
+		super();
+
 		_actor = actor;
 		_dispatcher = _actor.dispatcher();
 		_messageQueue = messageQueue;
@@ -62,30 +66,30 @@ class Mailbox extends DefaultSystemMessageQueue {
 
 	public function numberOfMessages() : Int return _messageQueue.numberOfMessages();
 
-	public function shouldPrecessMessage() : Bool return (status & 3) == Open;
+	public function shouldProcessMessage() : Bool return (_status & 3) == Open;
 
-	public function isSuspended() : Bool return (status & 3) == Suspended;
+	public function isSuspended() : Bool return (_status & 3) == Suspended;
 
-	public function isClosed() : Bool return status == Closed;
+	public function isClosed() : Bool return _status == Closed;
 
-	public function isScheduled() : Bool return (status & Scheduled) != 0;
+	public function isScheduled() : Bool return (_status & Scheduled) != 0;
 
 	public function becomeOpen() : Bool {
-		return switch(status) {
+		return switch(_status) {
 			case Closed: setStatus(Closed); false;
 			case _: _status = Open | _status & Scheduled; true;
 		}
 	}
 
 	public function becomeSuspended() : Bool {
-		return switch(status) {
+		return switch(_status) {
 			case Closed: _status = Closed; false;
 			case _: _status = Suspended | _status & Scheduled; true;
 		}
 	}
 
 	public function becomeClosed() : Bool {
-		return switch(status) {
+		return switch(_status) {
 			case Closed: _status = Closed; false;
 			case _: _status = Closed; true;
 		}
@@ -97,13 +101,13 @@ class Mailbox extends DefaultSystemMessageQueue {
 	}
 
 	public function setAsIdle() : Bool {
-		var s = status();
-		updateStatus(s, s & ~scheduled) || setAsIdle();
+		var s = _status;
+		return updateStatus(s, s & ~scheduled) || setAsIdle();
 	}
 
 	private function updateStatus(oldStatus : Int, newStatus : Int) : Bool {
 		return if (oldStatus == newStatus) true;
-		_status = newStatus;
+		else _status = newStatus; true;
 	}
 
 	private function run() : Void {
@@ -116,8 +120,8 @@ class Mailbox extends DefaultSystemMessageQueue {
 			if (!isClosed()) {
 				processAllSystemMessages();
 
-				var diff = Process.stamp() + _dispatcher.throughputDeadlineTime();
-				processMailbox(Math.max(_dispatcher.throughput(), 1), diff);
+				var diff = Std.int(Process.stamp() + _dispatcher.throughputDeadlineTime());
+				processMailbox(Std.int(Math.max(_dispatcher.throughput(), 1)), diff);
 			}
 		} catch(e : Dynamic) {
 			finally();
@@ -141,7 +145,7 @@ class Mailbox extends DefaultSystemMessageQueue {
 		if (shouldProcessMessage()) {
 			var next = dequeue();
 			if(next != null) {
-				actor.invoke(next);
+				_actor.invoke(next);
 				processAllSystemMessages();
 
 				if (left > 1 &&
@@ -153,13 +157,13 @@ class Mailbox extends DefaultSystemMessageQueue {
 	}
 
 	public function cleanUp() : Void {
-		if (AnyTypes.toBool(actor)) {
-			var dlm = actor.system().deadLetterMailbox();
+		if (AnyTypes.toBool(_actor)) {
+			var dlm = _actor.system().deadLetterMailbox();
 			if (hasSystemMessages()) {
 				var messages = systemDrain();
 				while(messages.nonEmpty()) {
 					var message = messages.head();
-					dlm.systemEnqueue(actor.self(), message);
+					dlm.systemEnqueue(_actor.self(), message);
 					messages = messages.tail();
 				}
 			}
@@ -197,7 +201,7 @@ class DeadLetterMailbox extends Mailbox {
 	public function new(deadLetters : ActorRef, queue : DeadLetterQueue) {
 		super(null, queue);
 
-		_deadLetter = deadLetters;
+		_deadLetters = deadLetters;
 
 		becomeClosed();
 	}
