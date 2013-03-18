@@ -118,14 +118,14 @@ class ActorCell {
 
     public function systemInvoke(message : SystemMessage) {
         switch(message) {
-            case Create: create();
-            case Recreate(cause): recreate(cause);
-            case Link(subject): link(subject);
-            case Unlink(subject): unlink(subject);
-            case Suspend: suspend();
-            case Resume: resume();
-            case Terminated: terminated();
-            case Supervise(child): supervise(child);
+            case Create: systemCreate();
+            case Recreate(cause): systemRecreate(cause);
+            case Link(subject): systemLink(subject);
+            case Unlink(subject): systemUnlink(subject);
+            case Suspend: systemSuspend();
+            case Resume: systemResume();
+            case Terminated: systemTerminated();
+            case Supervise(child): systemSupervise(child);
             case ChildTerminated(child): handChildTerminated(child);
         }
     }
@@ -134,7 +134,7 @@ class ActorCell {
         _currentMessage = message;
     }
 
-    private function create() : Void {
+    private function systemCreate() : Void {
         try {
             _actor = newActor();
             _actor.preStart();
@@ -143,29 +143,29 @@ class ActorCell {
         }
     }
 
-    private function recreate(cause : Errors) : Void {
+    private function systemRecreate(cause : Errors) : Void {
         switch(cause) {
             case _: // TODO (Simon) : Work out if we can reboot the actor.
         }
     }
 
-    private function suspend() : Void if(isNormal()) _dispatcher.suspend(this);
+    private function systemSuspend() : Void if(isNormal()) _dispatcher.suspend(this);
 
-    private function resume() : Void if(isNormal()) _dispatcher.resume(this);
+    private function systemResume() : Void if(isNormal()) _dispatcher.resume(this);
 
-    private function link(subject : ActorRef) : Void {
+    private function systemLink(subject : ActorRef) : Void {
         if (!isTerminating()) {
             // TODO (Simon) : Workout if we need to link
         }
     }
 
-    private function unlink(subject : ActorRef) : Void {
+    private function systemUnlink(subject : ActorRef) : Void {
         if (!isTerminating()) {
             // TODO (Simon) : Workout if we need to link
         }
     }
 
-    private function terminated() : Void {
+    private function systemTerminated() : Void {
         children().foreach(function(value) value.stop());
 
         _dispatcher.detach(this);
@@ -173,7 +173,7 @@ class ActorCell {
         _actor = null;
     }
 
-    private function supervise(child : ActorRef) : Void {
+    private function systemSupervise(child : ActorRef) : Void {
         var opt = _childrenRefs.find(function(value) return value == child);
         if (opt.isEmpty()) {
             _childrenRefs = _childrenRefs.prepend(child);

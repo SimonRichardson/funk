@@ -4,13 +4,17 @@ import funk.Funk;
 
 using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.event.EventStream;
+using funk.actors.ActorPath;
 using funk.actors.ActorSystem;
 using funk.types.AnyRef;
 using funk.types.Option;
+using funk.futures.Deferred;
+using funk.futures.Promise;
+using funk.types.Unit;
 
 typedef ActorRefProvider = {
 
-    function init(system : ActorSystem) : Void;
+    function init(system : ActorSystem) : ActorRefProvider;
 
     function rootGuardian() : InternalActorRef;
 
@@ -26,11 +30,15 @@ typedef ActorRefProvider = {
 
     function scheduler() : Scheduler;
 
+    function eventStream() : EventStream;
+
     function actorOf(   system: ActorSystem, 
                         props: Props, 
                         supervisor: InternalActorRef, 
                         path: ActorPath
                         ) : InternalActorRef;
+
+    function terminationFuture() : Promise<Unit>;
 }
 
 enum LocalActorMessage {
@@ -54,11 +62,15 @@ class LocalActorRefProvider {
 
     private var _systemGuardian : InternalActorRef;
 
+    private var _terminationDeferred : Deferred<Unit>;
+
     public function new(systemName : String, eventStream : EventStream, scheduler : Scheduler) {
         _systemName = systemName;
         _scheduler = scheduler;
 
-        _rootPath = new RootActorPath(Address("funk", _systemName));
+        _terminationDeferred = new Deferred();
+
+        _rootPath = new RootActorPath(Address("funk", _systemName, None, None));
         _deadLetters = new DeadLetterActorRef(this, _rootPath.child("deadLetters"), eventStream);
 
         var rootProps = new Props(Guadian);
@@ -69,8 +81,10 @@ class LocalActorRefProvider {
         _systemGuardian = actorOf(_system, systemProps, _rootGuardian, rootPath.child("system"));
     }
 
-    public function init(system : ActorSystem) : Void {
+    public function init(system : ActorSystem) : ActorRefProvider {
         _system = system;
+
+        return this;
     }
 
     public function actorOf(    system : ActorSystem, 
@@ -94,9 +108,13 @@ class LocalActorRefProvider {
 
     public function rootPath() : ActorPath return _rootPath;
 
-    public function dispatcher() : MessageDispatcher return _root;
+    public function dispatcher() : MessageDispatcher return _system.dispatcher();
 
-    public function scheduler(): Scheduler return _system.scheduler();
+    public function scheduler() : Scheduler return _system.scheduler();
+
+    public function eventStream() : EventStream return _eventStream;
+
+    public function terminationFuture() : Promise<Unit> return _terminationDeferred.promise();
 }
 
 class Guadian extends Actor {

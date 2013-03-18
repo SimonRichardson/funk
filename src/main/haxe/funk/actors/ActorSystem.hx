@@ -11,6 +11,7 @@ using funk.actors.event.EventStream;
 using funk.futures.Promise;
 using funk.collections.immutable.List;
 using funk.types.Any;
+using funk.types.Lazy;
 
 class ActorSystem {
 
@@ -24,6 +25,8 @@ class ActorSystem {
 
     private var _eventStream : EventStream;
 
+    private var _deadLetterMailbox : Mailbox;
+
     private var _name : String;
 
     function new(name : String, provider : ActorRefProvider) {
@@ -32,23 +35,34 @@ class ActorSystem {
 
         _actors = Nil;
 
-        _eventStream = new EventStream();
+        var deadLetters = _provider.deadLetters();
+        var deadLetterQueue = new MessageQueue(deadLetters);
+        _deadLetterMailbox = new Mailbox(deadLetters, deadLetterQueue);
 
-        var deadLetterQueue = new MessageQueue(deadLetters());
-        _deadLetterMailbox = new Mailbox(deadLetters(), deadLetterQueue);
+        _scheduler = provider.scheduler();
+        _eventStream = provider.eventStream();
 
-        _scheduler = new DefaultScheduler(function() {
-            return _dispatchers.defaultGlobalDispatcher;
-        });
         _dispatchers = new Dispatchers(_eventStream, _deadLetterMailbox, _scheduler);
     }
 
     public static function create(name : String, ?provider : ActorRefProvider = null) : ActorSystem {
-        var refProvider = AnyTypes.toBool(provider) ? provider : new ActorRefProvider();
+        var refProvider = if(AnyTypes.toBool(provider)) provider;
+        else {
+            var dispatchers = null;
+            var scheduler = new DefaultScheduler(function() {
+                return dispatchers.defaultGlobalDispatcher;
+            });
+            var provider = new LocalActorRefProvider(name, new EventStream(), scheduler);
+
+            dispatchers = provider._dispatchers;
+            
+            return provider;
+        }
+        
         return new ActorSystem(name, refProvider);
     }
 
-    public function child(name : String) : ActorPath return guardian.path().child(name);
+    public function child(name : String) : ActorPath return guardian().path().child(name);
 
     public function actorOf(props : Props, name : String) : Promise<ActorRef> {
         return guardian().ask(CreateChild(props, name));
