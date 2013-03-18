@@ -17,7 +17,7 @@ typedef ActorContext = {
 
     function children() : List<ActorRef>;
 
-    function parents() : ActorRef;
+    function parent() : ActorRef;
 
     function props() : Props;
 
@@ -28,7 +28,25 @@ typedef ActorContext = {
     function system() : ActorSystem;
 };
 
-@:allow(funk.actors.ActorRef)
+class ActorContextInjector {
+
+    private static var _contexts : List<ActorContext> = Nil;
+
+    private static var _currentContext : Option<ActorContext> = None;
+
+    public static function pushContext(context : ActorContext) : Void {
+        _currentContext = Some(context);
+        _contexts = _contexts.prepend(context);
+    }
+
+    public static function popContext() : Void {
+        _contexts = _contexts.tail();
+        _currentContext = _contexts.headOption();
+    }
+
+    public static function currentContext() : Option<ActorContext> return _currentContext;
+}
+
 class ActorCell {
 
     private var _actor : Actor;
@@ -83,6 +101,8 @@ class ActorCell {
     public function system() : ActorSystem return _system;
 
     public function newActor() : Actor {
+        ActorContextInjector.pushContext(this);
+
         try {
             var instance = props.creator();
 
@@ -92,6 +112,8 @@ class ActorCell {
         } catch(e : Dynamic) {
             throw e;
         }
+
+        ActorContextInjector.popContext();
     }
 
     public function systemInvoke(message : SystemMessage) {

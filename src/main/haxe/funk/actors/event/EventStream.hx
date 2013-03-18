@@ -1,7 +1,10 @@
 package funk.actors.event;
 
+import funk.Funk;
+
 using funk.actors.ActorSystem;
 using funk.actors.event.EventBus;
+using funk.types.Any;
 
 class EventStream extends LookupClassification {
 
@@ -14,12 +17,12 @@ class EventStream extends LookupClassification {
     }
 
     override public function subscribe<T>(subscriber : ActorRef, channel : Class<T>) : Bool {
-        if (!AnyTypes.toBool(subscriber)) Funk.Errors(ArgumentError("subscriber is null"));
+        if (!AnyTypes.toBool(subscriber)) Funk.error(ArgumentError("subscriber is null"));
         return super.subscribe(subscriber, channel);
     }
 
     override public function unsubscribe<T>(subscriber : ActorRef, ?channel : Class<T>) : Bool {
-        if (!AnyTypes.toBool(subscriber)) Funk.Errors(ArgumentError("subscriber is null"));
+        if (!AnyTypes.toBool(subscriber)) Funk.error(ArgumentError("subscriber is null"));
         return super.unsubscribe(subscriber);
     }
 

@@ -13,21 +13,12 @@ class Actor {
     private var _sender : ActorRef;
 
     public function new() {
-        var contextStack = ActorCell.contextStack.get();
+        var context = ActorContextInjector.currentContext();
+        if (context.isEmpty()) Funk.Errors(ActorError("No Context Error"));
 
-        function noContextError() {
-            Funk.Errors(ActorError("No Context Error"));
-        }
-
-        if (contextStack.isEmpty()) noContextError();
-        var c = contextStack.head();
-        if (AnyTypes.toBool(c)) noContextError();
-
-        _context = c;
+        _context = context;
         _self = _context.self();
         _sender = _context.sender();
-
-        ActorCell.contextStack.set(contextStack.push(null));
     }
 
     dynamic public function receive<T>(message : T) : Void {};
