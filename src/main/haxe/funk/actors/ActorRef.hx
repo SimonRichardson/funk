@@ -4,6 +4,7 @@ using funk.actors.ActorCell;
 using funk.actors.ActorSystem;
 using funk.futures.Promise;
 using funk.types.Option;
+using funk.collections.immutable.List;
 
 class ActorRef {
 

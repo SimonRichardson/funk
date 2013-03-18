@@ -3,6 +3,9 @@ package funk.actors.dispatch;
 import funk.actors.dispatch.Dispatcher;
 import funk.actors.dispatch.MessageDispatcher;
 
+using funk.collections.immutable.List;
+using funk.types.Option;
+
 class Dispatchers {
 
     public static var DefaultDispatcherId : String = "funk.actor.default-dispatcher";

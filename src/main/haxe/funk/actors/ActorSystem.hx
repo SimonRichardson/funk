@@ -1,6 +1,7 @@
 package funk.actors;
 
 import funk.actors.ActorRefProvider;
+import funk.actors.Scheduler;
 
 using funk.actors.dispatch.Dispatcher;
 using funk.actors.dispatch.Dispatchers;
@@ -8,6 +9,7 @@ using funk.actors.dispatch.Mailbox;
 using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.event.EventStream;
 using funk.futures.Promise;
+using funk.collections.immutable.List;
 using funk.types.Any;
 
 class ActorSystem {

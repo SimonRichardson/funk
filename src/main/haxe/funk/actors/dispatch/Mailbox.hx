@@ -76,7 +76,7 @@ class Mailbox extends DefaultSystemMessageQueue {
 
     public function becomeOpen() : Bool {
         return switch(_status) {
-            case Closed: setStatus(Closed); false;
+            case Closed: _status = Closed; false;
             case _: _status = Open | _status & Scheduled; true;
         }
     }

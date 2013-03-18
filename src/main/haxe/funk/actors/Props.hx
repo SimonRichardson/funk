@@ -1,7 +1,11 @@
 package funk.actors;
 
+import funk.Funk;
+
 using funk.actors.routing.Routing;
+using funk.types.Any;
 using funk.types.Function1;
+using funk.types.Pass;
 
 typedef Creator = {
     create: Function1<Void, Actor>
@@ -15,10 +19,11 @@ class Props {
 
     private var _dispatcher : String;
 
-    public function new(actor : Class<Actor>) {
+    public function new(?actor : Class<Actor> = null) {
         _creator = {
             function() {
-                return actor();
+                return if (AnyTypes.toBool(actor)) Pass.instanceOf(actor);
+                else Funk.error(ArgumentError());
             }
         };
         _dispatcher = "default-dispatcher";

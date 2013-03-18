@@ -7,6 +7,7 @@ using funk.actors.dispatch.Envelope;
 using funk.actors.dispatch.Mailbox;
 using funk.actors.dispatch.MessageDispatcher;
 using funk.types.Option;
+using funk.collections.immutable.List;
 
 typedef ActorContext = {
 
@@ -42,8 +43,10 @@ class ActorCell {
 
     private var _currentMessage : Envelope;
 
+    private var _props : Props;
+
     public function new() {
-        _dispatcher = _system.dispatchers.lookup(props.dispatcher());
+        _dispatcher = _system.dispatchers.lookup(_props.dispatcher());
     }
 
     public function start() {

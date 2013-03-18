@@ -2,6 +2,7 @@ package funk.actors;
 
 using funk.actors.dispatch.MessageDispatcher;
 using funk.types.Function0;
+using funk.types.Option;
 using funk.reactives.Process;
 
 typedef Cancellable = {
