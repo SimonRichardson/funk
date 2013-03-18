@@ -251,23 +251,23 @@ private class UnboundedMailbox {
         _list = Nil;
     }
 
-    public function enqueue(receiver : ActorRef, handle : Envelope) : Void { _list = _list.prepend(handle); }
+    public function enqueue(receiver : ActorRef, handle : Envelope) : Void _list = _list.prepend(handle);
 
-      public function dequeue() : Envelope return _list.head();
+    public function dequeue() : Envelope return _list.head();
 
-      public function numberOfMessages() : Int return _list.size();
+    public function numberOfMessages() : Int return _list.size();
 
-      public function hasMessages() : Bool return _list.nonEmpty();
+    public function hasMessages() : Bool return _list.nonEmpty();
 
-      public function cleanUp(owner: ActorContext, deadLetters: MessageQueue): Void {
-          if (hasMessages()) {
-              var list = _list;
-              while(list.nonEmpty()) {
-                  var head = list.head();
-                  deadLetters.enqueue(owner.self(), head);
-                  list = list.tail();
-              }
+    public function cleanUp(owner: ActorContext, deadLetters: MessageQueue): Void {
+      if (hasMessages()) {
+          var list = _list;
+          while(list.nonEmpty()) {
+              var head = list.head();
+              deadLetters.enqueue(owner.self(), head);
+              list = list.tail();
           }
       }
+    }
 
 }

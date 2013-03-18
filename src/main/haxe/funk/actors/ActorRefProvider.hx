@@ -32,9 +32,9 @@ typedef ActorRefProvider = {
 
     function eventStream() : EventStream;
 
-    function actorOf(   system: ActorSystem, 
-                        props: Props, 
-                        supervisor: InternalActorRef, 
+    function actorOf(   system: ActorSystem,
+                        props: Props,
+                        supervisor: InternalActorRef,
                         path: ActorPath
                         ) : InternalActorRef;
 
@@ -87,14 +87,14 @@ class LocalActorRefProvider {
         return this;
     }
 
-    public function actorOf(    system : ActorSystem, 
-                                props : Props, 
-                                supervisor : InternalActorRef, 
+    public function actorOf(    system : ActorSystem,
+                                props : Props,
+                                supervisor : InternalActorRef,
                                 path : ActorPath
                                 ) : InternalActorRef {
         switch(props.router) {
             case _ if(props.router == NoRouter): new LocalActorRef(system, props, supervisor, path);
-            case _: 
+            case _:
         }
     }
 
@@ -123,7 +123,7 @@ class Guadian extends Actor {
         super();
     }
 
-    override public function receive<T>(message : T) : Void {
+    override public function receive(message : EnumValue) : Void {
         switch(message) {
             case Terminated(_): context().stop(self);
             case CreateChild(child, name): sender().tell(context.actorOf(child, name));
@@ -141,7 +141,7 @@ class SystemGuadian extends Actor {
         super();
     }
 
-    override public function receive<T>(message : T) : Void {
+    override public function receive(message : EnumValue) : Void {
         switch(message) {
             case Terminated(_): context().stop(self);
             case CreateChild(child, name): sender().tell(context.actorOf(child, name));

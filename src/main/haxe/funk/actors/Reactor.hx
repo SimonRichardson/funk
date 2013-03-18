@@ -2,7 +2,7 @@ package funk.actors;
 
 class Rector {
 
-    private var _stream : Stream<T>;
+    private var _stream : Stream<EnumValue>;
 
     public function new(actor : ActorRef) {
         var stream = StreamTypes.indentity(None);
@@ -12,7 +12,7 @@ class Rector {
         });
     }
 
-    public function react<T>() : Stream<T> {
+    public function react() : Stream<EnumValue> {
         return _stream;
     }
 }

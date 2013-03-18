@@ -84,7 +84,7 @@ class ActorCell {
 
     public function children() : List<ActorRef> return _childrenRefs.children;
 
-    public function tell<T>(message : T, sender : ActorRef) : Void {
+    public function tell(message : EnumValue, sender : ActorRef) : Void {
         var ref = AnyTypes.toBool(sender)? sender : _system.deadLetters;
         _dispatcher.dispatch(this, Envelope(message, ref));
     }
@@ -99,6 +99,8 @@ class ActorCell {
     public function self() : ActorRef return _actor;
 
     public function system() : ActorSystem return _system;
+
+    public function dispatcher() : MessageDispatcher return _dispatcher;
 
     public function newActor() : Actor {
         ActorContextInjector.pushContext(this);

@@ -17,7 +17,7 @@ class ActorRef {
         _actorContext = _actorCell;
     }
 
-    public function ask<T>(reciever : ActorRef, message : T) : Promise<T> {
+    public function ask(reciever : ActorRef, message : EnumValue) : Promise<EnumValue> {
         return null;
     }
 
@@ -25,11 +25,11 @@ class ActorRef {
         return null;
     }
 
-    public function forward<T>(message : T) : Void {
+    public function forward(message : EnumValue) : Void {
 
     }
 
-    public function tell<T>(message : T, sender : ActorRef) : Void {
+    public function tell(message : EnumValue, sender : ActorRef) : Void {
         // var ref = AnyTypes.toBool(sender) ? sender : system.deadLetters;
         // dispatcher.dispatch(this, Envelope(message, s)(system))
     }

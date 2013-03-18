@@ -8,14 +8,14 @@ class Router extends Actor {
         super();
     }
 
-    override public function receive<T>(message : T) : Void {
+    override public function receive(message : EnumValue) : Void {
         switch (message) {
             case Terminated(child): context().stop(self);
             case _: routerReceive(message);
         }
     }
 
-    public function routerReceive<T>(message : T) : Void {
+    public function routerReceive(message : EnumValue) : Void {
         switch (message) {
             case _:
         }

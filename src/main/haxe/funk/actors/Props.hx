@@ -22,8 +22,8 @@ class Props {
 
     public function new(?actor : Class<Actor> = null) {
         _creator = {
-            create: function() {
-                return if (AnyTypes.toBool(actor)) Pass.instanceOf(actor);
+            create: function() : Actor {
+                return if (AnyTypes.toBool(actor)) Pass.instanceOf(actor)();
                 else Funk.error(ActorError("Actor instance passed to Props can't be 'null'"));
             }
         };

@@ -15,8 +15,8 @@ enum SystemMessage {
     ChildTerminated(child : ActorRef);
 }
 
-enum UnhandledMessage<T> {
-    UnhandledMessage(message : T, sender : ActorRef, self : ActorRef);
+enum UnhandledMessage {
+    UnhandledMessage(message : EnumValue, sender : ActorRef, self : ActorRef);
 }
 
 @:allow(funk.actors.dispatch)

@@ -17,9 +17,9 @@ class Actor {
 
     public function new() {
         var context = ActorContextInjector.currentContext();
-        if (context.isEmpty()) Funk.Errors(ActorError("No Context Error"));
+        if (context.isEmpty()) Funk.error(ActorError("No Context Error"));
 
-        _context = context;
+        _context = context.get();
         _self = _context.self();
         _sender = _context.sender();
     }
@@ -28,7 +28,7 @@ class Actor {
 
     public function postStop() : Void {}
 
-    public function receive<T>(message : T) : Void {}
+    public function receive(message : EnumValue) : Void {}
 
     public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {
         context.children().foreach(function(value) value.stop());
@@ -37,7 +37,7 @@ class Actor {
 
     public function postRestart(reason : Errors) : Void preStart();
 
-    public function unhandled<T>(message : T) : Void {
+    public function unhandled(message : EnumValue) : Void {
         switch(message) {
             case Terminated(dead): Funk.Errors(ActorError(dead));
             case _: context().system().publish(UnhandledMessage(message, sender(), self()));

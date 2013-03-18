@@ -1,15 +1,14 @@
 package funk.actors.dispatch;
 
 using funk.Funk;
-using funk.types.AnyRef;
 
 enum Envelope {
-    Envelope(message : AnyRef, sender : ActorRef);
+    Envelope(message : EnumValue, sender : ActorRef);
 }
 
 class EnvelopeTypes {
 
-    public static function message(envelope : Envelope) : AnyRef {
+    public static function message(envelope : Envelope) : EnumValue {
         return switch (envelope) {
             case Envelope(message, _): message;
         }

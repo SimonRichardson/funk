@@ -11,7 +11,7 @@ typedef EventBus = {
 
     function unsubscribe(subscriber : ActorRef) : Bool;
 
-    function publish<T>(event : T, subscriber : ActorRef) : Void;
+    function publish(event : EnumValue, subscriber : ActorRef) : Void;
 };
 
 class LookupClassification {
@@ -41,10 +41,10 @@ class LookupClassification {
         return _subscribers == original;
     }
 
-    public function publish<T>(event : T, subscriber : ActorRef) : Void {
+    public function publish(event : EnumValue, subscriber : ActorRef) : Void {
     }
 
-    public function publishEvent<T>(event : T) : Void {
+    public function publishEvent(event : EnumValue) : Void {
         var list = _subscribers.filter(function(tuple : Tuple2<Class<ActorRef>, ActorRef>) {
             return tuple._1() == event;
         });

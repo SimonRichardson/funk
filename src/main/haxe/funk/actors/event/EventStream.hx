@@ -26,7 +26,7 @@ class EventStream extends LookupClassification {
         return super.unsubscribe(subscriber);
     }
 
-    override public function publish<T>(event : T, subscriber : ActorRef) : Void {
+    override public function publish(event : EnumValue, subscriber : ActorRef) : Void {
         if (subscriber.isTerminated()) unsubscribe(subscriber);
         else subscriber.tell(event);
     }
