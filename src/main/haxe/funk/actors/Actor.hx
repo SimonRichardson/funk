@@ -1,8 +1,11 @@
 package funk.actors;
 
+import funk.Funk;
 import funk.actors.ActorSystem;
 
 using funk.actors.ActorCell;
+using funk.types.AnyRef;
+using funk.types.Option;
 
 class Actor {
 
@@ -21,11 +24,22 @@ class Actor {
         _sender = _context.sender();
     }
 
-    dynamic public function receive<T>(message : T) : Void {};
+    public function preStart() : Void {}
+
+    public function postStop() : Void {}
+
+    public function receive<T>(message : T) : Void {}
+
+    public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {
+        context.children().foreach(function(value) value.stop());
+        postStop();
+    }
+
+    public function postRestart(reason : Errors) : Void preStart();
 
     public function unhandled<T>(message : T) : Void {
         switch(message) {
-            // case Terminated(dead): Funk.Errors(ActorError(dead));
+            case Terminated(dead): Funk.Errors(ActorError(dead));
             case _: context().system().publish(UnhandledMessage(message, sender(), self()));
         }
     }
@@ -35,4 +49,6 @@ class Actor {
     public function sender() : ActorRef return _sender;
 
     private function context() : ActorContext return _context;
+
+    // TODO (Simon) : Add behaviours
 }
