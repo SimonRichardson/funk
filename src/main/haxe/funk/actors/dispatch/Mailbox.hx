@@ -60,6 +60,8 @@ class Mailbox extends DefaultSystemMessageQueue {
         _status = 0;
     }
 
+    public function dispatcher() : MessageDispatcher return _dispatcher;
+
     public function enqueue(reciever : ActorRef, msg : Envelope) : Void _messageQueue.enqueue(reciever, msg);
 
     public function dequeue() : Envelope return _messageQueue.dequeue();
@@ -115,6 +117,7 @@ class Mailbox extends DefaultSystemMessageQueue {
         }
     }
 
+    @:allow(funk.actors.dispatch)
     private function run() : Void {
         function finally() {
             setAsIdle();

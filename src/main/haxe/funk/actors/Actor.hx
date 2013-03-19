@@ -50,18 +50,18 @@ class Actor {
         switch(message) {
             case ActorMessage:
                 switch(cast a) {
-                    case Terminated(dead): Funk.Errors(ActorError(dead));
+                    case Terminated(dead): Funk.error(ActorError(dead));
                     case _: handle(message);
                 }
             case _: handle(message);
         }
     }
 
-    public function self() : ActorRef return _self;
+    inline public function self() : ActorRef return _self;
 
-    public function sender() : ActorRef return _sender;
+    inline public function sender() : ActorRef return _sender;
 
-    private function context() : ActorContext return _context;
+    inline private function context() : ActorContext return _context;
 
     // TODO (Simon) : Add behaviours
 }

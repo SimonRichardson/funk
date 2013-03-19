@@ -25,7 +25,7 @@ typedef ActorRefProvider = {
 
     function systemGuardian() : InternalActorRef;
 
-    function deadLetters() : ActorRef;
+    function deadLetters() : InternalActorRef;
 
     function rootPath() : ActorPath;
 
@@ -39,7 +39,7 @@ typedef ActorRefProvider = {
                         props: Props,
                         supervisor: ActorRef,
                         path: ActorPath
-                        ) : ActorRef;
+                        ) : InternalActorRef;
 
     function terminationFuture() : Promise<Unit>;
 }
@@ -64,7 +64,7 @@ class LocalActorRefProvider {
 
     private var _rootPath : ActorPath;
 
-    private var _deadLetters : ActorRef;
+    private var _deadLetters : InternalActorRef;
 
     private var _scheduler : Scheduler;
 
@@ -88,9 +88,9 @@ class LocalActorRefProvider {
         var rootProps = new Props(Guadian);
         var systemProps = new Props(SystemGuadian);
 
-        _rootGuardian = new InternalActorRef(_system, rootProps, rootPath);
-        _guardian = actorOf(_system, props, _rootGuardian, rootPath.child("user"));
-        _systemGuardian = actorOf(_system, systemProps, _rootGuardian, rootPath.child("system"));
+        _rootGuardian = new LocalActorRef(_system, rootProps, new MinimalActorRef(), _rootPath);
+        _guardian = actorOf(_system, rootProps, _rootGuardian, _rootPath.child("user"));
+        _systemGuardian = actorOf(_system, systemProps, _rootGuardian, _rootPath.child("system"));
     }
 
     public function init(system : ActorSystem) : ActorRefProvider {
@@ -101,11 +101,11 @@ class LocalActorRefProvider {
 
     public function actorOf(    system : ActorSystem,
                                 props : Props,
-                                supervisor : InternalActorRef,
+                                supervisor : ActorRef,
                                 path : ActorPath
-                                ) : ActorRef {
+                                ) : InternalActorRef {
         return switch(props.router) {
-            case _ if(Std.is(props.router, NoRouter)): new InternalActorRef(system, props, supervisor, path);
+            case _ if(Std.is(props.router, NoRouter)): new LocalActorRef(system, props, cast supervisor, path);
             case _: Funk.error(ActorError("Missing implementation around routers"));
         }
     }
@@ -116,7 +116,7 @@ class LocalActorRefProvider {
 
     public function systemGuardian() : InternalActorRef return _systemGuardian;
 
-    public function deadLetters() : ActorRef return _deadLetters;
+    public function deadLetters() : InternalActorRef return _deadLetters;
 
     public function rootPath() : ActorPath return _rootPath;
 
@@ -124,7 +124,7 @@ class LocalActorRefProvider {
 
     public function scheduler() : Scheduler return _system.scheduler();
 
-    public function eventStream() : EventStream return _eventStream;
+    public function eventStream() : EventStream return _system.eventStream();
 
     public function terminationFuture() : Promise<Unit> return _terminationDeferred.promise();
 }

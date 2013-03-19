@@ -35,12 +35,11 @@ class ActorSystem {
         _name = name;
         _provider = provider;
 
-        _actors = Nil;
         _isTerminated = false;
 
         var deadLetters = _provider.deadLetters();
-        var deadLetterQueue = new MessageQueue(deadLetters);
-        _deadLetterMailbox = new Mailbox(deadLetters, deadLetterQueue);
+        var deadLetterQueue = new DeadLetterQueue(deadLetters);
+        _deadLetterMailbox = new Mailbox(deadLetters.cell(), deadLetterQueue);
 
         _scheduler = provider.scheduler();
         _eventStream = provider.eventStream();
@@ -55,9 +54,9 @@ class ActorSystem {
             var scheduler = new DefaultScheduler(function() {
                 return dispatchers.defaultGlobalDispatcher;
             });
-            var provider = new LocalActorRefProvider(name, new EventStream(), scheduler);
+            var localProvider = new LocalActorRefProvider(name, new EventStream(), scheduler);
 
-            dispatchers = provider._dispatchers;
+            dispatchers = localProvider._dispatchers;
             
             return provider;
         }
@@ -67,8 +66,8 @@ class ActorSystem {
 
     public function child(name : String) : ActorPath return guardian().path().child(name);
 
-    public function actorOf(props : Props, name : String) : Promise<ActorRef> {
-        return guardian().ask(CreateChild(props, name));
+    public function actorOf(props : Props, name : String) : Promise<EnumValue> {
+        return guardian().ask(CreateChild(props, name), guardian());
     }
 
     public function start() : Void {
@@ -102,7 +101,7 @@ class ActorSystem {
 
     public function scheduler() : Scheduler return _scheduler;
 
-    public function dispatcher() : MessageDispatcher return _dispatchers.defaultGlobalDispatcher;
+    public function dispatcher() : MessageDispatcher return _dispatchers.defaultGlobalDispatcher();
 
     public function dispatchers() : Dispatchers return _dispatchers;
 

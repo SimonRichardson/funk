@@ -1,6 +1,7 @@
 package funk.actors;
 
 using funk.actors.dispatch.MessageDispatcher;
+using funk.actors.ActorRef;
 using funk.types.Function0;
 using funk.types.Option;
 using funk.reactives.Process;
@@ -14,9 +15,9 @@ typedef Cancellable = {
 
 typedef Scheduler = {
 
-    function schedule<T>(reciever : ActorRef, message : T) : Cancellable;
+    function schedule<T>(reciever : InternalActorRef, message : T) : Cancellable;
 
-    function scheduleOnce<T>(reciever : ActorRef, message : T) : Cancellable;
+    function scheduleOnce<T>(reciever : InternalActorRef, message : T) : Cancellable;
 }
 
 class DefaultScheduler {
@@ -27,10 +28,10 @@ class DefaultScheduler {
         _dispatcher = dispatcher;
     }
 
-    public function schedule<T>(reciever : ActorRef, message : T) : Cancellable {
+    public function schedule<T>(reciever : InternalActorRef, message : T) : Cancellable {
         var task = Process.start(function() {
             var dispatcher = _dispatcher();
-            dispatcher.execute(this);
+            dispatcher.execute(reciever.cell());
         }, 1);
 
         var cancelled = false;
@@ -41,10 +42,10 @@ class DefaultScheduler {
         };
     }
 
-    public function scheduleOnce<T>(reciever : ActorRef, message : T) : Cancellable {
+    public function scheduleOnce<T>(reciever : InternalActorRef, message : T) : Cancellable {
         var task = Process.start(function() {
             var dispatcher = _dispatcher();
-            dispatcher.execute(this);
+            dispatcher.execute(reciever.cell());
         }, 1);
 
         var cancelled = false;

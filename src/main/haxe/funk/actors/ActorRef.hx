@@ -18,6 +18,8 @@ typedef ActorRef = {
 
     function path() : ActorPath;
 
+    function ask(msg : EnumValue, sender : ActorRef) : Promise<EnumValue>;
+
     function tell(msg : EnumValue, sender : ActorRef) : Void;
 
     function forward(message : EnumValue) : Function1<ActorContext, Void>;
@@ -25,11 +27,16 @@ typedef ActorRef = {
     function isTerminated(): Bool;
 }
 
+typedef InternalActorRef = {>ActorRef,
+
+    function cell() : ActorCell;
+}
+
 enum DeadLetter {
     DeadLetter(message : AnyRef, sender : ActorRef, recipient : ActorRef);
 }
 
-class InternalActorRef {
+class LocalActorRef {
 
     private var _actorCell : ActorCell;
 
@@ -57,8 +64,8 @@ class InternalActorRef {
         _actorCell.start();
     }
 
-    public function ask(reciever : ActorRef, message : EnumValue) : Promise<EnumValue> {
-        return null;
+    public function ask(msg : EnumValue, sender : ActorRef) : Promise<EnumValue> {
+        return PromiseTypes.empty();
     }
 
     public function forward(message : EnumValue) : Function1<ActorContext, Void> {
@@ -120,38 +127,71 @@ class InternalActorRef {
     }
 }
 
-class EmptyActorRef extends InternalActorRef {
+class EmptyActorRef {
+
+    private var _provider : ActorRefProvider;
+
+    private var _path : ActorPath;
 
     private var _eventStream : EventStream;
 
     public function new(provider : ActorRefProvider, path : ActorPath, eventStream : EventStream) {
-        super(provider, props, supervisor, path);
-
+        _provider = provider;
+        _path = path;
         _eventStream = eventStream;
     }
 
-    override public function tell(message : EnumValue, sender : ActorRef) : Void {
+    public function ask(msg : EnumValue, sender : ActorRef) : Promise<EnumValue> {
+        return PromiseTypes.empty();
+    }
+
+    public function tell(message : EnumValue, sender : ActorRef) : Void {
         switch(message) {
             case DeadLetter:
             case _: eventStream().publish(DeadLetter(message, sender, this));
         }
     }
 
-    override public function isTerminated() : Bool return true;
+    public function name() : String return _path.name();
+
+    public function path() : ActorPath return _path;
+
+    public function cell() : ActorCell return null;
+
+    public function forward(message : EnumValue) : Function1<ActorContext, Void> {
+        return function(context) {};
+    }
+
+    public function isTerminated() : Bool return true;
 
     public function eventStream() : EventStream return _eventStream;
 }
 
-class DeadLetterActorRef extends EmptyActorRef {
+class MinimalActorRef extends EmptyActorRef {
+
+    public function new(provider : ActorRefProvider, path : ActorPath, eventStream : EventStream) {
+        super(provider, path, eventStream);
+    }
+}
+
+class DeadLetterActorRef extends MinimalActorRef {
 
     public function new(provider : ActorRefProvider, path : ActorPath, eventStream : EventStream) {
         super(provider, path, eventStream);
     }
 
     override public function tell(message : EnumValue, sender : ActorRef) : Void {
-        switch(sender) {
-            case DeadLetter: eventStream().publish(message);
-            case _: eventStream().publish(DeadLetter(message, sender, this));
+        function message(message : EnumValue) {
+            eventStream().publish(DeadLetter(message, sender, this), sender);
+        }
+
+        switch(message) {
+            case DeadLetter:
+                switch(cast message) {
+                    case DeadLetter(_): eventStream().publish(message, sender);
+                    case _: handle(message);
+                }
+            case _: handle(message);
         }
     }
 }

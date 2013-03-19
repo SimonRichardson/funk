@@ -48,7 +48,7 @@ class ActorContextInjector {
         _currentContext = _contexts.headOption();
     }
 
-    public static function currentContext() : Option<ActorContext> return _currentContext;
+    inline public static function currentContext() : Option<ActorContext> return _currentContext;
 }
 
 class ActorCell {
@@ -88,7 +88,7 @@ class ActorCell {
         _mailbox = _dispatcher.createMailbox(this);
         _mailbox.systemEnqueue(self(), Nil.prepend(Create));
 
-        if (Std.is(_parent, InternalActorRef)) {
+        if (Std.is(_parent, LocalActorRef)) {
             var internal = cast _parent;
             internal.sendSystemMessage(Supervise(self()));    
         }
@@ -100,10 +100,10 @@ class ActorCell {
 
     public function resume() : Void _dispatcher.systemDispatch(this, Resume);
 
-    public function stop(?actor : ActorRef) : Void {
+    public function stop(?actor : ActorRef = null) : Void {
         if (AnyTypes.toBool(actor)) {
             var opt = _childrenRefs.find(function(a) return a.name() == actor.name());
-            if (Std.is(actor, InternalActorRef)) {
+            if (Std.is(actor, LocalActorRef)) {
                 var internal : InternalActorRef = cast actor;
                 internal.stop(); 
             }
@@ -174,17 +174,20 @@ class ActorCell {
     public function newActor() : Actor {
         ActorContextInjector.pushContext(this);
 
+        var instance = null;
         try {
-            var instance = props.creator();
+            instance = props().creator()();
 
             if (AnyTypes.toBool(instance)) {
-                Funk.Errors(ActorError("Actor instance passed to actorOf can't be 'null'"));
+                Funk.error(ActorError("Actor instance passed to actorOf can't be 'null'"));
             }
         } catch(e : Dynamic) {
             throw e;
         }
 
         ActorContextInjector.popContext();
+
+        return instance;
     }
 
     public function systemInvoke(message : SystemMessage) {
@@ -212,7 +215,7 @@ class ActorCell {
             _actor = newActor();
             _actor.preStart();
         } catch (e : Dynamic) {
-            _parent.tell(Failed(self, "exception during creation"));
+            _parent.tell(Failed(ActorError("exception during creation")), self());
         }
     }
 
@@ -258,4 +261,6 @@ class ActorCell {
     }
 
     private function childrenRefs() : List<ActorRef> return _childrenRefs;
+
+    private function isNormal() : Bool return true;
 }

@@ -2,6 +2,7 @@ package funk.actors.dispatch;
 
 using funk.Funk;
 using funk.collections.immutable.List;
+using funk.actors.Scheduler;
 
 enum SystemMessage {
     Create;
@@ -52,34 +53,30 @@ class MessageDispatcher {
 
     public function suspend(actor : ActorCell) : Void {
         var mailbox = actor.mailbox();
-        if (mailbox.dispatcher == this) {
+        if (mailbox.dispatcher() == this) {
             mailbox.becomeSuspended();
         }
     }
 
     public function resume(actor : ActorCell) : Void {
         var mailbox = actor.mailbox();
-        if (mailbox.dispatcher == this && mailbox.becomeOpen()) {
+        if (mailbox.dispatcher() == this && mailbox.becomeOpen()) {
             registerForExecution(mailbox);
         }
     }
 
-    public function name() : String {
-        return _id;
-    }
+    public function name() : String return _id;
+    
+    public function throughput() : Int return 0;
+    
+    public function throughputDeadlineTime() : Int return 0;
 
-    public function throughput() : Int {
-        return 0;
-    }
+    public function isThroughputDeadlineTimeDefined() : Bool return throughputDeadlineTime() > 0;
 
-    public function throughputDeadlineTime() : Int {
-        return 0;
+    public function execute(actor : ActorCell) : Void {
+        var mailbox = actor.mailbox();
+        mailbox.run();
     }
-
-    public function isThroughputDeadlineTimeDefined() : Bool {
-        return throughputDeadlineTime() > 0;
-    }
-
 
     private function register(actor : ActorCell) {
         _inhabitants = _inhabitants.prepend(this);
