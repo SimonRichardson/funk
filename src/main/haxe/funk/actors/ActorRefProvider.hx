@@ -7,6 +7,7 @@ using funk.actors.event.EventStream;
 using funk.actors.routing.Routing;
 using funk.actors.Actor;
 using funk.actors.ActorPath;
+using funk.actors.ActorRef;
 using funk.actors.ActorSystem;
 using funk.types.AnyRef;
 using funk.types.Option;

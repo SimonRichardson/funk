@@ -1,11 +1,13 @@
 package funk.actors;
 
-import funk.actors.ActorSystem;
 import funk.Funk;
 
 using funk.actors.dispatch.Envelope;
 using funk.actors.dispatch.Mailbox;
 using funk.actors.dispatch.MessageDispatcher;
+using funk.actors.ActorSystem;
+using funk.actors.ActorRef;
+using funk.types.Any;
 using funk.types.Option;
 using funk.collections.immutable.List;
 
@@ -49,7 +51,7 @@ class ActorContextInjector {
 
 class ActorCell {
 
-    private var _actor : Actor;
+    private var _self : ActorRef;
 
     private var _mailbox : Mailbox;
 
@@ -63,8 +65,12 @@ class ActorCell {
 
     private var _props : Props;
 
-    public function new() {
-        _dispatcher = _system.dispatchers.lookup(_props.dispatcher());
+    public function new(system : ActorSystem, self : InternalActorRef, props : Props) {
+        _system = system;
+        _self = self;
+        _props = props;
+
+        _dispatcher = _system.dispatchers().lookup(_props.dispatcher());
     }
 
     public function start() {
@@ -85,20 +91,26 @@ class ActorCell {
     public function children() : List<ActorRef> return _childrenRefs.children;
 
     public function tell(message : EnumValue, sender : ActorRef) : Void {
-        var ref = AnyTypes.toBool(sender)? sender : _system.deadLetters;
+        var ref = AnyTypes.toBool(sender)? sender : _system.deadLetters();
         _dispatcher.dispatch(this, Envelope(message, ref));
     }
 
     public function sender() : ActorRef {
         return switch(_currentMessage) {
             case Envelope(msg, sender) if (AnyTypes.toBool(sender)): sender;
-            case _: _system.deadLetters;
+            case _: _system.deadLetters();
         }
     }
 
-    public function self() : ActorRef return _actor;
+    public function self() : ActorRef return _self;
+
+    public function guardian() : InternalActorRef return _self;
+
+    public function lookupRoot() : InternalActorRef return _self;
 
     public function system() : ActorSystem return _system;
+
+    public function provider() : ActorRefProvider return _system.provider();
 
     public function dispatcher() : MessageDispatcher return _dispatcher;
 

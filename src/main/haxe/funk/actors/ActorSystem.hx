@@ -1,8 +1,8 @@
 package funk.actors;
 
-import funk.actors.ActorRefProvider;
-import funk.actors.Scheduler;
-
+using funk.actors.ActorRef;
+using funk.actors.ActorRefProvider;
+using funk.actors.Scheduler;
 using funk.actors.dispatch.Dispatcher;
 using funk.actors.dispatch.Dispatchers;
 using funk.actors.dispatch.Mailbox;
@@ -29,11 +29,14 @@ class ActorSystem {
 
     private var _name : String;
 
+    private var _isTerminated : Bool;
+
     function new(name : String, provider : ActorRefProvider) {
         _name = name;
         _provider = provider;
 
         _actors = Nil;
+        _isTerminated = false;
 
         var deadLetters = _provider.deadLetters();
         var deadLetterQueue = new MessageQueue(deadLetters);
@@ -75,7 +78,21 @@ class ActorSystem {
         });
     }
 
-    public function stop() : Void guardian().stop();
+    public function stop(actor : ActorRef) : Void {
+        var path = actor.path();
+        var guard = guardian().path();
+        var sys = systemGuardian().path();
+
+        switch(path.parent()) {
+            case 'guard': guardian().ask(StopChild(actor));
+            case 'sys': systemGuardian().ask(StopChild(actor));
+            case _ if(Std.is(actor, InternalActorRef)):
+                var ref : InternalActorRef = cast actor;
+                ref.stop();
+        }
+    }
+
+    public function isTerminated() : Void return _isTerminated;
 
     public function shutdown() : Void guardian().stop();
 
@@ -87,20 +104,19 @@ class ActorSystem {
 
     public function dispatcher() : MessageDispatcher return _dispatchers.defaultGlobalDispatcher;
 
+    public function dispatchers() : Dispatchers return _dispatchers;
+
     public function eventStream() : EventStream return _eventStream;
 
     public function name() : String return _name;
+
+    public function provider() : ActorRefProvider return _provider;
 
     inline private function guardian() : InternalActorRef return _provider.guardian();
 
     inline private function systemGuardian() : InternalActorRef return _provider.systemGuardian();
 
     private function stopScheduler() : Void _scheduler.close();
-}
 
-class InternalActorRef extends ActorRef {
-
-    public function new() {
-        super();
-    }
+    public function toString() : String _lookupRoot.path().root().address().toString();
 }
