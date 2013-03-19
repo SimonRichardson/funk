@@ -37,11 +37,18 @@ typedef ActorRefProvider = {
 
     function actorOf(   system: ActorSystem,
                         props: Props,
-                        supervisor: InternalActorRef,
+                        supervisor: ActorRef,
                         path: ActorPath
-                        ) : InternalActorRef;
+                        ) : ActorRef;
 
     function terminationFuture() : Promise<Unit>;
+}
+
+typedef ActorRefFactory = {
+
+    function actorOf(props : Props, name : String) : ActorRef;
+
+    function stop(?actor : ActorRef) : Void;
 }
 
 enum LocalActorMessage {
@@ -81,7 +88,7 @@ class LocalActorRefProvider {
         var rootProps = new Props(Guadian);
         var systemProps = new Props(SystemGuadian);
 
-        _rootGuardian = new LocalActorRef(_system, rootProps, rootPath);
+        _rootGuardian = new InternalActorRef(_system, rootProps, rootPath);
         _guardian = actorOf(_system, props, _rootGuardian, rootPath.child("user"));
         _systemGuardian = actorOf(_system, systemProps, _rootGuardian, rootPath.child("system"));
     }
@@ -96,10 +103,10 @@ class LocalActorRefProvider {
                                 props : Props,
                                 supervisor : InternalActorRef,
                                 path : ActorPath
-                                ) : InternalActorRef {
-        switch(props.router) {
-            case _ if(Std.is(props.router, NoRouter)): new LocalActorRef(system, props, supervisor, path);
-            case _:
+                                ) : ActorRef {
+        return switch(props.router) {
+            case _ if(Std.is(props.router, NoRouter)): new InternalActorRef(system, props, supervisor, path);
+            case _: Funk.error(ActorError("Missing implementation around routers"));
         }
     }
 

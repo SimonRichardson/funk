@@ -28,6 +28,6 @@ class EventStream extends LookupClassification {
 
     override public function publish(event : EnumValue, subscriber : ActorRef) : Void {
         if (subscriber.isTerminated()) unsubscribe(subscriber);
-        else subscriber.tell(event);
+        else subscriber.tell(event, subscriber);
     }
 }

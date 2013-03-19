@@ -1,7 +1,9 @@
 package funk.actors.dispatch;
 
 using funk.actors.dispatch.MessageDispatcher;
+using funk.actors.Actor;
 using funk.actors.ActorCell;
+using funk.actors.ActorRef;
 using funk.reactives.Process;
 using funk.types.Any;
 using funk.types.Option;
@@ -102,12 +104,15 @@ class Mailbox extends DefaultSystemMessageQueue {
 
     public function setAsIdle() : Bool {
         var s = _status;
-        return updateStatus(s, s & ~scheduled) || setAsIdle();
+        return updateStatus(s, s & ~Scheduled) || setAsIdle();
     }
 
     private function updateStatus(oldStatus : Int, newStatus : Int) : Bool {
         return if (oldStatus == newStatus) true;
-        else _status = newStatus; true;
+        else {
+            _status = newStatus; 
+            true;
+        }
     }
 
     private function run() : Void {
@@ -161,7 +166,7 @@ class Mailbox extends DefaultSystemMessageQueue {
             var dlm = _actor.system().deadLetterMailbox();
             if (hasSystemMessages()) {
                 var messages = systemDrain();
-                dlm.systemEnqueue(_actor.self(), message);
+                dlm.systemEnqueue(_actor.self(), messages);
             }
         }
     }
@@ -180,14 +185,14 @@ class DeadLetterQueue {
         _deadLetters.tell(DeadLetter(envelope.message(), sender, receiver), sender);
     }
 
-      public function dequeue() : Envelope return null;
+    public function dequeue() : Envelope return null;
 
-      public function numberOfMessages() : Int return 0;
+    public function numberOfMessages() : Int return 0;
 
-      public function hasMessages() : Bool return false;
+    public function hasMessages() : Bool return false;
 
-      public function cleanUp(owner: ActorContext, deadLetters: MessageQueue): Void {
-      }
+    public function cleanUp(owner: ActorContext, deadLetters: MessageQueue): Void {
+    }
 }
 
 class DeadLetterMailbox extends Mailbox {
@@ -203,7 +208,7 @@ class DeadLetterMailbox extends Mailbox {
     }
 
     override public function systemEnqueue(reciever : ActorRef, handle : List<SystemMessage>) : Void {
-        _deadLetters.tell(DeadLetter(handle, reciever, reciever), _deadLetters.self());
+        _deadLetters.tell(DeadLetter(handle, reciever, reciever), _deadLetters);
     }
 
     override public function systemDrain() : List<SystemMessage> return Nil;
@@ -217,7 +222,7 @@ private typedef SystemMessageQueue = {
 
     function systemDrain() : List<SystemMessage>;
 
-      function hasSystemMessages(): Bool;
+    function hasSystemMessages(): Bool;
 }
 
 private class DefaultSystemMessageQueue {

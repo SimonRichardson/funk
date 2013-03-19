@@ -10,7 +10,7 @@ class Router extends Actor {
 
     override public function receive(message : EnumValue) : Void {
         switch (message) {
-            case Terminated(child): context().stop(self);
+            case Terminated(child): context().stop(self());
             case _: routerReceive(message);
         }
     }

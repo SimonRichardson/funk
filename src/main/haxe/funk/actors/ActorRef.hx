@@ -5,20 +5,28 @@ import funk.Funk;
 using funk.actors.ActorSystem;
 using funk.actors.ActorCell;
 using funk.actors.ActorSystem;
+using funk.actors.event.EventStream;
 using funk.futures.Promise;
+using funk.types.AnyRef;
 using funk.types.Function1;
 using funk.types.Option;
 using funk.collections.immutable.List;
 
 typedef ActorRef = {
 
-    function path(): ActorPath;
+    function name() : String;
+
+    function path() : ActorPath;
 
     function tell(msg : EnumValue, sender : ActorRef) : Void;
 
     function forward(message : EnumValue) : Function1<ActorContext, Void>;
 
     function isTerminated(): Bool;
+}
+
+enum DeadLetter {
+    DeadLetter(message : AnyRef, sender : ActorRef, recipient : ActorRef);
 }
 
 class InternalActorRef {
@@ -43,23 +51,27 @@ class InternalActorRef {
         _supervisor = supervisor;
         _actorPath = path;
 
-        _actorCell = new ActorCell(_system, this, _props);
+        _actorCell = new ActorCell(_system, this, _props, _supervisor);
         _actorContext = _actorCell;
+
+        _actorCell.start();
     }
 
     public function ask(reciever : ActorRef, message : EnumValue) : Promise<EnumValue> {
         return null;
     }
 
-    public function path() : ActorPath {
-        return _actorPath;
-    }
-
     public function forward(message : EnumValue) : Function1<ActorContext, Void> {
-        tell(message, context.sender());
+        return function(context : ActorContext) {
+            tell(message, context.sender());    
+        }
     }
 
     public function tell(message : EnumValue, sender : ActorRef) : Void _actorCell.tell(message, sender);
+
+    public function name() : String return _actorPath.name();
+
+    public function path() : ActorPath return _actorPath;
 
     public function suspended() : Void _actorCell.suspended();
 
@@ -78,6 +90,8 @@ class InternalActorRef {
     public function isTerminated() : Bool return _isTerminated;
 
     public function context() : ActorContext return _actorCell;
+
+    public function cell() : ActorCell return _actorCell;
 
     public function getChild(names : List<String>) : ActorRef {
         function rec(ref : ActorRef, name : List<String>) : ActorRef {
@@ -106,32 +120,39 @@ class InternalActorRef {
     }
 }
 
-class LocalActorRef extends InternalActorRef {
+class EmptyActorRef extends InternalActorRef {
 
-    public function new(system : ActorSystem, props : Props, supervisor : InternalActorRef) {
-        super();
+    private var _eventStream : EventStream;
 
-        _system = system;
-        _props = props;
-        _supervisor = supervisor;
+    public function new(provider : ActorRefProvider, path : ActorPath, eventStream : EventStream) {
+        super(provider, props, supervisor, path);
+
+        _eventStream = eventStream;
     }
 
-    public function cell() : ActorCell return _actorCell;
-}
-
-class MinimalActorRef extends InternalActorRef {
-
-    public function new() {
-
+    override public function tell(message : EnumValue, sender : ActorRef) : Void {
+        switch(message) {
+            case DeadLetter:
+            case _: eventStream().publish(DeadLetter(message, sender, this));
+        }
     }
 
-    
+    override public function isTerminated() : Bool return true;
+
+    public function eventStream() : EventStream return _eventStream;
 }
 
-class DeadLetterActorRef extends InternalActorRef {
+class DeadLetterActorRef extends EmptyActorRef {
 
-    public function new() {
-        super();
+    public function new(provider : ActorRefProvider, path : ActorPath, eventStream : EventStream) {
+        super(provider, path, eventStream);
+    }
+
+    override public function tell(message : EnumValue, sender : ActorRef) : Void {
+        switch(sender) {
+            case DeadLetter: eventStream().publish(message);
+            case _: eventStream().publish(DeadLetter(message, sender, this));
+        }
     }
 }
 

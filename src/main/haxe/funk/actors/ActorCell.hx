@@ -5,17 +5,15 @@ import funk.Funk;
 using funk.actors.dispatch.Envelope;
 using funk.actors.dispatch.Mailbox;
 using funk.actors.dispatch.MessageDispatcher;
+using funk.actors.Actor;
 using funk.actors.ActorSystem;
 using funk.actors.ActorRef;
+using funk.actors.ActorRefProvider;
 using funk.types.Any;
 using funk.types.Option;
 using funk.collections.immutable.List;
 
-typedef ActorContext = {
-
-    function actorOf(props : Props, name : String) : ActorRef;
-
-    function child(name : String) : Option<ActorRef>;
+typedef ActorContext = {> ActorRefFactory,
 
     function children() : List<ActorRef>;
 
@@ -28,6 +26,10 @@ typedef ActorContext = {
     function sender() : ActorRef;
 
     function system() : ActorSystem;
+
+    function watch(subject : ActorRef) : ActorRef;
+
+    function unwatch(subject : ActorRef) : ActorRef;
 };
 
 class ActorContextInjector {
@@ -51,6 +53,8 @@ class ActorContextInjector {
 
 class ActorCell {
 
+    private var _actor : Actor;
+
     private var _self : ActorRef;
 
     private var _mailbox : Mailbox;
@@ -65,20 +69,30 @@ class ActorCell {
 
     private var _props : Props;
 
-    public function new(system : ActorSystem, self : InternalActorRef, props : Props) {
+    private var _parent : ActorRef;
+
+    private var _isTerminating : Bool;
+
+    public function new(system : ActorSystem, self : InternalActorRef, props : Props, parent : ActorRef) {
         _system = system;
         _self = self;
         _props = props;
+        _parent = parent;
+
+        _isTerminating = false;
 
         _dispatcher = _system.dispatchers().lookup(_props.dispatcher());
     }
 
     public function start() {
         _mailbox = _dispatcher.createMailbox(this);
-        _mallbox.systemEnqueue(self(), Create);
+        _mailbox.systemEnqueue(self(), Nil.prepend(Create));
 
-        _parent.sendSystemMessage(Supervise(self()));
-
+        if (Std.is(_parent, InternalActorRef)) {
+            var internal = cast _parent;
+            internal.sendSystemMessage(Supervise(self()));    
+        }
+        
         _dispatcher.attach(this);
     }
 
@@ -86,9 +100,27 @@ class ActorCell {
 
     public function resume() : Void _dispatcher.systemDispatch(this, Resume);
 
-    public function stop() : Void _dispatcher.systemDispatch(this, Stop);
+    public function stop(?actor : ActorRef) : Void {
+        if (AnyTypes.toBool(actor)) {
+            var opt = _childrenRefs.find(function(a) return a.name() == actor.name());
+            if (Std.is(actor, InternalActorRef)) {
+                var internal : InternalActorRef = cast actor;
+                internal.stop(); 
+            }
+        } else _dispatcher.systemDispatch(this, Terminate);
+    }
 
-    public function children() : List<ActorRef> return _childrenRefs.children;
+    public function watch(subject : ActorRef) : ActorRef {
+        _dispatcher.systemDispatch(this, Link(subject));
+        return subject;
+    }
+
+    public function unwatch(subject : ActorRef) : ActorRef {
+        _dispatcher.systemDispatch(this, Unlink(subject));
+        return subject;
+    }
+
+    public function children() : List<ActorRef> return _childrenRefs;
 
     public function tell(message : EnumValue, sender : ActorRef) : Void {
         var ref = AnyTypes.toBool(sender)? sender : _system.deadLetters();
@@ -97,12 +129,18 @@ class ActorCell {
 
     public function sender() : ActorRef {
         return switch(_currentMessage) {
-            case Envelope(msg, sender) if (AnyTypes.toBool(sender)): sender;
+            case Envelope(_, sender) if (AnyTypes.toBool(sender)): sender;
             case _: _system.deadLetters();
         }
     }
 
+    public function name() : String return _self.name();
+
+    public function props() : Props return _props;
+
     public function self() : ActorRef return _self;
+
+    public function mailbox() : Mailbox return _mailbox;
 
     public function guardian() : InternalActorRef return _self;
 
@@ -113,6 +151,25 @@ class ActorCell {
     public function provider() : ActorRefProvider return _system.provider();
 
     public function dispatcher() : MessageDispatcher return _dispatcher;
+
+    public function parent() : ActorRef return _parent;
+
+    public function actorOf(props : Props, name : String) : ActorRef {
+        var opt : Option<ActorRef> = _childrenRefs.find(function(actor) return actor.name() == name); 
+        return switch(opt) {
+            case None: 
+                var actor : ActorRef;
+                if (isTerminating()) {
+                    // Fixme, we should get an actorFor
+                    Funk.error(ActorError('Actor isTerminating'));
+                } else {
+                    actor = provider().actorOf(system(), props, self(), self().path().child(name));
+                    _childrenRefs = _childrenRefs.prepend(actor);
+                }
+                actor;
+            case _: Funk.error(ActorError('Actor name $name is not unique!'));
+        }
+    }
 
     public function newActor() : Actor {
         ActorContextInjector.pushContext(this);
@@ -147,6 +204,8 @@ class ActorCell {
     public function invoke(message : Envelope) {
         _currentMessage = message;
     }
+
+    public function isTerminating() : Bool return _isTerminating;
 
     private function systemCreate() : Void {
         try {

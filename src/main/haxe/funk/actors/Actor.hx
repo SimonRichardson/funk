@@ -8,6 +8,7 @@ using funk.types.AnyRef;
 using funk.types.Option;
 
 enum ActorMessage {
+    Failed(cause : Errors);
     Terminated(actor : ActorRef);
 }
 
@@ -42,9 +43,17 @@ class Actor {
     public function postRestart(reason : Errors) : Void preStart();
 
     public function unhandled(message : EnumValue) : Void {
+        function handle(message : EnumValue) {
+            context().system().publish(UnhandledMessage(message, sender(), self()));
+        }
+
         switch(message) {
-            case Terminated(dead): Funk.Errors(ActorError(dead));
-            case _: context().system().publish(UnhandledMessage(message, sender(), self()));
+            case ActorMessage:
+                switch(cast a) {
+                    case Terminated(dead): Funk.Errors(ActorError(dead));
+                    case _: handle(message);
+                }
+            case _: handle(message);
         }
     }
 

@@ -1,6 +1,7 @@
 package funk.actors.dispatch;
 
 using funk.Funk;
+using funk.collections.immutable.List;
 
 enum SystemMessage {
     Create;
@@ -24,10 +25,14 @@ class MessageDispatcher {
 
     private var _id : String;
 
+    private var _inhabitants : List<MessageDispatcher>;
+
     public function new() {
+        _inhabitants = Nil;
     }
 
     public function createMailbox(actor : ActorCell) : Mailbox {
+        return null;
     }
 
     public function systemDispatch(reciever : ActorCell, invocation : SystemMessage) : Void {
