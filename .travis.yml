@@ -1,0 +1,24 @@
+language: java
+
+env: LD_LIBRARY_PATH=/usr/lib/neko
+
+before_script:
+  - sudo apt-get install ocaml camlp4 ocaml-findlib cvs zlib1g-dev make wget tar subversion libgc1c2
+  - svn checkout http://haxe.googlecode.com/svn/trunk haxe_trunk > /dev/null
+  - cd haxe_trunk
+  - make
+  - sudo make install
+  - cd ..
+  - curl http://nekovm.org/_media/neko-2.0.0-linux64.tar.gz | tar xzf -
+  - sudo mv neko-2.0.0-linux /usr/lib/neko
+  - sudo cp /usr/lib/neko/neko /usr/bin/neko
+  - sudo cp /usr/lib/neko/nekoc /usr/bin/nekoc
+  - sudo cp /usr/lib/neko/nekotools /usr/bin/nekotools
+  - mkdir -p ~/.haxe/lib
+  - echo ~/.haxe/lib | haxelib setup
+  - haxelib install munit
+  - haxelib install hamcrest
+  - mkdir bin
+
+script:
+  - haxe ciserver.hxml
