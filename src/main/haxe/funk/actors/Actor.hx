@@ -7,6 +7,10 @@ using funk.actors.ActorCell;
 using funk.types.AnyRef;
 using funk.types.Option;
 
+enum ActorMessage {
+    Terminated(actor : ActorRef);
+}
+
 class Actor {
 
     private var _context : ActorContext;

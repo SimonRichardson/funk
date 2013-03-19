@@ -1,5 +1,7 @@
 package funk.actors;
 
+import funk.actors.ActorSystem;
+
 using funk.actors.ActorCell;
 using funk.actors.ActorSystem;
 using funk.futures.Promise;
@@ -71,4 +73,23 @@ class ActorRef {
             return value.name() == name;
         });
     }
+}
+
+class LocalActorRef extends InternalActorRef {
+
+    private var _system : ActorSystem;
+
+    private var _props : Props;
+
+    private var _supervisor : InternalActorRef;
+
+    public function new(system : ActorSystem, props : Props, supervisor : InternalActorRef) {
+        super();
+
+        _system = system;
+        _props = props;
+        _supervisor = supervisor;
+    }
+
+    public function cell() : ActorCell return _actorCell;
 }

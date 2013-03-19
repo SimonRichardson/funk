@@ -4,6 +4,8 @@ import funk.Funk;
 
 using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.event.EventStream;
+using funk.actors.routing.Routing;
+using funk.actors.Actor;
 using funk.actors.ActorPath;
 using funk.actors.ActorSystem;
 using funk.types.AnyRef;
@@ -58,6 +60,8 @@ class LocalActorRefProvider {
 
     private var _scheduler : Scheduler;
 
+    private var _rootGuardian : InternalActorRef;
+
     private var _guardian : InternalActorRef;
 
     private var _systemGuardian : InternalActorRef;
@@ -93,7 +97,7 @@ class LocalActorRefProvider {
                                 path : ActorPath
                                 ) : InternalActorRef {
         switch(props.router) {
-            case _ if(props.router == NoRouter): new LocalActorRef(system, props, supervisor, path);
+            case _ if(Std.is(props.router, NoRouter)): new LocalActorRef(system, props, supervisor, path);
             case _:
         }
     }
@@ -124,11 +128,22 @@ class Guadian extends Actor {
     }
 
     override public function receive(message : EnumValue) : Void {
-        switch(message) {
-            case Terminated(_): context().stop(self);
-            case CreateChild(child, name): sender().tell(context.actorOf(child, name));
-            case StopChild(child): context().stop(child); sender().tell("ok");
-            case _: deadLetters().tell(message, sender(), self());
+        function forward(message : EnumValue) {
+            deadLetters().tell(message, sender(), self());
+        }
+
+        switch(Type.getEnum(message)) {
+            case LocalActorMessage:
+                switch(cast message) {
+                    case CreateChild(child, name): sender().tell(context.actorOf(child, name));
+                    case StopChild(child): context().stop(child); sender().tell("ok");
+                }
+            case ActorMessage:
+                switch(cast message) {
+                    case Terminated(_): context().stop(self);
+                    case _: forward(message);
+                }
+            case _: forward(message);
         }
     }
 
@@ -142,11 +157,22 @@ class SystemGuadian extends Actor {
     }
 
     override public function receive(message : EnumValue) : Void {
-        switch(message) {
-            case Terminated(_): context().stop(self);
-            case CreateChild(child, name): sender().tell(context.actorOf(child, name));
-            case StopChild(child): context().stop(child); sender().tell("ok");
-            case _: deadLetters().tell(message, sender(), self());
+        function forward(message : EnumValue) {
+            deadLetters().tell(message, sender(), self());
+        }
+
+        switch(Type.getEnum(message)) {
+            case LocalActorMessage:
+                switch(cast message) {
+                    case CreateChild(child, name): sender().tell(context.actorOf(child, name));
+                    case StopChild(child): context().stop(child); sender().tell("ok");
+                }
+            case ActorMessage:
+                switch(cast message) {
+                    case Terminated(_): context().stop(self);
+                    case _: forward(message);
+                }
+            case _: forward(message);
         }
     }
 
