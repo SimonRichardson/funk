@@ -88,7 +88,9 @@ class LocalActorRefProvider {
         var rootProps = new Props(Guadian);
         var systemProps = new Props(SystemGuadian);
 
-        _rootGuardian = new LocalActorRef(_system, rootProps, new MinimalActorRef(), _rootPath);
+        var rootRef = new RootGuardianActorRef(this, _rootPath, eventStream);
+
+        _rootGuardian = new LocalActorRef(_system, rootProps, rootRef, _rootPath);
         _guardian = actorOf(_system, rootProps, _rootGuardian, _rootPath.child("user"));
         _systemGuardian = actorOf(_system, systemProps, _rootGuardian, _rootPath.child("system"));
     }
@@ -127,6 +129,13 @@ class LocalActorRefProvider {
     public function eventStream() : EventStream return _system.eventStream();
 
     public function terminationFuture() : Promise<Unit> return _terminationDeferred.promise();
+}
+
+class RootGuardianActorRef extends MinimalActorRef {
+
+    public function new(provider : ActorRefProvider, path : ActorPath, eventStream : EventStream) {
+        super(provider, path, eventStream);
+    }
 }
 
 class Guadian extends Actor {

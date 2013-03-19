@@ -63,23 +63,25 @@ class ActorCell {
 
     private var _system : ActorSystem;
 
-    private var _childrenRefs : List<ActorRef>;
+    private var _childrenRefs : List<InternalActorRef>;
 
     private var _currentMessage : Envelope;
 
     private var _props : Props;
 
-    private var _parent : ActorRef;
+    private var _parent : InternalActorRef;
 
     private var _isTerminating : Bool;
 
-    public function new(system : ActorSystem, self : InternalActorRef, props : Props, parent : ActorRef) {
+    public function new(system : ActorSystem, self : InternalActorRef, props : Props, parent : InternalActorRef) {
         _system = system;
         _self = self;
         _props = props;
         _parent = parent;
 
         _isTerminating = false;
+
+        _childrenRefs = Nil;
 
         _dispatcher = _system.dispatchers().lookup(_props.dispatcher());
     }
@@ -88,11 +90,8 @@ class ActorCell {
         _mailbox = _dispatcher.createMailbox(this);
         _mailbox.systemEnqueue(self(), Nil.prepend(Create));
 
-        if (Std.is(_parent, LocalActorRef)) {
-            var internal = cast _parent;
-            internal.sendSystemMessage(Supervise(self()));    
-        }
-        
+        _parent.sendSystemMessage(Supervise(self()));
+
         _dispatcher.attach(this);
     }
 
@@ -100,14 +99,16 @@ class ActorCell {
 
     public function resume() : Void _dispatcher.systemDispatch(this, Resume);
 
+    public function restart(cause : Errors) : Void _dispatcher.systemDispatch(this, Recreate(cause));
+
     public function stop(?actor : ActorRef = null) : Void {
         if (AnyTypes.toBool(actor)) {
             var opt = _childrenRefs.find(function(a) return a.name() == actor.name());
             if (Std.is(actor, LocalActorRef)) {
-                var internal : InternalActorRef = cast actor;
-                internal.stop(); 
+                var local : LocalActorRef = cast actor;
+                local.stop();
             }
-        } else _dispatcher.systemDispatch(this, Terminate);
+        } else _dispatcher.systemDispatch(this, Terminated);
     }
 
     public function watch(subject : ActorRef) : ActorRef {
@@ -120,7 +121,7 @@ class ActorCell {
         return subject;
     }
 
-    public function children() : List<ActorRef> return _childrenRefs;
+    public function children() : List<ActorRef> return cast _childrenRefs;
 
     public function tell(message : EnumValue, sender : ActorRef) : Void {
         var ref = AnyTypes.toBool(sender)? sender : _system.deadLetters();
@@ -155,10 +156,10 @@ class ActorCell {
     public function parent() : ActorRef return _parent;
 
     public function actorOf(props : Props, name : String) : ActorRef {
-        var opt : Option<ActorRef> = _childrenRefs.find(function(actor) return actor.name() == name); 
+        var opt : Option<InternalActorRef> = _childrenRefs.find(function(actor) return actor.name() == name);
         return switch(opt) {
-            case None: 
-                var actor : ActorRef;
+            case None:
+                var actor : InternalActorRef;
                 if (isTerminating()) {
                     // Fixme, we should get an actorFor
                     Funk.error(ActorError('Actor isTerminating'));
@@ -166,7 +167,7 @@ class ActorCell {
                     actor = provider().actorOf(system(), props, self(), self().path().child(name));
                     _childrenRefs = _childrenRefs.prepend(actor);
                 }
-                actor;
+                cast actor;
             case _: Funk.error(ActorError('Actor name $name is not unique!'));
         }
     }
@@ -201,6 +202,7 @@ class ActorCell {
             case Terminated: systemTerminated();
             case Supervise(child): systemSupervise(child);
             case ChildTerminated(child): handChildTerminated(child);
+            case _:
         }
     }
 
@@ -260,7 +262,7 @@ class ActorCell {
         _childrenRefs = _childrenRefs.filterNot(function(value) return value == child);
     }
 
-    private function childrenRefs() : List<ActorRef> return _childrenRefs;
+    private function childrenRefs() : List<InternalActorRef> return _childrenRefs;
 
     private function isNormal() : Bool return true;
 }

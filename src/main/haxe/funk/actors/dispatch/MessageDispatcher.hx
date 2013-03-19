@@ -12,7 +12,7 @@ enum SystemMessage {
     Stop;
     Link(subject : ActorRef);
     Unlink(subject : ActorRef);
-    Terminate;
+    Terminated;
     Supervise(child : ActorRef);
     ChildTerminated(child : ActorRef);
 }
@@ -66,9 +66,9 @@ class MessageDispatcher {
     }
 
     public function name() : String return _id;
-    
+
     public function throughput() : Int return 0;
-    
+
     public function throughputDeadlineTime() : Int return 0;
 
     public function isThroughputDeadlineTimeDefined() : Bool return throughputDeadlineTime() > 0;

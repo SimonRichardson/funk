@@ -5,6 +5,7 @@ import funk.Funk;
 using funk.actors.ActorSystem;
 using funk.actors.ActorCell;
 using funk.actors.ActorSystem;
+using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.event.EventStream;
 using funk.futures.Promise;
 using funk.types.AnyRef;
@@ -30,6 +31,18 @@ typedef ActorRef = {
 typedef InternalActorRef = {>ActorRef,
 
     function cell() : ActorCell;
+
+    function start() : Void;
+
+    function resume(causedByFailure : Errors) : Void;
+
+    function suspend() : Void;
+
+    function restart(cause : Errors) : Void;
+
+    function stop() : Void;
+
+    function sendSystemMessage(message : SystemMessage) : Void;
 }
 
 enum DeadLetter {
@@ -70,7 +83,7 @@ class LocalActorRef {
 
     public function forward(message : EnumValue) : Function1<ActorContext, Void> {
         return function(context : ActorContext) {
-            tell(message, context.sender());    
+            tell(message, context.sender());
         }
     }
 
@@ -82,11 +95,15 @@ class LocalActorRef {
 
     public function suspended() : Void _actorCell.suspended();
 
-    public function resume() : Void _actorCell.resume();
+    public function resume(causedByFailure : Errors) : Void _actorCell.resume();
 
     public function restart(cause : Errors) : Void _actorCell.restart(cause);
 
+    public function start() : Void _actorCell.start();
+
     public function stop() : Void _actorCell.stop();
+
+    public function suspend() : Void _actorCell.suspend();
 
     public function parent() : ActorRef return _actorCell.parent();
 
@@ -99,6 +116,8 @@ class LocalActorRef {
     public function context() : ActorContext return _actorCell;
 
     public function cell() : ActorCell return _actorCell;
+
+    public function sendSystemMessage(message : SystemMessage) : Void {}
 
     public function getChild(names : List<String>) : ActorRef {
         function rec(ref : ActorRef, name : List<String>) : ActorRef {
