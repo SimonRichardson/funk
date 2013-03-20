@@ -65,7 +65,7 @@ class ActorCell {
 
     private var _childrenRefs : List<InternalActorRef>;
 
-    private var _currentMessage : Envelope;
+    private var _currentMessage : EnvelopeMessage;
 
     private var _props : Props;
 
@@ -206,7 +206,7 @@ class ActorCell {
         }
     }
 
-    public function invoke(message : Envelope) {
+    public function invoke(message : EnvelopeMessage) {
         _currentMessage = message;
     }
 

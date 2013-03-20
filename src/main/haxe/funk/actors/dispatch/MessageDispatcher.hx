@@ -4,6 +4,7 @@ using funk.Funk;
 using funk.collections.immutable.List;
 using funk.actors.ActorRef;
 using funk.actors.Scheduler;
+using funk.actors.dispatch.Envelope;
 
 enum SystemMessage {
     Create;
@@ -40,7 +41,7 @@ class MessageDispatcher {
     public function systemDispatch(reciever : ActorCell, invocation : SystemMessage) : Void {
     }
 
-    public function dispatch(reciever : ActorCell, invocation : Envelope) : Void {
+    public function dispatch(reciever : ActorCell, invocation : EnvelopeMessage) : Void {
     }
 
     public function attach(actor : ActorCell) : Void {

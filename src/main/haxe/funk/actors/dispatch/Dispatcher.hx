@@ -2,6 +2,7 @@ package funk.actors.dispatch;
 
 using funk.actors.dispatch.Mailbox;
 using funk.actors.dispatch.MessageDispatcher;
+using funk.actors.dispatch.Envelope;
 
 @:allow(funk.actors.dispatch)
 class Dispatcher extends MessageDispatcher {
@@ -14,7 +15,7 @@ class Dispatcher extends MessageDispatcher {
         return new Mailbox(actor, MailboxType.create(actor.context()));
     }
 
-    override public function dispatch(receiver : ActorCell, invocation : Envelope) {
+    override public function dispatch(receiver : ActorCell, invocation : EnvelopeMessage) {
         var mbox = receiver.mailbox();
         mbox.enqueue(receiver.self(), invocation);
         registerForExecution(mbox);

@@ -45,7 +45,7 @@ typedef InternalActorRef = {>ActorRef,
     function sendSystemMessage(message : SystemMessage) : Void;
 }
 
-enum DeadLetter {
+enum DeadLetterMessage {
     DeadLetter(message : AnyRef, sender : ActorRef, recipient : ActorRef);
 }
 
@@ -166,8 +166,8 @@ class EmptyActorRef {
 
     public function tell(message : EnumValue, sender : ActorRef) : Void {
         switch(message) {
-            case DeadLetter:
-            case _: eventStream().publish(DeadLetter(message, sender, this));
+            case DeadLetterMessage:
+            case _: eventStream().publish(DeadLetter(message, sender, this), sender);
         }
     }
 
@@ -192,7 +192,7 @@ class MinimalActorRef extends EmptyActorRef {
         super(provider, path, eventStream);
     }
 
-    public function cell() : ActorCell return null;
+    override public function cell() : ActorCell return null;
 
     public function start() : Void {
     }
@@ -220,15 +220,14 @@ class DeadLetterActorRef extends MinimalActorRef {
     }
 
     override public function tell(message : EnumValue, sender : ActorRef) : Void {
-        function message(message : EnumValue) {
+        function handle(message : EnumValue) {
             eventStream().publish(DeadLetter(message, sender, this), sender);
         }
 
         switch(message) {
-            case DeadLetter:
+            case DeadLetterMessage:
                 switch(cast message) {
                     case DeadLetter(_): eventStream().publish(message, sender);
-                    case _: handle(message);
                 }
             case _: handle(message);
         }

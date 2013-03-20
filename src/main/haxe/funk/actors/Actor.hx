@@ -49,8 +49,8 @@ class Actor {
 
         switch(message) {
             case ActorMessage:
-                switch(cast a) {
-                    case Terminated(dead): Funk.error(ActorError(dead));
+                switch(cast message) {
+                    case Terminated(dead): Funk.error(ActorError('Actor is dead ($dead)'));
                     case _: handle(message);
                 }
             case _: handle(message);

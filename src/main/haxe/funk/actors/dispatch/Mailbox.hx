@@ -12,9 +12,9 @@ using funk.collections.immutable.List;
 
 typedef MessageQueue = {
 
-  function enqueue(receiver : ActorRef, handle : Envelope) : Void;
+  function enqueue(receiver : ActorRef, handle : EnvelopeMessage) : Void;
 
-  function dequeue() : Envelope;
+  function dequeue() : EnvelopeMessage;
 
   function numberOfMessages() : Int;
 
@@ -62,9 +62,9 @@ class Mailbox extends DefaultSystemMessageQueue {
 
     public function dispatcher() : MessageDispatcher return _dispatcher;
 
-    public function enqueue(reciever : ActorRef, msg : Envelope) : Void _messageQueue.enqueue(reciever, msg);
+    public function enqueue(reciever : ActorRef, msg : EnvelopeMessage) : Void _messageQueue.enqueue(reciever, msg);
 
-    public function dequeue() : Envelope return _messageQueue.dequeue();
+    public function dequeue() : EnvelopeMessage return _messageQueue.dequeue();
 
     public function hasMessages() : Bool return _messageQueue.hasMessages();
 
@@ -183,12 +183,12 @@ class DeadLetterQueue {
         _deadLetters = deadLetters;
     }
 
-    public function enqueue(receiver : ActorRef, envelope : Envelope) : Void {
+    public function enqueue(receiver : ActorRef, envelope : EnvelopeMessage) : Void {
         var sender = envelope.sender();
         _deadLetters.tell(DeadLetter(envelope.message(), sender, receiver), sender);
     }
 
-    public function dequeue() : Envelope return null;
+    public function dequeue() : EnvelopeMessage return null;
 
     public function numberOfMessages() : Int return 0;
 
@@ -253,15 +253,15 @@ private class DefaultSystemMessageQueue {
 
 private class UnboundedMailbox {
 
-    private var _list : List<Envelope>;
+    private var _list : List<EnvelopeMessage>;
 
     public function new() {
         _list = Nil;
     }
 
-    public function enqueue(receiver : ActorRef, handle : Envelope) : Void _list = _list.prepend(handle);
+    public function enqueue(receiver : ActorRef, handle : EnvelopeMessage) : Void _list = _list.prepend(handle);
 
-    public function dequeue() : Envelope return _list.head();
+    public function dequeue() : EnvelopeMessage return _list.head();
 
     public function numberOfMessages() : Int return _list.size();
 
