@@ -1,16 +1,15 @@
 package funk.actors;
 
 import funk.Funk;
+import funk.actors.routing.Routing;
+import funk.types.Any;
+import funk.types.AnyRef;
+import funk.types.Function0;
+import funk.types.Pass;
 
-using funk.actors.routing.Routing;
-using funk.types.Any;
-using funk.types.AnyRef;
-using funk.types.Function0;
-using funk.types.Pass;
-
-typedef Creator = {
-    create: Function0<Actor>
-};
+interface Creator {
+    function create(): Actor;
+}
 
 class Props {
 
@@ -21,14 +20,9 @@ class Props {
     private var _dispatcher : String;
 
     public function new(?actor : Class<Actor> = null) {
-        _creator = {
-            create: function() : Actor {
-                return if (AnyTypes.toBool(actor)) Pass.instanceOf(actor)();
-                else Funk.error(ActorError("Actor instance passed to Props can't be 'null'"));
-            }
-        };
-        _dispatcher = "default-dispatcher";
         _router = new NoRouter();
+        _creator = new CreatorImpl(actor);
+        _dispatcher = "default-dispatcher";
     }
 
     public function creator() : Function0<Actor> return _creator.create;
@@ -57,5 +51,19 @@ class Props {
         props._creator = Reflect.hasField(o, "creator") ? Reflect.field(o, "creator") : _creator;
         props._dispatcher = Reflect.hasField(o, "dispatcher") ? Reflect.field(o, "dispatcher") : _dispatcher;
         return props;
+    }
+}
+
+private class CreatorImpl implements Creator {
+
+    private var _actor : Class<Actor>;
+
+    public function new(?actor : Class<Actor> = null) {
+        _actor = actor;
+    }
+
+    public function create() : Actor {
+        return if (AnyTypes.toBool(_actor)) Pass.instanceOf(_actor)();
+        else Funk.error(ActorError("Actor instance passed to Props can't be 'null'"));
     }
 }

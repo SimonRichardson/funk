@@ -1,12 +1,13 @@
 package funk.actors;
 
 import funk.Funk;
+import funk.actors.Address;
 
 using funk.collections.immutable.List;
 
 typedef ActorPath = {
 
-    function address() : Address;
+    function address() : AddressType;
 
     function name() : String;
 
@@ -21,16 +22,16 @@ typedef ActorPath = {
 
 class RootActorPath {
 
-    private var _address : Address;
+    private var _address : AddressType;
 
     private var _name : String;
 
-    public function new(address : Address, ?name : String = "/") {
+    public function new(address : AddressType, ?name : String = "/") {
         _address = address;
         _name = name;
     }
 
-    public function address() : Address return _address;
+    public function address() : AddressType return _address;
 
     public function name() : String return _name;
 
@@ -56,7 +57,7 @@ class ChildActorPath {
         _name = name;
     }
 
-    public function address() : Address return root().address();
+    public function address() : AddressType return root().address();
 
     public function name() : String return _name;
 

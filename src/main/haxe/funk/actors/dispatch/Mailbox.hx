@@ -31,7 +31,6 @@ class MailboxType {
     }
 }
 
-@:allow(funk.actors.dispatch.Dispatcher)
 class Mailbox extends DefaultSystemMessageQueue {
 
     inline private static var Open : Int = 0;
@@ -112,7 +111,7 @@ class Mailbox extends DefaultSystemMessageQueue {
     private function updateStatus(oldStatus : Int, newStatus : Int) : Bool {
         return if (oldStatus == newStatus) true;
         else {
-            _status = newStatus; 
+            _status = newStatus;
             true;
         }
     }
@@ -166,11 +165,11 @@ class Mailbox extends DefaultSystemMessageQueue {
 
     public function cleanUp() : Void {
         if (AnyTypes.toBool(_actor)) {
-            var dlm = _actor.system().deadLetterMailbox();
+            /*var dlm = _actor.system().deadLetterMailbox();
             if (hasSystemMessages()) {
                 var messages = systemDrain();
                 dlm.systemEnqueue(_actor.self(), messages);
-            }
+            }*/
         }
     }
 }

@@ -1,20 +1,22 @@
 package funk.actors;
 
-using funk.actors.ActorRef;
-using funk.actors.ActorRefProvider;
-using funk.actors.Scheduler;
-using funk.actors.dispatch.Dispatcher;
-using funk.actors.dispatch.Dispatchers;
-using funk.actors.dispatch.Mailbox;
-using funk.actors.dispatch.MessageDispatcher;
-using funk.actors.event.EventStream;
+//import funk.actors.ActorRef;
+//import funk.actors.ActorRefProvider;
+//import funk.actors.Scheduler;
+//import funk.actors.dispatch.Dispatcher;
+//import funk.actors.dispatch.Dispatchers;
+//import funk.actors.dispatch.Mailbox;
+//import funk.actors.dispatch.MessageDispatcher;
+import funk.actors.event.EventStream;
+
 using funk.futures.Promise;
 using funk.collections.immutable.List;
 using funk.types.Any;
-using funk.types.Lazy;
+
 
 class ActorSystem {
 
+    /*
     private var _provider : ActorRefProvider;
 
     private var _scheduler : Scheduler;
@@ -26,29 +28,30 @@ class ActorSystem {
     private var _dispatchers : Dispatchers;
 
     private var _dispatcher : MessageDispatcher;
+    */
 
     private var _name : String;
 
     private var _isTerminated : Bool;
 
-    function new(name : String, provider : ActorRefProvider) {
+    public function new(name : String/*, provider : ActorRefProvider*/) {
         _name = name;
-        _provider = provider;
+        //_provider = provider;
 
         _isTerminated = false;
 
-        var deadLetters = _provider.deadLetters();
-        var deadLetterQueue = new DeadLetterQueue(deadLetters);
-        _deadLetterMailbox = new Mailbox(deadLetters.cell(), deadLetterQueue);
+        //var deadLetters = _provider.deadLetters();
+        //var deadLetterQueue = new DeadLetterQueue(deadLetters);
+        //_deadLetterMailbox = new Mailbox(deadLetters.cell(), deadLetterQueue);
 
-        _scheduler = provider.scheduler();
-        _eventStream = provider.eventStream();
+        //_scheduler = provider.scheduler();
+        //_eventStream = provider.eventStream();
 
-        _dispatchers = new Dispatchers(_eventStream, _deadLetterMailbox, _scheduler);
+        //_dispatchers = new Dispatchers(_eventStream, _deadLetterMailbox, _scheduler);
     }
 
-    public static function create(name : String, ?provider : ActorRefProvider = null) : ActorSystem {
-        var dispatchers : Dispatchers = null;
+    public static function create(name : String/*, ?provider : ActorRefProvider = null*/) : ActorSystem {
+        /*var dispatchers : Dispatchers = null;
         var refProvider = if(AnyTypes.toBool(provider)) provider;
         else {
             var scheduler = new DefaultScheduler(function() : MessageDispatcher {
@@ -56,14 +59,15 @@ class ActorSystem {
             });
             new LocalActorRefProvider(name, new EventStream(), scheduler);
         }
-        
-        var system = new ActorSystem(name, refProvider);
+        */
+        var system = new ActorSystem(name);//, null);//refProvider);
 
-        dispatchers = system._dispatchers;
+        //dispatchers = system._dispatchers;
 
         return system;
     }
 
+    /*
     public function child(name : String) : ActorPath return guardian().path().child(name);
 
     public function actorOf(props : Props, name : String) : Promise<EnumValue> {
@@ -116,4 +120,5 @@ class ActorSystem {
     inline private function systemGuardian() : InternalActorRef return _provider.systemGuardian();
 
     private function stopScheduler() : Void _scheduler.close();
+    */
 }

@@ -44,13 +44,6 @@ typedef ActorRefProvider = {
     function terminationFuture() : Promise<Unit>;
 }
 
-typedef ActorRefFactory = {
-
-    function actorOf(props : Props, name : String) : ActorRef;
-
-    function stop(?actor : ActorRef) : Void;
-}
-
 enum LocalActorMessage {
     CreateChild(props : Props, name : String);
     StopChild(child : ActorRef);
@@ -122,11 +115,11 @@ class LocalActorRefProvider {
 
     public function rootPath() : ActorPath return _rootPath;
 
-    public function dispatcher() : MessageDispatcher return _system.dispatcher();
+    public function dispatcher() : MessageDispatcher return null;//_system.dispatcher();
 
-    public function scheduler() : Scheduler return _system.scheduler();
+    public function scheduler() : Scheduler return null;//_system.scheduler();
 
-    public function eventStream() : EventStream return _system.eventStream();
+    public function eventStream() : EventStream return null;//_system.eventStream();
 
     public function terminationFuture() : Promise<Unit> return _terminationDeferred.promise();
 }
@@ -152,10 +145,10 @@ class Guadian extends Actor {
         switch(Type.getEnum(message)) {
             case LocalActorMessage:
                 switch(cast message) {
-                    case CreateChild(child, name): 
+                    case CreateChild(child, name):
                         var s = sender();
                         s.tell(ChildCreated(cast context().actorOf(child, name)), s);
-                    case StopChild(child): 
+                    case StopChild(child):
                         var s = sender();
                         context().stop(child); s.tell(Message("ok"), s);
                 }
@@ -185,10 +178,10 @@ class SystemGuadian extends Actor {
         switch(Type.getEnum(message)) {
             case LocalActorMessage:
                 switch(cast message) {
-                    case CreateChild(child, name): 
+                    case CreateChild(child, name):
                         var s = sender();
                         s.tell(ChildCreated(cast context().actorOf(child, name)), s);
-                    case StopChild(child): 
+                    case StopChild(child):
                         var s = sender();
                         context().stop(child); s.tell(Message("ok"), s);
                 }

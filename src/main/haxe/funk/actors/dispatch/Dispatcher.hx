@@ -6,7 +6,6 @@ using funk.actors.dispatch.Envelope;
 using funk.types.Option;
 using funk.collections.immutable.List;
 
-@:allow(funk.actors.dispatch)
 class Dispatcher extends MessageDispatcher {
 
     public function new() {
@@ -29,6 +28,7 @@ class Dispatcher extends MessageDispatcher {
         registerForExecution(mbox);
     }
 
+    @:allow(funk.actors.dispatch)
     override private function registerForExecution(mailbox : Mailbox) : Bool {
         return if (mailbox.setAsScheduled()) {
             try {

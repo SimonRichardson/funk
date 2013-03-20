@@ -1,9 +1,9 @@
 package funk.actors.event;
 
 import funk.Funk;
+import funk.actors.ActorSystem;
+import funk.actors.event.EventBus;
 
-using funk.actors.ActorSystem;
-using funk.actors.event.EventBus;
 using funk.types.Any;
 using funk.types.AnyRef;
 
@@ -14,7 +14,7 @@ class EventStream extends LookupClassification {
     }
 
     public static function fromActorSystem(system : ActorSystem) : EventStream {
-        return system.eventStream();
+        return null;//system.eventStream();
     }
 
     override public function subscribe<T>(subscriber : ActorRef, channel : Enum<AnyRef>) : Bool {

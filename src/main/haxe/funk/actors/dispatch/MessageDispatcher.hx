@@ -25,7 +25,6 @@ enum UnhandledMessage {
     Unhandled(message : EnumValue, sender : ActorRef, self : ActorRef);
 }
 
-@:allow(funk.actors.dispatch)
 class MessageDispatcher {
 
     private var _id : String;
@@ -96,5 +95,6 @@ class MessageDispatcher {
         mailbox.cleanUp();
     }
 
+    @:allow(funk.actors.dispatch)
     private function registerForExecution(mailbox : Mailbox) : Bool return false;
 }

@@ -2,13 +2,13 @@ package funk.actors;
 
 using funk.types.Option;
 
-enum Address {
+enum AddressType {
     Address(protocol : String, system : String, host : Option<String>, port : Option<Int>);
 }
 
 class AddressTypes {
 
-    public static function hostPort(address : Address) : String {
+    public static function hostPort(address : AddressType) : String {
         return switch(address) {
             case Address(_, system, host, port):
                 var sb = new StringBuf();
@@ -25,7 +25,7 @@ class AddressTypes {
         }
     }
 
-    public static function toString(address : Address) : String {
+    public static function toString(address : AddressType) : String {
         return switch(address) {
             case Address(protocol, _, _, _):
                 var sb = new StringBuf();

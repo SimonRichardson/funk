@@ -20,9 +20,6 @@ class Router extends Actor {
     }
 
     public function routerReceive(message : EnumValue) : Void {
-        switch (message) {
-            case _:
-        }
     }
 }
 
