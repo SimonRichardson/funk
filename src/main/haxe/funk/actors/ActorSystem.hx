@@ -19,13 +19,13 @@ class ActorSystem {
 
     private var _scheduler : Scheduler;
 
-    private var _dispatchers : Dispatchers;
-
-    private var _dispatcher : MessageDispatcher;
-
     private var _eventStream : EventStream;
 
     private var _deadLetterMailbox : Mailbox;
+
+    private var _dispatchers : Dispatchers;
+
+    private var _dispatcher : MessageDispatcher;
 
     private var _name : String;
 
@@ -48,20 +48,20 @@ class ActorSystem {
     }
 
     public static function create(name : String, ?provider : ActorRefProvider = null) : ActorSystem {
+        var dispatchers : Dispatchers = null;
         var refProvider = if(AnyTypes.toBool(provider)) provider;
         else {
-            var dispatchers = null;
-            var scheduler = new DefaultScheduler(function() {
-                return dispatchers.defaultGlobalDispatcher;
+            var scheduler = new DefaultScheduler(function() : MessageDispatcher {
+                return dispatchers.defaultGlobalDispatcher();
             });
-            var localProvider = new LocalActorRefProvider(name, new EventStream(), scheduler);
-
-            dispatchers = localProvider._dispatchers;
-            
-            return provider;
+            new LocalActorRefProvider(name, new EventStream(), scheduler);
         }
         
-        return new ActorSystem(name, refProvider);
+        var system = new ActorSystem(name, refProvider);
+
+        dispatchers = system._dispatchers;
+
+        return system;
     }
 
     public function child(name : String) : ActorPath return guardian().path().child(name);
