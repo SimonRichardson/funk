@@ -4,6 +4,7 @@ using funk.collections.immutable.List;
 using funk.types.Tuple2;
 using funk.types.Any;
 using funk.types.AnyRef;
+using funk.types.Option;
 
 typedef EventBus = {
 
@@ -16,26 +17,26 @@ typedef EventBus = {
 
 class LookupClassification {
 
-    private var _subscribers : List<Tuple2<Class<ActorRef>, ActorRef>>;
+    private var _subscribers : List<Tuple2<Class<AnyRef>, ActorRef>>;
 
     public function new() {
         _subscribers = Nil;
     }
 
-    public function subscribe<T>(subscriber : ActorRef, to : Class<T>) : Bool {
+    public function subscribe(subscriber : ActorRef, to : Class<AnyRef>) : Bool {
         var found = _subscribers.find(function(tuple) {
             return (tuple._2() == subscriber && (!AnyTypes.toBool(to) || tuple._1() == to));
         });
 
-        return if (!found) {
+        return if (found.isEmpty()) {
             _subscribers = _subscribers.prepend(tuple2(to, subscriber));
             true;
         } else false;
     }
 
-    public function unsubscribe<T>(subscriber : ActorRef, ?from : Class<T>) : Bool {
+    public function unsubscribe(subscriber : ActorRef, ?from : Class<AnyRef>) : Bool {
         var original = _subscribers;
-        _subscribers = original.filterNot(function(tuple : Tuple2<Class<ActorRef>, ActorRef>) {
+        _subscribers = original.filterNot(function(tuple : Tuple2<Class<AnyRef>, ActorRef>) {
             return (tuple._2() == subscriber && (!AnyTypes.toBool(from) || tuple._1() == from));
         });
         return _subscribers == original;
@@ -45,7 +46,7 @@ class LookupClassification {
     }
 
     public function publishEvent(event : EnumValue) : Void {
-        var list = _subscribers.filter(function(tuple : Tuple2<Class<ActorRef>, ActorRef>) {
+        var list = _subscribers.filter(function(tuple : Tuple2<Class<AnyRef>, ActorRef>) {
             return tuple._1() == event;
         });
         while(list.nonEmpty()) {
