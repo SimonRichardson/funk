@@ -2,6 +2,7 @@ package funk.actors.dispatch;
 
 using funk.Funk;
 using funk.collections.immutable.List;
+using funk.actors.ActorRef;
 using funk.actors.Scheduler;
 
 enum SystemMessage {
@@ -13,8 +14,8 @@ enum SystemMessage {
     Link(subject : ActorRef);
     Unlink(subject : ActorRef);
     Terminated;
-    Supervise(child : ActorRef);
-    ChildTerminated(child : ActorRef);
+    Supervise(child : InternalActorRef);
+    ChildTerminated(child : InternalActorRef);
 }
 
 enum UnhandledMessage {

@@ -55,7 +55,7 @@ class ActorCell {
 
     private var _actor : Actor;
 
-    private var _self : ActorRef;
+    private var _self : InternalActorRef;
 
     private var _mailbox : Mailbox;
 
@@ -90,7 +90,7 @@ class ActorCell {
         _mailbox = _dispatcher.createMailbox(this);
         _mailbox.systemEnqueue(self(), Nil.prepend(Create));
 
-        _parent.sendSystemMessage(Supervise(self()));
+        _parent.sendSystemMessage(Supervise(_self));
 
         _dispatcher.attach(this);
     }
@@ -244,14 +244,14 @@ class ActorCell {
     }
 
     private function systemTerminated() : Void {
-        children().foreach(function(value) value.stop());
+        _childrenRefs.foreach(function(value) value.stop());
 
         _dispatcher.detach(this);
-        parent().sendSystemMessage(ChildTerminated(self()));
+        _parent.sendSystemMessage(ChildTerminated(_self));
         _actor = null;
     }
 
-    private function systemSupervise(child : ActorRef) : Void {
+    private function systemSupervise(child : InternalActorRef) : Void {
         var opt = _childrenRefs.find(function(value) return value == child);
         if (opt.isEmpty()) {
             _childrenRefs = _childrenRefs.prepend(child);

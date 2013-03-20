@@ -191,6 +191,26 @@ class MinimalActorRef extends EmptyActorRef {
     public function new(provider : ActorRefProvider, path : ActorPath, eventStream : EventStream) {
         super(provider, path, eventStream);
     }
+
+    public function cell() : ActorCell return null;
+
+    public function start() : Void {
+    }
+
+    public function resume(causedByFailure : Errors) : Void {
+    }
+
+    public function suspend() : Void {
+    }
+
+    public function restart(cause : Errors) : Void {
+    }
+
+    public function stop() : Void {
+    }
+
+    public function sendSystemMessage(message : SystemMessage) : Void {
+    }
 }
 
 class DeadLetterActorRef extends MinimalActorRef {
