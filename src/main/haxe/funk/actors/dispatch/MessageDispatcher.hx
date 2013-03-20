@@ -16,11 +16,13 @@ enum SystemMessage {
     Unlink(subject : ActorRef);
     Terminated;
     Supervise(child : InternalActorRef);
+    ChildCreated(child : InternalActorRef);
     ChildTerminated(child : InternalActorRef);
+    Message(value : String);
 }
 
 enum UnhandledMessage {
-    UnhandledMessage(message : EnumValue, sender : ActorRef, self : ActorRef);
+    Unhandled(message : EnumValue, sender : ActorRef, self : ActorRef);
 }
 
 @:allow(funk.actors.dispatch)

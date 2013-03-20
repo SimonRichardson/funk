@@ -18,6 +18,8 @@ typedef Scheduler = {
     function schedule<T>(reciever : InternalActorRef, message : T) : Cancellable;
 
     function scheduleOnce<T>(reciever : InternalActorRef, message : T) : Cancellable;
+
+    function close() : Void;
 }
 
 class DefaultScheduler {
@@ -59,5 +61,9 @@ class DefaultScheduler {
             cancel: function() return task.foreach(function(value) { value.stop(); cancelled = true; }),
             isCancelled: function() return cancelled
         };
+    }
+
+    public function close() : Void {
+        // TODO (Simon) : Fix this.
     }
 }

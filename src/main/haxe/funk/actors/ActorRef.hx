@@ -25,6 +25,8 @@ typedef ActorRef = {
 
     function forward(message : EnumValue) : Function1<ActorContext, Void>;
 
+    function stop() : Void;
+
     function isTerminated(): Bool;
 }
 
@@ -40,7 +42,11 @@ typedef InternalActorRef = {>ActorRef,
 
     function restart(cause : Errors) : Void;
 
-    function stop() : Void;
+    function parent() : ActorRef;
+
+    function getChild(names : List<String>) : InternalActorRef;
+
+    function getSingleChild(name : String) : Option<InternalActorRef>;
 
     function sendSystemMessage(message : SystemMessage) : Void;
 }
@@ -93,8 +99,6 @@ class LocalActorRef {
 
     public function path() : ActorPath return _actorPath;
 
-    public function suspended() : Void _actorCell.suspended();
-
     public function resume(causedByFailure : Errors) : Void _actorCell.resume();
 
     public function restart(cause : Errors) : Void _actorCell.restart(cause);
@@ -119,18 +123,19 @@ class LocalActorRef {
 
     public function sendSystemMessage(message : SystemMessage) : Void {}
 
-    public function getChild(names : List<String>) : ActorRef {
-        function rec(ref : ActorRef, name : List<String>) : ActorRef {
+    public function getChild(names : List<String>) : InternalActorRef {
+        function rec(ref : InternalActorRef, name : List<String>) : InternalActorRef {
             return switch(ref) {
-                case _ if(Std.is(ref, InternalActorRef)):
+                case _ if(Std.is(ref, LocalActorRef)):
+                    var local : InternalActorRef = cast ref;
                     var n = names.head();
-                    var next = switch(n) {
-                        case "..": ref.parent().toOption();
-                        case "": Some(ref);
-                        case _: ref.getSingleChild(n).toOption();
+                    var next : Option<InternalActorRef> = switch(n) {
+                        case "..": cast local.parent().toOption();
+                        case "": Some(local);
+                        case _: local.getSingleChild(n);
                     }
-                    if (next.isDefined() || name.isEmpty()) next;
-                    else rec(next, name.tail());
+                    if (name.isEmpty()) next.getOrElse(function() return null);
+                    else rec(next.get(), name.tail());
                 case _: ref.getChild(name);
             }
         }
@@ -139,8 +144,8 @@ class LocalActorRef {
         else rec(this, names);
     }
 
-    private function getSingleChild(name : String) : Option<InternalActorRef> {
-        _actorCell.childrenRefs.filter(function(value) {
+    public function getSingleChild(name : String) : Option<InternalActorRef> {
+        return _actorCell.childrenRefs().find(function(value) {
             return value.name() == name;
         });
     }
@@ -181,6 +186,9 @@ class EmptyActorRef {
         return function(context) {};
     }
 
+    public function stop() : Void {
+    }
+
     public function isTerminated() : Bool return true;
 
     public function eventStream() : EventStream return _eventStream;
@@ -206,8 +214,11 @@ class MinimalActorRef extends EmptyActorRef {
     public function restart(cause : Errors) : Void {
     }
 
-    public function stop() : Void {
-    }
+    public function parent() : ActorRef return null;
+
+    public function getChild(names : List<String>) : InternalActorRef return null;
+
+    public function getSingleChild(name : String) : Option<InternalActorRef> return None;
 
     public function sendSystemMessage(message : SystemMessage) : Void {
     }

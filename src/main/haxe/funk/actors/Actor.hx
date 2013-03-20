@@ -2,10 +2,11 @@ package funk.actors;
 
 import funk.Funk;
 import funk.actors.ActorSystem;
-
+using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.ActorCell;
 using funk.types.AnyRef;
 using funk.types.Option;
+
 
 enum ActorMessage {
     Failed(cause : Errors);
@@ -36,7 +37,7 @@ class Actor {
     public function receive(message : EnumValue) : Void {}
 
     public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {
-        context.children().foreach(function(value) value.stop());
+        //context().children().foreach(function(value) value.stop());
         postStop();
     }
 
@@ -44,7 +45,7 @@ class Actor {
 
     public function unhandled(message : EnumValue) : Void {
         function handle(message : EnumValue) {
-            context().system().publish(UnhandledMessage(message, sender(), self()));
+            //context().system().publish(Unhandled(message, sender(), self()));
         }
 
         switch(message) {

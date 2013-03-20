@@ -72,7 +72,7 @@ class ActorSystem {
 
     public function start() : Void {
         _provider.init(this);
-        _provider.terminationFuture().when(function() {
+        _provider.terminationFuture().when(function(attempt) {
             stopScheduler();
         });
     }
@@ -82,16 +82,16 @@ class ActorSystem {
         var guard = guardian().path();
         var sys = systemGuardian().path();
 
-        switch(path.parent()) {
-            case 'guard': guardian().ask(StopChild(actor));
-            case 'sys': systemGuardian().ask(StopChild(actor));
-            case _ if(Std.is(actor, InternalActorRef)):
-                var ref : InternalActorRef = cast actor;
+        switch(path.parent().name()) {
+            case 'guard': guardian().ask(StopChild(actor), guardian());
+            case 'sys': systemGuardian().ask(StopChild(actor), systemGuardian());
+            case _ if(Std.is(actor, LocalActorRef)):
+                var ref : LocalActorRef = cast actor;
                 ref.stop();
         }
     }
 
-    public function isTerminated() : Void return _isTerminated;
+    public function isTerminated() : Bool return _isTerminated;
 
     public function shutdown() : Void guardian().stop();
 
@@ -116,6 +116,4 @@ class ActorSystem {
     inline private function systemGuardian() : InternalActorRef return _provider.systemGuardian();
 
     private function stopScheduler() : Void _scheduler.close();
-
-    public function toString() : String _lookupRoot.path().root().address().toString();
 }

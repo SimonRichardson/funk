@@ -147,6 +147,8 @@ class ActorCell {
 
     public function lookupRoot() : InternalActorRef return _self;
 
+    public function context() : ActorContext return this;
+
     public function system() : ActorSystem return _system;
 
     public function provider() : ActorRefProvider return _system.provider();
@@ -155,11 +157,13 @@ class ActorCell {
 
     public function parent() : ActorRef return _parent;
 
+    public function childrenRefs() : List<InternalActorRef> return _childrenRefs;
+
     public function actorOf(props : Props, name : String) : ActorRef {
         var opt : Option<InternalActorRef> = _childrenRefs.find(function(actor) return actor.name() == name);
         return switch(opt) {
             case None:
-                var actor : InternalActorRef;
+                var actor : InternalActorRef = null;
                 if (isTerminating()) {
                     // Fixme, we should get an actorFor
                     Funk.error(ActorError('Actor isTerminating'));
@@ -261,8 +265,6 @@ class ActorCell {
     private function handChildTerminated(child : ActorRef) : Void {
         _childrenRefs = _childrenRefs.filterNot(function(value) return value == child);
     }
-
-    private function childrenRefs() : List<InternalActorRef> return _childrenRefs;
 
     private function isNormal() : Bool return true;
 }

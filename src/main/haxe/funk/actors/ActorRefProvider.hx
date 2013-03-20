@@ -146,18 +146,22 @@ class Guadian extends Actor {
 
     override public function receive(message : EnumValue) : Void {
         function forward(message : EnumValue) {
-            deadLetters().tell(message, sender(), self());
+            //deadLetters().tell(message, sender(), self());
         }
 
         switch(Type.getEnum(message)) {
             case LocalActorMessage:
                 switch(cast message) {
-                    case CreateChild(child, name): sender().tell(context.actorOf(child, name));
-                    case StopChild(child): context().stop(child); sender().tell("ok");
+                    case CreateChild(child, name): 
+                        var s = sender();
+                        s.tell(ChildCreated(cast context().actorOf(child, name)), s);
+                    case StopChild(child): 
+                        var s = sender();
+                        context().stop(child); s.tell(Message("ok"), s);
                 }
             case ActorMessage:
                 switch(cast message) {
-                    case Terminated(_): context().stop(self);
+                    case Terminated(_): context().stop(self());
                     case _: forward(message);
                 }
             case _: forward(message);
@@ -175,18 +179,22 @@ class SystemGuadian extends Actor {
 
     override public function receive(message : EnumValue) : Void {
         function forward(message : EnumValue) {
-            deadLetters().tell(message, sender(), self());
+            //deadLetters().tell(message, sender(), self());
         }
 
         switch(Type.getEnum(message)) {
             case LocalActorMessage:
                 switch(cast message) {
-                    case CreateChild(child, name): sender().tell(context.actorOf(child, name));
-                    case StopChild(child): context().stop(child); sender().tell("ok");
+                    case CreateChild(child, name): 
+                        var s = sender();
+                        s.tell(ChildCreated(cast context().actorOf(child, name)), s);
+                    case StopChild(child): 
+                        var s = sender();
+                        context().stop(child); s.tell(Message("ok"), s);
                 }
             case ActorMessage:
                 switch(cast message) {
-                    case Terminated(_): context().stop(self);
+                    case Terminated(_): context().stop(self());
                     case _: forward(message);
                 }
             case _: forward(message);

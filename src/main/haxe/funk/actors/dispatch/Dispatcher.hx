@@ -3,6 +3,8 @@ package funk.actors.dispatch;
 using funk.actors.dispatch.Mailbox;
 using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.dispatch.Envelope;
+using funk.types.Option;
+using funk.collections.immutable.List;
 
 @:allow(funk.actors.dispatch)
 class Dispatcher extends MessageDispatcher {
@@ -12,7 +14,7 @@ class Dispatcher extends MessageDispatcher {
     }
 
     override public function createMailbox(actor : ActorCell) : Mailbox {
-        return new Mailbox(actor, MailboxType.create(actor.context()));
+        return new Mailbox(actor, MailboxType.create(actor.context().toOption()));
     }
 
     override public function dispatch(receiver : ActorCell, invocation : EnvelopeMessage) {
@@ -23,7 +25,7 @@ class Dispatcher extends MessageDispatcher {
 
     override public function systemDispatch(receiver : ActorCell, invocation : SystemMessage) {
         var mbox = receiver.mailbox();
-        mbox.systemEnqueue(receiver.self(), invocation);
+        mbox.systemEnqueue(receiver.self(), Nil.prepend(invocation));
         registerForExecution(mbox);
     }
 
