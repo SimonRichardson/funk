@@ -2,6 +2,7 @@ package funk.actors;
 
 import funk.Funk;
 
+using funk.actors.Address;
 using funk.collections.immutable.List;
 
 typedef ActorPath = {
@@ -17,6 +18,8 @@ typedef ActorPath = {
     function child(child : String) : ActorPath;
 
     function elements() : List<String>;
+
+    function toString() : String;
 }
 
 class RootActorPath {
@@ -41,6 +44,8 @@ class RootActorPath {
     public function child(child : String) : ActorPath return new ChildActorPath(this, child);
 
     public function elements() : List<String> return Nil;
+
+    public function toString() : String return _address.toString();
 }
 
 class ChildActorPath {
@@ -82,5 +87,9 @@ class ChildActorPath {
             }
         }
         return rec(this, Nil);
+    }
+
+    public function toString() : String {
+        return '';
     }
 }

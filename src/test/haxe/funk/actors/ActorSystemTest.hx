@@ -23,6 +23,12 @@ class ActorSystemTest {
         var ref = _system.actorOf(new Props(MockClass), "listener");
         Std.is(ref, Promise).isTrue();
     }
+
+    @Test
+    public function calling_toString_on_actor_path_should_return_valid_path() : Void {
+        var path = _system.actorPath().toString();
+        path.areEqual('funk://system');
+    }
 }
 
 class MockClass extends Actor {

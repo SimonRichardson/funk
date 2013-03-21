@@ -1,9 +1,13 @@
 package funk.actors;
 
+import funk.actors.ActorPath;
+import funk.actors.Address;
+
 using funk.actors.ActorRef;
 using funk.futures.Promise;
 using funk.collections.immutable.List;
 using funk.types.Any;
+using funk.types.Option;
 using funk.types.Lazy;
 
 class ActorSystem {
@@ -12,19 +16,22 @@ class ActorSystem {
 
     private var _isTerminated : Bool;
 
+    private var _rootActor : ActorRef;
+
+    private var _rootActorPath : ActorPath;
+
     function new(name : String) {
         _name = name;
 
         _isTerminated = false;
+
+        _rootActorPath = new RootActorPath(Address("funk", name, None, None));
+        _rootActor = new InternalActorRef(_rootActorPath);
     }
 
     public static function create(name : String) : ActorSystem {
         return new ActorSystem(name);
     }
-
-    public function child(name : String) : ActorPath {
-        return null;
-    } 
 
     public function actorOf(props : Props, name : String) : Promise<ActorRef> {
         return PromiseTypes.empty();
@@ -38,7 +45,9 @@ class ActorSystem {
         
     }
 
-    public function name() : String {
-        return _name;
-    }
+    public function actorPath() : ActorPath return _rootActorPath;
+
+    public function child(name : String) : ActorPath return _rootActorPath.child(name);
+
+    public function name() : String return _name;
 }
