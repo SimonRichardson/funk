@@ -1,10 +1,15 @@
 package funk.actors;
 
 import funk.futures.Promise;
+import massive.munit.async.AsyncFactory;
+import massive.munit.util.Timer;
 
 using massive.munit.Assert;
+using funk.types.Attempt;
 
 class ActorSystemTest {
+
+    private static var TIMEOUT : Int = 500;
 
     private var _system : ActorSystem;
 
@@ -19,9 +24,28 @@ class ActorSystemTest {
     }
 
     @Test
-    public function calling_actorOf_should_return_valid_ActorRef() : Void {
+    public function calling_actorOf_should_return_valid_Promise_ActorRef() : Void {
         var ref = _system.actorOf(new Props(MockClass), "listener");
         Std.is(ref, Promise).isTrue();
+    }
+
+    @AsyncTest
+    public function calling_actorOf_should_return_valid_ActorRef(asyncFactory : AsyncFactory) : Void {
+        var actual = null;
+
+        var handler = asyncFactory.createHandler(this, function() {
+            Std.is(actual, ActorRef).isTrue();
+        }, TIMEOUT);
+
+        var ref = _system.actorOf(new Props(MockClass), "listener");
+        ref.when(function(attempt) {
+            switch(attempt) {
+                case Success(actor): actual = actor;
+                case _: Assert.fail("Failed if called");
+            }
+
+            handler();
+        });
     }
 
     @Test
