@@ -27,7 +27,7 @@ class ActorSystemTest {
     @Test
     public function calling_toString_on_actor_path_should_return_valid_path() : Void {
         var path = _system.actorPath().toString();
-        path.areEqual('funk://system/guardian/');
+        path.areEqual('funk://system/');
     }
 }
 

@@ -1,7 +1,7 @@
 package funk.actors;
 
 import funk.actors.ActorPath;
-import funk.actors.Address;
+import funk.actors.ActorRefProvider;
 
 using funk.actors.ActorRef;
 using funk.futures.Promise;
@@ -16,35 +16,18 @@ class ActorSystem {
 
     private var _isTerminated : Bool;
 
-    private var _rootActor : ActorRef;
+    private var _refProvider : ActorRefProvider;
 
-    private var _rootActorPath : ActorPath;
-
-    private var _guardianActor : ActorRef;
-
-    private var _guardianActorPath : ActorPath;
-
-    private var _systemActor : ActorRef;
-
-    private var _systemActorPath : ActorPath;
-
-    function new(name : String) {
+    function new(name : String, refProvider : ActorRefProvider) {
         _name = name;
 
         _isTerminated = false;
-
-        _rootActorPath = new RootActorPath(Address("funk", name, None, None));
-        _rootActor = new InternalActorRef(_rootActorPath);
-
-        _guardianActorPath = _rootActorPath.child("guardian");
-        _systemActorPath = _rootActorPath.child("sys");
-
-        _guardianActor = new InternalActorRef(_guardianActorPath);
-        _systemActor = new InternalActorRef(_systemActorPath);
+        _refProvider = refProvider;
     }
 
-    public static function create(name : String) : ActorSystem {
-        return new ActorSystem(name);
+    public static function create(name : String, ?refProvider : ActorRefProvider) : ActorSystem {
+        var provider = AnyTypes.toBool(refProvider) ? refProvider : new LocalActorRefProvider(name);
+        return new ActorSystem(name, provider);
     }
 
     public function actorOf(props : Props, name : String) : Promise<ActorRef> {
@@ -59,9 +42,9 @@ class ActorSystem {
 
     }
 
-    public function actorPath() : ActorPath return _guardianActorPath;
+    public function actorPath() : ActorPath return _refProvider.rootPath();
 
-    public function child(name : String) : ActorPath return _guardianActorPath.child(name);
+    public function child(name : String) : ActorPath return actorPath().child(name);
 
     public function name() : String return _name;
 }
