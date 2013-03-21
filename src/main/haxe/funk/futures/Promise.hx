@@ -11,7 +11,7 @@ using funk.types.Predicate1;
 using funk.types.Option;
 using funk.types.Tuple2;
 
-typedef Promise<T> = {
+interface Promise<T> {
 
     function then(func : Function1<T, Void>) : Promise<T>;
 

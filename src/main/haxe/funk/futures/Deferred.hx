@@ -116,7 +116,7 @@ class Deferred<T> {
     }
 }
 
-private class PromiseImpl<T> {
+private class PromiseImpl<T> implements Promise<T> {
 
     private var _state : State<T>;
 
@@ -206,7 +206,7 @@ private class PromiseImpl<T> {
     }
 }
 
-class EmptyPromise<T> {
+class EmptyPromise<T> implements Promise<T> {
 
     public function new() {
     }

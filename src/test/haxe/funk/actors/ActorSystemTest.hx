@@ -1,5 +1,7 @@
 package funk.actors;
 
+import funk.futures.Promise;
+
 using massive.munit.Assert;
 
 class ActorSystemTest {
@@ -19,7 +21,7 @@ class ActorSystemTest {
     @Test
     public function calling_actorOf_should_return_valid_ActorRef() : Void {
         var ref = _system.actorOf(new Props(MockClass), "listener");
-        //Std.is(ref, ActorRef).isTrue();
+        Std.is(ref, Promise).isTrue();
     }
 }
 
