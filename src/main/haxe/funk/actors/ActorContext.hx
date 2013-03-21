@@ -1,10 +1,13 @@
 package funk.actors;
 
-import funk.Funk;
-
-using funk.types.Any;
 using funk.types.Option;
 using funk.collections.immutable.List;
+
+interface ActorContext {
+
+    function self() : ActorRef;
+
+}
 
 class ActorContextInjector {
 
@@ -23,8 +26,4 @@ class ActorContextInjector {
     }
 
     inline public static function currentContext() : Option<ActorContext> return _currentContext;
-}
-
-class ActorCell {
-    
 }

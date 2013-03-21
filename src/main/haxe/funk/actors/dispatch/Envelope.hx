@@ -2,19 +2,19 @@ package funk.actors.dispatch;
 
 using funk.Funk;
 
-enum EnvelopeMessage {
-    Envelope(message : EnumValue, sender : ActorRef);
+enum EnvelopeMessage<T> {
+    Envelope(message : T, sender : ActorRef);
 }
 
 class EnvelopeTypes {
 
-    public static function message(envelope : EnvelopeMessage) : EnumValue {
+    public static function message<T>(envelope : EnvelopeMessage<T>) : T {
         return switch (envelope) {
             case Envelope(message, _): message;
         }
     }
 
-    public static function sender(envelope : EnvelopeMessage) : ActorRef {
+    public static function sender<T>(envelope : EnvelopeMessage<T>) : ActorRef {
         return switch (envelope) {
             case Envelope(_, sender): sender;
         }

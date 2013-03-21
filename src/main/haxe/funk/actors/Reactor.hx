@@ -1,18 +1,18 @@
 package funk.actors;
 
+import funk.reactives.Stream;
+import funk.types.AnyRef;
+import funk.types.Option;
+
 class Rector {
 
-    private var _stream : Stream<EnumValue>;
+    private var _stream : Stream<AnyRef>;
 
     public function new(actor : ActorRef) {
         var stream = StreamTypes.indentity(None);
-
-        actor.recieve(function(value) {
-            stream.dispatch(value);
-        });
     }
 
-    public function react() : Stream<EnumValue> {
+    public function react() : Stream<AnyRef> {
         return _stream;
     }
 }

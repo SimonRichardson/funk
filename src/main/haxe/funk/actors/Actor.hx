@@ -1,25 +1,17 @@
 package funk.actors;
 
 import funk.Funk;
-import funk.actors.ActorSystem;
-using funk.actors.dispatch.MessageDispatcher;
-using funk.actors.ActorCell;
+import funk.actors.ActorContext;
+
+using funk.futures.Promise;
 using funk.types.AnyRef;
 using funk.types.Option;
 
-
-enum ActorMessage {
-    Failed(cause : Errors);
-    Terminated(actor : ActorRef);
-}
-
-class Actor {
+class Actor implements ActorRef {
 
     private var _context : ActorContext;
 
     private var _self : ActorRef;
-
-    private var _sender : ActorRef;
 
     public function new() {
         var context = ActorContextInjector.currentContext();
@@ -27,42 +19,21 @@ class Actor {
 
         _context = context.get();
         _self = _context.self();
-        _sender = _context.sender();
     }
 
-    public function preStart() : Void {}
+    public function receive(value : AnyRef) : Void {
 
-    public function postStop() : Void {}
-
-    public function receive(message : EnumValue) : Void {}
-
-    public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {
-        //context().children().foreach(function(value) value.stop());
-        postStop();
     }
 
-    public function postRestart(reason : Errors) : Void preStart();
+    public function actorOf(props : Props, name : String) : ActorRef return _self.actorOf(props, name);
 
-    public function unhandled(message : EnumValue) : Void {
-        function handle(message : EnumValue) {
-            //context().system().publish(Unhandled(message, sender(), self()));
-        }
+    public function actorFor(name : String) : ActorRef return _self.actorFor(name);
 
-        switch(message) {
-            case ActorMessage:
-                switch(cast message) {
-                    case Terminated(dead): Funk.error(ActorError('Actor is dead ($dead)'));
-                    case _: handle(message);
-                }
-            case _: handle(message);
-        }
-    }
+    public function ask(value : AnyRef, sender : ActorRef) : Promise<AnyRef> return _self.ask(value, sender);
 
-    inline public function self() : ActorRef return _self;
+    public function send(value : AnyRef, sender : ActorRef) : Void _self.send(value, sender);
 
-    inline public function sender() : ActorRef return _sender;
+    public function path() : ActorPath return _self.path();
 
-    inline private function context() : ActorContext return _context;
-
-    // TODO (Simon) : Add behaviours
+    public function name() : String return path().name();
 }
