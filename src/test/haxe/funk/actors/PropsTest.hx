@@ -7,6 +7,6 @@ class PropsTest {
     @Test
     public function test() : Void {
         var props = new Props();
-        //props.isNotNull();
+        props.isNotNull();
     }
 }
