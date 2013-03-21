@@ -24,11 +24,11 @@ enum LocalActorMessage {
 
 class LocalActorRefProvider implements ActorRefProvider {
 
-    private var _rootActor : ActorRef;
+    private var _rootGuardian : ActorRef;
 
-    private var _guardianActor : ActorRef;
+    private var _guardian : ActorRef;
 
-    private var _systemActor : ActorRef;
+    private var _systemGuardian : ActorRef;
 
     public function new() {
     }
@@ -41,15 +41,16 @@ class LocalActorRefProvider implements ActorRefProvider {
         var guardianProps = new Props(Guardian);
         var systemProps = new Props(SystemGuardian);
 
-        _rootActor = new RootGuardianActorRef(this, rootActorPath);
+        var rootRef = new RootGuardianActorRef(this, rootActorPath);
 
-        _guardianActor = actorOf(system, guardianProps, _rootActor, guardianActorPath);
-        _systemActor = actorOf(system, systemProps, _rootActor, systemActorPath);
+        _rootGuardian = new InternalActorRef(system, guardianProps, rootRef, rootActorPath);
+        _guardian = actorOf(system, guardianProps, _rootGuardian, guardianActorPath);
+        _systemGuardian = actorOf(system, systemProps, _rootGuardian, systemActorPath);
     }
 
-    public function rootPath() : ActorPath return _rootActor.path();
+    public function rootPath() : ActorPath return _guardian.path();
 
-    public function guardian() : ActorRef return _guardianActor;
+    public function guardian() : ActorRef return _guardian;
 
     private function actorOf(   system : ActorSystem,
                                 props : Props,
