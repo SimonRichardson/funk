@@ -6,6 +6,7 @@ import funk.actors.ActorSystem;
 import funk.actors.ActorPath;
 import funk.actors.ActorRef;
 import funk.actors.routing.Routing;
+import funk.types.AnyRef;
 
 using funk.types.Option;
 
@@ -16,6 +17,11 @@ interface ActorRefProvider {
     function rootPath() : ActorPath;
 
     function guardian() : ActorRef;
+}
+
+interface ActorRefFactory {
+
+    function actorOf(props : Props, name : String) : ActorRef;
 }
 
 enum LocalActorMessage {
@@ -75,6 +81,18 @@ class Guardian extends Actor {
 
     public function new() {
         super();
+    }
+
+    override public function receive(value : AnyRef) : Void {
+        switch(value) {
+            case _ if(Std.is(value, LocalActorMessage)):
+                var local : LocalActorMessage = cast value;
+                switch(local) {
+                    case CreateChild(props, name):
+                        var s = sender();
+                        s.send(context().actorOf(props, name), s);
+                }
+        }
     }
 }
 

@@ -36,4 +36,8 @@ class Actor implements ActorRef {
     public function path() : ActorPath return _self.path();
 
     public function name() : String return path().name();
+
+    public function sender() : ActorRef return _context.sender();
+
+    public function context() : ActorContext return _context;
 }

@@ -1,12 +1,15 @@
 package funk.actors;
 
+import funk.actors.ActorRefProvider;
+
 using funk.types.Option;
 using funk.collections.immutable.List;
 
-interface ActorContext {
+interface ActorContext extends ActorRefFactory {
 
     function self() : ActorRef;
 
+    function sender() : ActorRef;
 }
 
 class ActorContextInjector {

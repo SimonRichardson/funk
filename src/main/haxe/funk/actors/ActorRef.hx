@@ -21,6 +21,10 @@ interface ActorRef {
     function actorOf(props : Props, name : String) : ActorRef;
 
     function actorFor(name : String) : ActorRef;
+
+    function sender() : ActorRef;
+
+    function context() : ActorContext;
 }
 
 class InternalActorRef implements ActorRef {
@@ -59,6 +63,10 @@ class InternalActorRef implements ActorRef {
     public function path() : ActorPath return _path;
 
     public function name() : String return path().name();
+
+    public function sender() : ActorRef return null;
+
+    public function context() : ActorContext return null;
 }
 
 class EmptyActorRef implements ActorRef {
@@ -91,4 +99,8 @@ class EmptyActorRef implements ActorRef {
     public function path() : ActorPath return _path;
 
     public function name() : String return path().name();
+
+    public function sender() : ActorRef return null;
+
+    public function context() : ActorContext return null;
 }
