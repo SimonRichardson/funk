@@ -1,10 +1,7 @@
 package funk.actors;
 
-using funk.actors.dispatch.MessageDispatcher;
 using funk.actors.ActorRef;
-using funk.types.Function0;
-using funk.types.Option;
-using funk.reactives.Process;
+using funk.types.AnyRef;
 
 typedef Cancellable = {
 
@@ -13,57 +10,16 @@ typedef Cancellable = {
     function isCancelled() : Bool;
 }
 
-typedef Scheduler = {
+interface Runnable {
 
-    function schedule<T>(reciever : InternalActorRef, message : T) : Cancellable;
-
-    function scheduleOnce<T>(reciever : InternalActorRef, message : T) : Cancellable;
-
-    function close() : Void;
+    function run() : Void;
 }
 
-class DefaultScheduler {
+interface Scheduler {
 
-    private var _dispatcher : Function0<MessageDispatcher>;
+    function schedule(reciever : ActorRef, message : AnyRef) : Cancellable;
 
-    public function new(dispatcher : Function0<MessageDispatcher>) {
-        _dispatcher = dispatcher;
-    }
+    function scheduleOnce(reciever : InternalActorRef, message : AnyRef) : Cancellable;
 
-    public function schedule<T>(reciever : InternalActorRef, message : T) : Cancellable {
-        var task = Process.start(function() {
-            var dispatcher = _dispatcher();
-            dispatcher.execute(reciever.cell());
-        }, 1);
-
-        var cancelled = false;
-
-        return {
-            cancel: function() return task.foreach(function(value) { value.stop(); cancelled = true; }),
-            isCancelled: function() return cancelled
-        };
-    }
-
-    public function scheduleOnce<T>(reciever : InternalActorRef, message : T) : Cancellable {
-        var task = Process.start(function() {
-            var dispatcher = _dispatcher();
-            dispatcher.execute(reciever.cell());
-        }, 1);
-
-        var cancelled = false;
-
-        if (task.isDefined()) {
-            task.stop();
-            cancelled = true;
-        }
-
-        return {
-            cancel: function() return task.foreach(function(value) { value.stop(); cancelled = true; }),
-            isCancelled: function() return cancelled
-        };
-    }
-
-    public function close() : Void {
-        // TODO (Simon) : Fix this.
-    }
+    function close() : Void;
 }
