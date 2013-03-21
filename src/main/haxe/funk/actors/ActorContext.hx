@@ -7,6 +7,8 @@ using funk.collections.immutable.List;
 
 interface ActorContext extends ActorRefFactory {
 
+    function start() : ActorContext;
+
     function self() : ActorRef;
 
     function sender() : ActorRef;

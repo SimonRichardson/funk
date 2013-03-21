@@ -37,11 +37,20 @@ class InternalActorRef implements ActorRef {
 
     private var _path : ActorPath;
 
+    private var _actorCell : ActorCell;
+
+    private var _actorContext : ActorContext;
+
     public function new(system : ActorSystem, props : Props, supervisor : ActorRef, path : ActorPath) {
         _system = system;
         _props = props;
         _supervisor = supervisor;
         _path = path;
+
+        _actorCell = new ActorCell(system, this, props, supervisor);
+        _actorContext = _actorCell;
+
+        _actorCell.start();
     }
 
     public function ask(msg : AnyRef, sender : ActorRef) : Promise<AnyRef> {

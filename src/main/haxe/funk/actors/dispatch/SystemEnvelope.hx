@@ -1,20 +1,22 @@
 package funk.actors.dispatch;
 
+import funk.types.AnyRef;
+
 using funk.Funk;
 
-enum SystemEnvelope<T> {
-    SystemEnvelope(message : T, sender : ActorRef);
+enum SystemEnvelope {
+    SystemEnvelope(message : AnyRef, sender : ActorRef);
 }
 
 class SystemEnvelopeTypes {
 
-    public static function message<T>(envelope : SystemEnvelope<T>) : T {
+    public static function message(envelope : SystemEnvelope) : AnyRef {
         return switch (envelope) {
             case SystemEnvelope(message, _): message;
         }
     }
 
-    public static function sender<T>(envelope : SystemEnvelope<T>) : ActorRef {
+    public static function sender(envelope : SystemEnvelope) : ActorRef {
         return switch (envelope) {
             case SystemEnvelope(_, sender): sender;
         }

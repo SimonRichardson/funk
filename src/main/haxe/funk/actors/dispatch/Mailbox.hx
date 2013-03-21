@@ -5,6 +5,8 @@ import funk.actors.dispatch.Envelope;
 import funk.actors.dispatch.SystemEnvelope;
 import funk.actors.Scheduler;
 
+using funk.types.Option;
+
 interface MessageQueue {
 
   function enqueue(receiver : ActorRef, handle : Envelope) : Void;
@@ -37,7 +39,7 @@ class MailboxType {
     }
 }
 
-class Mailbox implements MessageQueue implements SystemMessageQueue implements Runmable {
+class Mailbox implements MessageQueue implements SystemMessageQueue implements Runnable {
 
     public function new() {
 
@@ -48,15 +50,15 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
     }
 
     public function dequeue() : Envelope {
-
+        return null;
     }
 
     public function numberOfMessages() : Int {
-
+        return -1;
     }
 
     public function hasMessages() : Bool {
-
+        return false;
     }
 
     public function systemEnqueue(receiver : ActorRef, handle : SystemEnvelope) : Void {
@@ -64,15 +66,15 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
     }
 
     public function systemDequeue() : SystemEnvelope {
-
+        return null;
     }
 
     public function numberOfSystemMessages() : Int {
-
+        return -1;
     }
 
     public function hasSystemMessages() : Bool {
-
+        return false;
     }
 
     public function run() : Void {
