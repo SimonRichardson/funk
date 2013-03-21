@@ -32,6 +32,7 @@ class AddressTypes {
                 sb.add(protocol);
                 sb.add("://");
                 sb.add(hostPort(address));
+                sb.add("/");
                 sb.toString();
         }
     }

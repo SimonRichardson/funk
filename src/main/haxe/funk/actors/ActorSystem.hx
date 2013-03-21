@@ -20,6 +20,14 @@ class ActorSystem {
 
     private var _rootActorPath : ActorPath;
 
+    private var _guardianActor : ActorRef;
+
+    private var _guardianActorPath : ActorPath;
+
+    private var _systemActor : ActorRef;
+
+    private var _systemActorPath : ActorPath;
+
     function new(name : String) {
         _name = name;
 
@@ -27,6 +35,14 @@ class ActorSystem {
 
         _rootActorPath = new RootActorPath(Address("funk", name, None, None));
         _rootActor = new InternalActorRef(_rootActorPath);
+
+        _guardianActorPath = _rootActorPath.child("guardian");
+        _systemActorPath = _rootActorPath.child("sys");
+
+        trace(_guardianActorPath.child("fuckshitup").toString());
+
+        _guardianActor = new InternalActorRef(_guardianActorPath);
+        _systemActor = new InternalActorRef(_systemActorPath);
     }
 
     public static function create(name : String) : ActorSystem {
