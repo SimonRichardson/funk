@@ -47,11 +47,7 @@ class ActorCell implements ActorContext {
         var dispatchers = _system.dispatchers();
         _dispatcher = dispatchers.find(_props.dispatcher());
         
-        _mailbox == _dispatcher.createMailbox(this);
-
-        trace("here");
-        trace(_mailbox.name());
-        
+        _mailbox = _dispatcher.createMailbox(this);
 
         return this;
     }

@@ -50,7 +50,7 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
     }
 
     public function run() : Void {
-        /*function finally() {
+        function finally() {
 
         }
 
@@ -65,7 +65,7 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
             throw e;
         }
 
-        finally();*/
+        finally();
     }
 
     public function name() : String return _dispatcher.name();
