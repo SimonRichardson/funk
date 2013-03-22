@@ -36,6 +36,14 @@ class ActorSystemTest {
         ref.path().toString().areEqual('funk://system/user/name$rand/');
     }
 
+    @Test
+    public function calling_actorOf_multiple_times_should_return_valid_ActorRef_path() : Void {
+        for (i in 0...10) {
+            var ref = _system.actorOf(new Props(MockClass), 'name$i');
+            ref.path().toString().areEqual('funk://system/user/name$i/');
+        }
+    }
+
 
     /*
     @AsyncTest
