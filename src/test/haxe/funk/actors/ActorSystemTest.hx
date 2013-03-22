@@ -29,6 +29,14 @@ class ActorSystemTest {
         Std.is(ref, ActorRef).isTrue();
     }
 
+    @Test
+    public function calling_actorOf_should_return_valid_ActorRef_path() : Void {
+        var rand = Std.int(Math.random() * 9999).toString();
+        var ref = _system.actorOf(new Props(MockClass), 'name$rand');
+        ref.path().toString().areEqual('funk://system/user/name$rand/');
+    }
+
+
     /*
     @AsyncTest
     public function calling_actorOf_should_return_valid_ActorRef(asyncFactory : AsyncFactory) : Void {
