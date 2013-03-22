@@ -1,17 +1,17 @@
 package funk.collections;
 
 import funk.collections.CollectionTestBase;
-import funk.collections.extensions.FoldableTestBase;
+import funk.collections.extensions.ReducibleTestBase;
 
 using funk.collections.Collection;
 using funk.collections.CollectionUtil;
 using massive.munit.Assert;
 
-class CollectionFoldableTest extends FoldableTestBase {
+class CollectionReducibleTest extends ReducibleTestBase {
 
     @Before
     public function setup() : Void {
         var collection : Collection<Int> = [1, 2, 3];
-        foldable = collection;
+        reducible = collection;
     }
 }

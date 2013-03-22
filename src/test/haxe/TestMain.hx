@@ -10,6 +10,7 @@ import suites.FuturesSuite;
 import suites.FoldablesSuite;
 import suites.IocSuite;
 import suites.ReactivesSuite;
+import suites.ReduciblesSuite;
 import suites.SignalsSuite;
 import suites.TypesSuite;
 
@@ -42,6 +43,7 @@ class TestMain {
         suites.push(FoldablesSuite);
         suites.push(IocSuite);
         suites.push(ReactivesSuite);
+        suites.push(ReduciblesSuite);
         suites.push(SignalsSuite);
         suites.push(TypesSuite);
 

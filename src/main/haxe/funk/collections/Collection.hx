@@ -10,8 +10,8 @@ import funk.types.Tuple2;
 using funk.collections.Collection.CollectionTypes;
 using funk.collections.CollectionUtil;
 using funk.collections.IteratorUtil;
-using funk.types.Foldable;
-using funk.types.Reducible;
+using funk.collections.extensions.Foldable;
+using funk.collections.extensions.Reducible;
 using funk.types.Any;
 using funk.types.Option;
 

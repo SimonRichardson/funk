@@ -11,8 +11,8 @@ import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.Any;
 
-using funk.types.Foldable;
-using funk.types.Reducible;
+using funk.collections.extensions.Foldable;
+using funk.collections.extensions.Reducible;
 using funk.types.Option;
 
 enum ListType<T> {

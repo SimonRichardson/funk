@@ -1,4 +1,6 @@
-package funk.types;
+package funk.collections.extensions;
+
+import funk.types.Function2;
 
 using funk.types.Option;
 
