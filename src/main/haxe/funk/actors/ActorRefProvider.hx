@@ -1,5 +1,6 @@
 package funk.actors;
 
+import funk.actors.dispatch.Dispatcher;
 import funk.actors.Props;
 import funk.Funk;
 import funk.actors.ActorSystem;
@@ -35,6 +36,8 @@ enum LocalActorMessage {
 
 class LocalActorRefProvider implements ActorRefProvider {
 
+    private var _system : ActorSystem;
+
     private var _rootGuardian : ActorRef;
 
     private var _guardian : ActorRef;
@@ -45,6 +48,8 @@ class LocalActorRefProvider implements ActorRefProvider {
     }
 
     public function init(system : ActorSystem) : Void {
+        _system = system;
+
         var rootActorPath = new RootActorPath(Address("funk", system.name(), None, None));
         var guardianActorPath = rootActorPath.child("user");
         var systemActorPath = rootActorPath.child("system");

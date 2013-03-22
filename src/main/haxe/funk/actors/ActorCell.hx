@@ -1,14 +1,16 @@
 package funk.actors;
 
+import funk.actors.dispatch.Dispatcher;
 import funk.Funk;
 import funk.actors.dispatch.Envelope;
 import funk.actors.dispatch.Mailbox;
-import funk.actors.dispatch.MessageDispatcher;
 import funk.actors.Actor;
 import funk.actors.ActorSystem;
 import funk.actors.ActorPath;
 import funk.actors.ActorRef;
 import funk.actors.ActorRefProvider;
+import funk.types.Any.AnyTypes;
+import funk.types.AnyRef;
 
 using funk.types.Any;
 using funk.types.Option;
@@ -26,6 +28,12 @@ class ActorCell implements ActorContext {
 
     private var _children : Children;
 
+    private var _dispatcher : Dispatcher;
+
+    private var _currentMessage : Envelope;
+
+    private var _mailbox : Mailbox;
+    
     public function new(system : ActorSystem, self : ActorRef, props : Props, parent : ActorRef) {
         _system = system;
         _self = self;
@@ -36,15 +44,37 @@ class ActorCell implements ActorContext {
     }
 
     public function start() : ActorContext {
+        var dispatchers = _system.dispatchers();
+        _dispatcher = dispatchers.find(_props.dispatcher());
+        
+        _mailbox == _dispatcher.createMailbox(this);
+
+        trace("here");
+        trace(_mailbox.name());
+        
+
         return this;
     }
+
+    public function send(msg : AnyRef, sender : ActorRef) : Void {
+        var ref = AnyTypes.toBool(sender) ? sender : null;
+        _dispatcher.dispatch(this, Envelope(msg, ref));
+    } 
 
     public function actorOf(props : Props, name : String) : ActorRef return _children.actorOf(props, name);
 
     public function self() : ActorRef return _self;
 
+    public function mailbox() : Mailbox return _mailbox;
+
     public function sender() : ActorRef {
         return null;
+    }
+
+    public function invoke(message : Envelope) : Void {
+        _currentMessage = message;
+
+        trace(message);
     }
 
     @:allow(funk.actors)
@@ -52,6 +82,9 @@ class ActorCell implements ActorContext {
 
     @:allow(funk.actors)
     private function provider() : ActorRefProvider return _system.provider();
+
+    @:allow(funk.actors)
+    private function dispatcher() : Dispatcher return _dispatcher;
 }
 
 

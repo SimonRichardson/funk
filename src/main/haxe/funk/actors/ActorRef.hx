@@ -52,13 +52,11 @@ class LocalActorRef implements InternalActorRef {
         _actorCell.start();
     }
 
-    public function start() : Void {
-        
-    }
-
-    public function send(msg : AnyRef, sender : ActorRef) : Void {
+    public function start() : Void { 
 
     }
+
+    public function send(msg : AnyRef, sender : ActorRef) : Void _actorCell.send(msg, sender);
 
     public function actorOf(props : Props, name : String) : ActorRef {
         return null;

@@ -3,63 +3,35 @@ package funk.actors.dispatch;
 import funk.Funk;
 import funk.actors.dispatch.Envelope;
 import funk.actors.dispatch.SystemEnvelope;
+import funk.actors.dispatch.MessageQueue;
 import funk.actors.Scheduler;
+import funk.reactives.Process;
+import funk.types.Any.AnyTypes;
 
 using funk.types.Option;
 
-interface MessageQueue {
-
-  function enqueue(receiver : ActorRef, handle : Envelope) : Void;
-
-  function dequeue() : Envelope;
-
-  function numberOfMessages() : Int;
-
-  function hasMessages() : Bool;
-}
-
-interface SystemMessageQueue {
-
-    function systemEnqueue(receiver : ActorRef, handle : SystemEnvelope) : Void;
-
-    function systemDequeue() : SystemEnvelope;
-
-    function numberOfSystemMessages() : Int;
-
-    function hasSystemMessages() : Bool;
-}
-
-class MailboxType {
-
-    public static function create(actor : Option<ActorCell>) : Mailbox {
-        return switch(actor) {
-            case Some(_): new UnboundMailbox();
-            case _: Funk.error(ActorError("Expected ActorCell but received none"));
-        }
-    }
-}
-
+@:keep
 class Mailbox implements MessageQueue implements SystemMessageQueue implements Runnable {
 
-    public function new() {
+    private var _actor : ActorCell;
 
+    private var _dispatcher : Dispatcher;
+
+    private var _messageQueue : MessageQueue;
+
+    public function new(actor : ActorCell, messageQueue : MessageQueue) {
+        _actor = actor;
+        _dispatcher = _actor.dispatcher();
+        _messageQueue = messageQueue;
     }
 
-    public function enqueue(receiver : ActorRef, handle : Envelope) : Void {
+    public function enqueue(receiver : ActorRef, envelope : Envelope) : Void _messageQueue.enqueue(receiver, envelope);
 
-    }
+    public function dequeue() : Envelope return _messageQueue.dequeue();
 
-    public function dequeue() : Envelope {
-        return null;
-    }
+    public function numberOfMessages() : Int return _messageQueue.numberOfMessages();
 
-    public function numberOfMessages() : Int {
-        return -1;
-    }
-
-    public function hasMessages() : Bool {
-        return false;
-    }
+    public function hasMessages() : Bool return _messageQueue.hasMessages();
 
     public function systemEnqueue(receiver : ActorRef, handle : SystemEnvelope) : Void {
 
@@ -78,13 +50,41 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
     }
 
     public function run() : Void {
+        /*function finally() {
+
+        }
+
+        try {
+            processAllSystemMessages();
+
+            var diff = Std.int(Process.stamp() + _dispatcher.throughputDeadlineTime());
+            processMailbox(Std.int(Math.max(_dispatcher.throughput(), 1)), diff);
+        } catch(e : Dynamic) {
+            finally();
+
+            throw e;
+        }
+
+        finally();*/
+    }
+
+    public function name() : String return _dispatcher.name();
+
+    private function processAllSystemMessages() {
 
     }
-}
 
-private class UnboundMailbox extends Mailbox {
+    private function processMailbox(?left : Int = 1, ?deadlineNs : Int = 0) : Void {
+        var next = dequeue();
+        if (AnyTypes.toBool(next)) {
+            _actor.invoke(next);
 
-    public function new() {
-        super();
+            processAllSystemMessages();
+
+            if (left > 1 &&
+                ((_dispatcher.isThroughputDeadlineTimeDefined() == false) || (Process.stamp() - deadlineNs < 0))){
+                processMailbox(left - 1, deadlineNs);
+            }
+        }
     }
 }

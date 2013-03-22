@@ -2,6 +2,7 @@ package funk.actors;
 
 import funk.actors.ActorPath;
 import funk.actors.ActorRefProvider;
+import funk.actors.dispatch.Dispatchers;
 import funk.types.AnyRef;
 
 using funk.actors.ActorRef;
@@ -19,11 +20,15 @@ class ActorSystem {
 
     private var _provider : ActorRefProvider;
 
+    private var _dispatchers : Dispatchers;
+
     function new(name : String, refProvider : ActorRefProvider) {
         _name = name;
 
         _isTerminated = false;
         _provider = refProvider;
+
+        _dispatchers = new Dispatchers();
     }
 
     public static function create(name : String, ?refProvider : ActorRefProvider) : ActorSystem {
@@ -46,6 +51,8 @@ class ActorSystem {
     public function child(name : String) : ActorPath return actorPath().child(name);
 
     public function name() : String return _name;
+
+    public function dispatchers() : Dispatchers return _dispatchers;
 
     @:allow(funk.actors)
     private function provider() : ActorRefProvider return _provider;

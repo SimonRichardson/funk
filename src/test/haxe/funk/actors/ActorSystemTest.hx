@@ -1,6 +1,7 @@
 package funk.actors;
 
 import funk.futures.Promise;
+import funk.types.AnyRef;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
@@ -44,27 +45,13 @@ class ActorSystemTest {
         }
     }
 
-
-    /*
-    @AsyncTest
-    public function calling_actorOf_should_return_valid_ActorRef(asyncFactory : AsyncFactory) : Void {
-        var actual = null;
-
-        var handler = asyncFactory.createHandler(this, function() {
-            Std.is(actual, ActorRef).isTrue();
-        }, TIMEOUT);
-
-        var ref = _system.actorOf(new Props(MockClass), "listener");
-        ref.when(function(attempt) {
-            switch(attempt) {
-                case Success(actor): actual = actor;
-                case _: Assert.fail("Failed if called");
-            }
-
-            handler();
-        });
+    @Test
+    public function calling_actorOf_and_telling_the_actor_some_info_should_be_called() : Void {
+        var expected = "hello";
+        var ref = _system.actorOf(new Props(MockClass), 'name');
+        ref.send(expected, ref);
+        //ref.actual.areEqual(expected);
     }
-    */
 
     @Test
     public function calling_toString_on_actor_path_should_return_valid_path() : Void {
@@ -75,7 +62,14 @@ class ActorSystemTest {
 
 class MockClass extends Actor {
 
+    public var actual : AnyRef;
+
     public function new() {
         super();
+    }
+
+    override public function receive(value : AnyRef) : Void {
+        trace(value);
+        actual = value;
     }
 }

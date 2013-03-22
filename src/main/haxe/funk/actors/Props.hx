@@ -1,5 +1,6 @@
 package funk.actors;
 
+import funk.actors.dispatch.Dispatchers;
 import funk.Funk;
 import funk.actors.routing.Routing;
 import funk.types.Any;
@@ -22,7 +23,7 @@ class Props {
     public function new(?actor : Class<Actor> = null) {
         _router = new NoRouter();
         _creator = new CreatorImpl(actor);
-        _dispatcher = "default-dispatcher";
+        _dispatcher = Dispatchers.DefaultDispatcherId;
     }
 
     public function creator() : Function0<Actor> return _creator.create;
