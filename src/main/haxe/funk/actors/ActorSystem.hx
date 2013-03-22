@@ -32,13 +32,8 @@ class ActorSystem {
         return system.start();
     }
 
-    public function actorOf(props : Props, name : String) : Promise<ActorRef> {
-        var guard = _provider.guardian();
-        return guard.ask(CreateChild(props, name), guard).map(function(value : AnyRef) return cast value);
-    }
-
-    public function actorFor(name : String) : Promise<ActorRef> {
-        return PromiseTypes.empty();
+    public function actorOf(props : Props, name : String) : ActorRef {
+        return _provider.guardian().context().actorOf(props, name);
     }
 
     public function start() : ActorSystem {
@@ -51,4 +46,7 @@ class ActorSystem {
     public function child(name : String) : ActorPath return actorPath().child(name);
 
     public function name() : String return _name;
+
+    @:allow(funk.actors)
+    private function provider() : ActorRefProvider return _provider;
 }

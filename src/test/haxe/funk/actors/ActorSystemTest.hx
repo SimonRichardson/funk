@@ -24,11 +24,12 @@ class ActorSystemTest {
     }
 
     @Test
-    public function calling_actorOf_should_return_valid_Promise_ActorRef() : Void {
+    public function calling_actorOf_should_return_valid_ActorRef() : Void {
         var ref = _system.actorOf(new Props(MockClass), "listener");
-        Std.is(ref, Promise).isTrue();
+        Std.is(ref, ActorRef).isTrue();
     }
 
+    /*
     @AsyncTest
     public function calling_actorOf_should_return_valid_ActorRef(asyncFactory : AsyncFactory) : Void {
         var actual = null;
@@ -47,6 +48,7 @@ class ActorSystemTest {
             handler();
         });
     }
+    */
 
     @Test
     public function calling_toString_on_actor_path_should_return_valid_path() : Void {

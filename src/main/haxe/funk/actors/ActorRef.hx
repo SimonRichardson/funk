@@ -14,20 +14,19 @@ interface ActorRef {
 
     function path() : ActorPath;
 
-    function ask(msg : AnyRef, sender : ActorRef) : Promise<AnyRef>;
-
     function send(msg : AnyRef, sender : ActorRef) : Void;
 
     function actorOf(props : Props, name : String) : ActorRef;
 
-    function actorFor(name : String) : ActorRef;
-
-    function sender() : ActorRef;
-
     function context() : ActorContext;
 }
 
-class InternalActorRef implements ActorRef {
+interface InternalActorRef extends ActorRef {
+
+    function start() : Void;
+}
+
+class LocalActorRef implements InternalActorRef {
 
     private var _system : ActorSystem;
 
@@ -53,8 +52,8 @@ class InternalActorRef implements ActorRef {
         _actorCell.start();
     }
 
-    public function ask(msg : AnyRef, sender : ActorRef) : Promise<AnyRef> {
-        return PromiseTypes.empty();
+    public function start() : Void {
+        
     }
 
     public function send(msg : AnyRef, sender : ActorRef) : Void {
@@ -65,17 +64,11 @@ class InternalActorRef implements ActorRef {
         return null;
     }
 
-    public function actorFor(name : String) : ActorRef {
-        return null;
-    }
-
     public function path() : ActorPath return _path;
 
     public function name() : String return path().name();
 
-    public function sender() : ActorRef return null;
-
-    public function context() : ActorContext return null;
+    public function context() : ActorContext return _actorContext;
 }
 
 class EmptyActorRef implements ActorRef {
@@ -89,19 +82,11 @@ class EmptyActorRef implements ActorRef {
         _path = path;
     }
 
-    public function ask(msg : AnyRef, sender : ActorRef) : Promise<AnyRef> {
-        return PromiseTypes.empty();
-    }
-
     public function send(msg : AnyRef, sender : ActorRef) : Void {
 
     }
 
     public function actorOf(props : Props, name : String) : ActorRef {
-        return null;
-    }
-
-    public function actorFor(name : String) : ActorRef {
         return null;
     }
 

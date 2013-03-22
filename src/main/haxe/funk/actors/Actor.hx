@@ -27,10 +27,6 @@ class Actor implements ActorRef {
 
     public function actorOf(props : Props, name : String) : ActorRef return _self.actorOf(props, name);
 
-    public function actorFor(name : String) : ActorRef return _self.actorFor(name);
-
-    public function ask(value : AnyRef, sender : ActorRef) : Promise<AnyRef> return _self.ask(value, sender);
-
     public function send(value : AnyRef, sender : ActorRef) : Void _self.send(value, sender);
 
     public function path() : ActorPath return _self.path();

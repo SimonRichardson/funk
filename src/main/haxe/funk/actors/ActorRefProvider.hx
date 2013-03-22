@@ -17,6 +17,11 @@ interface ActorRefProvider {
     function rootPath() : ActorPath;
 
     function guardian() : ActorRef;
+
+    function actorOf(   system : ActorSystem,
+                        props : Props,
+                        supervisor : ActorRef,
+                        path : ActorPath) : InternalActorRef;
 }
 
 interface ActorRefFactory {
@@ -49,7 +54,7 @@ class LocalActorRefProvider implements ActorRefProvider {
 
         var rootRef = new RootGuardianActorRef(this, rootActorPath);
 
-        _rootGuardian = new InternalActorRef(system, guardianProps, rootRef, rootActorPath);
+        _rootGuardian = new LocalActorRef(system, guardianProps, rootRef, rootActorPath);
         _guardian = actorOf(system, guardianProps, _rootGuardian, guardianActorPath);
         _systemGuardian = actorOf(system, systemProps, _rootGuardian, systemActorPath);
     }
@@ -58,14 +63,14 @@ class LocalActorRefProvider implements ActorRefProvider {
 
     public function guardian() : ActorRef return _guardian;
 
-    private function actorOf(   system : ActorSystem,
+    public function actorOf(   system : ActorSystem,
                                 props : Props,
                                 supervisor : ActorRef,
-                                path : ActorPath) : ActorRef {
+                                path : ActorPath) : InternalActorRef {
         var router = props.router();
         return switch(router) {
-            case _ if(Std.is(router, NoRouter)): new InternalActorRef(system, props, supervisor, path);
-            case _: null;
+            case _ if(Std.is(router, NoRouter)): new LocalActorRef(system, props, supervisor, path);
+            case _: Funk.error(ActorError("Missing implementation around routers"));
         }
     }
 }

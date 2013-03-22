@@ -23,6 +23,11 @@ interface ActorPath {
     function toString() : String;
 }
 
+class ActorPathName {
+
+    public static var Regexp = new EReg("(?:[-\\w:@&=+,.!~*'_;]|%\\p{XDigit}{2})(?:[-\\w:@&=+,.!~*'$_;]|%\\p{XDigit}{2})*", "");
+}
+
 class RootActorPath implements ActorPath {
 
     private var _address : AddressType;
