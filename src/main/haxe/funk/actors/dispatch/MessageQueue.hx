@@ -2,7 +2,7 @@ package funk.actors.dispatch;
 
 import funk.actors.ActorRef;
 import funk.actors.dispatch.Envelope;
-import funk.actors.dispatch.SystemEnvelope;
+import funk.actors.dispatch.SystemMessage;
 
 using funk.collections.immutable.List;
 using funk.types.Option;
@@ -11,7 +11,7 @@ interface MessageQueue {
 
   function enqueue(receiver : ActorRef, handle : Envelope) : Void;
 
-  function dequeue() : Envelope;
+  function dequeue() : Option<Envelope>;
 
   function numberOfMessages() : Int;
 
@@ -20,9 +20,9 @@ interface MessageQueue {
 
 interface SystemMessageQueue {
 
-    function systemEnqueue(receiver : ActorRef, handle : SystemEnvelope) : Void;
+    function systemEnqueue(receiver : ActorRef, handle : SystemMessage) : Void;
 
-    function systemDequeue() : SystemEnvelope;
+    function systemDequeue() : Option<SystemMessage>;
 
     function numberOfSystemMessages() : Int;
 
@@ -49,8 +49,8 @@ private class UnboundedMessageQueue implements MessageQueue {
 
     public function enqueue(receiver : ActorRef, handle : Envelope) : Void _list = _list.append(handle);
 
-    public function dequeue() : Envelope {
-        var head = _list.head();
+    public function dequeue() : Option<Envelope> {
+        var head = _list.headOption();
         _list = _list.tail();
         return head;
     }

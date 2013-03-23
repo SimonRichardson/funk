@@ -1,10 +1,12 @@
 package funk.actors;
 
 import funk.actors.dispatch.Dispatcher;
-import funk.Funk;
 import funk.actors.dispatch.Envelope;
+import funk.actors.dispatch.SystemMessage;
+import funk.Funk;
 import funk.actors.dispatch.Mailbox;
 import funk.actors.Actor;
+import funk.actors.ActorContext;
 import funk.actors.ActorSystem;
 import funk.actors.ActorPath;
 import funk.actors.ActorRef;
@@ -12,11 +14,16 @@ import funk.actors.ActorRefProvider;
 import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
 
+using funk.actors.dispatch.Envelope;
 using funk.types.Any;
 using funk.types.Option;
 using funk.collections.immutable.List;
 
 class ActorCell implements ActorContext {
+
+    private var _uid : String;
+
+    private var _actor : Actor;
 
     private var _self : ActorRef;
 
@@ -33,7 +40,7 @@ class ActorCell implements ActorContext {
     private var _currentMessage : Envelope;
 
     private var _mailbox : Mailbox;
-    
+
     public function new(system : ActorSystem, self : ActorRef, props : Props, parent : ActorRef) {
         _system = system;
         _self = self;
@@ -43,23 +50,22 @@ class ActorCell implements ActorContext {
         _children = new Children(this);
     }
 
-    public function start() : ActorContext {
+    public function init(uid : String) : Void {
         var dispatchers = _system.dispatchers();
         _dispatcher = dispatchers.find(_props.dispatcher());
-        
-        _mailbox == _dispatcher.createMailbox(this);
 
-        trace("here");
-        trace(_mailbox.name());
-        
+        _mailbox = _dispatcher.createMailbox(this);
+        _mailbox.systemEnqueue(_self, Create(uid));
+    }
 
+    public function start() : ActorContext {
         return this;
     }
 
     public function send(msg : AnyRef, sender : ActorRef) : Void {
         var ref = AnyTypes.toBool(sender) ? sender : null;
         _dispatcher.dispatch(this, Envelope(msg, ref));
-    } 
+    }
 
     public function actorOf(props : Props, name : String) : ActorRef return _children.actorOf(props, name);
 
@@ -71,10 +77,59 @@ class ActorCell implements ActorContext {
         return null;
     }
 
+    public function systemInvoke(message : SystemMessage) : Void {
+        switch(message) {
+            case Create(uid): systemCreate(uid);
+        }
+    }
+
     public function invoke(message : Envelope) : Void {
         _currentMessage = message;
+        var msg : AnyRef = message.message();
+        switch(msg) {
+            case _ if(Std.is(msg, Enum)): autoReceiveMessage(message);
+            case _: receiveMessage(msg);
+        }
+        _currentMessage = null;
+    }
 
-        trace(message);
+    private function autoReceiveMessage(message : Envelope) : Void {
+
+    }
+
+    private function receiveMessage(message : AnyRef) : Void {
+        // TODO (Simon) : Implement behaviors.
+        _actor.receive(message);
+    }
+
+    private function newActor() : Actor {
+        ActorContextInjector.pushContext(this);
+
+        var instance = null;
+        try {
+            var creator = _props.creator();
+            instance = creator();
+            if (!AnyTypes.toBool(instance)) {
+                Funk.error(ActorError("Actor instance passed to actorOf can't be 'null'"));
+            }
+        } catch(e : Dynamic) {
+            throw e;
+        }
+
+        ActorContextInjector.popContext();
+
+        return instance;
+    }
+
+    private function systemCreate(uid : String) : Void {
+        this._uid = uid;
+
+        try {
+            _actor = newActor();
+            _actor.preStart();
+        } catch (e : Dynamic) {
+            throw e;
+        }
     }
 
     @:allow(funk.actors)
@@ -116,7 +171,7 @@ private class Children {
     private function makeChild(cell : ActorCell, props : Props, name : String) : ActorRef {
         var provider = cell.provider();
         var self = cell.self();
-        var actor = provider.actorOf(cell.system(), props, self, self.path().child(name)); 
+        var actor = provider.actorOf(cell.system(), props, self, self.path().child(name));
 
         initChild(actor);
         actor.start();

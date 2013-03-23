@@ -50,7 +50,7 @@ class ActorSystemTest {
         var expected = "hello";
         var ref = _system.actorOf(new Props(MockClass), 'name');
         ref.send(expected, ref);
-        //ref.actual.areEqual(expected);
+        MockClass.Actual.areEqual(expected);
     }
 
     @Test
@@ -62,14 +62,13 @@ class ActorSystemTest {
 
 class MockClass extends Actor {
 
-    public var actual : AnyRef;
+    public static var Actual : AnyRef;
 
     public function new() {
         super();
     }
 
     override public function receive(value : AnyRef) : Void {
-        trace(value);
-        actual = value;
+        Actual = value;
     }
 }

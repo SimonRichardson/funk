@@ -21,6 +21,9 @@ class Actor implements ActorRef {
         _self = _context.self();
     }
 
+    public function preStart() : Void {
+    }
+
     public function receive(value : AnyRef) : Void {
 
     }

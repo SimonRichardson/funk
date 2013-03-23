@@ -49,12 +49,10 @@ class LocalActorRef implements InternalActorRef {
         _actorCell = new ActorCell(system, this, props, supervisor);
         _actorContext = _actorCell;
 
-        _actorCell.start();
+        _actorCell.init(ActorSystem.UniqueId);
     }
 
-    public function start() : Void { 
-
-    }
+    public function start() : Void _actorCell.start();
 
     public function send(msg : AnyRef, sender : ActorRef) : Void _actorCell.send(msg, sender);
 
