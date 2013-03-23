@@ -74,7 +74,11 @@ class ActorCell implements ActorContext {
     public function mailbox() : Mailbox return _mailbox;
 
     public function sender() : ActorRef {
-        return null;
+        return switch (_currentMessage) {
+            case _ if(_currentMessage == null):
+            case _ if(AnyTypes.toBool(_currentMessage.sender())): _currentMessage.sender();
+            case _:
+        }
     }
 
     public function systemInvoke(message : SystemMessage) : Void {

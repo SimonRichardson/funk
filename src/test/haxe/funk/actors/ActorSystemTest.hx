@@ -10,8 +10,6 @@ using funk.types.Attempt;
 
 class ActorSystemTest {
 
-    private static var TIMEOUT : Int = 500;
-
     private var _system : ActorSystem;
 
     @Before
@@ -60,7 +58,7 @@ class ActorSystemTest {
     }
 }
 
-class MockClass extends Actor {
+private class MockClass extends Actor {
 
     public static var Actual : AnyRef;
 
