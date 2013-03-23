@@ -25,13 +25,13 @@ class ActorCell implements ActorContext {
 
     private var _actor : Actor;
 
-    private var _self : ActorRef;
+    private var _self : InternalActorRef;
 
     private var _system : ActorSystem;
 
     private var _props : Props;
 
-    private var _parent : ActorRef;
+    private var _parent : InternalActorRef;
 
     private var _children : Children;
 
@@ -41,7 +41,7 @@ class ActorCell implements ActorContext {
 
     private var _mailbox : Mailbox;
 
-    public function new(system : ActorSystem, self : ActorRef, props : Props, parent : ActorRef) {
+    public function new(system : ActorSystem, self : InternalActorRef, props : Props, parent : InternalActorRef) {
         _system = system;
         _self = self;
         _props = props;
@@ -56,6 +56,8 @@ class ActorCell implements ActorContext {
 
         _mailbox = _dispatcher.createMailbox(this);
         _mailbox.systemEnqueue(_self, Create(uid));
+
+        _parent.sendSystemMessage(Supervise(_self));
     }
 
     public function start() : ActorContext {
@@ -69,7 +71,7 @@ class ActorCell implements ActorContext {
 
     public function actorOf(props : Props, name : String) : ActorRef return _children.actorOf(props, name);
 
-    public function self() : ActorRef return _self;
+    public function self() : InternalActorRef return _self;
 
     public function mailbox() : Mailbox return _mailbox;
 
@@ -81,9 +83,18 @@ class ActorCell implements ActorContext {
         }
     }
 
+    public function sendSystemMessage(message : SystemMessage) : Void {
+        try {
+            _dispatcher.systemDispatch(this, message);
+        } catch(e : Dynamic) {
+            // handle
+        }
+    }
+
     public function systemInvoke(message : SystemMessage) : Void {
         switch(message) {
             case Create(uid): systemCreate(uid);
+            case Supervise(ref):
         }
     }
 

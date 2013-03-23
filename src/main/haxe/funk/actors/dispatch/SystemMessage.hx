@@ -6,4 +6,5 @@ using funk.Funk;
 
 enum SystemMessage {
     Create(uid : String);
+    Supervise(cell : ActorRef);
 }

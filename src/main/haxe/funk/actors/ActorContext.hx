@@ -1,5 +1,6 @@
 package funk.actors;
 
+import funk.actors.ActorRef;
 import funk.actors.ActorRefProvider;
 
 using funk.types.Option;
@@ -9,7 +10,7 @@ interface ActorContext extends ActorRefFactory {
 
     function start() : ActorContext;
 
-    function self() : ActorRef;
+    function self() : InternalActorRef;
 
     function sender() : ActorRef;
 }

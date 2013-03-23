@@ -1,6 +1,7 @@
 package funk.actors;
 
 import funk.actors.ActorSystem;
+import funk.actors.dispatch.SystemMessage;
 import funk.actors.Props;
 import funk.Funk;
 
@@ -24,6 +25,8 @@ interface ActorRef {
 interface InternalActorRef extends ActorRef {
 
     function start() : Void;
+
+    function sendSystemMessage(message : SystemMessage) : Void;
 }
 
 class LocalActorRef implements InternalActorRef {
@@ -32,7 +35,7 @@ class LocalActorRef implements InternalActorRef {
 
     private var _props : Props;
 
-    private var _supervisor : ActorRef;
+    private var _supervisor : InternalActorRef;
 
     private var _path : ActorPath;
 
@@ -40,7 +43,7 @@ class LocalActorRef implements InternalActorRef {
 
     private var _actorContext : ActorContext;
 
-    public function new(system : ActorSystem, props : Props, supervisor : ActorRef, path : ActorPath) {
+    public function new(system : ActorSystem, props : Props, supervisor : InternalActorRef, path : ActorPath) {
         _system = system;
         _props = props;
         _supervisor = supervisor;
@@ -60,6 +63,8 @@ class LocalActorRef implements InternalActorRef {
         return null;
     }
 
+    public function sendSystemMessage(message : SystemMessage) : Void _actorCell.sendSystemMessage(message);
+
     public function path() : ActorPath return _path;
 
     public function name() : String return path().name();
@@ -67,7 +72,7 @@ class LocalActorRef implements InternalActorRef {
     public function context() : ActorContext return _actorContext;
 }
 
-class EmptyActorRef implements ActorRef {
+class EmptyActorRef implements InternalActorRef {
 
     private var _provider : ActorRefProvider;
 
@@ -78,7 +83,15 @@ class EmptyActorRef implements ActorRef {
         _path = path;
     }
 
+    public function start() : Void {
+
+    }
+
     public function send(msg : AnyRef, sender : ActorRef) : Void {
+
+    }
+
+    public function sendSystemMessage(message : SystemMessage) : Void {
 
     }
 
