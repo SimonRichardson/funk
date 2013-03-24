@@ -148,8 +148,8 @@ class ActorCell implements ActorContext {
         }
     }
 
-    private function systemSupervise(cell : ActorRef) : Void {
-        switch(_children.initChild(cell)) {
+    private function systemSupervise(child : ActorRef) : Void {
+        switch(_children.initChild(child)) {
             case Some(_): // TODO
             case _: Funk.error(ActorError('received Supervise from unregistered child $child, this will not end well'));
         }
@@ -183,18 +183,24 @@ private class Children {
         var opt = _container.getByName(name);
         return switch(opt) {
             case Some(ChildRestartStats(value)): Some(value);
-            case Some(ChildNameReserved)): _container = _container.add(name, ref); Some(ref);
+            case Some(ChildNameReserved): _container = _container.add(name, ref); Some(ref);
             case _: None;
         }
     }
 
     public function actorOf(props : Props, name : String) : ActorRef return makeChild(_cell, props, checkName(name));
 
-    private function attachChild(props : Props, name : String) : ActorRef return makeChild(_cell, props, checkName(name));
+    private function attachChild(props : Props, name : String) : ActorRef {
+        return makeChild(_cell, props, checkName(name));
+    }
 
-    private function reserveChild(cell : ActorCell) : Void _container = _container.reserveChild(cell);
+    private function reserveChild(cell : ActorCell) : Void {
+        _container = _container.reserve(cell.self().path().name());
+    }
 
-    private function unreserveChild(cell : ActorCell) : Void _container = _container.unreserveChild(cell);
+    private function unreserveChild(cell : ActorCell) : Void {
+        _container = _container.unreserve(cell.self().path().name());
+    }
 
     private function checkName(name : String) : String {
         return switch(name) {
@@ -214,6 +220,7 @@ private class Children {
             provider.actorOf(cell.system(), props, self, self.path().child(name));
         } catch(e : Dynamic) {
             unreserveChild(cell);
+            throw e;
         }
 
         initChild(actor);
@@ -224,17 +231,15 @@ private class Children {
 
 interface ChildrenContainer {
 
-    function add(name: String, stats: ChildRestartStats): ChildrenContainer;
+    function add(name: String, stats: ActorRef): ChildrenContainer;
 
     function remove(child: ActorRef): ChildrenContainer;
 
     function getByName(name: String): Option<ChildStats>;
 
-    function getByRef(actor: ActorRef): Option<ChildRestartStats>;
+    function getByRef(actor: ActorRef): Option<ChildStats>;
 
     function children(): List<ActorRef>;
-
-    function shallDie(actor: ActorRef): ChildrenContainer;
 
     function reserve(name: String): ChildrenContainer;
 
@@ -250,7 +255,7 @@ private enum ChildStats {
     ChildRestartStats(child : ActorRef);
 }
 
-private class NormalChildrenContainer {
+private class NormalChildrenContainer implements ChildrenContainer {
 
     private var _map : StringMap<ChildStats>;
 
@@ -259,18 +264,20 @@ private class NormalChildrenContainer {
     }
 
     public function add(name : String, child : ActorRef) : ChildrenContainer {
-        return new NormalChildrenContainer(_map.set(name, ChildRestartStats(child)));
+        _map.set(name, ChildRestartStats(child));
+        return new NormalChildrenContainer(_map);
     }
 
     public function remove(child : ActorRef) : ChildrenContainer {
-        return new NormalChildrenContainer(_map.remove(name));
+        _map.remove(child.path().name());
+        return new NormalChildrenContainer(_map);
     }
 
     public function getByName(name : String) : Option<ChildStats> {
         return _map.exists(name) ? Some(_map.get(name)) : None;
     }
 
-    public function getByRef(actor : ActorRef) : Option<ChildRestartStats> {
+    public function getByRef(actor : ActorRef) : Option<ChildStats> {
         var opt = getByName(actor.path().name());
         return switch(opt) {
             case Some(ChildNameReserved): None;
@@ -283,11 +290,7 @@ private class NormalChildrenContainer {
         var list = Nil;
         for(i in _map.keys()) {
             switch(getByName(i)) {
-                case Some(stat):
-                    switch(stat) {
-                        case Some(ChildRestartStats(child)): list = list.prepend(child);
-                        case _:
-                    }
+                case Some(ChildRestartStats(child)): list = list.prepend(child);
                 case _:
             }
         }
@@ -296,12 +299,15 @@ private class NormalChildrenContainer {
 
     public function reserve(name : String) : ChildrenContainer {
         if(_map.exists(name)) Funk.error(ArgumentError('actor name $name is not unique!'));
-        return new NormalChildrenContainer(_map.set(name, ChildNameReserved));
+        _map.set(name, ChildNameReserved);
+        return new NormalChildrenContainer(_map);
     }
 
     public function unreserve(name : String) : ChildrenContainer {
-        return if(_map.exists(name)) new NormalChildrenContainer(_map.remove(name));
-        else this;
+        return if(_map.exists(name)) {
+            _map.remove(name);
+            new NormalChildrenContainer(_map);
+        } else this;
     }
 
     public function isTerminating() : Bool return false;
