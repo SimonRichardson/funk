@@ -107,7 +107,7 @@ class ActorCell implements ActorContext {
         switch(message) {
             case Create(uid): systemCreate(uid);
             case Supervise(cell): systemSupervise(cell);
-            case ChildTerminated(_): //HANDLE ME
+            case ChildTerminated(child): handleChildTerminated(child);
             case Terminate: systemTerminate();
             case Watch(watchee, watcher): trace([watchee, watcher]); //HANDLE ME
             case Unwatch(watchee, watcher): trace([watchee, watcher]); //HANDLE ME
@@ -217,6 +217,10 @@ class ActorCell implements ActorContext {
         _actor._self = null;
     }
 
+    private function handleChildTerminated(child : ActorRef) : Void {
+        _children.removeChild(child);
+    }
+
     private function watch(actor : ActorCell) : Void {
         switch(actor) {
             case _ if(Std.is(actor, InternalActorRef)):
@@ -275,6 +279,19 @@ private class Children {
             case Some(ChildRestartStats(value)): Some(value);
             case Some(ChildNameReserved): _container = _container.add(name, ref); Some(ref);
             case _: None;
+        }
+    }
+
+    public function removeChild(ref : ActorRef) : Option<ActorRef> {
+        return switch(_container) {
+            case _ if(Std.is(_container, TerminatedChildrenContainer)): None;
+            case _:
+                switch(_container.getByRef(ref)) {
+                    case Some(ChildRestartStats(a)):
+                        _container = _container.remove(a);
+                        Some(ref);
+                    case _: None;
+                }
         }
     }
 
