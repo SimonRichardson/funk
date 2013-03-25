@@ -5,6 +5,7 @@ import massive.munit.TestSuite;
 import funk.collections.CollectionTest;
 import funk.collections.immutable.ListTest;
 import funk.collections.immutable.ListCollectionsTest;
+import funk.collections.immutable.MapTest;
 
 class CollectionsSuite extends TestSuite {
 
@@ -14,5 +15,6 @@ class CollectionsSuite extends TestSuite {
         add(funk.collections.CollectionTest);
         add(funk.collections.immutable.ListTest);
         add(funk.collections.immutable.ListCollectionsTest);
+        add(funk.collections.immutable.MapTest);
     }
 }

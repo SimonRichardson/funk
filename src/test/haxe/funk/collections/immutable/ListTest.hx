@@ -26,5 +26,4 @@ class ListTest extends ListTestBase {
 
         name = 'List';
     }
-
 }
