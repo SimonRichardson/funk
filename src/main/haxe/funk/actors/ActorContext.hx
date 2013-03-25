@@ -10,9 +10,13 @@ interface ActorContext extends ActorRefFactory {
 
     function start() : ActorContext;
 
+    function stop() : ActorContext;
+
     function self() : InternalActorRef;
 
     function sender() : Option<ActorRef>;
+
+    function children() : List<ActorRef>;
 }
 
 class ActorContextInjector {

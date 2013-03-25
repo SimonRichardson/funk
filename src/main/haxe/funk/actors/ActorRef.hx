@@ -26,6 +26,8 @@ interface InternalActorRef extends ActorRef {
 
     function start() : Void;
 
+    function stop() : Void;
+
     function sendSystemMessage(message : SystemMessage) : Void;
 }
 
@@ -57,6 +59,8 @@ class LocalActorRef implements InternalActorRef {
 
     public function start() : Void _actorCell.start();
 
+    public function stop() : Void _actorCell.stop();
+
     public function send(msg : AnyRef, sender : ActorRef) : Void _actorCell.send(msg, sender);
 
     public function actorOf(props : Props, name : String) : ActorRef return _actorCell.actorOf(props, name);
@@ -81,21 +85,15 @@ class EmptyActorRef implements InternalActorRef {
         _path = path;
     }
 
-    public function start() : Void {
+    public function start() : Void {}
 
-    }
+    public function stop() : Void {}
 
-    public function send(msg : AnyRef, sender : ActorRef) : Void {
+    public function send(msg : AnyRef, sender : ActorRef) : Void {}
 
-    }
+    public function sendSystemMessage(message : SystemMessage) : Void {}
 
-    public function sendSystemMessage(message : SystemMessage) : Void {
-
-    }
-
-    public function actorOf(props : Props, name : String) : ActorRef {
-        return null;
-    }
+    public function actorOf(props : Props, name : String) : ActorRef return null;
 
     public function path() : ActorPath return _path;
 

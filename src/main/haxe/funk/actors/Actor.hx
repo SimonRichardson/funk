@@ -6,11 +6,14 @@ import funk.actors.ActorContext;
 using funk.futures.Promise;
 using funk.types.AnyRef;
 using funk.types.Option;
+using funk.collections.immutable.List;
 
 class Actor implements ActorRef {
 
+    @:allow(funk.actors.ActorCell)
     private var _context : ActorContext;
 
+    @:allow(funk.actors.ActorCell)
     private var _self : ActorRef;
 
     public function new() {
@@ -21,12 +24,18 @@ class Actor implements ActorRef {
         _self = _context.self();
     }
 
-    public function preStart() : Void {
+    public function preStart() : Void {}
+
+    public function postStop() : Void {}
+
+    public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {
+        _context.children().foreach(function(child) child.context().stop());
+        postStop();
     }
 
-    public function receive(value : AnyRef) : Void {
+    public function postRestart(reason : Errors) : Void preStart();
 
-    }
+    public function receive(value : AnyRef) : Void {}
 
     public function actorOf(props : Props, name : String) : ActorRef return _self.actorOf(props, name);
 

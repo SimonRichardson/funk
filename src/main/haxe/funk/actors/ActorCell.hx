@@ -63,6 +63,12 @@ class ActorCell implements ActorContext {
     }
 
     public function start() : ActorContext {
+        //_dispatcher.attach(this);
+        return this;
+    }
+
+    public function stop() : ActorContext {
+        _dispatcher.systemDispatch(this, Terminate);
         return this;
     }
 
@@ -76,6 +82,8 @@ class ActorCell implements ActorContext {
     public function self() : InternalActorRef return _self;
 
     public function mailbox() : Mailbox return _mailbox;
+
+    public function children() : List<ActorRef> return _children.children();
 
     public function sender() : Option<ActorRef> {
         return switch (_currentMessage) {
@@ -97,6 +105,8 @@ class ActorCell implements ActorContext {
         switch(message) {
             case Create(uid): systemCreate(uid);
             case Supervise(cell): systemSupervise(cell);
+            case ChildTerminated(_): //HANDLE ME
+            case Terminate: systemTerminate();
         }
     }
 
@@ -145,6 +155,11 @@ class ActorCell implements ActorContext {
             _actor = newActor();
             _actor.preStart();
         } catch (e : Dynamic) {
+            if (AnyTypes.toBool(_actor)) {
+                clearActorFields(_actor);
+                _actor = null;
+                _currentMessage = null;
+            }
             throw e;
         }
     }
@@ -154,6 +169,48 @@ class ActorCell implements ActorContext {
             case Some(_): // TODO
             case _: Funk.error(ActorError('received Supervise from unregistered child $child, this will not end well'));
         }
+    }
+
+    private function systemTerminate() : Void {
+        // unwatchWatchActors(_actor)
+
+        children().foreach(function(child) {
+            if(Std.is(child, InternalActorRef)) {
+                var c : InternalActorRef = cast child;
+                c.stop();
+            } else {
+                // TODO (Simon) : Log out that the stop didn't happen.
+            }
+        });
+
+        if(!setChildrenTerminationReason(Termination)) {
+            finishTerminate();
+        }
+    }
+
+    private function setChildrenTerminationReason(reason : Containers) : Bool {
+        return _children.setChildrenTerminationReason(reason);
+    }
+
+    private function finishTerminate() : Void {
+        var a = _actor;
+
+        if(AnyTypes.toBool(a)) a.postStop();
+        
+        //_dispatcher.detach(this);
+        _parent.sendSystemMessage(ChildTerminated(_self));
+        
+        if(AnyTypes.toBool(a)) {
+            //unwatchWatchedActors(a);
+            clearActorFields(a);
+
+            _actor = null;
+        }
+    }
+
+    private function clearActorFields(actor : Actor) : Void {
+        _actor._context = null;
+        _actor._self = null;
     }
 
     @:allow(funk.actors)
@@ -166,6 +223,10 @@ class ActorCell implements ActorContext {
     private function dispatcher() : Dispatcher return _dispatcher;
 }
 
+private enum Containers {
+    Normal;
+    Termination;
+}
 
 private class Children {
 
@@ -189,7 +250,21 @@ private class Children {
         }
     }
 
+    public function setChildrenTerminationReason(reason : Containers) : Bool {
+        // Return true on change
+        return switch(reason) {
+            case Termination if(Std.is(_container, NormalChildrenContainer)): 
+                var c : NormalChildrenContainer = cast _container;
+                _container = c.toTermination();
+                true;
+            case Termination if(_container.isTerminating()): false;
+            case _: false;
+        }
+    }
+
     public function actorOf(props : Props, name : String) : ActorRef return makeChild(_cell, props, checkName(name));
+
+    public function children() : List<ActorRef> return _container.children();
 
     private function attachChild(props : Props, name : String) : ActorRef {
         return makeChild(_cell, props, checkName(name));
@@ -274,9 +349,7 @@ private class NormalChildrenContainer implements ChildrenContainer {
         return new NormalChildrenContainer(_map);
     }
 
-    public function getByName(name : String) : Option<ChildStats> {
-        return _map.get(name);
-    }
+    public function getByName(name : String) : Option<ChildStats> return _map.get(name);
 
     public function getByRef(actor : ActorRef) : Option<ChildStats> {
         var opt = getByName(actor.path().name());
@@ -311,7 +384,101 @@ private class NormalChildrenContainer implements ChildrenContainer {
         } else this;
     }
 
+    public function toTermination() : TerminatingChildrenContainer return new TerminatingChildrenContainer(_map, true);
+
     public function isTerminating() : Bool return false;
 
     public function isNormal() : Bool return true;
+}
+
+private class TerminatingChildrenContainer implements ChildrenContainer {
+
+    private var _map : Map<String, ChildStats>;
+
+    private var _userRequest : Bool;
+
+    public function new(map : Map<String, ChildStats>, userRequest : Bool) {
+        _map = map;
+        _userRequest = userRequest;
+    }
+
+    public function add(name : String, child : ActorRef) : ChildrenContainer {
+        _map.add(name, ChildRestartStats(child));
+        return new TerminatingChildrenContainer(_map, _userRequest);
+    }
+
+    public function remove(child : ActorRef) : ChildrenContainer {
+        _map.remove(child.path().name());
+
+        return if (_map.isEmpty()) new TerminatedChildrenContainer();
+        else new TerminatingChildrenContainer(_map, _userRequest);
+    }
+
+    public function getByName(name : String) : Option<ChildStats> return _map.get(name);
+
+    public function getByRef(actor : ActorRef) : Option<ChildStats> {
+        var opt = getByName(actor.path().name());
+        return switch(opt) {
+            case Some(ChildNameReserved): None;
+            case Some(_): opt;
+            case _: None;
+        }
+    }
+
+    public function children() : List<ActorRef> {
+        var list = Nil;
+        for(i in _map.indices()) {
+            switch(getByName(i)) {
+                case Some(ChildRestartStats(child)): list = list.prepend(child);
+                case _:
+            }
+        }
+        return list;
+    }
+
+    public function reserve(name : String) : ChildrenContainer {
+        return Funk.error(ActorError('cannot reserve actor name ${name} already terminating'));
+    }
+
+    public function unreserve(name : String) : ChildrenContainer {
+        return if(_map.exists(name)) {
+            _map.remove(name);
+            new TerminatingChildrenContainer(_map, _userRequest);
+        } else this;
+    }
+
+    public function isTerminating() : Bool return true;
+
+    public function isNormal() : Bool return _userRequest;
+}
+
+private class TerminatedChildrenContainer implements ChildrenContainer {
+
+    public function new() {}
+
+    public function add(name : String, child : ActorRef) : ChildrenContainer {
+        return Funk.error(ActorError('cannot reserve actor name ${name} already terminated'));
+    }
+
+    public function remove(child : ActorRef) : ChildrenContainer {
+        return Funk.error(ActorError('cannot reserve actor name ${child.path().name()} already terminated'));
+    }
+
+    public function getByName(name : String) : Option<ChildStats> return None;
+
+    public function getByRef(actor : ActorRef) : Option<ChildStats> return None;
+
+    public function children() : List<ActorRef> return Nil;
+
+    public function reserve(name : String) : ChildrenContainer {
+        return Funk.error(ActorError('cannot reserve actor name ${name} already terminated'));
+    }
+
+    public function unreserve(name : String) : ChildrenContainer {
+        return Funk.error(ActorError('cannot reserve actor name ${name} already terminated'));
+    }
+
+    public function isTerminating() : Bool return true;
+
+    public function isNormal() : Bool return false;
 }
