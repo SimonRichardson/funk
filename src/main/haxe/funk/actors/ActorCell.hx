@@ -176,7 +176,7 @@ class ActorCell implements ActorContext {
     }
 
     private function systemTerminate() : Void {
-        // unwatchWatchActors(_actor)
+        unwatchWatchedActors(_actor);
 
         children().foreach(function(child) {
             if(Std.is(child, InternalActorRef)) {
@@ -205,7 +205,7 @@ class ActorCell implements ActorContext {
         _parent.sendSystemMessage(ChildTerminated(_self));
 
         if(AnyTypes.toBool(a)) {
-            //unwatchWatchedActors(a);
+            unwatchWatchedActors(a);
             clearActorFields(a);
 
             _actor = null;
@@ -242,6 +242,19 @@ class ActorCell implements ActorContext {
                     _watching = _watching.filterNot(function(child) return child == a);
                 }
             case _:
+        }
+    }
+
+    private function unwatchWatchedActors(actor : Actor) : Void {
+        if(!_watching.isEmpty()) {
+            _watching.foreach(function(a) {
+                if(Std.is(a, InternalActorRef)) {
+                    var watchee : InternalActorRef = cast a;
+                    watchee.sendSystemMessage(Unwatch(watchee, self()));
+                }
+            });
+
+            _watching = Nil;
         }
     }
 
