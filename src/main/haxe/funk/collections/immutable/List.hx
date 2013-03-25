@@ -540,7 +540,7 @@ class ListTypes {
         return appendAll(p, Cons(item, Nil));
     }
 
-    inline public static function appendAll<T>(list : List<T>, items : List<T>) : List<T> {
+    public static function appendAll<T>(list : List<T>, items : List<T>) : List<T> {
         var result = items;
         var p = list;
 
@@ -597,34 +597,26 @@ class ListTypes {
     }
 
     inline public static function head<T>(list : List<T>) : T {
-        var p = list;
-        return switch(p) {
+        return switch(list) {
+            case _ if(list == null): null;
             case Cons(head, _): head;
             case _: null;
         }
     }
 
     inline public static function headOption<T>(list : List<T>) : Option<T> {
-        var p = list;
-        var result : Option<T> = None;
-        if (p != null) {
-            result = switch(p) {
-                case Cons(head, _): Some(head);
-                case _: None;
-            }
+        return switch(list) {
+            case _ if(list == null): None;
+            case Cons(head, _): Some(head);
+            case _: None;
         }
-        return result;
     }
 
     inline public static function tail<T>(list : List<T>) : List<T> {
-        var p = list;
-        return if (null == p) {
-            null;
-        } else {
-            switch(p) {
-                case Cons(_, tail): tail;
-                case _: null;
-            }
+        return switch(list) {
+            case _ if(list == null): Nil;
+            case Cons(_, tail): tail;
+            case _: Nil;
         }
     }
 
@@ -640,7 +632,7 @@ class ListTypes {
         }
     }
 
-    inline public static function reverse<T>(list : List<T>) : List<T> {
+    public static function reverse<T>(list : List<T>) : List<T> {
         // Note (Simon) : We do it this way because as3 gets very confused about using.
         function recursive(p, stack) {
             return switch(p) {

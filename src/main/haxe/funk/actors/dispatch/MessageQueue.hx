@@ -4,8 +4,8 @@ import funk.actors.ActorRef;
 import funk.actors.dispatch.Envelope;
 import funk.actors.dispatch.SystemMessage;
 
-using funk.collections.immutable.List;
 using funk.types.Option;
+using funk.collections.immutable.List;
 
 interface MessageQueue {
 
@@ -51,7 +51,7 @@ private class UnboundedMessageQueue implements MessageQueue {
 
     public function dequeue() : Option<Envelope> {
         var head = _list.headOption();
-        _list = _list.tail();
+        _list = ListTypes.tail(_list);
         return head;
     }
 

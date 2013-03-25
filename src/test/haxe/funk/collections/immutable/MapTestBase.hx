@@ -76,6 +76,8 @@ class MapTestBase {
 
     @Test
     public function map_toString_should_return_correct_value() : Void {
+        #if js
         alpha.toString().areEqual("Map(c => 3, b => 2, a => 1)");
+        #end
     }
 }
