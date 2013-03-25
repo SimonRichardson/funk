@@ -18,6 +18,7 @@ import haxe.ds.StringMap;
 using funk.actors.dispatch.Envelope;
 using funk.types.Any;
 using funk.types.Option;
+using funk.collections.immutable.Map;
 using funk.collections.immutable.List;
 
 class ActorCell implements ActorContext {
@@ -175,7 +176,7 @@ private class Children {
     public function new(cell : ActorCell) {
         _cell = cell;
 
-        _container = new NormalChildrenContainer(new StringMap());
+        _container = new NormalChildrenContainer(Empty);
     }
 
     public function initChild(ref : ActorRef) : Option<ActorRef> {
@@ -257,14 +258,14 @@ private enum ChildStats {
 
 private class NormalChildrenContainer implements ChildrenContainer {
 
-    private var _map : StringMap<ChildStats>;
+    private var _map : Map<String, ChildStats>;
 
-    public function new(map : StringMap<ChildStats>) {
+    public function new(map : Map<String, ChildStats>) {
         _map = map;
     }
 
     public function add(name : String, child : ActorRef) : ChildrenContainer {
-        _map.set(name, ChildRestartStats(child));
+        _map.add(name, ChildRestartStats(child));
         return new NormalChildrenContainer(_map);
     }
 
@@ -274,7 +275,7 @@ private class NormalChildrenContainer implements ChildrenContainer {
     }
 
     public function getByName(name : String) : Option<ChildStats> {
-        return _map.exists(name) ? Some(_map.get(name)) : None;
+        return _map.get(name);
     }
 
     public function getByRef(actor : ActorRef) : Option<ChildStats> {
@@ -288,7 +289,7 @@ private class NormalChildrenContainer implements ChildrenContainer {
 
     public function children() : List<ActorRef> {
         var list = Nil;
-        for(i in _map.keys()) {
+        for(i in _map.indices()) {
             switch(getByName(i)) {
                 case Some(ChildRestartStats(child)): list = list.prepend(child);
                 case _:
@@ -299,7 +300,7 @@ private class NormalChildrenContainer implements ChildrenContainer {
 
     public function reserve(name : String) : ChildrenContainer {
         if(_map.exists(name)) Funk.error(ArgumentError('actor name $name is not unique!'));
-        _map.set(name, ChildNameReserved);
+        _map.add(name, ChildNameReserved);
         return new NormalChildrenContainer(_map);
     }
 

@@ -1,11 +1,13 @@
 package funk.collections.immutable;
 
+import funk.collections.Collection;
 import funk.collections.immutable.ListUtil;
 import funk.types.Any;
 import funk.types.Function1;
 import funk.types.Predicate1;
 import haxe.ds.ObjectMap;
 
+using funk.collections.immutable.List;
 using funk.types.Option;
 using funk.types.Tuple2;
 
@@ -103,10 +105,32 @@ class MapTypes {
         return !isEmpty(map);
     }
 
+    public static function collection<K : String, V>(map : Map<K, V>) : Collection<Tuple2<K, V>> {
+        return new MapInstanceImpl(map);
+    }
+
+    inline public static function iterable<K : String, V>(map : Map<K, V>) : Iterable<Tuple2<K, V>> {
+        return new MapInstanceImpl(map);
+    }
+
+    inline public static function iterator<K : String, V>(map : Map<K, V>) : Iterator<Tuple2<K, V>> {
+        return iterable(map).iterator();
+    }
+
     public static function toString<K : String, V>(map : Map<K, V>, ?func : Function1<Tuple2<K, V>, String>) : String {
         var p = map;
         return switch(p) {
-            case Node(_, _, _): 'Map';
+            case Node(_, _, _): 
+                var mappedFunc : Function1<Tuple2<K, V>, String> = AnyTypes.toBool(func) ? func : function(tuple) {
+                    return '${tuple._1()} => ${tuple._2()}';
+                };
+                var mapped : Collection<String> = CollectionTypes.map(collection(p), function(value) {
+                    return AnyTypes.toString(value, mappedFunc);
+                });
+                var folded : Option<String> = CollectionTypes.foldLeftWithIndex(mapped, '', function(a, b, index) {
+                    return index < 1 ? b : '$a, $b';
+                });
+                'Map(${folded.get()})';
             case _: 'Empty';
         }
     }
@@ -159,3 +183,51 @@ class MapTypes {
         }
     }
 }
+
+private class MapInstanceImpl<K : String, V> {
+
+    private var _list : List<Tuple2<K, V>>;
+
+    private var _knownSize : Bool;
+
+    private var _size : Int;
+
+    public function new(map : Map<K, V>) {
+        _list = Nil;
+
+        MapTypes.foreach(map, function(value) {
+            _list = _list.prepend(value);
+        });
+
+        _size = 0;
+        _knownSize = false;
+    }
+
+    public function iterator() : Iterator<Tuple2<K, V>> {
+        var list = _list;
+        return {
+            hasNext: function() return ListTypes.nonEmpty(list),
+            next: function() {
+                return if (ListTypes.nonEmpty(list)) {
+                    var value = ListTypes.head(list);
+                    list = ListTypes.tail(list);
+                    value;
+                } else {
+                    Funk.error(NoSuchElementError);
+                }
+            }
+        };
+    }
+
+    public function size() : Int {
+        if (_knownSize) {
+            return _size;
+        }
+
+        _size = ListTypes.size(_list);
+        _knownSize = true;
+
+        return _size;
+    }
+}
+
