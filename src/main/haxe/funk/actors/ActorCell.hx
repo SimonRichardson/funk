@@ -109,8 +109,8 @@ class ActorCell implements ActorContext {
             case Supervise(cell): systemSupervise(cell);
             case ChildTerminated(child): handleChildTerminated(child);
             case Terminate: systemTerminate();
-            case Watch(watchee, watcher): trace([watchee, watcher]); //HANDLE ME
-            case Unwatch(watchee, watcher): trace([watchee, watcher]); //HANDLE ME
+            case Watch(watchee, watcher): addWatcher(watchee, watcher);
+            case Unwatch(watchee, watcher): remWatcher(watchee, watcher);
         }
     }
 
@@ -256,6 +256,14 @@ class ActorCell implements ActorContext {
 
             _watching = Nil;
         }
+    }
+
+    private function addWatcher(watchee : ActorRef, watcher : ActorRef) : Void {
+
+    }
+
+    private function remWatcher(watchee : ActorRef, watcher : ActorRef) : Void {
+
     }
 
     @:allow(funk.actors)
