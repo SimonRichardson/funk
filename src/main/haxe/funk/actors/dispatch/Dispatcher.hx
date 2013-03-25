@@ -4,6 +4,7 @@ import funk.actors.ActorCell;
 import funk.actors.dispatch.Envelope;
 import funk.actors.dispatch.Mailbox;
 import funk.actors.dispatch.MessageQueue;
+import funk.actors.dispatch.SystemMessage;
 
 using funk.types.Option;
 using funk.collections.immutable.List;
@@ -13,6 +14,8 @@ interface Dispatcher {
     function createMailbox(actor : ActorCell) : Mailbox;
 
     function dispatch(actor : ActorCell, envelope : Envelope) : Void;
+
+    function systemDispatch(receiver : ActorCell, invocation : SystemMessage) : Void;
 
     function name() : String;
 
@@ -38,6 +41,12 @@ class MessageDispatcher implements Dispatcher {
     public function dispatch(receiver : ActorCell, invocation : Envelope) : Void {
         var mbox = receiver.mailbox();
         mbox.enqueue(receiver.self(), invocation);
+        registerForExecution(mbox);
+    }
+
+    public function systemDispatch(receiver : ActorCell, invocation : SystemMessage) : Void {
+        var mbox = receiver.mailbox();
+        mbox.systemEnqueue(receiver.self(), invocation);
         registerForExecution(mbox);
     }
 

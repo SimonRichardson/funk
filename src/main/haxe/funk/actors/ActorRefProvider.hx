@@ -21,7 +21,7 @@ interface ActorRefProvider {
 
     function actorOf(   system : ActorSystem,
                         props : Props,
-                        supervisor : ActorRef,
+                        supervisor : InternalActorRef,
                         path : ActorPath) : InternalActorRef;
 }
 
@@ -38,7 +38,7 @@ class LocalActorRefProvider implements ActorRefProvider {
 
     private var _system : ActorSystem;
 
-    private var _rootGuardian : ActorRef;
+    private var _rootGuardian : InternalActorRef;
 
     private var _guardian : ActorRef;
 
@@ -70,7 +70,7 @@ class LocalActorRefProvider implements ActorRefProvider {
 
     public function actorOf(   system : ActorSystem,
                                 props : Props,
-                                supervisor : ActorRef,
+                                supervisor : InternalActorRef,
                                 path : ActorPath) : InternalActorRef {
         var router = props.router();
         return switch(router) {
