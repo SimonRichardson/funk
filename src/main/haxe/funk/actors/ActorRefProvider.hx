@@ -99,8 +99,10 @@ class Guardian extends Actor {
                 var local : LocalActorMessage = cast value;
                 switch(local) {
                     case CreateChild(props, name):
-                        var s = sender();
-                        s.send(context().actorOf(props, name), s);
+                        switch(sender()) {
+                            case Some(s): s.send(context().actorOf(props, name), s);
+                            case _:
+                        }
                 }
         }
     }

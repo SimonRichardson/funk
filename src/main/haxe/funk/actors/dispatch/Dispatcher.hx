@@ -17,6 +17,8 @@ interface Dispatcher {
 
     function systemDispatch(receiver : ActorCell, invocation : SystemMessage) : Void;
 
+    function registerForExecution(mailbox : Mailbox, hasMessageHint: Bool, hasSystemMessageHint: Bool) : Void;
+
     function name() : String;
 
     function throughput() : Int;
@@ -41,20 +43,27 @@ class MessageDispatcher implements Dispatcher {
     public function dispatch(receiver : ActorCell, invocation : Envelope) : Void {
         var mbox = receiver.mailbox();
         mbox.enqueue(receiver.self(), invocation);
-        registerForExecution(mbox);
+        registerForExecution(mbox, true, false);
     }
 
     public function systemDispatch(receiver : ActorCell, invocation : SystemMessage) : Void {
         var mbox = receiver.mailbox();
         mbox.systemEnqueue(receiver.self(), invocation);
-        registerForExecution(mbox);
+        registerForExecution(mbox, false, true);
     }
 
     public function name() : String return _name;
 
-    private function registerForExecution(mailbox : Mailbox) : Void {
-        // TODO (Simon) : Use a process for this.
-        mailbox.run();
+    public function registerForExecution(mailbox : Mailbox, hasMessageHint: Bool, hasSystemMessageHint: Bool) : Void {
+        if (mailbox.canBeScheduledForExecution(hasMessageHint, hasSystemMessageHint)) {
+            if(mailbox.setAsScheduled()) {
+                try {
+                    mailbox.run();
+                } catch (e : Dynamic) {
+                    mailbox.setAsIdle();
+                }
+            }
+        }
     }
 
     public function throughput() : Int return 0;

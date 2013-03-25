@@ -6,10 +6,9 @@ import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
 using massive.munit.Assert;
-using funk.types.Option;
 using funk.types.Attempt;
 
-class ActorRefTest {
+class ActorTest {
 
     private var _system : ActorSystem;
 
@@ -22,24 +21,34 @@ class ActorRefTest {
     }
 
     @Test
-    public function calling_send_should_return_correct_sender() : Void {
-        _actor.send("Hello", _actor);
-        MockClass.Sender.areEqual(_actor);
+    public function calling_send_should_create_a_new_actorOf_which_is_not_null() : Void {
+        _actor.send(GetActorOf, _actor);
+        MockClass.Actor.isNotNull();
     }
+
+    @Test
+    public function calling_send_should_create_a_new_actorOf() : Void {
+        _actor.send(GetActorOf, _actor);
+        Std.is(MockClass.Actor, ActorRef).isTrue();
+    }
+}
+
+private enum Tests {
+    GetActorOf;
 }
 
 private class MockClass extends Actor {
 
-    public static var Sender : ActorRef = null;
+    public static var Actor : ActorRef = null;
 
     public function new() {
         super();
     }
 
     override public function receive(value : AnyRef) : Void {
-        Sender = switch(sender()) {
-            case Some(v): v;
-            case _: null;
+        var tests : Tests = cast value;
+        switch(tests) {
+            case GetActorOf: Actor = actorOf(new Props(MockClass), "test");
         }
     }
 }

@@ -36,7 +36,6 @@ class MapTypes {
     }
 
     public static function exists<K : String, V>(map : Map<K, V>, key : K) : Bool {
-        trace(key);
         return switch (map) {
             case Node(_, k, _) if(k == key): true;
             case Node(m, _, _): m.exists(key);
@@ -146,7 +145,6 @@ class MapTypes {
         for(i in map.keys()) {
             result.set(i, map.get(i));
         }
-        trace(result);
         return result;
     }
 

@@ -4,6 +4,7 @@ import massive.munit.TestSuite;
 
 import funk.actors.ActorRefTest;
 import funk.actors.ActorSystemTest;
+import funk.actors.ActorTest;
 import funk.actors.PropsTest;
 
 class ActorsSuite extends TestSuite {
@@ -13,6 +14,7 @@ class ActorsSuite extends TestSuite {
 
         add(funk.actors.ActorRefTest);
         add(funk.actors.ActorSystemTest);
+        add(funk.actors.ActorTest);
         add(funk.actors.PropsTest);
     }
 }

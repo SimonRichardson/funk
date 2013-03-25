@@ -15,6 +15,14 @@ using funk.types.Tuple2;
 @:keep
 class Mailbox implements MessageQueue implements SystemMessageQueue implements Runnable {
 
+    inline private static var Open : Int = 0;
+
+    inline private static var Suspended : Int = 1;
+
+    inline private static var Closed : Int = 2;
+
+    inline private static var Scheduled : Int = 4;
+
     private var _actor : ActorCell;
 
     private var _dispatcher : Dispatcher;
@@ -23,12 +31,16 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
 
     private var _systemMessageQueue : SystemMessageQueue;
 
+    private var _status : Int;
+
     public function new(actor : ActorCell, messageQueue : MessageQueue) {
         _actor = actor;
         _dispatcher = _actor.dispatcher();
         _messageQueue = messageQueue;
 
         _systemMessageQueue = new DefaultSystemMessageQueue();
+
+        _status = Open;
     }
 
     public function enqueue(receiver : ActorRef, envelope : Envelope) : Void _messageQueue.enqueue(receiver, envelope);
@@ -51,14 +63,17 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
 
     public function run() : Void {
         function finally() {
-
+            setAsIdle();
+            _dispatcher.registerForExecution(this, false, false);
         }
 
         try {
-            processAllSystemMessages();
+            if (!isClosed()) {
+                processAllSystemMessages();
 
-            var diff = Std.int(Process.stamp() + _dispatcher.throughputDeadlineTime());
-            processMailbox(Std.int(Math.max(_dispatcher.throughput(), 1)), diff);
+                var diff = Std.int(Process.stamp() + _dispatcher.throughputDeadlineTime());
+                processMailbox(Std.int(Math.max(_dispatcher.throughput(), 1)), diff);
+            }
         } catch(e : Dynamic) {
             finally();
 
@@ -70,8 +85,71 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
 
     public function name() : String return _dispatcher.name();
 
+    public function becomeOpen() : Bool {
+        return switch(_status) {
+            case _ if((_status & Closed) == Closed): 
+                _status = Closed; 
+                false;
+            case _: 
+                _status = Open | _status & Scheduled; 
+                true;
+        }
+    }
+
+    public function becomeSuspended() : Bool {
+        return switch(_status) {
+            case _ if((_status & Closed) == Closed): 
+                _status = Closed; 
+                false;
+            case _: 
+                _status = Suspended | _status & Scheduled; 
+                true;
+        }
+    }
+
+    public function becomeClosed() : Bool {
+        return switch(_status) {
+            case _ if((_status & Closed) == Closed):
+                _status = Closed; 
+                false;
+            case _: 
+                _status = Closed; 
+                true;
+        }
+    }
+
+    public function setAsScheduled() : Bool {
+        return switch(_status) {
+            case _ if((_status & Open) == Open):
+                _status = _status | Scheduled; 
+                true; 
+            case _: false;
+        }
+    }
+
+    public function setAsIdle() : Bool {
+        _status = _status & ~Scheduled;
+        return (_status & Scheduled) != Scheduled;
+    }
+
+    public function shouldProcessMessage() : Bool return (_status & Open) == Open;
+
+    public function isSuspended() : Bool return (_status & Suspended) == Suspended;
+
+    public function isClosed() : Bool return _status == Closed;
+
+    public function isScheduled() : Bool return (_status & Scheduled) != 0;
+
+    public function canBeScheduledForExecution(hasMessageHint : Bool, hasSystemMessageHint : Bool) : Bool {
+        return switch(_status) {
+            case _ if((_status & Open) == Open): hasMessageHint || hasSystemMessageHint || hasSystemMessages() || hasMessages();
+            case _ if((_status & Scheduled) == Scheduled): true;
+            case _: hasSystemMessageHint ||  hasSystemMessages();
+        }
+    }
+
     private function processAllSystemMessages() {
-        while(hasSystemMessages()) {
+        while(!isClosed() && hasSystemMessages()) {
             switch(systemDequeue()) {
                 case Some(msg): _actor.systemInvoke(msg);
                 case _:
@@ -80,17 +158,21 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
     }
 
     private function processMailbox(?left : Int = 1, ?deadlineNs : Int = 0) : Void {
-        switch(dequeue()) {
-            case Some(msg):
-                _actor.invoke(msg);
+        if (shouldProcessMessage()) {
+            switch(dequeue()) {
+                case Some(msg):
+                    _actor.invoke(msg);
 
-                processAllSystemMessages();
+                    processAllSystemMessages();
 
-                if (left > 1 &&
-                    ((_dispatcher.isThroughputDeadlineTimeDefined() == false) || (Process.stamp() - deadlineNs < 0))){
-                    processMailbox(left - 1, deadlineNs);
-                }
-            case _:
+                    if (left > 1 &&
+                        (   (_dispatcher.isThroughputDeadlineTimeDefined() == false) || 
+                            (Process.stamp() - deadlineNs < 0))
+                        ){
+                        processMailbox(left - 1, deadlineNs);
+                    }
+                case _:
+            }
         }
     }
 }
