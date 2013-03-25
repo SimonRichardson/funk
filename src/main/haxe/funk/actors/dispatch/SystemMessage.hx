@@ -9,4 +9,6 @@ enum SystemMessage {
     Supervise(cell : ActorRef);
     ChildTerminated(cell : ActorRef);
     Terminate;
+    Watch(watchee : ActorRef, watcher : ActorRef);
+    Unwatch(watchee : ActorRef, watcher : ActorRef);
 }

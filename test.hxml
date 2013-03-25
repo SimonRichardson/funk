@@ -20,6 +20,7 @@
 -debug
 -lib munit
 -lib hamcrest
+-D dump=pretty
 -D test
 -D net
 

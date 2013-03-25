@@ -43,6 +43,8 @@ class ActorCell implements ActorContext {
 
     private var _mailbox : Mailbox;
 
+    private var _watching : List<ActorRef>;
+
     public function new(system : ActorSystem, self : InternalActorRef, props : Props, parent : InternalActorRef) {
         _system = system;
         _self = self;
@@ -107,6 +109,8 @@ class ActorCell implements ActorContext {
             case Supervise(cell): systemSupervise(cell);
             case ChildTerminated(_): //HANDLE ME
             case Terminate: systemTerminate();
+            case Watch(watchee, watcher): trace([watchee, watcher]); //HANDLE ME
+            case Unwatch(watchee, watcher): trace([watchee, watcher]); //HANDLE ME
         }
     }
 
@@ -211,6 +215,30 @@ class ActorCell implements ActorContext {
     private function clearActorFields(actor : Actor) : Void {
         _actor._context = null;
         _actor._self = null;
+    }
+
+    private function watch(actor : ActorCell) : Void {
+        switch(actor) {
+            case _ if(Std.is(actor, InternalActorRef)):
+                var a : InternalActorRef = cast actor;
+                if(a != self() && !_watching.exists(function(child) return child == a)) {
+                    a.sendSystemMessage(Watch(a, self()));
+                    _watching = _watching.prepend(a);
+                }
+            case _:
+        }
+    }
+
+    private function unwatch(actor : ActorCell) : Void {
+        switch(actor) {
+            case _ if(Std.is(actor, InternalActorRef)):
+                var a : InternalActorRef = cast actor;
+                if(a != self() && _watching.exists(function(child) return child == a)) {
+                    a.sendSystemMessage(Unwatch(a, self()));
+                    _watching = _watching.filterNot(function(child) return child == a);
+                }
+            case _:
+        }
     }
 
     @:allow(funk.actors)
