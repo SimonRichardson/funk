@@ -11,6 +11,10 @@ using funk.collections.immutable.List;
 
 interface Dispatcher {
 
+    function attach(actor : ActorCell) : Void;
+
+    function detach(actor : ActorCell) : Void;
+
     function createMailbox(actor : ActorCell) : Mailbox;
 
     function dispatch(actor : ActorCell, envelope : Envelope) : Void;
@@ -32,12 +36,28 @@ class MessageDispatcher implements Dispatcher {
 
     private var _name : String;
 
+    private var _actors : List<ActorRef>;
+
+    private var _inhabitants : Int;
+
     public function new(name : String) {
         _name = name;
+        _actors = Nil;
+        _inhabitants = 0;
     }
 
     public function createMailbox(actor : ActorCell) : Mailbox {
         return new Mailbox(actor, MailboxMessageQueue.create(actor.toOption()));
+    }
+
+    public function attach(actor : ActorCell) : Void {
+        register(actor);
+        registerForExecution(actor.mailbox(), false, true);
+    }
+
+    public function detach(actor : ActorCell) : Void {
+        unregister(actor);
+        ifSensibleToDoSoThenScheduleShutdown();
     }
 
     public function dispatch(receiver : ActorCell, invocation : Envelope) : Void {
@@ -71,4 +91,33 @@ class MessageDispatcher implements Dispatcher {
     public function throughputDeadlineTime() : Int return 0;
 
     public function isThroughputDeadlineTimeDefined() : Bool return throughputDeadlineTime() > 0;
+
+    private function register(actor : ActorCell) : Void {
+        _actors = _actors.prepend(actor.self());
+        addInhabitants(1);
+    }
+
+    private function unregister(actor : ActorCell) : Void {
+        var self = actor.self();
+        _actors = _actors.filterNot(function(a) return a == self);
+        addInhabitants(-1);
+    }
+
+    private function addInhabitants(value : Int) : Void {
+        var r = _inhabitants + value;
+        if (r < 0) {
+            Funk.error(ActorError("ACTOR SYSTEM CORRUPTED!!! A dispatcher can't have less than 0 inhabitants!"));
+        }
+        _inhabitants = r;
+    }
+
+    private function ifSensibleToDoSoThenScheduleShutdown() : Void {
+        if (_inhabitants <= 0) {
+            shutdown();
+        }
+    }
+
+    private function shutdown() : Void {
+
+    }
 }

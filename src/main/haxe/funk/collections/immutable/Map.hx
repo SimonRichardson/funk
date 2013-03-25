@@ -5,7 +5,7 @@ import funk.collections.immutable.ListUtil;
 import funk.types.Any;
 import funk.types.Function1;
 import funk.types.Predicate1;
-import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 
 using funk.collections.immutable.List;
 using funk.types.Option;
@@ -22,9 +22,9 @@ enum Map<K : String, V> {
 class MapTypes {
 
     public static function add<K : String, V>(map : Map<K, V>, key : K, value : V) : Map<K, V> {
-        return nativeMap(map, key, value, function(m) { 
-            m.set(key, value); 
-            return m; 
+        return nativeMap(map, key, value, function(m) {
+            m.set(key, value);
+            return m;
         });
     }
 
@@ -72,7 +72,7 @@ class MapTypes {
         return ListUtil.toList(nativeKeys(map));
     }
 
-    public static function map<K1 : String, V1, K2 : String, V2>(   map : Map<K1, V1>, 
+    public static function map<K1 : String, V1, K2 : String, V2>(   map : Map<K1, V1>,
                                                                     func : Function1<Tuple2<K1, V1>, Tuple2<K2, V2>>
                                                                     ) : Map<K2, V2> {
         var result = Empty;
@@ -81,7 +81,7 @@ class MapTypes {
             result = add(result, f._1(), f._2());
         }
         return result;
-    }   
+    }
 
     public static function remove<K : String, V>(map : Map<K, V>, key : K) : Map<K, V> {
         var result = Empty;
@@ -119,7 +119,7 @@ class MapTypes {
     public static function toString<K : String, V>(map : Map<K, V>, ?func : Function1<Tuple2<K, V>, String>) : String {
         var p = map;
         return switch(p) {
-            case Node(_, _, _): 
+            case Node(_, _, _):
                 var mappedFunc : Function1<Tuple2<K, V>, String> = AnyTypes.toBool(func) ? func : function(tuple) {
                     return '${tuple._1()} => ${tuple._2()}';
                 };
@@ -157,7 +157,7 @@ class MapTypes {
 
     private static function nativeGet<K : String, V>(map : Map<K, V>, key : K) : V {
         return switch (map) {
-            case Node(m, _, _): 
+            case Node(m, _, _):
                 var v = m.get(key);
                 AnyTypes.toBool(v) ? v : Funk.error(NoSuchElementError);
             case _: Funk.error(NoSuchElementError);
@@ -174,7 +174,7 @@ class MapTypes {
                 var m = nativeClone(map);
                 m = func(m);
                 Node(m, key, value);
-            case _: 
+            case _:
                 var m = new StringMap();
                 m.set(key, value);
                 Node(m, key, value);

@@ -63,7 +63,7 @@ class ActorCell implements ActorContext {
     }
 
     public function start() : ActorContext {
-        //_dispatcher.attach(this);
+        _dispatcher.attach(this);
         return this;
     }
 
@@ -196,10 +196,10 @@ class ActorCell implements ActorContext {
         var a = _actor;
 
         if(AnyTypes.toBool(a)) a.postStop();
-        
-        //_dispatcher.detach(this);
+
+        _dispatcher.detach(this);
         _parent.sendSystemMessage(ChildTerminated(_self));
-        
+
         if(AnyTypes.toBool(a)) {
             //unwatchWatchedActors(a);
             clearActorFields(a);
@@ -253,7 +253,7 @@ private class Children {
     public function setChildrenTerminationReason(reason : Containers) : Bool {
         // Return true on change
         return switch(reason) {
-            case Termination if(Std.is(_container, NormalChildrenContainer)): 
+            case Termination if(Std.is(_container, NormalChildrenContainer)):
                 var c : NormalChildrenContainer = cast _container;
                 _container = c.toTermination();
                 true;
