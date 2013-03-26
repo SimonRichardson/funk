@@ -81,6 +81,8 @@ class ActorCell implements ActorContext {
 
     public function actorOf(props : Props, name : String) : ActorRef return _children.actorOf(props, name);
 
+    public function actorFor(name : String) : Option<ActorRef> return _children.actorFor(name);
+
     public function self() : InternalActorRef return _self;
 
     public function mailbox() : Mailbox return _mailbox;
@@ -329,6 +331,17 @@ private class Children {
     }
 
     public function actorOf(props : Props, name : String) : ActorRef return makeChild(_cell, props, checkName(name));
+
+    public function actorFor(name : String) : Option<ActorRef> {
+        return switch(_container) {
+            case _ if(Std.is(_container, TerminatedChildrenContainer)): None;
+            case _:
+                switch(_container.getByName(name)) {
+                    case Some(ChildRestartStats(a)): Some(a);
+                    case _: None;
+                }
+        }
+    }
 
     public function children() : List<ActorRef> return _container.children();
 

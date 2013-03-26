@@ -4,7 +4,8 @@ import funk.reactives.Stream;
 import funk.types.AnyRef;
 import funk.types.Option;
 
-class Rector {
+@:final
+class Rector extends Actor {
 
     private var _stream : Stream<AnyRef>;
 
@@ -12,7 +13,7 @@ class Rector {
         var stream = StreamTypes.indentity(None);
     }
 
-    public function react() : Stream<AnyRef> {
-        return _stream;
-    }
+    override public function receive(value : AnyRef) : Void stream.dispatch(value);
+
+    public function react() : Stream<AnyRef> return _stream;
 }

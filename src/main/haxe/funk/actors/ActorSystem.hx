@@ -47,6 +47,8 @@ class ActorSystem {
         return _provider.guardian().context().actorOf(props, name);
     }
 
+    public function actorFor(name : String) :Option<ActorRef> return _provider.guardian().context().actorFor(name);
+
     public function start() : ActorSystem {
         _provider.init(this);
         return this;

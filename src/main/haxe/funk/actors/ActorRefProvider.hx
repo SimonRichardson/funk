@@ -28,6 +28,8 @@ interface ActorRefProvider {
 interface ActorRefFactory {
 
     function actorOf(props : Props, name : String) : ActorRef;
+
+    function actorFor(name : String) : Option<ActorRef>;
 }
 
 enum LocalActorMessage {
