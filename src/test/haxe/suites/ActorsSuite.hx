@@ -8,6 +8,7 @@ import funk.actors.ActorTest;
 import funk.actors.PropsTest;
 import funk.actors.ReactorTest;
 import funk.actors.patterns.ActSupportTest;
+import funk.actors.patterns.AskSupportTest;
 
 class ActorsSuite extends TestSuite {
 
@@ -21,5 +22,6 @@ class ActorsSuite extends TestSuite {
         add(funk.actors.ReactorTest);
 
         add(funk.actors.patterns.ActSupportTest);
+        add(funk.actors.patterns.AskSupportTest);
     }
 }

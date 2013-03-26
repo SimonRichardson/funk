@@ -5,12 +5,16 @@ import funk.types.AnyRef;
 
 using funk.futures.Promise;
 
-interface AskSupport {
+class AskSupport {
 
-    function ask(value : AnyRef, sender : ActorRef) : Promise<AnyRef>;
+    public static function ask( actor : ActorRef, 
+                                value : AnyRef, 
+                                sender : ActorRef) : Promise<AnyRef> {
+        return PromiseTypes.empty();
+    }
 }
 
-class PromiseActorRef implements AskSupport {
+class PromiseActorRef {
 
     public function new() {
 
