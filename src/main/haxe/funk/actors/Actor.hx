@@ -50,4 +50,6 @@ class Actor implements ActorRef {
     public function sender() : Option<ActorRef> return _context.sender();
 
     public function context() : ActorContext return _context;
+
+    // Implement become
 }
