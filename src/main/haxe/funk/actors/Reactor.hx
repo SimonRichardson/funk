@@ -1,19 +1,27 @@
 package funk.actors;
 
-import funk.reactives.Stream;
 import funk.types.AnyRef;
 import funk.types.Option;
 
-@:final
-class Rector extends Actor {
+using funk.reactives.Stream;
+
+class Reactor extends Actor {
 
     private var _stream : Stream<AnyRef>;
 
-    public function new(actor : ActorRef) {
-        var stream = StreamTypes.indentity(None);
+    public function new() {
+        super();
+
+        _stream = StreamTypes.identity(None);
     }
 
-    override public function receive(value : AnyRef) : Void stream.dispatch(value);
+    @:final
+    override public function receive(value : AnyRef) : Void {
+        onReceive(value);
+        _stream.dispatch(value);
+    }
+
+    public function onReceive(value : AnyRef) : Void {}
 
     public function react() : Stream<AnyRef> return _stream;
 }

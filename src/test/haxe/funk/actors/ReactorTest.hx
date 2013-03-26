@@ -8,6 +8,7 @@ import massive.munit.util.Timer;
 using massive.munit.Assert;
 using funk.types.Option;
 using funk.types.Attempt;
+using funk.reactives.Stream;
 
 class ReactorTest {
 
@@ -22,14 +23,23 @@ class ReactorTest {
     }
 
     @Test
-    public function calling_send_should_return_correct_sender() : Void {
-        _actor.send("Hello", _actor);
+    public function calling_send_to_self_should_return_via_react() : Void {
+        var actual = 'nothing';
+        var expected = 'Hello';
+
+        _actor.send(expected, _actor);
+        
+        MockClass.Actual.areEqual(expected);
     }
 }
 
 private class MockClass extends Reactor {
 
+    public static var Actual : AnyRef;
+
     public function new() {
         super();
+
+        react().foreach(function(any) Actual = any);
     }
 }
