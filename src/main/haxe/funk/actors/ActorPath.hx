@@ -25,7 +25,7 @@ interface ActorPath {
 
 class ActorPathName {
 
-    public static var Regexp = new EReg("(?:[-\\w:@&=+,.!~*'_;]|%\\p{XDigit}{2})(?:[-\\w:@&=+,.!~*'$_;]|%\\p{XDigit}{2})*", "");
+    public static var NameRegexp = ~/^[a-zA-Z0-9\\_]+$/;
 }
 
 class RootActorPath implements ActorPath {

@@ -361,8 +361,8 @@ private class Children {
         return switch(name) {
             case _ if(name == null): Funk.error(ArgumentError("actor name must not be null"));
             case _ if(name == ""): Funk.error(ArgumentError("actor name must not be empty"));
-            case _ if(ActorPathName.Regexp.match(name)): name;
-            case _: name;//Funk.error(ArgumentError('illegal actor name "$name"'));
+            case _ if(ActorPathName.NameRegexp.match(name)): name;
+            case _: Funk.error(ArgumentError('illegal actor name "$name"'));
         }
     }
 
