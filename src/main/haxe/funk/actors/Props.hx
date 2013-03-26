@@ -45,7 +45,7 @@ class Props {
     }
 
     private function clone(overrides : AnyRef) : Props {
-        var o = !AnyTypes.toBool(overrides) ? overrides : {};
+        var o = AnyTypes.toBool(overrides) ? overrides : {};
 
         var props = new Props();
         props._router = Reflect.hasField(o, "router") ? Reflect.field(o, "router") : _router;
