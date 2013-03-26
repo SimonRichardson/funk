@@ -148,6 +148,8 @@ class Guardian extends Actor {
                 forwardToDeadLetters(DeadLetter(value, sender(), receiver));
         }
     }
+
+    override public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {}
 }
 
 class SystemGuardian extends Actor {
@@ -170,6 +172,8 @@ class SystemGuardian extends Actor {
                 forwardToDeadLetters(DeadLetter(value, sender(), receiver));
         }
     }
+
+    override public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {}
 }
 
 class DeadLetters extends Actor {
