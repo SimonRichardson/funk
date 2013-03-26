@@ -1,5 +1,6 @@
 package funk.actors.dispatch;
 
+import funk.actors.ActorRefProvider.DeadLetters;
 import funk.Funk;
 import funk.actors.dispatch.Envelope;
 import funk.actors.dispatch.SystemMessage;
@@ -7,6 +8,7 @@ import funk.actors.dispatch.MessageQueue;
 import funk.actors.Scheduler;
 import funk.reactives.Process;
 import funk.types.Any.AnyTypes;
+import funk.types.AnyRef;
 
 using funk.collections.immutable.List;
 using funk.types.Option;
@@ -149,10 +151,27 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
     }
 
     private function processAllSystemMessages() {
+        function dispatch(msg : AnyRef) {
+            _actor.system().eventStream().dispatch('Error while sending $msg to deadLetters');
+        }
+
         while(!isClosed() && hasSystemMessages()) {
             switch(systemDequeue()) {
                 case Some(msg): _actor.systemInvoke(msg);
-                case _:
+                case _: dispatch('Invalid system message');
+            }
+        }
+
+        while(hasSystemMessages()) {
+            switch (systemDequeue()) {
+                case Some(msg): 
+                    try {
+                        var letters = _actor.system().deadLetters();
+                        letters.send(msg, letters);
+                    } catch(e : Dynamic) {
+                        dispatch(msg);
+                    }
+                case _: dispatch('Invalid system message');
             }
         }
     }

@@ -3,6 +3,7 @@ package funk.actors;
 import funk.actors.ActorPath;
 import funk.actors.ActorRefProvider;
 import funk.actors.dispatch.Dispatchers;
+import funk.actors.event.EventStream;
 import funk.types.AnyRef;
 
 using funk.actors.ActorRef;
@@ -60,7 +61,11 @@ class ActorSystem {
 
     public function name() : String return _name;
 
+    public function deadLetters() : ActorRef return _provider.deadLetters();
+
     public function dispatchers() : Dispatchers return _dispatchers;
+
+    public function eventStream() : EventStream return _provider.eventStream();
 
     @:allow(funk.actors)
     private function provider() : ActorRefProvider return _provider;

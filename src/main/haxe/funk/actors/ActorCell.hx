@@ -89,11 +89,13 @@ class ActorCell implements ActorContext {
 
     public function children() : List<ActorRef> return _children.children();
 
+    public function system() : ActorSystem return _system;
+
     public function sender() : Option<ActorRef> {
         return switch (_currentMessage) {
-            case _ if(_currentMessage == null): None;
+            case _ if(_currentMessage == null): Some(_system.deadLetters());
             case _ if(AnyTypes.toBool(_currentMessage.sender())): Some(_currentMessage.sender());
-            case _: None;
+            case _: Some(_system.deadLetters());
         }
     }
 
@@ -267,9 +269,6 @@ class ActorCell implements ActorContext {
     private function remWatcher(watchee : ActorRef, watcher : ActorRef) : Void {
 
     }
-
-    @:allow(funk.actors)
-    private function system() : ActorSystem return _system;
 
     @:allow(funk.actors)
     private function provider() : ActorRefProvider return _system.provider();
