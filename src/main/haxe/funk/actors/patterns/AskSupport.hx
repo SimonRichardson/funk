@@ -5,6 +5,7 @@ import funk.actors.Props;
 import funk.futures.Deferred;
 import funk.types.AnyRef;
 import funk.types.Attempt;
+import funk.types.Pass;
 
 using funk.futures.Promise;
 
@@ -43,15 +44,17 @@ private class AskSupportRef extends Actor {
         _deferred = deferred;
     }
 
-    override public function recieve(value : AnyRef) : Void {
+    override public function receive(value : AnyRef) : Void {
+        function dispatch(attempt : Attempt<AnyRef>) {
+            switch(attempt){
+                case Success(v): _deferred.resolve(v);
+                case Failure(e): _deferred.reject(e);
+            }
+        }
+
         switch(Type.typeof(value)) {
-            case TEnum(e) if(e == Attempt || e == AttemptType):
-                var attempt : Attempt<AnyRef> = cast value;
-                switch(value){
-                    case Success(v): _deferred.resolve(v);
-                    case Failure(e): _deferred.reject(e);
-                    case _: _deferred.resolve(value);
-                }
+            case TEnum(e) if(e == AttemptType): dispatch(cast e);
+            case TClass(c) if(c == Attempt): dispatch(cast c);
             case _: _deferred.resolve(value);
         }
     }

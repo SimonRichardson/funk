@@ -23,11 +23,11 @@ class AskSupportTest {
     @Test
     public function calling_ask_support_will_call_ref() : Void {
         var actual = "nothing";
-        var expected = "ping";
+        var expected = "pong";
 
         var ref = _system.actorOf(new Props(MockClass), 'listener');
 
-        var promise = ref.ask(expected, ref);
+        var promise = ref.ask("ping", ref);
         promise.when(function(attempt) {
             switch(attempt) {
                 case Success(v): actual = v;
@@ -48,11 +48,8 @@ class MockClass extends Actor {
     override public function receive(value : AnyRef) : Void {
         var receiver = sender().getOrElse(function() return context().system().deadLetters());
 
-        trace(value);
-
         switch(value) {
             case _ if(value == 'ping'): receiver.send('pong', receiver);
-            case _ if(value == 'pong'): context().stop();
             case _: receiver.send(Failure(Error('Invalid message $value')), receiver);
         }
     }
