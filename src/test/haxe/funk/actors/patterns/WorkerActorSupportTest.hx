@@ -20,12 +20,10 @@ class WorkerActorSupportTest {
         _system = ActorSystem.create('system');
     }
 
-    @Test
-    public function calling_worker_support_will_call_ref() : Void {
-        var actual = "nothing";
-        var expected = 1222;
-
-        trace("here");
+    @AsyncTest
+    public function calling_worker_support_will_call_ref(asyncFactory : AsyncFactory) : Void {
+        var actual = -1;
+        var expected = 499500;
 
         var ref = _system.actorOf(new Props(MockClass), 'listener');
 
@@ -35,17 +33,27 @@ class WorkerActorSupportTest {
                 sum += i;
             }
             return sum;
-        }, {from:0, to:1000});
+        }, {from : 0, to : 1000});
+
+
+        var handler : Dynamic = asyncFactory.createHandler(this, function() {
+            #if js
+            actual.areEqual(expected);
+            #end
+        }, 300);
 
         promise.when(function(attempt) {
-            trace(attempt);
             switch(attempt) {
                 case Success(v): actual = v;
                 case _: Assert.fail("Failed if called");
             }
+
+            handler();
         });
 
-        actual.areEqual(expected);
+        #if !js
+        handler();
+        #end
     }
 }
 

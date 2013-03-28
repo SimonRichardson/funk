@@ -67,11 +67,12 @@ private class WorkerActorSupportRef extends Actor {
         function callable(args) {
             var func = ${origin};
             if (typeof func === "function") {
-                return func.apply(this, args);
+                return func.apply(this, [args]);
             }
         }
         onmessage = function(e) {
             postMessage(callable(e.data));
+            close();
         };
         ';
 
@@ -84,7 +85,8 @@ private class WorkerActorSupportRef extends Actor {
     }
 
     override public function receive(value : AnyRef) : Void {
-        var worker = untyped __js__('new Worker(_url)');
+        var url = this._url;
+        var worker = untyped __js__('new Worker(url)');
         worker.onmessage = function(e) {
             var data = e.data;
 
