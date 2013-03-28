@@ -9,9 +9,9 @@ using massive.munit.Assert;
 using funk.types.Option;
 using funk.types.Attempt;
 using funk.reactives.Stream;
-using funk.actors.patterns.AskSupport;
+using funk.actors.patterns.WorkerActorSupport;
 
-class AskSupportTest {
+class WorkerActorSupportTest {
 
     private var _system : ActorSystem;
 
@@ -21,14 +21,24 @@ class AskSupportTest {
     }
 
     @Test
-    public function calling_ask_support_will_call_ref() : Void {
+    public function calling_worker_support_will_call_ref() : Void {
         var actual = "nothing";
-        var expected = "pong";
+        var expected = 1222;
+
+        trace("here");
 
         var ref = _system.actorOf(new Props(MockClass), 'listener');
 
-        var promise = ref.ask("ping", ref);
+        var promise = ref.parallel(function(data : AnyRef) : AnyRef {
+            var sum : Int = 0;
+            for(i in data.from...data.to) {
+                sum += i;
+            }
+            return sum;
+        }, {from:0, to:1000});
+
         promise.when(function(attempt) {
+            trace(attempt);
             switch(attempt) {
                 case Success(v): actual = v;
                 case _: Assert.fail("Failed if called");
@@ -46,11 +56,7 @@ private class MockClass extends Actor {
     }
 
     override public function receive(value : AnyRef) : Void {
-        var receiver = sender().getOrElse(function() return context().system().deadLetters());
-
-        switch(value) {
-            case _ if(value == 'ping'): receiver.send('pong', receiver);
-            case _: receiver.send(Failure(Error('Invalid message $value')), receiver);
-        }
+        trace("WTF");
+        trace(value);
     }
 }
