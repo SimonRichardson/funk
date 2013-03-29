@@ -32,6 +32,8 @@ interface ActorRefProvider {
     function actorFor(path : List<String>) : Option<ActorRef>;
 
     function eventStream() : EventStream;
+
+    function settings() : Settings;
 }
 
 interface ActorRefFactory {
@@ -43,6 +45,17 @@ interface ActorRefFactory {
 
 enum LocalActorMessage {
     CreateChild(props : Props, name : String);
+}
+
+class Settings {
+
+    private var _serializeAllMessages : Bool;
+
+    public function new(serializeAllMessages : Bool = false) {
+        _serializeAllMessages = serializeAllMessages;
+    }
+
+    public function serializeAllMessages() : Bool return _serializeAllMessages;
 }
 
 class LocalActorRefProvider implements ActorRefProvider {
@@ -59,7 +72,10 @@ class LocalActorRefProvider implements ActorRefProvider {
 
     private var _eventStream : EventStream;
 
-    public function new() {
+    private var _settings : Settings;
+
+    public function new(?settings : Settings = null) {
+        _settings = AnyTypes.toBool(settings) ? settings : new Settings();
     }
 
     public function init(system : ActorSystem) : Void {
@@ -94,6 +110,8 @@ class LocalActorRefProvider implements ActorRefProvider {
 
     public function eventStream() : EventStream return _eventStream;
 
+    public function settings() : Settings return _settings;
+
     public function actorOf(    system : ActorSystem,
                                 props : Props,
                                 supervisor : InternalActorRef,
@@ -101,7 +119,9 @@ class LocalActorRefProvider implements ActorRefProvider {
         var router = props.router();
         return switch(router) {
             case _ if(Std.is(router, NoRouter)): new LocalActorRef(system, props, supervisor, path);
-            case _: Funk.error(ActorError("Missing implementation around routers"));
+            case _:
+                // TODO (Simon) : Work out if we need to fall-back onto a router if we can't locate it.
+                new RoutedActorRef(system, props, supervisor, path);
         }
     }
 
@@ -130,7 +150,7 @@ class Guardian extends Actor {
             var letters = cxt.system().deadLetters();
             letters.send(letter, letters);
         }
-        
+
         switch(value) {
             case _ if(Std.is(value, LocalActorMessage)):
                 var local : LocalActorMessage = cast value;
@@ -138,12 +158,12 @@ class Guardian extends Actor {
                     case CreateChild(props, name):
                         switch(sender()) {
                             case Some(s): s.send(cxt.actorOf(props, name), s);
-                            case _: 
+                            case _:
                                 var receiver : Option<ActorRef> = cast cxt.self().toOption();
                                 forwardToDeadLetters(DeadLetter(value, sender(), receiver));
                         }
                 }
-            case _: 
+            case _:
                 var receiver : Option<ActorRef> = cast cxt.self().toOption();
                 forwardToDeadLetters(DeadLetter(value, sender(), receiver));
         }
@@ -165,9 +185,9 @@ class SystemGuardian extends Actor {
             var letters = cxt.system().deadLetters();
             letters.send(letter, letters);
         }
-        
+
         switch(value) {
-            case _: 
+            case _:
                 var receiver : Option<ActorRef> = cast cxt.self().toOption();
                 forwardToDeadLetters(DeadLetter(value, sender(), receiver));
         }
@@ -189,7 +209,7 @@ class DeadLetters extends Actor {
         switch(value) {
             case _ if(value == null): Funk.error(ActorError("Message is null"));
             case _ if(value == DeadLetterMessage): eventStream.dispatch(value);
-            case _: 
+            case _:
                 var s = sender();
                 var receiver : Option<ActorRef> = cast cxt.self().toOption();
                 var origin : Option<ActorRef> = AnyTypes.toBool(s) ? s : receiver;

@@ -14,6 +14,8 @@ import funk.actors.ActorRefProvider;
 import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
 import haxe.ds.StringMap;
+import haxe.Serializer;
+import haxe.Unserializer;
 
 using funk.actors.dispatch.Envelope;
 using funk.types.Any;
@@ -21,7 +23,22 @@ using funk.types.Option;
 using funk.collections.immutable.Map;
 using funk.collections.immutable.List;
 
-class ActorCell implements ActorContext {
+interface Cell extends ActorContext {
+
+    function start() : ActorContext;
+
+    function stop() : ActorContext;
+
+    function send(msg : AnyRef, sender : ActorRef) : Void;
+
+    function sendMessage(message: AnyRef) : Void;
+
+    function sendSystemMessage(msg : SystemMessage) : Void;
+
+    function parent() : InternalActorRef;
+}
+
+class ActorCell implements Cell implements ActorContext {
 
     private var _uid : String;
 
@@ -91,6 +108,8 @@ class ActorCell implements ActorContext {
 
     public function system() : ActorSystem return _system;
 
+    public function parent() : InternalActorRef return _parent;
+
     public function sender() : Option<ActorRef> {
         return switch (_currentMessage) {
             case _ if(_currentMessage == null): Some(_system.deadLetters());
@@ -99,11 +118,28 @@ class ActorCell implements ActorContext {
         }
     }
 
+    public function sendMessage(message : Envelope) : Void {
+        try {
+            var msg = message.message();
+
+            // Note (Simon) : This be expensive, but good for thread safety (Share nothing)
+            if (_system.settings().serializeAllMessages()) {
+                msg = Unserializer.run(Serializer.run(msg));
+            }
+
+            _dispatcher.dispatch(this, msg);
+        } catch(e : Dynamic) {
+            // TODO (Simon) : handle with a log
+            throw e;
+        }
+    }
+
     public function sendSystemMessage(message : SystemMessage) : Void {
         try {
             _dispatcher.systemDispatch(this, message);
         } catch(e : Dynamic) {
-            // handle
+            // TODO (Simon) : handle with a log
+            throw e;
         }
     }
 

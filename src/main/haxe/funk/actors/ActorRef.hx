@@ -1,6 +1,8 @@
 package funk.actors;
 
+import funk.actors.ActorCell;
 import funk.actors.ActorSystem;
+import funk.actors.dispatch.Envelope;
 import funk.actors.dispatch.SystemMessage;
 import funk.actors.Props;
 import funk.Funk;
@@ -30,6 +32,8 @@ interface InternalActorRef extends ActorRef {
 
     function stop() : Void;
 
+    function sendMessage(message : Envelope) : Void;
+
     function sendSystemMessage(message : SystemMessage) : Void;
 }
 
@@ -43,7 +47,7 @@ class LocalActorRef implements InternalActorRef {
 
     private var _path : ActorPath;
 
-    private var _actorCell : ActorCell;
+    private var _actorCell : Cell;
 
     private var _actorContext : ActorContext;
 
@@ -53,10 +57,10 @@ class LocalActorRef implements InternalActorRef {
         _supervisor = supervisor;
         _path = path;
 
-        _actorCell = new ActorCell(system, this, props, supervisor);
-        _actorContext = _actorCell;
+        var cell = newCell();
 
-        _actorCell.init(ActorSystem.UniqueId);
+        _actorCell = cell;
+        _actorContext = cell;
     }
 
     public function start() : Void _actorCell.start();
@@ -69,6 +73,8 @@ class LocalActorRef implements InternalActorRef {
 
     public function actorFor(name : String) : Option<ActorRef> return _actorCell.actorFor(name);
 
+    public function sendMessage(message : Envelope) : Void _actorCell.sendMessage(message);
+
     public function sendSystemMessage(message : SystemMessage) : Void _actorCell.sendSystemMessage(message);
 
     public function path() : ActorPath return _path;
@@ -76,6 +82,13 @@ class LocalActorRef implements InternalActorRef {
     public function name() : String return path().name();
 
     public function context() : ActorContext return _actorContext;
+
+    private function newCell() : Cell {
+        var actorCell = new ActorCell(_system, this, _props, _supervisor);
+        actorCell.init(ActorSystem.UniqueId);
+
+        return actorCell;
+    }
 }
 
 class EmptyActorRef implements InternalActorRef {
@@ -94,6 +107,8 @@ class EmptyActorRef implements InternalActorRef {
     public function stop() : Void {}
 
     public function send(msg : AnyRef, sender : ActorRef) : Void {}
+
+    public function sendMessage(message : Envelope) : Void {};
 
     public function sendSystemMessage(message : SystemMessage) : Void {}
 

@@ -67,6 +67,8 @@ class ActorSystem {
 
     public function eventStream() : EventStream return _provider.eventStream();
 
+    public function settings() : Settings return _provider.settings();
+
     @:allow(funk.actors)
     private function provider() : ActorRefProvider return _provider;
 }
