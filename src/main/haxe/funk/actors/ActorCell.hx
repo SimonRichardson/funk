@@ -31,7 +31,7 @@ interface Cell extends ActorContext {
 
     function send(msg : AnyRef, sender : ActorRef) : Void;
 
-    function sendMessage(message: AnyRef) : Void;
+    function sendMessage(message : Envelope) : Void;
 
     function sendSystemMessage(msg : SystemMessage) : Void;
 
@@ -165,7 +165,7 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     private function autoReceiveMessage(message : Envelope) : Void {
-
+        // TODO (Simon) : Work on auto received messages.
     }
 
     private function receiveMessage(message : AnyRef) : Void {

@@ -40,27 +40,30 @@ class RoutedActorCellCreator implements Creator {
     public function new() {
     }
 
-    public function create() : Actor return null;//Pass.instanceOf(RoutedActorCell)();
+    public function create() : Actor return Pass.instanceOf(Router)();
 }
 
-class Router {
+class Router extends Actor {
 
     public function new() {
-        //super();
+        super();
     }
 
-    /*
     override public function receive(value : AnyRef) : Void {
 
     }
 
     override public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {}
-    */
 }
 
-class NoRouter extends Router {
+interface RouterConfig {
 
-    public function new() {
-        super();
-    }
+    function createRoute() : Router;
+}
+
+class NoRouter implements RouterConfig {
+
+    public function new() {}
+
+    public function createRoute() : Router return Funk.error(ActorError("NoRouter does not createRoute"));
 }

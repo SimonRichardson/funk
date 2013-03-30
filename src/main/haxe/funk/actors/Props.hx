@@ -14,7 +14,7 @@ interface Creator {
 
 class Props {
 
-    private var _router : Router;
+    private var _router : RouterConfig;
 
     private var _creator : Creator;
 
@@ -30,7 +30,7 @@ class Props {
 
     public function dispatcher() : String return _dispatcher;
 
-    public function router() : Router return _router;
+    public function router() : RouterConfig return _router;
 
     public function withCreator<T>(creator : Creator) : Props {
         return clone({creator: creator});
@@ -40,7 +40,7 @@ class Props {
         return clone({dispatcher: dispatcher});
     }
 
-    public function withRouter(router : Router) : Props {
+    public function withRouter(router : RouterConfig) : Props {
         return clone({router: router});
     }
 
