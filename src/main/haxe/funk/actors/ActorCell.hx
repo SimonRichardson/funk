@@ -235,7 +235,9 @@ class ActorCell implements Cell implements ActorContext {
     private function systemSupervise(child : ActorRef) : Void {
         switch(_children.initChild(child)) {
             case Some(_): // TODO
-            case _: Funk.error(ActorError('received Supervise from unregistered child $child, this will not end well'));
+            case _:
+                trace('received Supervise from unregistered child "${child.path()}", this will not end well');
+                //Funk.error(ActorError('received Supervise from unregistered child $child, this will not end well'));
         }
     }
 
@@ -384,13 +386,9 @@ private class Children {
         return makeChild(_cell, props, checkName(name));
     }
 
-    private function reserveChild(name : String) : Void {
-        _container = _container.reserve(name);
-    }
+    private function reserveChild(name : String) : Void _container = _container.reserve(name);
 
-    private function unreserveChild(name : String) : Void {
-        _container = _container.unreserve(name);
-    }
+    private function unreserveChild(name : String) : Void _container = _container.unreserve(name);
 
     private function checkName(name : String) : String {
         return switch(name) {
@@ -454,13 +452,13 @@ private class NormalChildrenContainer implements ChildrenContainer {
     }
 
     public function add(name : String, child : ActorRef) : ChildrenContainer {
-        _map.add(name, ChildRestartStats(child));
-        return new NormalChildrenContainer(_map);
+        var map = _map.add(name, ChildRestartStats(child));
+        return new NormalChildrenContainer(map);
     }
 
     public function remove(child : ActorRef) : ChildrenContainer {
-        _map.remove(child.path().name());
-        return new NormalChildrenContainer(_map);
+        var map = _map.remove(child.path().name());
+        return new NormalChildrenContainer(map);
     }
 
     public function getByName(name : String) : Option<ChildStats> return _map.get(name);
@@ -487,14 +485,14 @@ private class NormalChildrenContainer implements ChildrenContainer {
 
     public function reserve(name : String) : ChildrenContainer {
         if(_map.exists(name)) Funk.error(ArgumentError('actor name $name is not unique!'));
-        _map.add(name, ChildNameReserved);
-        return new NormalChildrenContainer(_map);
+        var map = _map.add(name, ChildNameReserved);
+        return new NormalChildrenContainer(map);
     }
 
     public function unreserve(name : String) : ChildrenContainer {
         return if(_map.exists(name)) {
-            _map.remove(name);
-            new NormalChildrenContainer(_map);
+            var map = _map.remove(name);
+            new NormalChildrenContainer(map);
         } else this;
     }
 
@@ -517,15 +515,15 @@ private class TerminatingChildrenContainer implements ChildrenContainer {
     }
 
     public function add(name : String, child : ActorRef) : ChildrenContainer {
-        _map.add(name, ChildRestartStats(child));
-        return new TerminatingChildrenContainer(_map, _userRequest);
+        var map = _map.add(name, ChildRestartStats(child));
+        return new TerminatingChildrenContainer(map, _userRequest);
     }
 
     public function remove(child : ActorRef) : ChildrenContainer {
-        _map.remove(child.path().name());
+        var map = _map.remove(child.path().name());
 
-        return if (_map.isEmpty()) new TerminatedChildrenContainer();
-        else new TerminatingChildrenContainer(_map, _userRequest);
+        return if (map.isEmpty()) new TerminatedChildrenContainer();
+        else new TerminatingChildrenContainer(map, _userRequest);
     }
 
     public function getByName(name : String) : Option<ChildStats> return _map.get(name);
@@ -556,8 +554,8 @@ private class TerminatingChildrenContainer implements ChildrenContainer {
 
     public function unreserve(name : String) : ChildrenContainer {
         return if(_map.exists(name)) {
-            _map.remove(name);
-            new TerminatingChildrenContainer(_map, _userRequest);
+            var map = _map.remove(name);
+            new TerminatingChildrenContainer(map, _userRequest);
         } else this;
     }
 
