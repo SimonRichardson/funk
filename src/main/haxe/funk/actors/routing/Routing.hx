@@ -2,6 +2,7 @@ package funk.actors.routing;
 
 import funk.Funk;
 import funk.actors.Props;
+import funk.actors.Actor;
 import funk.actors.ActorCell;
 import funk.actors.ActorRef;
 import funk.actors.ActorRefProvider;
@@ -10,6 +11,7 @@ import funk.types.AnyRef;
 import funk.types.Pass;
 
 using funk.types.Option;
+using funk.collections.immutable.List;
 
 class RoutedActorRef extends LocalActorRef {
 
@@ -27,12 +29,29 @@ class RoutedActorRef extends LocalActorRef {
 
 class RoutedActorCell extends ActorCell {
 
+    private var _routees : List<ActorRef>;
+
     public function new(system : ActorSystem, self : InternalActorRef, props : Props, parent : InternalActorRef) {
         super(system, self, props
                             .withCreator(new RoutedActorCellCreator())
                             .withDispatcher(Dispatchers.DefaultDispatcherId),
                             parent);
+        _routees = Nil;
     }
+
+    public function addRoutees(routees : List<ActorRef>) : Void {
+        _routees = _routees.prependAll(routees);
+        routees.foreach(function(routee) watch(routee));
+    }
+
+    public function removeRoutees(routees : List<ActorRef>) : Void {
+        _routees = routees.foldLeft(_routees, function(xs, x) {
+            unwatch(x);
+            return xs.filterNot(function(v) return v == x);
+        }).get();
+    }
+
+    public function routees() : List<ActorRef> return _routees;
 }
 
 class RoutedActorCellCreator implements Creator {
@@ -45,12 +64,28 @@ class RoutedActorCellCreator implements Creator {
 
 class Router extends Actor {
 
+    private var _ref : RoutedActorCell;
+
     public function new() {
         super();
+
+        var c = context();
+        _ref = switch(c) {
+            case _ if(Std.is(c, RoutedActorCell)): cast c;
+            case _: Funk.error(ActorError('Router actor can only be used in RoutedActorRef, not in ${c}'));
+        }
     }
 
     override public function receive(value : AnyRef) : Void {
-
+        switch(value) {
+            case _ if(Std.is(value, ActorMessages)):
+                var actorMsg : ActorMessages = cast value;
+                switch(actorMsg) {
+                    case Terminated(child):
+                        _ref.removeRoutees(Nil.prepend(child));
+                        if(_ref.routees().isEmpty()) context().stop();
+                }
+        }
     }
 
     override public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {}
@@ -59,6 +94,8 @@ class Router extends Actor {
 interface RouterConfig {
 
     function createRoute() : Router;
+
+    function createActor() : Actor;
 }
 
 class NoRouter implements RouterConfig {
@@ -66,4 +103,6 @@ class NoRouter implements RouterConfig {
     public function new() {}
 
     public function createRoute() : Router return Funk.error(ActorError("NoRouter does not createRoute"));
+
+    public function createActor() : Actor return Funk.error(ActorError("NoRouter does not createActor"));
 }

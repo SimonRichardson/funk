@@ -298,7 +298,10 @@ class ListTypes {
         return result;
     }
 
-    inline public static function foldLeft<T>(list : List<T>, value : T, func : Function2<T, T, T>) : Option<T> {
+    inline public static function foldLeft<T1, T2>( list : List<T1>,
+                                                    value : T2,
+                                                    func : Function2<T2, T1, T2>
+                                                    ) : Option<T2> {
         var p = list;
         while (nonEmpty(p)) {
             value = func(value, head(p));
@@ -307,7 +310,10 @@ class ListTypes {
         return Some(value);
     }
 
-    inline public static function foldRight<T>(list : List<T>, value : T, func : Function2<T, T, T>) : Option<T> {
+    inline public static function foldRight<T1, T2>(    list : List<T1>,
+                                                        value : T2,
+                                                        func : Function2<T2, T1, T2>
+                                                        ) : Option<T2> {
         var p = list;
         p = reverse(p);
         while (nonEmpty(p)) {

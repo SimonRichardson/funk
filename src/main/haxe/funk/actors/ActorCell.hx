@@ -118,6 +118,30 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
+    public function watch(actor : ActorRef) : Void {
+        switch(actor) {
+            case _ if(Std.is(actor, InternalActorRef)):
+                var a : InternalActorRef = cast actor;
+                if(a != self() && !_watching.exists(function(child) return child == a)) {
+                    a.sendSystemMessage(Watch(a, self()));
+                    _watching = _watching.prepend(a);
+                }
+            case _:
+        }
+    }
+
+    public function unwatch(actor : ActorRef) : Void {
+        switch(actor) {
+            case _ if(Std.is(actor, InternalActorRef)):
+                var a : InternalActorRef = cast actor;
+                if(a != self() && _watching.exists(function(child) return child == a)) {
+                    a.sendSystemMessage(Unwatch(a, self()));
+                    _watching = _watching.filterNot(function(child) return child == a);
+                }
+            case _:
+        }
+    }
+
     public function sendMessage(message : Envelope) : Void {
         try {
             var msg = message.message();
@@ -259,30 +283,6 @@ class ActorCell implements Cell implements ActorContext {
 
     private function handleChildTerminated(child : ActorRef) : Void {
         _children.removeChild(child);
-    }
-
-    private function watch(actor : ActorCell) : Void {
-        switch(actor) {
-            case _ if(Std.is(actor, InternalActorRef)):
-                var a : InternalActorRef = cast actor;
-                if(a != self() && !_watching.exists(function(child) return child == a)) {
-                    a.sendSystemMessage(Watch(a, self()));
-                    _watching = _watching.prepend(a);
-                }
-            case _:
-        }
-    }
-
-    private function unwatch(actor : ActorCell) : Void {
-        switch(actor) {
-            case _ if(Std.is(actor, InternalActorRef)):
-                var a : InternalActorRef = cast actor;
-                if(a != self() && _watching.exists(function(child) return child == a)) {
-                    a.sendSystemMessage(Unwatch(a, self()));
-                    _watching = _watching.filterNot(function(child) return child == a);
-                }
-            case _:
-        }
     }
 
     private function unwatchWatchedActors(actor : Actor) : Void {

@@ -8,6 +8,10 @@ using funk.types.AnyRef;
 using funk.types.Option;
 using funk.collections.immutable.List;
 
+enum ActorMessages {
+    Terminated(child : ActorRef);
+}
+
 class Actor implements ActorRef {
 
     @:allow(funk.actors.ActorCell)
