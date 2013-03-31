@@ -384,12 +384,12 @@ private class Children {
         return makeChild(_cell, props, checkName(name));
     }
 
-    private function reserveChild(cell : ActorCell) : Void {
-        _container = _container.reserve(cell.self().path().name());
+    private function reserveChild(name : String) : Void {
+        _container = _container.reserve(name);
     }
 
-    private function unreserveChild(cell : ActorCell) : Void {
-        _container = _container.unreserve(cell.self().path().name());
+    private function unreserveChild(name : String) : Void {
+        _container = _container.unreserve(name);
     }
 
     private function checkName(name : String) : String {
@@ -402,14 +402,14 @@ private class Children {
     }
 
     private function makeChild(cell : ActorCell, props : Props, name : String) : ActorRef {
-        reserveChild(cell);
+        reserveChild(name);
 
         var actor = try {
             var provider = cell.provider();
             var self = cell.self();
             provider.actorOf(cell.system(), props, self, self.path().child(name));
         } catch(e : Dynamic) {
-            unreserveChild(cell);
+            unreserveChild(name);
             throw e;
         }
 
