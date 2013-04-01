@@ -10,6 +10,7 @@ import funk.actors.dispatch.Dispatchers;
 import funk.types.AnyRef;
 import funk.types.Function2;
 import funk.types.Pass;
+import funk.types.extensions.Strings;
 
 using funk.actors.routing.Destination;
 using funk.actors.routing.RouterEnvelope;
@@ -30,7 +31,7 @@ class RoutedActorRef extends LocalActorRef {
 
     override private function newCell() : Cell {
         var actorCell = new RoutedActorCell(_system, this, _props, _supervisor);
-        actorCell.init(ActorSystem.UniqueId);
+        actorCell.init(Strings.uuid());
 
         return actorCell;
     }

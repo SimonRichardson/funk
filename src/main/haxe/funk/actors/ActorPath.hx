@@ -25,7 +25,7 @@ interface ActorPath {
 
 class ActorPathName {
 
-    public static var NameRegexp = ~/^[a-zA-Z0-9\\_]+$/;
+    public static var NameRegexp = ~/^[a-zA-Z0-9\\_\\-]+$/;
 }
 
 class RootActorPath implements ActorPath {

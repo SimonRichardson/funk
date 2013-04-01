@@ -15,10 +15,6 @@ using funk.types.Lazy;
 
 class ActorSystem {
 
-    public static var UniqueId(get_UniqueId, never) : String;
-
-    private static var _uniqueId : Int = 0;
-
     private var _name : String;
 
     private var _isTerminated : Bool;
@@ -41,8 +37,6 @@ class ActorSystem {
         var system = new ActorSystem(name, provider);
         return system.start();
     }
-
-    private static function get_UniqueId() : String return 'id${_uniqueId++}';
 
     public function actorOf(props : Props, name : String) : ActorRef {
         return _provider.guardian().context().actorOf(props, name);

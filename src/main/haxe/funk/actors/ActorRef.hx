@@ -6,6 +6,7 @@ import funk.actors.dispatch.Envelope;
 import funk.actors.dispatch.SystemMessage;
 import funk.actors.Props;
 import funk.Funk;
+import funk.types.extensions.Strings;
 
 using funk.futures.Promise;
 using funk.types.AnyRef;
@@ -88,7 +89,7 @@ class LocalActorRef implements InternalActorRef {
 
     private function newCell() : Cell {
         var actorCell = new ActorCell(_system, this, _props, _supervisor);
-        actorCell.init(ActorSystem.UniqueId);
+        actorCell.init(Strings.uuid());
 
         return actorCell;
     }

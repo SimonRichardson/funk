@@ -6,16 +6,11 @@ import funk.futures.Deferred;
 import funk.types.AnyRef;
 import funk.types.Attempt;
 import funk.types.Pass;
+import funk.types.extensions.Strings;
 
 using funk.futures.Promise;
 
 class AskSupport {
-
-    private static var UniqueId(get_UniqueId, never) : Int;
-
-    private static var _uniqueId : Int = 0;
-
-    private static function get_UniqueId() : Int return _uniqueId++;
 
     public static function ask( actor : ActorRef,
                                 value : AnyRef,
@@ -24,7 +19,7 @@ class AskSupport {
         var promise = deferred.promise();
 
         var system = actor.context().system();
-        var name = '${actor.name()}_promise_${UniqueId}';
+        var name = '${actor.name()}_promise_${Strings.uuid()}';
         var creator = new AskSupportRefCreator(deferred);
         var askRef = system.actorOf(new Props().withCreator(creator), name);
 
