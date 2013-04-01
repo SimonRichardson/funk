@@ -313,6 +313,12 @@ class ActorCell implements Cell implements ActorContext {
 
     @:allow(funk.actors)
     private function dispatcher() : Dispatcher return _dispatcher;
+
+    @:allow(funk.actors)
+    private function reserveChild(name : String) : Void _children.reserveChild(name);
+
+    @:allow(funk.actors)
+    private function unreserveChild(name : String) : Void _children.unreserveChild(name);
 }
 
 private enum Containers {
@@ -386,8 +392,10 @@ private class Children {
         return makeChild(_cell, props, checkName(name));
     }
 
+    @:allow(funk.actors)
     private function reserveChild(name : String) : Void _container = _container.reserve(name);
 
+    @:allow(funk.actors)
     private function unreserveChild(name : String) : Void _container = _container.unreserve(name);
 
     private function checkName(name : String) : String {

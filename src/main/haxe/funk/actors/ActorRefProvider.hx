@@ -94,7 +94,14 @@ class LocalActorRefProvider implements ActorRefProvider {
 
         var rootRef = new RootGuardianActorRef(this, rootActorPath);
 
-        _rootGuardian = new LocalActorRef(system, guardianProps, rootRef, rootActorPath);
+        var rootGuardian = new LocalActorRef(system, guardianProps, rootRef, rootActorPath);
+
+        var rootCell = rootGuardian.underlying();
+        rootCell.reserveChild(guardianActorPath.name());
+        rootCell.reserveChild(systemActorPath.name());
+        rootCell.reserveChild(deadLettersActorPath.name());
+
+        _rootGuardian = rootGuardian;
 
         _deadLetters = actorOf(system, deadLettersProps, _rootGuardian, deadLettersActorPath);
 
