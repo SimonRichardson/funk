@@ -8,10 +8,19 @@ import funk.actors.ActorRef;
 import funk.actors.ActorRefProvider;
 import funk.actors.dispatch.Dispatchers;
 import funk.types.AnyRef;
+import funk.types.Function2;
 import funk.types.Pass;
 
+using funk.actors.routing.Destination;
+using funk.actors.routing.RouterEnvelope;
 using funk.types.Option;
 using funk.collections.immutable.List;
+
+typedef Route = Function2<ActorRef, AnyRef, List<Destination>>;
+
+enum RouterRoutees {
+    RouterRoutees(routees : List<ActorRef>);
+}
 
 class RoutedActorRef extends LocalActorRef {
 
@@ -93,16 +102,24 @@ class Router extends Actor {
 
 interface RouterConfig {
 
-    function createRoute() : Router;
+    function createRoute(routeeProvider : RouteeProvider) : Route;
 
     function createActor() : Actor;
+
+    function createRouteeProvider(context : ActorContext, routeeProps : Props) : RouteeProvider;
 }
 
 class NoRouter implements RouterConfig {
 
     public function new() {}
 
-    public function createRoute() : Router return Funk.error(ActorError("NoRouter does not createRoute"));
+    public function createRoute(routeeProvider : RouteeProvider) : Route {
+        return Funk.error(ActorError("NoRouter does not createRoute"));
+    }
 
     public function createActor() : Actor return Funk.error(ActorError("NoRouter does not createActor"));
+
+    public function createRouteeProvider(context : ActorContext, routeeProps : Props) : RouteeProvider {
+        return Funk.error(ActorError("NoRouter does not createRouteeProvider"));
+    }
 }

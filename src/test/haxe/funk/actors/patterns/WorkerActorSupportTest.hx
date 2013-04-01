@@ -13,6 +13,8 @@ using funk.actors.patterns.WorkerActorSupport;
 
 class WorkerActorSupportTest {
 
+    inline public static var TIMEOUT : Int = 500;
+
     private var _system : ActorSystem;
 
     @Before
@@ -38,7 +40,7 @@ class WorkerActorSupportTest {
 
         var handler : Dynamic = asyncFactory.createHandler(this, function() {
             actual.areEqual(expected);
-        }, 300);
+        }, TIMEOUT);
 
         promise.when(function(attempt) {
             switch(attempt) {

@@ -8,6 +8,7 @@ import funk.Funk;
 import funk.actors.ActorSystem;
 import funk.actors.ActorPath;
 import funk.actors.ActorRef;
+import funk.actors.routing.RoundRobinRouter;
 import funk.actors.routing.Routing;
 import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
@@ -128,7 +129,10 @@ class LocalActorRefProvider implements ActorRefProvider {
             case _ if(Std.is(router, NoRouter)): new LocalActorRef(system, props, supervisor, path);
             case _:
                 // TODO (Simon) : Work out if we need to fall-back onto a router if we can't locate it.
-                new RoutedActorRef(system, props, supervisor, path);
+                // TODO (Simon) : Make this configurable
+                var nrOfInstances = 8;
+                var routedProps = props.withRouter(new RoundRobinRouter(nrOfInstances));
+                new RoutedActorRef(system, routedProps, supervisor, path);
         }
     }
 
