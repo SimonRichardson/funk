@@ -1,5 +1,7 @@
 package funk.actors.routing;
 
+import funk.actors.dispatch.Envelope;
+import funk.actors.routing.Destination;
 import funk.Funk;
 import funk.actors.Props;
 import funk.actors.Actor;
@@ -12,8 +14,8 @@ import funk.types.Function2;
 import funk.types.Pass;
 import funk.types.extensions.Strings;
 
+using funk.actors.dispatch.Envelope;
 using funk.actors.routing.Destination;
-using funk.actors.routing.RouterEnvelope;
 using funk.types.Option;
 using funk.collections.immutable.List;
 
@@ -41,12 +43,28 @@ class RoutedActorCell extends ActorCell {
 
     private var _routees : List<ActorRef>;
 
+    private var _route : Route;
+
+    private var _routeeProvider : RouteeProvider;
+
     public function new(system : ActorSystem, self : InternalActorRef, props : Props, parent : InternalActorRef) {
         super(system, self, props
                             .withCreator(new RoutedActorCellCreator())
                             .withDispatcher(Dispatchers.DefaultDispatcherId),
                             parent);
         _routees = Nil;
+
+        var routerConfig = _props.router();
+
+        _routeeProvider = routerConfig.createRouteeProvider(this, props.withRouter(new NoRouter()));
+        _route = routerConfig.createRoute(_routeeProvider);
+    }
+
+    public function applyRoute(sender : ActorRef, message : AnyRef) : List<Destination> {
+        return switch(message) {
+            case _ if (_route.isDefinedAt(sender, msg)): _route(sender, message);
+            case _: Nil;
+        }
     }
 
     public function addRoutees(routees : List<ActorRef>) : Void {
@@ -61,7 +79,35 @@ class RoutedActorCell extends ActorCell {
         }).get();
     }
 
+    override public function sendMessage(msg : Envelope) : Void {
+        var message : Envelope = switch (msg) {
+            case RouterEnvelope(wrapped, _) if(Std.is(wrapped, Envelope)): wrapped.message();
+            case _: msg;
+        };
+
+        var destinations = applyRoute(msg.sender(), msg.message());
+
+        // Note (Simon) : Haxe issue.
+        // We have to do it this way, as we're not allowed to call the super in a local function.
+        while(destinations.nonEmpty()) {
+            var dest = destinations.head();
+
+            switch(dest) {
+                case Destination(_, s) if(s == self()): super.sendMessage(message);
+                case Destination(sender, recipient):
+                    // TODO (Simon) : Resize?
+                    recipient.send(message, sender);
+            }
+
+            destinations = destinations.tail();
+        }
+    }
+
     public function routees() : List<ActorRef> return _routees;
+
+    public function routeeProvider() : RouteeProvider return _routeeProvider;
+
+    private function routerConfig() : RouterConfig return _props.router();
 }
 
 class RoutedActorCellCreator implements Creator {
