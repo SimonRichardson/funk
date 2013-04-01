@@ -2,6 +2,8 @@ package funk.types.extensions;
 
 import funk.Funk;
 
+using StringTools;
+
 class Strings {
 
     public static function isEmpty(value : String) : Bool {
@@ -67,5 +69,14 @@ class Strings {
                 }
             }
         };
+    }
+
+    public static function uuid(value : String = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx') : String {
+        var reg = ~/[xy]/g;
+        return reg.map(value, function(reg) {
+            var r = Std.int(Math.random() * 16) | 0;
+            var v = reg.matched(0) == 'x' ? r : (r & 0x3 | 0x8);
+            return v.hex();
+        }).toLowerCase();
     }
 }

@@ -18,6 +18,7 @@ import funk.types.Predicate3Test;
 import funk.types.Predicate4Test;
 import funk.types.Predicate5Test;
 import funk.types.SelectorTest;
+import funk.types.StringsTest;
 import funk.types.Tuple1Test;
 import funk.types.Tuple2Test;
 import funk.types.Tuple3Test;
@@ -52,6 +53,8 @@ class TypesSuite extends TestSuite {
         add(funk.types.Predicate5Test);
 
         add(funk.types.SelectorTest);
+
+        add(funk.types.StringsTest);
 
         add(funk.types.Tuple1Test);
         add(funk.types.Tuple2Test);
