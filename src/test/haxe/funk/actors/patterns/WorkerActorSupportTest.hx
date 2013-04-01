@@ -37,9 +37,7 @@ class WorkerActorSupportTest {
 
 
         var handler : Dynamic = asyncFactory.createHandler(this, function() {
-            #if js
             actual.areEqual(expected);
-            #end
         }, 300);
 
         promise.when(function(attempt) {
@@ -50,10 +48,6 @@ class WorkerActorSupportTest {
 
             handler();
         });
-
-        #if !js
-        handler();
-        #end
     }
 }
 

@@ -38,6 +38,8 @@ class WorkerActorSupport {
         var workerRef = system.actorOf(new Props().withCreator(creator), name);
 
         workerRef.send(value, actor);
+        #else
+        deferred.resolve(func(value));
         #end
 
         return promise;
