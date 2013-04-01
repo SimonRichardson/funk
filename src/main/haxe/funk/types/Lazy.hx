@@ -8,15 +8,13 @@ typedef Lazy<T> = Function0<T>;
 class Lazys {
 
     public static function lazy<R>(func : Lazy<R>) : Function0<R> {
-        var value : Option<R> = None;
+        var value : R = null;
 
         return function() {
-            return switch(value) {
-                case Some(value): value;
-                case _:
-                    value = Some(func());
-                    value.get();
-            };
+            if (value == null) {
+                value = func();
+            }
+            return value;
         };
     }
 }
