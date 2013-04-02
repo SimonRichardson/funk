@@ -9,6 +9,7 @@ import funk.actors.ActorCell;
 import funk.actors.ActorRef;
 import funk.actors.ActorRefProvider;
 import funk.actors.dispatch.Dispatchers;
+import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
 import funk.types.Function2;
 import funk.types.Pass;
@@ -62,7 +63,7 @@ class RoutedActorCell extends ActorCell {
 
     public function applyRoute(sender : ActorRef, message : AnyRef) : List<Destination> {
         return switch(message) {
-            case _ if (_route.isDefinedAt(sender, msg)): _route(sender, message);
+            case _ if (AnyTypes.toBool(sender) && AnyTypes.toBool(message)): _route(sender, message);
             case _: Nil;
         }
     }
