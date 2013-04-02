@@ -32,12 +32,7 @@ class RoutedActorRef extends LocalActorRef {
         super(system, props, supervisor, path);
     }
 
-    override private function newCell() : Cell {
-        var actorCell = new RoutedActorCell(_system, this, _props, _supervisor);
-        actorCell.init(Strings.uuid());
-
-        return actorCell;
-    }
+    override private function newCell() : Cell return new RoutedActorCell(_system, this, _props, _supervisor);
 }
 
 class RoutedActorCell extends ActorCell {
@@ -54,10 +49,14 @@ class RoutedActorCell extends ActorCell {
                             .withDispatcher(Dispatchers.DefaultDispatcherId),
                             parent);
         _routees = Nil;
+    }
+
+    override public function init(uid : String) : Void {
+        super.init(uid);
 
         var routerConfig = _props.router();
 
-        _routeeProvider = routerConfig.createRouteeProvider(this, props.withRouter(new NoRouter()));
+        _routeeProvider = routerConfig.createRouteeProvider(this, _props.withRouter(new NoRouter()));
         _route = routerConfig.createRoute(_routeeProvider);
     }
 

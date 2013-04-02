@@ -25,6 +25,8 @@ using funk.collections.immutable.List;
 
 interface Cell extends ActorContext {
 
+    function init(uid : String) : Void;
+
     function start() : ActorContext;
 
     function stop() : ActorContext;

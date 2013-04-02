@@ -40,6 +40,8 @@ interface InternalActorRef extends ActorRef {
 
 class LocalActorRef implements InternalActorRef {
 
+    private var _uid : String;
+
     private var _system : ActorSystem;
 
     private var _props : Props;
@@ -58,10 +60,14 @@ class LocalActorRef implements InternalActorRef {
         _supervisor = supervisor;
         _path = path;
 
+        _uid = Strings.uuid();
+
         var cell = newCell();
 
         _actorCell = cell;
         _actorContext = cell;
+
+        _actorCell.init(Strings.uuid());
     }
 
     public function start() : Void _actorCell.start();
@@ -87,12 +93,7 @@ class LocalActorRef implements InternalActorRef {
     @:allow(funk.actors)
     private function underlying() : ActorCell return cast _actorCell;
 
-    private function newCell() : Cell {
-        var actorCell = new ActorCell(_system, this, _props, _supervisor);
-        actorCell.init(Strings.uuid());
-
-        return actorCell;
-    }
+    private function newCell() : Cell return new ActorCell(_system, this, _props, _supervisor);
 }
 
 class EmptyActorRef implements InternalActorRef {
