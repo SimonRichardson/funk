@@ -1,5 +1,6 @@
 package funk;
 
+import haxe.CallStack;
 import haxe.PosInfos;
 
 enum Errors {
@@ -47,13 +48,14 @@ class Funk {
             case TypeError(msg):
                 msg == null ? 'Type error was thrown' : msg;
         }
-        
+
         #if debug
-        trace(message);
+        trace('Message : ${message}, Position : ${posInfo}');
+        trace('CallStack : ${CallStack.toString(CallStack.callStack())}');
         #end
 
         throw message;
-        
+
         return null;
     }
 
