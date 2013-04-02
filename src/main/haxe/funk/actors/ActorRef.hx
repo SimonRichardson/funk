@@ -67,7 +67,7 @@ class LocalActorRef implements InternalActorRef {
         _actorCell = cell;
         _actorContext = cell;
 
-        _actorCell.init(Strings.uuid());
+        initCell();
     }
 
     public function start() : Void _actorCell.start();
@@ -94,6 +94,8 @@ class LocalActorRef implements InternalActorRef {
     private function underlying() : ActorCell return cast _actorCell;
 
     private function newCell() : Cell return new ActorCell(_system, this, _props, _supervisor);
+
+    private function initCell() : Void _actorCell.init(Strings.uuid());
 }
 
 class EmptyActorRef implements InternalActorRef {

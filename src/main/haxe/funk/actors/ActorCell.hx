@@ -25,7 +25,7 @@ using funk.collections.immutable.List;
 
 interface Cell extends ActorContext {
 
-    function init(uid : String) : Void;
+    function init(uid : String, ?sendSupervise : Bool = true) : Void;
 
     function start() : ActorContext;
 
@@ -70,17 +70,21 @@ class ActorCell implements Cell implements ActorContext {
         _props = props;
         _parent = parent;
 
+        _watching = Nil;
+
         _children = new Children(this);
     }
 
-    public function init(uid : String) : Void {
+    public function init(uid : String, ?sendSupervise : Bool = true) : Void {
         var dispatchers = _system.dispatchers();
         _dispatcher = dispatchers.find(_props.dispatcher());
 
         _mailbox = _dispatcher.createMailbox(this);
         _mailbox.systemEnqueue(_self, Create(uid));
 
-        _parent.sendSystemMessage(Supervise(_self));
+        if (sendSupervise) {
+            _parent.sendSystemMessage(Supervise(_self));
+        }
     }
 
     public function start() : ActorContext {
@@ -202,6 +206,10 @@ class ActorCell implements Cell implements ActorContext {
     private function newActor() : Actor {
         ActorContextInjector.pushContext(this);
 
+        function finally() {
+            ActorContextInjector.popContext();            
+        }
+
         var instance = null;
         try {
             var creator = _props.creator();
@@ -210,10 +218,11 @@ class ActorCell implements Cell implements ActorContext {
                 Funk.error(ActorError("Actor instance passed to actorOf can't be 'null'"));
             }
         } catch(e : Dynamic) {
+            finally();
             throw e;
         }
 
-        ActorContextInjector.popContext();
+        finally();
 
         return instance;
     }
@@ -239,7 +248,7 @@ class ActorCell implements Cell implements ActorContext {
             case Some(_): // TODO
             case _:
                 trace('received Supervise from unregistered child "${child.path()}", this will not end well');
-                //Funk.error(ActorError('received Supervise from unregistered child $child, this will not end well'));
+                Funk.error(ActorError('received Supervise from unregistered child $child, this will not end well'));
         }
     }
 
