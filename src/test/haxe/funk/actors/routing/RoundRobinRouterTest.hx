@@ -30,5 +30,7 @@ private class MockClass extends Actor {
 
     public function new() {
         super();
+
+        trace("HERE");
     }
 }

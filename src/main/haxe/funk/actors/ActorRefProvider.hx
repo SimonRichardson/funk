@@ -130,9 +130,9 @@ class LocalActorRefProvider implements ActorRefProvider {
             case _:
                 // TODO (Simon) : Work out if we need to fall-back onto a router if we can't locate it.
                 // TODO (Simon) : Make this configurable
-                var nrOfInstances = 2;
-                var routedProps = props.withRouter(new RoundRobinRouter(nrOfInstances));
-                new RoutedActorRef(system, routedProps, supervisor, path);
+                //var nrOfInstances = 2;
+                //var routedProps = props.withRouter(new RoundRobinRouter(nrOfInstances));
+                new RoutedActorRef(system, props, supervisor, path);
         }
     }
 
