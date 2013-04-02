@@ -47,7 +47,13 @@ class Funk {
             case TypeError(msg):
                 msg == null ? 'Type error was thrown' : msg;
         }
+        
+        #if debug
+        trace(message);
+        #end
+
         throw message;
+        
         return null;
     }
 

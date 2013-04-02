@@ -5,6 +5,7 @@ import funk.actors.ActorContext;
 import funk.actors.Props;
 import funk.actors.routing.Routing;
 import funk.collections.immutable.ListUtil;
+import funk.types.extensions.Strings;
 
 using funk.types.Option;
 using funk.collections.immutable.List;
@@ -31,7 +32,11 @@ class RouteeProvider {
     public function createRoutees(nrOfInstances : Int) : Void {
         if (nrOfInstances <= 0) {
             Funk.error(ArgumentError('Must specify nrOfInstances or routees for ${_context.self().path()}'));
-        } else registerRoutees(ListUtil.fill(nrOfInstances)(function() return _context.actorOf(_routeeProps, '')));
+        } else {
+            registerRoutees(ListUtil.fill(nrOfInstances)(function() {
+                return _context.actorOf(_routeeProps, Strings.uuid());
+            }));
+        }
     }
 
     public function removeRoutees(nrOfInstances : Int) : Void {
