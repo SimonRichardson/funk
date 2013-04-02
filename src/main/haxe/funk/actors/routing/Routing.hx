@@ -1,6 +1,6 @@
 package funk.actors.routing;
 
-import funk.actors.dispatch.Envelope;
+import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.routing.Destination;
 import funk.Funk;
 import funk.actors.Props;
@@ -15,7 +15,7 @@ import funk.types.Function2;
 import funk.types.Pass;
 import funk.types.extensions.Strings;
 
-using funk.actors.dispatch.Envelope;
+using funk.actors.dispatch.EnvelopeMessage;
 using funk.actors.routing.Destination;
 using funk.types.Option;
 using funk.collections.immutable.List;
@@ -85,9 +85,13 @@ class RoutedActorCell extends ActorCell {
         }).get();
     }
 
-    override public function sendMessage(msg : Envelope) : Void {
-        var message : Envelope = switch (msg) {
-            case RouterEnvelope(wrapped, _) if(Std.is(wrapped, Envelope)): wrapped.message();
+    override public function sendMessage(msg : EnvelopeMessage) : Void {
+        var message : EnvelopeMessage = switch (msg) {
+            case RouterEnvelope(routerMessage, _):
+                switch(Type.typeof(routerMessage)) {
+                    case TEnum(e) if(e == EnvelopeMessage): routerMessage;
+                    case _: msg;
+                }
             case _: msg;
         };
 

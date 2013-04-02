@@ -4,7 +4,7 @@ import funk.types.AnyRef;
 
 using funk.Funk;
 
-enum Envelope {
+enum EnvelopeMessage {
     Envelope(message : AnyRef, sender : ActorRef);
     RouterEnvelope(message : AnyRef, sender : ActorRef);
     Broadcast(message : AnyRef);
@@ -12,7 +12,7 @@ enum Envelope {
 
 class EnvelopeTypes {
 
-    public static function message(envelope : Envelope) : AnyRef {
+    public static function message(envelope : EnvelopeMessage) : AnyRef {
         return switch (envelope) {
             case Envelope(message, _): message;
             case RouterEnvelope(message, _): message;
@@ -20,7 +20,7 @@ class EnvelopeTypes {
         }
     }
 
-    public static function sender(envelope : Envelope) : ActorRef {
+    public static function sender(envelope : EnvelopeMessage) : ActorRef {
         return switch (envelope) {
             case Envelope(_, sender): sender;
             case RouterEnvelope(_, sender): sender;

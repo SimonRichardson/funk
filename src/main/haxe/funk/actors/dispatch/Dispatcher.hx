@@ -1,7 +1,7 @@
 package funk.actors.dispatch;
 
 import funk.actors.ActorCell;
-import funk.actors.dispatch.Envelope;
+import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.dispatch.Mailbox;
 import funk.actors.dispatch.MessageQueue;
 import funk.actors.dispatch.SystemMessage;
@@ -17,7 +17,7 @@ interface Dispatcher {
 
     function createMailbox(actor : ActorCell) : Mailbox;
 
-    function dispatch(actor : ActorCell, envelope : Envelope) : Void;
+    function dispatch(actor : ActorCell, envelope : EnvelopeMessage) : Void;
 
     function systemDispatch(receiver : ActorCell, invocation : SystemMessage) : Void;
 
@@ -60,7 +60,7 @@ class MessageDispatcher implements Dispatcher {
         ifSensibleToDoSoThenScheduleShutdown();
     }
 
-    public function dispatch(receiver : ActorCell, invocation : Envelope) : Void {
+    public function dispatch(receiver : ActorCell, invocation : EnvelopeMessage) : Void {
         var mbox = receiver.mailbox();
         mbox.enqueue(receiver.self(), invocation);
         registerForExecution(mbox, true, false);

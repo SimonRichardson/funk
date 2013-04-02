@@ -1,7 +1,7 @@
 package funk.actors.dispatch;
 
 import funk.actors.ActorRef;
-import funk.actors.dispatch.Envelope;
+import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.dispatch.SystemMessage;
 
 using funk.types.Option;
@@ -9,9 +9,9 @@ using funk.collections.immutable.List;
 
 interface MessageQueue {
 
-  function enqueue(receiver : ActorRef, handle : Envelope) : Void;
+  function enqueue(receiver : ActorRef, handle : EnvelopeMessage) : Void;
 
-  function dequeue() : Option<Envelope>;
+  function dequeue() : Option<EnvelopeMessage>;
 
   function numberOfMessages() : Int;
 
@@ -41,15 +41,15 @@ class MailboxMessageQueue {
 
 private class UnboundedMessageQueue implements MessageQueue {
 
-    private var _list : List<Envelope>;
+    private var _list : List<EnvelopeMessage>;
 
     public function new() {
         _list = Nil;
     }
 
-    public function enqueue(receiver : ActorRef, handle : Envelope) : Void _list = _list.append(handle);
+    public function enqueue(receiver : ActorRef, handle : EnvelopeMessage) : Void _list = _list.append(handle);
 
-    public function dequeue() : Option<Envelope> {
+    public function dequeue() : Option<EnvelopeMessage> {
         var head = _list.headOption();
         _list = ListTypes.tail(_list);
         return head;

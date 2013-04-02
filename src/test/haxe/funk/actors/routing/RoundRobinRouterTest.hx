@@ -1,7 +1,7 @@
 package funk.actors.routing;
 
 import funk.actors.ActorSystem;
-import funk.actors.dispatch.Envelope;
+import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.routing.RoundRobinRouter;
 import funk.types.AnyRef;
 import funk.types.extensions.Strings;
@@ -27,6 +27,7 @@ class RoundRobinRouterTest {
         actor.send('Hello', actor);
         actor.send('Hello', actor);
         actor.send('Hello', actor);
+        actor.send(Broadcast('world'), actor);
     }
 }
 

@@ -1,7 +1,6 @@
 package funk.actors;
 
 import funk.actors.dispatch.Dispatcher;
-import funk.actors.dispatch.Envelope;
 import funk.actors.dispatch.SystemMessage;
 import funk.Funk;
 import funk.actors.dispatch.Mailbox;
@@ -17,7 +16,7 @@ import haxe.ds.StringMap;
 import haxe.Serializer;
 import haxe.Unserializer;
 
-using funk.actors.dispatch.Envelope;
+using funk.actors.dispatch.EnvelopeMessage;
 using funk.types.Any;
 using funk.types.Option;
 using funk.collections.immutable.Map;
@@ -31,7 +30,7 @@ interface Cell extends ActorContext {
 
     function stop() : ActorContext;
 
-    function sendMessage(msg : Envelope) : Void;
+    function sendMessage(msg : EnvelopeMessage) : Void;
 
     function sendSystemMessage(msg : SystemMessage) : Void;
 
@@ -56,7 +55,7 @@ class ActorCell implements Cell implements ActorContext {
 
     private var _dispatcher : Dispatcher;
 
-    private var _currentMessage : Envelope;
+    private var _currentMessage : EnvelopeMessage;
 
     private var _mailbox : Mailbox;
 
@@ -141,7 +140,7 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
-    public function sendMessage(envelope : Envelope) : Void {
+    public function sendMessage(envelope : EnvelopeMessage) : Void {
         try {
             // Note (Simon) : This be expensive, but good for thread safety (Share nothing)
             var msg = envelope.message();
@@ -177,7 +176,7 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
-    public function invoke(message : Envelope) : Void {
+    public function invoke(message : EnvelopeMessage) : Void {
         _currentMessage = message;
         var msg : AnyRef = message.message();
         switch(msg) {
@@ -187,7 +186,7 @@ class ActorCell implements Cell implements ActorContext {
         _currentMessage = null;
     }
 
-    private function autoReceiveMessage(message : Envelope) : Void {
+    private function autoReceiveMessage(message : EnvelopeMessage) : Void {
         // TODO (Simon) : Work on auto received messages.
     }
 

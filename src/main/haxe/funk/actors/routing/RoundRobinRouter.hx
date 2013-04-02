@@ -1,12 +1,13 @@
 package funk.actors.routing;
 
+import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.routing.Destination;
 import funk.actors.routing.RouteeProvider;
 import funk.actors.routing.Routing;
 import funk.types.AnyRef;
 
 using funk.types.Option;
-using funk.actors.dispatch.Envelope;
+using funk.actors.dispatch.EnvelopeMessage;
 using funk.collections.immutable.List;
 
 class RoundRobinRouter implements RouterConfig {
@@ -43,14 +44,14 @@ class RoundRobinRouter implements RouterConfig {
         }
 
         return function(sender : ActorRef, message : AnyRef) : List<Destination> {
-            return switch(message) {
-              case _ if(Std.is(message, Envelope)):
-                var envelope : Envelope = cast message;
-                switch(envelope) {
-                    case Broadcast(_): toAll(sender, routeeProvider.routees());
-                    case _: createDestinations(sender);
-                }
-              case _: createDestinations(sender);
+            return switch (Type.typeof(message)) {
+                case TEnum(e) if (e == EnvelopeMessage):
+                    var envelope : EnvelopeMessage = cast message;
+                    switch(envelope) {
+                        case Broadcast(_): toAll(sender, routeeProvider.routees());
+                        case _: createDestinations(sender);
+                    }
+                case _: createDestinations(sender);
             }
         };
     }

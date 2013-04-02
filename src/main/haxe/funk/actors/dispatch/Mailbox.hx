@@ -2,7 +2,7 @@ package funk.actors.dispatch;
 
 import funk.actors.ActorRefProvider.DeadLetters;
 import funk.Funk;
-import funk.actors.dispatch.Envelope;
+import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.dispatch.SystemMessage;
 import funk.actors.dispatch.MessageQueue;
 import funk.actors.Scheduler;
@@ -45,9 +45,11 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
         _status = Open;
     }
 
-    public function enqueue(receiver : ActorRef, envelope : Envelope) : Void _messageQueue.enqueue(receiver, envelope);
+    public function enqueue(receiver : ActorRef, envelope : EnvelopeMessage) : Void {
+        _messageQueue.enqueue(receiver, envelope);
+    }
 
-    public function dequeue() : Option<Envelope> return _messageQueue.dequeue();
+    public function dequeue() : Option<EnvelopeMessage> return _messageQueue.dequeue();
 
     public function numberOfMessages() : Int return _messageQueue.numberOfMessages();
 
@@ -89,22 +91,22 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
 
     public function becomeOpen() : Bool {
         return switch(_status) {
-            case _ if((_status & Closed) == Closed): 
-                _status = Closed; 
+            case _ if((_status & Closed) == Closed):
+                _status = Closed;
                 false;
-            case _: 
-                _status = Open | _status & Scheduled; 
+            case _:
+                _status = Open | _status & Scheduled;
                 true;
         }
     }
 
     public function becomeSuspended() : Bool {
         return switch(_status) {
-            case _ if((_status & Closed) == Closed): 
-                _status = Closed; 
+            case _ if((_status & Closed) == Closed):
+                _status = Closed;
                 false;
-            case _: 
-                _status = Suspended | _status & Scheduled; 
+            case _:
+                _status = Suspended | _status & Scheduled;
                 true;
         }
     }
@@ -112,10 +114,10 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
     public function becomeClosed() : Bool {
         return switch(_status) {
             case _ if((_status & Closed) == Closed):
-                _status = Closed; 
+                _status = Closed;
                 false;
-            case _: 
-                _status = Closed; 
+            case _:
+                _status = Closed;
                 true;
         }
     }
@@ -123,8 +125,8 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
     public function setAsScheduled() : Bool {
         return switch(_status) {
             case _ if((_status & Open) == Open):
-                _status = _status | Scheduled; 
-                true; 
+                _status = _status | Scheduled;
+                true;
             case _: false;
         }
     }
@@ -164,7 +166,7 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
 
         while(hasSystemMessages()) {
             switch (systemDequeue()) {
-                case Some(msg): 
+                case Some(msg):
                     try {
                         var letters = _actor.system().deadLetters();
                         letters.send(msg, letters);
@@ -185,7 +187,7 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
                     processAllSystemMessages();
 
                     if (left > 1 &&
-                        (   (_dispatcher.isThroughputDeadlineTimeDefined() == false) || 
+                        (   (_dispatcher.isThroughputDeadlineTimeDefined() == false) ||
                             (Process.stamp() - deadlineNs < 0))
                         ){
                         processMailbox(left - 1, deadlineNs);

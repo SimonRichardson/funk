@@ -2,7 +2,7 @@ package funk.actors;
 
 import funk.actors.ActorCell;
 import funk.actors.ActorSystem;
-import funk.actors.dispatch.Envelope;
+import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.dispatch.SystemMessage;
 import funk.actors.Props;
 import funk.Funk;
@@ -110,8 +110,6 @@ class EmptyActorRef implements InternalActorRef {
     public function stop() : Void {}
 
     public function send(msg : AnyRef, sender : ActorRef) : Void {}
-
-    public function sendMessage(message : Envelope) : Void {};
 
     public function sendSystemMessage(message : SystemMessage) : Void {}
 
