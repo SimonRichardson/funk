@@ -31,9 +31,7 @@ interface Cell extends ActorContext {
 
     function stop() : ActorContext;
 
-    function send(msg : AnyRef, sender : ActorRef) : Void;
-
-    function sendMessage(message : Envelope) : Void;
+    function sendMessage(msg : Envelope) : Void;
 
     function sendSystemMessage(msg : SystemMessage) : Void;
 
@@ -97,11 +95,6 @@ class ActorCell implements Cell implements ActorContext {
         return this;
     }
 
-    public function send(msg : AnyRef, sender : ActorRef) : Void {
-        var ref = AnyTypes.toBool(sender) ? sender : null;
-        _dispatcher.dispatch(this, Envelope(msg, ref));
-    }
-
     public function actorOf(props : Props, name : String) : ActorRef return _children.actorOf(props, name);
 
     public function actorFor(name : String) : Option<ActorRef> return _children.actorFor(name);
@@ -148,16 +141,16 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
-    public function sendMessage(message : Envelope) : Void {
+    public function sendMessage(envelope : Envelope) : Void {
         try {
-            var msg = message.message();
-
             // Note (Simon) : This be expensive, but good for thread safety (Share nothing)
-            if (_system.settings().serializeAllMessages()) {
-                msg = Unserializer.run(Serializer.run(msg));
-            }
+            var msg = envelope.message();
+            var message = if (_system.settings().serializeAllMessages()) Unserializer.run(Serializer.run(msg)) else msg;
 
-            _dispatcher.dispatch(this, msg);
+            var sender = envelope.sender();
+            var ref = AnyTypes.toBool(sender) ? sender : null;
+
+            _dispatcher.dispatch(this, Envelope(message, ref));
         } catch(e : Dynamic) {
             // TODO (Simon) : handle with a log
             throw e;
@@ -207,7 +200,7 @@ class ActorCell implements Cell implements ActorContext {
         ActorContextInjector.pushContext(this);
 
         function finally() {
-            ActorContextInjector.popContext();            
+            ActorContextInjector.popContext();
         }
 
         var instance = null;

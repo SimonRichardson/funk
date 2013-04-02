@@ -4,6 +4,7 @@ import funk.actors.ActorSystem;
 import funk.actors.dispatch.Envelope;
 import funk.actors.routing.RoundRobinRouter;
 import funk.types.AnyRef;
+import funk.types.extensions.Strings;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
@@ -21,24 +22,25 @@ class RoundRobinRouterTest {
     @Test
     public function when_using_a_actorOf_with_robin_router_should_return_actor() : Void {
         var actor = _system.actorOf(new Props(MockClass).withRouter(new RoundRobinRouter(4)), "robin");
-        
-        trace(actor);
-
         actor.isNotNull();
-
-        cast(actor).sendMessage(Broadcast('hello'));
+        actor.send('Hello', actor);
+        actor.send('Hello', actor);
+        actor.send('Hello', actor);
+        actor.send('Hello', actor);
     }
 }
 
 private class MockClass extends Actor {
 
+    private var _uid : String;
+
     public function new() {
         super();
 
-        trace("HERE");
+        _uid = Strings.uuid();
     }
 
     override public function receive(value : AnyRef) : Void {
-        trace(value);
+        trace('${_uid} - ${value}');
     }
 }

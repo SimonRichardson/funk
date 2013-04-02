@@ -33,8 +33,6 @@ interface InternalActorRef extends ActorRef {
 
     function stop() : Void;
 
-    function sendMessage(message : Envelope) : Void;
-
     function sendSystemMessage(message : SystemMessage) : Void;
 }
 
@@ -74,13 +72,11 @@ class LocalActorRef implements InternalActorRef {
 
     public function stop() : Void _actorCell.stop();
 
-    public function send(msg : AnyRef, sender : ActorRef) : Void _actorCell.send(msg, sender);
-
     public function actorOf(props : Props, name : String) : ActorRef return _actorCell.actorOf(props, name);
 
     public function actorFor(name : String) : Option<ActorRef> return _actorCell.actorFor(name);
 
-    public function sendMessage(message : Envelope) : Void _actorCell.sendMessage(message);
+    public function send(msg : AnyRef, sender : ActorRef) : Void _actorCell.sendMessage(Envelope(msg, sender));
 
     public function sendSystemMessage(message : SystemMessage) : Void _actorCell.sendSystemMessage(message);
 
