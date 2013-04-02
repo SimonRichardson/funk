@@ -1,7 +1,9 @@
 package funk.actors.routing;
 
 import funk.actors.ActorSystem;
+import funk.actors.dispatch.Envelope;
 import funk.actors.routing.RoundRobinRouter;
+import funk.types.AnyRef;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
@@ -23,6 +25,8 @@ class RoundRobinRouterTest {
         trace(actor);
 
         actor.isNotNull();
+
+        cast(actor).sendMessage(Broadcast('hello'));
     }
 }
 
@@ -32,5 +36,9 @@ private class MockClass extends Actor {
         super();
 
         trace("HERE");
+    }
+
+    override public function receive(value : AnyRef) : Void {
+        trace(value);
     }
 }

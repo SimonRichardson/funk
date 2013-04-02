@@ -146,10 +146,15 @@ class Router extends Actor {
                         _ref.removeRoutees(Nil.prepend(child));
                         if(_ref.routees().isEmpty()) context().stop();
                 }
+            case _: routerReceive(value);
         }
     }
 
     override public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {}
+
+    public function routerReceive(value : AnyRef) : Void {
+
+    }
 }
 
 interface RouterConfig {
