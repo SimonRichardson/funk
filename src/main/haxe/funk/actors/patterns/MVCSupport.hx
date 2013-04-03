@@ -29,7 +29,6 @@ class Model extends Actor {
     }
 
     override public function receive(value : AnyRef) : Void {
-        trace(EnumValues.getEnumName(value));
         switch(Type.typeof(value)){
             case TEnum(e) if(e == Notifications):
                 var note : Notifications = cast value;
