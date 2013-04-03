@@ -78,7 +78,7 @@ class Funk {
 
         var error = new FunkError(type, message, posInfo, stack);
 
-        #if debug trace(error.toString()); #end
+        #if (debug && !sys) trace(error.toString()); #end
 
         throw error;
 
