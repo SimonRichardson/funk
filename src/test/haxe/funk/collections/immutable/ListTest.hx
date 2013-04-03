@@ -25,5 +25,7 @@ class ListTest extends ListTestBase {
         otherTotal = 4;
 
         name = 'List';
+
+        empty = Nil;
     }
 }

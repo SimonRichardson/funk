@@ -21,6 +21,7 @@ class ListTestBase {
 
     public var name : String;
 
+    public var empty : List<Int>;
 
     @Test
     public function should_be_non_empty() {
@@ -127,6 +128,21 @@ class ListTestBase {
     }
 
     // Tail
+
+    @Test
+    public function when_empty_tail__should_not_be_null() : Void {
+        empty.tail().isNotNull();
+    }
+
+    @Test
+    public function when_empty_tail__should_be_empty() : Void {
+        empty.tail().isEmpty().isTrue();
+    }
+
+    @Test
+    public function when_empty_tail__should_be_equal_to_Nil() : Void {
+        empty.tail().toString().areEqual('Nil');
+    }
 
     @Test
     public function when_tail__should_not_be_null() : Void {

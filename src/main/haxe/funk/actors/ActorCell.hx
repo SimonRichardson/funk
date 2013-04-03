@@ -75,7 +75,7 @@ class ActorCell implements Cell implements ActorContext {
         _parent = parent;
 
         _watching = Nil;
-        _becomingStack = Nil;
+        _becomingStack = Nil.prepend(actorRecieve());
 
         _children = new Children(this);
     }
@@ -195,12 +195,25 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     public function become(value : Predicate1<AnyRef>, ?discardLast : Bool = false) : Void {
+        // Note: discard last can actually be very dangerous, by removing the last actor receive.
         if(discardLast) _becomingStack = _becomingStack.tail();
         _becomingStack = _becomingStack.prepend(value);
     }
 
     public function unbecome() : Void {
         _becomingStack = _becomingStack.tail();
+
+        // Make sure we add the actor receiver back onto the stack
+        if (_becomingStack.isEmpty()) {
+            _becomingStack = _becomingStack.prepend(actorRecieve());
+        }
+    }
+
+    private function actorRecieve() : Predicate1<AnyRef> {
+        return function(value : AnyRef) : Bool {
+            _actor.receive(value);
+            return false;
+        };
     }
 
     private function autoReceiveMessage(message : EnvelopeMessage) : Void {
@@ -208,11 +221,7 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     private function receiveMessage(message : AnyRef) : Void {
-        var p = _becomingStack.append(function(value : AnyRef) {
-            _actor.receive(value);
-            return false;
-        });
-
+        var p = _becomingStack;
         while(p.nonEmpty()) {
             var func = p.head();
             if (!func(message)) {

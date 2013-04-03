@@ -36,7 +36,7 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
     inline public function tail() : List<T> {
         return switch (this) {
             case Cons(_, value): value;
-            case Nil: null;
+            case Nil: Nil;
         }
     }
 
