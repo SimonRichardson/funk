@@ -1,5 +1,6 @@
 package funk;
 
+import funk.types.extensions.EnumValues;
 import haxe.CallStack;
 import haxe.PosInfos;
 
@@ -16,6 +17,40 @@ enum Errors {
     NoSuchElementError;
     RangeError;
     TypeError(?message : String);
+}
+
+class FunkError {
+
+    private var _error : Errors;
+
+    private var _message : String;
+
+    private var _posInfo : PosInfos;
+
+    private var _stack : Array<StackItem>;
+
+    public function new(    error : Errors,
+                            message : String,
+                            posInfo : PosInfos,
+                            ?stack : Array<StackItem>
+                            ) {
+        _error = error;
+        _message = message;
+        _posInfo = posInfo;
+        _stack = stack;
+    }
+
+    public function error() : Errors return _error;
+
+    public function message() : String return _message;
+
+    public function posInfo() : PosInfos return _posInfo;
+
+    public function stack() : Array<StackItem> return _stack;
+
+    public function toString() : String {
+        return '${EnumValues.getEnumName(_error)}: ${_message} ${CallStack.toString(_stack)}';
+    }
 }
 
 class Funk {
@@ -49,12 +84,15 @@ class Funk {
                 msg == null ? 'Type error was thrown' : msg;
         }
 
-        #if debug
-        trace('Message : ${message}, Position : ${posInfo}');
-        trace('CallStack : ${CallStack.toString(CallStack.callStack())}');
-        #end
+        var stack = CallStack.callStack();
+        // Remove the first item as it's always going to be Funk.error
+        if (stack.length > 0) stack.shift();
 
-        throw message;
+        var error = new FunkError(type, message, posInfo, stack);
+
+        #if debug trace(error.toString()); #end
+
+        throw error;
 
         return null;
     }

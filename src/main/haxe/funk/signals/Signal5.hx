@@ -88,8 +88,8 @@ class Signal5<T1, T2, T3, T4, T5> {
         return switch(slot) {
             case Some(x):
                 if(x.getOnce() != once) {
-                    Funk.error(IllegalOperationError('You cannot addOnce() then add() the same " +
-                     "listener without removing the relationship first.'));
+                    Funk.error(IllegalOperationError('You cannot addOnce() then add() the same ' +
+                     'listener without removing the relationship first.'));
                 }
                 false;
             case _: true;
