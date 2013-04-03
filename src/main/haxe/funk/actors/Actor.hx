@@ -45,7 +45,7 @@ class Actor implements ActorRef {
 
     public function actorFor(name : String) : Option<ActorRef> return _self.actorFor(name);
 
-    public function send(value : AnyRef, sender : ActorRef) : Void _self.send(value, sender);
+    public function send(value : AnyRef, ?sender : ActorRef = null) : Void _self.send(value, sender);
 
     public function path() : ActorPath return _self.path();
 

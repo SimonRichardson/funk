@@ -6,6 +6,7 @@ import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.dispatch.SystemMessage;
 import funk.actors.Props;
 import funk.Funk;
+import funk.types.Any.AnyTypes;
 import funk.types.extensions.Strings;
 
 using funk.futures.Promise;
@@ -18,7 +19,7 @@ interface ActorRef {
 
     function path() : ActorPath;
 
-    function send(msg : AnyRef, sender : ActorRef) : Void;
+    function send(msg : AnyRef, ?sender : ActorRef = null) : Void;
 
     function actorOf(props : Props, name : String) : ActorRef;
 
@@ -76,7 +77,10 @@ class LocalActorRef implements InternalActorRef {
 
     public function actorFor(name : String) : Option<ActorRef> return _actorCell.actorFor(name);
 
-    public function send(msg : AnyRef, sender : ActorRef) : Void _actorCell.sendMessage(Envelope(msg, sender));
+    public function send(msg : AnyRef, ?sender : ActorRef = null) : Void {
+        var s = AnyTypes.toBool(sender) ? sender : this;
+        _actorCell.sendMessage(Envelope(msg, s));
+    }
 
     public function sendSystemMessage(message : SystemMessage) : Void _actorCell.sendSystemMessage(message);
 
@@ -110,7 +114,7 @@ class EmptyActorRef implements InternalActorRef {
 
     public function stop() : Void {}
 
-    public function send(msg : AnyRef, sender : ActorRef) : Void {}
+    public function send(msg : AnyRef, ?sender : ActorRef = null) : Void {}
 
     public function sendSystemMessage(message : SystemMessage) : Void {}
 
