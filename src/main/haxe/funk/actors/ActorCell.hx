@@ -37,6 +37,8 @@ interface Cell extends ActorContext {
 
     function parent() : InternalActorRef;
 
+    function child(name : String) : Option<ActorRef>;
+
     function become(value : Predicate1<AnyRef>, ?discardLast : Bool = false) : Void;
 
     function unbecome() : Void;
@@ -104,7 +106,7 @@ class ActorCell implements Cell implements ActorContext {
 
     public function actorOf(props : Props, name : String) : ActorRef return _children.actorOf(props, name);
 
-    public function actorFor(name : String) : Option<ActorRef> return _children.actorFor(name);
+    public function actorFor(path : ActorPath) : Option<ActorRef> return _system.provider().actorFor(path);
 
     public function self() : InternalActorRef return _self;
 
@@ -115,6 +117,8 @@ class ActorCell implements Cell implements ActorContext {
     public function system() : ActorSystem return _system;
 
     public function parent() : InternalActorRef return _parent;
+
+    public function child(name : String) : Option<ActorRef> return _children.child(name);
 
     public function sender() : Option<ActorRef> {
         return switch (_currentMessage) {
@@ -414,18 +418,16 @@ private class Children {
 
     public function actorOf(props : Props, name : String) : ActorRef return makeChild(_cell, props, checkName(name));
 
-    public function actorFor(name : String) : Option<ActorRef> {
-        return switch(_container) {
-            case _ if(Std.is(_container, TerminatedChildrenContainer)): None;
-            case _:
-                switch(_container.getByName(name)) {
-                    case Some(ChildRestartStats(a)): Some(a);
-                    case _: None;
-                }
+    public function children() : List<ActorRef> return _container.children();
+
+    public function child(name : String) : Option<ActorRef> return getChild(name).toOption();
+
+    public function getChild(name : String) : ActorRef {
+        return switch(_container.getByName(name)) {
+            case Some(ChildRestartStats(a)): a;
+            case _: null;
         }
     }
-
-    public function children() : List<ActorRef> return _container.children();
 
     private function attachChild(props : Props, name : String) : ActorRef {
         return makeChild(_cell, props, checkName(name));

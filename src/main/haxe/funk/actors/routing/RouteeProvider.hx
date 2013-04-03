@@ -25,7 +25,7 @@ class RouteeProvider {
 
     public function unregisterRoutees(routees : List<ActorRef>) : Void routedCell().removeRoutees(routees);
 
-    public function registerRouteesFor(paths : List<String>) : Void {
+    public function registerRouteesFor(paths : List<ActorPath>) : Void {
         registerRoutees(paths.map(function(value) return context().actorFor(value).get()));
     }
 

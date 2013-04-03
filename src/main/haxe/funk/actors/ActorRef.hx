@@ -23,7 +23,7 @@ interface ActorRef {
 
     function actorOf(props : Props, name : String) : ActorRef;
 
-    function actorFor(name : String) : Option<ActorRef>;
+    function actorFor(path : ActorPath) : Option<ActorRef>;
 
     function context() : ActorContext;
 }
@@ -75,7 +75,7 @@ class LocalActorRef implements InternalActorRef {
 
     public function actorOf(props : Props, name : String) : ActorRef return _actorCell.actorOf(props, name);
 
-    public function actorFor(name : String) : Option<ActorRef> return _actorCell.actorFor(name);
+    public function actorFor(path : ActorPath) : Option<ActorRef> return _actorCell.actorFor(path);
 
     public function send(msg : AnyRef, ?sender : ActorRef = null) : Void {
         var s = AnyTypes.toBool(sender) ? sender : this;
@@ -120,7 +120,7 @@ class EmptyActorRef implements InternalActorRef {
 
     public function actorOf(props : Props, name : String) : ActorRef return null;
 
-    public function actorFor(name : String) : Option<ActorRef> return None;
+    public function actorFor(path : ActorPath) : Option<ActorRef> return None;
 
     public function path() : ActorPath return _path;
 

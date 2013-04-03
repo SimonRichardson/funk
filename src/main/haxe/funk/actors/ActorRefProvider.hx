@@ -30,7 +30,7 @@ interface ActorRefProvider {
                         supervisor : InternalActorRef,
                         path : ActorPath) : InternalActorRef;
 
-    function actorFor(path : List<String>) : Option<ActorRef>;
+    function actorFor(path : ActorPath) : Option<ActorRef>;
 
     function eventStream() : EventStream;
 
@@ -41,7 +41,7 @@ interface ActorRefFactory {
 
     function actorOf(props : Props, name : String) : ActorRef;
 
-    function actorFor(name : String) : Option<ActorRef>;
+    function actorFor(path : ActorPath) : Option<ActorRef>;
 }
 
 enum LocalActorMessage {
@@ -136,7 +136,7 @@ class LocalActorRefProvider implements ActorRefProvider {
         }
     }
 
-    public function actorFor(path : List<String>) : Option<ActorRef> {
+    public function actorFor(path : ActorPath) : Option<ActorRef> {
         return None;
     }
 }

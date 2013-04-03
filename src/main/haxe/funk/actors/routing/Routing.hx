@@ -189,7 +189,7 @@ class AccessRouter implements RouterConfig {
 
     private var _nrOfInstances : Int;
 
-    private var _routees : List<String>;
+    private var _routees : List<ActorPath>;
 
     public function new(nrOfInstances : Int) {
         _nrOfInstances = nrOfInstances;

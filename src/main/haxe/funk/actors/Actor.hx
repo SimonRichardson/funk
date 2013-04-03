@@ -43,7 +43,7 @@ class Actor implements ActorRef {
 
     public function actorOf(props : Props, name : String) : ActorRef return _self.actorOf(props, name);
 
-    public function actorFor(name : String) : Option<ActorRef> return _self.actorFor(name);
+    public function actorFor(path : ActorPath) : Option<ActorRef> return _self.actorFor(path);
 
     public function send(value : AnyRef, ?sender : ActorRef = null) : Void _self.send(value, sender);
 

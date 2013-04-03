@@ -23,10 +23,10 @@ class RoundRobinRouterTest {
     public function when_using_a_actorOf_with_robin_router_should_return_actor() : Void {
         var actor = _system.actorOf(new Props(MockClass).withRouter(new RoundRobinRouter(4)), "robin");
         actor.isNotNull();
-        actor.send('Hello', actor);
-        actor.send('Hello', actor);
-        actor.send('Hello', actor);
-        actor.send('Hello', actor);
+        actor.send('Hello');
+        actor.send('Hello');
+        actor.send('Hello');
+        actor.send('Hello');
         actor.send(Broadcast('world'), actor);
     }
 }
