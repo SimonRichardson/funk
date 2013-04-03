@@ -1,0 +1,14 @@
+-cmd rm -rfd ../bin/actors
+-cmd mkdir ../bin/actors
+
+--next
+-js ../bin/actors/Example01.js
+-main Example01
+-cp main/actors
+-cp ../src/main/haxe
+-cp ../src/test/haxe
+-debug
+-D test
+
+--next
+-cmd echo "<html lang='en-GB'>\n<head>\n<title>Example01</title>\n</head>\n<body>\n<script type='text/javascript' src='Example01.js'></script>\n</body>\n</html>" >> ../bin/actors/Example01.html

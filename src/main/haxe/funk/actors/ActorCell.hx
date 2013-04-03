@@ -12,6 +12,7 @@ import funk.actors.ActorRef;
 import funk.actors.ActorRefProvider;
 import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
+import funk.types.Predicate1;
 import haxe.ds.StringMap;
 import haxe.Serializer;
 import haxe.Unserializer;
@@ -35,6 +36,10 @@ interface Cell extends ActorContext {
     function sendSystemMessage(msg : SystemMessage) : Void;
 
     function parent() : InternalActorRef;
+
+    function become(value : Predicate1<AnyRef>, ?discardLast : Bool = false) : Void;
+
+    function unbecome() : Void;
 }
 
 class ActorCell implements Cell implements ActorContext {
@@ -61,6 +66,8 @@ class ActorCell implements Cell implements ActorContext {
 
     private var _watching : List<ActorRef>;
 
+    private var _becomingStack : List<Predicate1<AnyRef>>;
+
     public function new(system : ActorSystem, self : InternalActorRef, props : Props, parent : InternalActorRef) {
         _system = system;
         _self = self;
@@ -68,6 +75,7 @@ class ActorCell implements Cell implements ActorContext {
         _parent = parent;
 
         _watching = Nil;
+        _becomingStack = Nil;
 
         _children = new Children(this);
     }
@@ -186,13 +194,32 @@ class ActorCell implements Cell implements ActorContext {
         _currentMessage = null;
     }
 
+    public function become(value : Predicate1<AnyRef>, ?discardLast : Bool = false) : Void {
+        if(discardLast) _becomingStack = _becomingStack.tail();
+        _becomingStack = _becomingStack.prepend(value);
+    }
+
+    public function unbecome() : Void {
+        _becomingStack = _becomingStack.tail();
+    }
+
     private function autoReceiveMessage(message : EnvelopeMessage) : Void {
         // TODO (Simon) : Work on auto received messages.
     }
 
     private function receiveMessage(message : AnyRef) : Void {
-        // TODO (Simon) : Implement behaviors.
-        _actor.receive(message);
+        var p = _becomingStack.append(function(value : AnyRef) {
+            _actor.receive(value);
+            return false;
+        });
+
+        while(p.nonEmpty()) {
+            var func = p.head();
+            if (!func(message)) {
+                break;
+            }
+            p = p.tail();
+        }
     }
 
     private function newActor() : Actor {
