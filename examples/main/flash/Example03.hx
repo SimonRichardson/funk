@@ -21,7 +21,7 @@ class Example03 extends Sprite {
         super();
 
         // Create a list of 6 sprite instances.
-        var sprites = ListsUtil.fill(6)(Pass.instanceOf(Sprite));
+        var sprites = ListUtil.fill(6)(Pass.instanceOf(Sprite));
         // Map the sprites to their graphics object and apply a
         // function on each of them.
         sprites.map(_.graphics()).foreach(function(g) {

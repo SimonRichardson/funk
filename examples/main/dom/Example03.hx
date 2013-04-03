@@ -20,7 +20,7 @@ class Example03 {
 
     public function new() {
         // Create a list of 6 elements instances.
-        var elements = ListsUtil.fill(6)(Pass.instanceOf(HtmlDivElement));
+        var elements = ListUtil.fill(6)(Pass.instanceOf(HtmlDivElement));
 
         // Map the elements to their styles object and apply a
         // function on each of them.

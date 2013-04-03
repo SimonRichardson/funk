@@ -24,7 +24,8 @@ class CanvasPainter {
 
         var context : CanvasRenderingContext2D = canvas.getContext("2d");
 
-        RenderEvents.enterFrame().foreach(function (event : Event) {
+        var target = new RenderTarget(RenderEventTypes.toString(EnterFrame));
+        RenderEvents.enterFrame(target).foreach(function (event : Event) {
             if (_paint) {
                 _rectangles.foreach(function (rectangle : Rectangle) : Void {
                     switch (rectangle) {

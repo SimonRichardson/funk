@@ -19,7 +19,7 @@ class Example01 {
         CanvasPainter.init(getCanvas());
 
         // Create a list of 6 layers instances.
-        var layers = ListsUtil.fill(6)(Pass.instanceOf(Layer));
+        var layers = ListUtil.fill(6)(Pass.instanceOf(Layer));
 
         // Map the layers to their styles object and apply a
         // function on each of them.
