@@ -65,4 +65,6 @@ class ActorSystem {
 
     @:allow(funk.actors)
     private function provider() : ActorRefProvider return _provider;
+
+    public function toString() return '[ActorSystem]';
 }

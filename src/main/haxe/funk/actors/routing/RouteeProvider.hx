@@ -60,4 +60,6 @@ class RouteeProvider {
     private function routees() : List<ActorRef> return routedCell().routees();
 
     private function routedCell() : RoutedActorCell return cast _context;
+
+    public function toString() return '[RouteeProvider]';
 }

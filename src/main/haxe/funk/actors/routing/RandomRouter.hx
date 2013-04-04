@@ -11,4 +11,6 @@ class RandomRouter extends AccessRouter {
     override private function access(offset : Int, size : Int) : Int {
         return Math.floor(Math.random() * size);
     }
+
+    override public function toString() return '[RandomRouter (nrOfInstances=${_nrOfInstances})]';
 }

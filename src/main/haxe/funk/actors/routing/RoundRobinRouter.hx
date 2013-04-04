@@ -9,4 +9,6 @@ class RoundRobinRouter extends AccessRouter {
     }
 
     override private function access(offset : Int, size : Int) : Int return offset % size;
+
+    override public function toString() return '[RoundRobinRouter (nrOfInstances=${_nrOfInstances})]';
 }

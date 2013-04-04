@@ -157,6 +157,8 @@ class LocalActorRefProvider implements ActorRefProvider {
             }
         }
     }
+
+    public function toString() return '[ActorRefProvider (path=${_rootPath.toString()})]';
 }
 
 class RootGuardianActorRef extends EmptyActorRef {

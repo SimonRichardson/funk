@@ -132,6 +132,8 @@ class LocalActorRef implements InternalActorRef {
     private function newCell() : Cell return new ActorCell(_system, this, _props, _supervisor);
 
     private function initCell() : Void _actorCell.init(Strings.uuid());
+
+    public function toString() return '[ActorRef (path=${path()})]';
 }
 
 class EmptyActorRef implements InternalActorRef {

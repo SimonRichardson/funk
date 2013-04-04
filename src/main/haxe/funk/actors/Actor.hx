@@ -55,5 +55,5 @@ class Actor implements ActorRef {
 
     public function context() : ActorContext return _context;
 
-    // Implement become
+    public function toString() return '[Actor (path=${path().toString()})]';
 }

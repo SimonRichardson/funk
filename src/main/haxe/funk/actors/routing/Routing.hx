@@ -35,6 +35,8 @@ class RoutedActorRef extends LocalActorRef {
     override private function newCell() : Cell return new RoutedActorCell(_system, this, _props, _supervisor);
 
     override private function initCell() : Void _actorCell.init(Strings.uuid(), false);
+
+    override public function toString() return '[RoutedActorRef (path=${path()})]';
 }
 
 class RoutedActorCell extends ActorCell {
@@ -118,6 +120,8 @@ class RoutedActorCell extends ActorCell {
     public function routeeProvider() : RouteeProvider return _routeeProvider;
 
     private function routerConfig() : RouterConfig return _props.router();
+
+    override public function toString() return '[RoutedActorCell (path=${self().path()})]';
 }
 
 class RoutedActorCellCreator implements Creator {
@@ -159,6 +163,8 @@ class Router extends Actor {
     public function routerReceive(value : AnyRef) : Void {
 
     }
+
+    override public function toString() return '[Router (path=${path()})]';
 }
 
 interface RouterConfig {
@@ -168,6 +174,8 @@ interface RouterConfig {
     function createActor() : Actor;
 
     function createRouteeProvider(context : ActorContext, routeeProps : Props) : RouteeProvider;
+
+    function toString() : String;
 }
 
 class NoRouter implements RouterConfig {
@@ -183,6 +191,8 @@ class NoRouter implements RouterConfig {
     public function createRouteeProvider(context : ActorContext, routeeProps : Props) : RouteeProvider {
         return Funk.error(ActorError("NoRouter does not createRouteeProvider"));
     }
+
+    public function toString() return '[NoRouter]';
 }
 
 class AccessRouter implements RouterConfig {
@@ -244,4 +254,6 @@ class AccessRouter implements RouterConfig {
     }
 
     private function access(offset : Int, size : Int) : Int return 0;
+
+    public function toString() return '[AccessRouter (nrOfInstances=${_nrOfInstances})]';
 }

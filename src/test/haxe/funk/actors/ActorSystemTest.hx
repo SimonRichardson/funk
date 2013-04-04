@@ -7,6 +7,7 @@ import massive.munit.util.Timer;
 
 using massive.munit.Assert;
 using funk.types.Attempt;
+using funk.types.Option;
 
 class ActorSystemTest {
 
@@ -55,6 +56,12 @@ class ActorSystemTest {
     public function calling_toString_on_actor_path_should_return_valid_path() : Void {
         var path = _system.actorPath().toString();
         path.areEqual('funk://system/user/');
+    }
+
+    @Test
+    public function calling_actorFor_should_return_ActorRef_that_is_not_null() : Void {
+        trace(_system.actorFor(_system.actorPath()).get().path());
+        _system.actorFor(_system.actorPath()).get().isNotNull();
     }
 }
 

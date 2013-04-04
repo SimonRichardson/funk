@@ -53,6 +53,8 @@ class Props {
         props._dispatcher = Reflect.hasField(o, "dispatcher") ? Reflect.field(o, "dispatcher") : _dispatcher;
         return props;
     }
+
+    public function toString() return '[Props (router=${router().toString()})]';
 }
 
 private class CreatorImpl implements Creator {
