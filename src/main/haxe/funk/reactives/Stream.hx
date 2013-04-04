@@ -156,9 +156,9 @@ class StreamTypes {
         return [stream].toCollection();
     }
 
-    public static function bindTo<T, E>(func : Function1<T, Void>, stream : Stream<E>) : Stream<E> {
-        stream.foreach(function(v) {
-            func(cast v);
+    public static function bindTo<T>(func : Function1<T, Void>, stream : Stream<T>) : Stream<T> {
+        foreach(stream, function(v) {
+            func(v);
         });
         return stream;
     }
