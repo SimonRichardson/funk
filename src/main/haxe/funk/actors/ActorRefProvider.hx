@@ -24,6 +24,8 @@ interface ActorRefProvider {
 
     function guardian() : ActorRef;
 
+    function systemGuardian() : ActorRef;
+
     function deadLetters() : ActorRef;
 
     function actorOf(   system : ActorSystem,
@@ -98,33 +100,35 @@ class LocalActorRefProvider implements ActorRefProvider {
         var systemProps = new Props(SystemGuardian);
         var deadLettersProps = new Props(DeadLetters);
 
-        var rootRef = new RootGuardianActorRef(this, rootActorPath);
+        _rootGuardian = new RootGuardianActorRef(this, rootActorPath);
 
-        var rootGuardian = new LocalActorRef(system, guardianProps, rootRef, rootActorPath);
+        var rootGuardian = new LocalActorRef(system, guardianProps, _rootGuardian, rootActorPath);
 
         var rootCell = rootGuardian.underlying();
         rootCell.reserveChild(guardianActorPath.name());
         rootCell.reserveChild(systemActorPath.name());
         rootCell.reserveChild(deadLettersActorPath.name());
 
-        _rootGuardian = rootGuardian;
-
-        _deadLetters = actorOf(system, deadLettersProps, _rootGuardian, deadLettersActorPath);
+        _deadLetters = actorOf(system, deadLettersProps, rootGuardian, deadLettersActorPath);
         rootCell.initChild(_deadLetters);
         _deadLetters.start();
 
-        _guardian = actorOf(system, guardianProps, _rootGuardian, guardianActorPath);
+        _guardian = actorOf(system, guardianProps, rootGuardian, guardianActorPath);
         rootCell.initChild(_guardian);
         _guardian.start();
 
-        _systemGuardian = actorOf(system, systemProps, _rootGuardian, systemActorPath);
+        _systemGuardian = actorOf(system, systemProps, rootGuardian, systemActorPath);
         rootCell.initChild(_systemGuardian);
         _systemGuardian.start();
+
+        rootGuardian.start();
     }
 
     public function rootPath() : ActorPath return _guardian.path();
 
     public function guardian() : ActorRef return _guardian;
+
+    public function systemGuardian() : ActorRef return _systemGuardian;
 
     public function deadLetters() : ActorRef return _deadLetters;
 
@@ -149,9 +153,10 @@ class LocalActorRefProvider implements ActorRefProvider {
     }
 
     public function actorFor(path : ActorPath) : Option<ActorRef> {
-        return (path.root() == _rootPath) ? actorFrom(_guardian, path.elements()) : Some(deadLetters());
+        return (path.root() == _rootPath) ? actorFrom(_rootGuardian, path.elements()) : Some(deadLetters());
     }
 
+    @:allow(funk.actors)
     private function actorFrom(ref : InternalActorRef, elements : List<String>) : Option<ActorRef> {
         return if (elements.isEmpty()) Some(deadLetters());
         else {
@@ -172,6 +177,20 @@ class RootGuardianActorRef extends EmptyActorRef {
 
     public function new(provider : ActorRefProvider, path : ActorPath) {
         super(provider, path);
+    }
+
+    override public function getChild(names : List<String>) : Option<InternalActorRef> {
+        if (!Std.is(_provider, LocalActorRefProvider)) {
+            Funk.error(IllegalOperationError());
+        }
+
+        var local : LocalActorRefProvider = cast _provider;
+        return switch(names.head()) {
+            case "deadLetters": Some(cast local.deadLetters());
+            case "user": cast local.actorFrom(cast local.guardian(), names.tail());
+            case "system": cast local.actorFrom(cast local.systemGuardian(), names.tail());
+            case _: None;
+        }
     }
 }
 

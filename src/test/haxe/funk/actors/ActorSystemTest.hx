@@ -1,5 +1,6 @@
 package funk.actors;
 
+import funk.actors.ActorRef;
 import funk.futures.Promise;
 import funk.types.AnyRef;
 import funk.types.extensions.Strings;
@@ -66,7 +67,27 @@ class ActorSystemTest {
 
         var ref = _system.actorOf(new Props(MockClass), expected);
 
-        trace(_system.actorFor(ref.path()));
+        _system.actorFor(ref.path()).get().isNotNull();
+    }
+
+    @Test
+    public function calling_actorFor_should_return_ActorRef_that_is_not_an_EmptyActorRef() : Void {
+        var actual = '';
+        var expected = 'Name_${Strings.uuid()}';
+
+        var ref = _system.actorOf(new Props(MockClass), expected);
+
+        Std.is(_system.actorFor(ref.path()).get(), EmptyActorRef).isFalse();
+    }
+
+    @Test
+    public function calling_actorFor_should_return_ActorRef_that_is_the_same_path() : Void {
+        var actual = '';
+        var expected = 'Name_${Strings.uuid()}';
+
+        var ref = _system.actorOf(new Props(MockClass), expected);
+
+        _system.actorFor(ref.path()).get().path().toString().areEqual(ref.path().toString());
     }
 }
 
