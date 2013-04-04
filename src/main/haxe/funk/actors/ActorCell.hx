@@ -39,6 +39,8 @@ interface Cell extends ActorContext {
 
     function child(name : String) : Option<ActorRef>;
 
+    function getChildByName(name : String) : Option<ChildStats>;
+
     function become(value : Predicate1<AnyRef>, ?discardLast : Bool = false) : Void;
 
     function unbecome() : Void;
@@ -119,6 +121,8 @@ class ActorCell implements Cell implements ActorContext {
     public function parent() : InternalActorRef return _parent;
 
     public function child(name : String) : Option<ActorRef> return _children.child(name);
+
+    public function getChildByName(name : String) : Option<ChildStats> return _children.getChildByName(name);
 
     public function sender() : Option<ActorRef> {
         return switch (_currentMessage) {
@@ -421,6 +425,8 @@ private class Children {
     public function children() : List<ActorRef> return _container.children();
 
     public function child(name : String) : Option<ActorRef> return getChild(name).toOption();
+
+    public function getChildByName(name : String) : Option<ChildStats> return _container.getByName(name);
 
     public function getChild(name : String) : ActorRef {
         return switch(_container.getByName(name)) {

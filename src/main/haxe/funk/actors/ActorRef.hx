@@ -12,6 +12,7 @@ import funk.types.extensions.Strings;
 using funk.futures.Promise;
 using funk.types.AnyRef;
 using funk.types.Option;
+using funk.collections.immutable.List;
 
 interface ActorRef {
 
@@ -35,6 +36,10 @@ interface InternalActorRef extends ActorRef {
     function stop() : Void;
 
     function sendSystemMessage(message : SystemMessage) : Void;
+
+    function getChild(name : List<String>) : Option<InternalActorRef>;
+
+    function getParent() : InternalActorRef;
 }
 
 class LocalActorRef implements InternalActorRef {
@@ -90,6 +95,36 @@ class LocalActorRef implements InternalActorRef {
 
     public function context() : ActorContext return _actorContext;
 
+    public function getParent() : InternalActorRef return _actorCell.parent();
+
+    public function getChild(names : List<String>) : Option<InternalActorRef> {
+        function rec(ref : InternalActorRef, names : Iterator<String>) : Option<InternalActorRef> {
+            return switch(ref) {
+                case _ if(Std.is(ref, LocalActorRef)):
+                    var local : LocalActorRef = cast ref;
+                    var any = names.next();
+                    var next : Option<InternalActorRef> = switch (any) {
+                        case "..": Some(local.getParent());
+                        case "": Some(ref);
+                        case _: local.getSingleChild(any);
+                    }
+
+                    (!names.hasNext() || next.isEmpty()) ? next : rec(next.get(), names);
+
+                case _: ref.getChild(Nil.appendIterator(names));
+            }
+        }
+
+        return (names.isEmpty()) ? Some(cast this) : rec(this, names.iterator());
+    }
+
+    private function getSingleChild(name : String) : Option<InternalActorRef> {
+        return switch(_actorCell.getChildByName(name)) {
+            case Some(ChildRestartStats(val)) if(Std.is(val, InternalActorRef)): Some(cast val);
+            case _: None;
+        }
+    }
+
     @:allow(funk.actors)
     @:allow(funk.actors.patterns)
     private function underlying() : ActorCell return cast _actorCell;
@@ -129,4 +164,8 @@ class EmptyActorRef implements InternalActorRef {
     public function sender() : ActorRef return null;
 
     public function context() : ActorContext return null;
+
+    public function getParent() : InternalActorRef return null;
+
+    public function getChild(names : List<String>) : Option<InternalActorRef> return None;
 }

@@ -14,6 +14,7 @@ import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
 
 using funk.types.Option;
+using funk.collections.immutable.List;
 
 interface ActorRefProvider {
 
@@ -63,9 +64,11 @@ class LocalActorRefProvider implements ActorRefProvider {
 
     private var _system : ActorSystem;
 
+    private var _rootPath : ActorPath;
+
     private var _rootGuardian : InternalActorRef;
 
-    private var _guardian : ActorRef;
+    private var _guardian : InternalActorRef;
 
     private var _systemGuardian : ActorRef;
 
@@ -84,7 +87,9 @@ class LocalActorRefProvider implements ActorRefProvider {
 
         _eventStream = new EventStream();
 
-        var rootActorPath = new RootActorPath(Address("funk", system.name(), None, None));
+        _rootPath = new RootActorPath(Address("funk", system.name(), None, None));
+
+        var rootActorPath = _rootPath;
         var guardianActorPath = rootActorPath.child("user");
         var systemActorPath = rootActorPath.child("system");
         var deadLettersActorPath = rootActorPath.child("deadLetters");
@@ -137,7 +142,20 @@ class LocalActorRefProvider implements ActorRefProvider {
     }
 
     public function actorFor(path : ActorPath) : Option<ActorRef> {
-        return None;
+        return (path.root() == _rootPath) ? actorFrom(_guardian, path.elements()) : Some(deadLetters());
+    }
+
+    private function actorFrom(ref : InternalActorRef, elements : List<String>) : Option<ActorRef> {
+        return if (elements.isEmpty()) Some(deadLetters());
+        else {
+            var x = ref.getChild(elements);
+            switch(x) {
+                case None:
+                    var empty : ActorRef = new EmptyActorRef(_system.provider(), ref.path().childs(elements));
+                    Some(empty);
+                case _: cast x;
+            }
+        }
     }
 }
 

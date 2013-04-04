@@ -18,6 +18,8 @@ interface ActorPath {
 
     function child(name : String) : ActorPath;
 
+    function childs(names : List<String>) : ActorPath;
+
     function elements() : List<String>;
 
     function toString() : String;
@@ -48,6 +50,11 @@ class RootActorPath implements ActorPath {
     public function parent() : ActorPath return this;
 
     public function child(name : String) : ActorPath return new ChildActorPath(this, name);
+
+    public function childs(names : List<String>) : ActorPath {
+        return if (names.isEmpty()) this;
+        else child(names.head()).childs(names.tail());
+    }
 
     public function elements() : List<String> return Nil;
 
@@ -84,6 +91,11 @@ class ChildActorPath implements ActorPath {
     public function parent() : ActorPath return _parent;
 
     public function child(name : String) : ActorPath return new ChildActorPath(this, name);
+
+    public function childs(names : List<String>) : ActorPath {
+        return if (names.isEmpty()) this;
+        else child(names.head()).childs(names.tail());
+    }
 
     public function elements() : List<String> {
         function rec(p : ActorPath, list : List<String>) {
