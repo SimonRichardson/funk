@@ -98,11 +98,13 @@ class LocalActorRef implements InternalActorRef {
     public function getParent() : InternalActorRef return _actorCell.parent();
 
     public function getChild(names : List<String>) : Option<InternalActorRef> {
+        trace(path());
         function rec(ref : InternalActorRef, names : Iterator<String>) : Option<InternalActorRef> {
             return switch(ref) {
                 case _ if(Std.is(ref, LocalActorRef)):
                     var local : LocalActorRef = cast ref;
                     var any = names.next();
+                    trace(any);
                     var next : Option<InternalActorRef> = switch (any) {
                         case "..": Some(local.getParent());
                         case "": Some(ref);
@@ -170,4 +172,6 @@ class EmptyActorRef implements InternalActorRef {
     public function getParent() : InternalActorRef return null;
 
     public function getChild(names : List<String>) : Option<InternalActorRef> return None;
+
+    public function toString() return '[EmptyActorRef (path=${path()})]';
 }

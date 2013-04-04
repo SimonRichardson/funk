@@ -217,6 +217,8 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
+    public function initChild(ref : ActorRef) : Option<ActorRef> return _children.initChild(ref);
+
     private function actorRecieve() : Predicate1<AnyRef> {
         return function(value : AnyRef) : Bool {
             _actor.receive(value);

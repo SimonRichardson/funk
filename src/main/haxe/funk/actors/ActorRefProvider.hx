@@ -70,9 +70,9 @@ class LocalActorRefProvider implements ActorRefProvider {
 
     private var _guardian : InternalActorRef;
 
-    private var _systemGuardian : ActorRef;
+    private var _systemGuardian : InternalActorRef;
 
-    private var _deadLetters : ActorRef;
+    private var _deadLetters : InternalActorRef;
 
     private var _eventStream : EventStream;
 
@@ -110,9 +110,16 @@ class LocalActorRefProvider implements ActorRefProvider {
         _rootGuardian = rootGuardian;
 
         _deadLetters = actorOf(system, deadLettersProps, _rootGuardian, deadLettersActorPath);
+        rootCell.initChild(_deadLetters);
+        _deadLetters.start();
 
         _guardian = actorOf(system, guardianProps, _rootGuardian, guardianActorPath);
+        rootCell.initChild(_guardian);
+        _guardian.start();
+
         _systemGuardian = actorOf(system, systemProps, _rootGuardian, systemActorPath);
+        rootCell.initChild(_systemGuardian);
+        _systemGuardian.start();
     }
 
     public function rootPath() : ActorPath return _guardian.path();

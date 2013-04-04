@@ -2,6 +2,7 @@ package funk.actors;
 
 import funk.futures.Promise;
 import funk.types.AnyRef;
+import funk.types.extensions.Strings;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
@@ -60,8 +61,12 @@ class ActorSystemTest {
 
     @Test
     public function calling_actorFor_should_return_ActorRef_that_is_not_null() : Void {
-        trace(_system.actorFor(_system.actorPath()).get().path());
-        _system.actorFor(_system.actorPath()).get().isNotNull();
+        var actual = '';
+        var expected = 'Name_${Strings.uuid()}';
+
+        var ref = _system.actorOf(new Props(MockClass), expected);
+
+        trace(_system.actorFor(ref.path()));
     }
 }
 
