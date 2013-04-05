@@ -3,7 +3,7 @@ package funk.actors;
 import funk.actors.ActorPath;
 import funk.actors.ActorRefProvider;
 import funk.actors.dispatch.Dispatchers;
-import funk.actors.event.EventStream;
+import funk.actors.events.EventStream;
 import funk.types.AnyRef;
 
 using funk.actors.ActorRef;

@@ -153,6 +153,7 @@ class Router extends Actor {
                     case Terminated(child):
                         _ref.removeRoutees(Nil.prepend(child));
                         if(_ref.routees().isEmpty()) context().stop();
+                    case _: routerReceive(value);
                 }
             case _: routerReceive(value);
         }

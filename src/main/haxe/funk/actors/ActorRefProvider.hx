@@ -2,7 +2,7 @@ package funk.actors;
 
 import funk.actors.dispatch.DeadLetterMessage;
 import funk.actors.dispatch.Dispatcher;
-import funk.actors.event.EventStream;
+import funk.actors.events.EventStream;
 import funk.actors.Props;
 import funk.Funk;
 import funk.actors.ActorSystem;
@@ -265,12 +265,12 @@ class DeadLetters extends Actor {
 
         switch(value) {
             case _ if(value == null): Funk.error(ActorError("Message is null"));
-            case _ if(value == DeadLetterMessage): eventStream.dispatch(value);
+            case _ if(value == DeadLetterMessage): eventStream.publish(value);
             case _:
                 var s = sender();
                 var receiver : Option<ActorRef> = cast cxt.self().toOption();
                 var origin : Option<ActorRef> = AnyTypes.toBool(s) ? s : receiver;
-                eventStream.dispatch(DeadLetter(value, origin, receiver));
+                eventStream.publish(DeadLetter(value, origin, receiver));
         }
     }
 }

@@ -10,6 +10,7 @@ using funk.collections.immutable.List;
 
 enum ActorMessages {
     Terminated(child : ActorRef);
+    UnhandledMessage(message : AnyRef, sender : Option<ActorRef>, self : ActorRef);
 }
 
 class Actor implements ActorRef {
@@ -39,7 +40,7 @@ class Actor implements ActorRef {
 
     public function postRestart(reason : Errors) : Void preStart();
 
-    public function receive(value : AnyRef) : Void {}
+    public function receive(message : AnyRef) : Void unhandled(message);
 
     public function actorOf(props : Props, name : String) : ActorRef return _self.actorOf(props, name);
 
@@ -54,6 +55,15 @@ class Actor implements ActorRef {
     public function sender() : Option<ActorRef> return _context.sender();
 
     public function context() : ActorContext return _context;
+
+    public function isTerminated() : Bool return _self.isTerminated();
+
+    private function unhandled(message : AnyRef) : Void {
+        // handle termination
+        switch(message) {
+            case _ : context().system().eventStream().publish(UnhandledMessage(message, sender(), _self));
+        }
+    }
 
     public function toString() return '[Actor (path=${path().toString()})]';
 }

@@ -3,6 +3,9 @@ package funk.io.logging;
 import funk.io.logging.Log;
 import funk.io.logging.LogValue;
 
+using funk.collections.immutable.List;
+using funk.collections.immutable.ListUtil;
+
 enum LogLevel<T> {
     Trace(value : LogValue<T>);
     Debug(value : LogValue<T>);
@@ -26,6 +29,20 @@ class LogLevelTypes {
             case Warn(_): 8;
             case Error(_): 16;
             case Fatal(_): 32;
+        };
+    }
+
+    public static function bits() : List<Int> return [1, 2, 4, 8, 16, 32].toList();
+
+    public static function index<T>(value : Int) : LogLevel<T> {
+        return switch (value) {
+            case 1: Trace(Data({}));
+            case 2: Debug(Data({}));
+            case 4: Info(Data({}));
+            case 8: Warn(Data({}));
+            case 16: Error(Data({}));
+            case 32: Fatal(Data({}));
+            case _: Funk.error(ArgumentError());
         };
     }
 

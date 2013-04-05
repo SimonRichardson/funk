@@ -1,5 +1,6 @@
 package funk.types;
 
+import funk.types.AnyRef;
 import funk.types.Attempt;
 import funk.types.Either;
 import funk.types.Function1;
@@ -30,6 +31,22 @@ class AnyTypes {
         }
         return func(value0, value1);
     }
+
+    public static function getName<T>(value : T)  : String {
+        return switch(Type.typeof(value)) {
+            case TUnknown: 'unknown';
+            case TObject: try Type.getClassName(cast value) catch(e:Dynamic) Std.string(value);
+            case TNull: 'null';
+            case TInt: 'int';
+            case TFunction: 'function';
+            case TFloat: 'float';
+            case TEnum(e): '${Type.getEnumName(e)}.${Type.enumConstructor(cast value)}';
+            case TClass(e): Type.getClassName(e);
+            case TBool: 'bool';
+        }
+    }
+
+    public static function getClass<T>(value : T) : Class<T> return Type.getClass(value);
 
     public static function isTypeOf<T>(value : T, possible : String) : Bool {
         var value = switch(Type.typeof(value)) {
@@ -62,7 +79,7 @@ class AnyTypes {
 
     public static function isBoolean<T>(value : T) : Bool return isTypeOf(value, 'bool');
 
-    public static function isInstanceOf<T>(value : T, possible : AnyRef) : Bool return Std.is(value, possible);
+    public static function isInstanceOf<T : AnyRef>(value : T, possible : AnyRef) : Bool return Std.is(value, possible);
 
     public static function toBool<T>(value : Null<T>) : Bool {
         return if(value == null) false;

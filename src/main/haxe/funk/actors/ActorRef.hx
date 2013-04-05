@@ -27,6 +27,8 @@ interface ActorRef {
     function actorFor(path : ActorPath) : Option<ActorRef>;
 
     function context() : ActorContext;
+
+    function isTerminated() : Bool;
 }
 
 interface InternalActorRef extends ActorRef {
@@ -94,6 +96,9 @@ class LocalActorRef implements InternalActorRef {
     public function name() : String return path().name();
 
     public function context() : ActorContext return _actorContext;
+
+    // FIXME (Simon) : This needs fixing.
+    public function isTerminated() : Bool return false;
 
     public function getParent() : InternalActorRef return _actorCell.parent();
 
@@ -166,6 +171,9 @@ class EmptyActorRef implements InternalActorRef {
     public function sender() : ActorRef return null;
 
     public function context() : ActorContext return null;
+
+    // FIXME (Simon) : This needs fixing.
+    public function isTerminated() : Bool return false;
 
     public function getParent() : InternalActorRef return null;
 
