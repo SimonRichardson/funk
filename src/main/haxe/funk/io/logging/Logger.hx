@@ -41,21 +41,13 @@ class Logger<T> {
         }.bindTo(streamIn());
     }
 
-    public function tag() : Tag {
-        return _tag;
-    }
+    public function tag() : Tag return _tag;
 
-    public function streamIn() : Stream<LogLevel<T>> {
-        return _streamIn;
-    }
+    public function streamIn() : Stream<LogLevel<T>> return _streamIn;
 
-    public function streamOut() : Stream<Message<T>> {
-        return _streamOut;
-    }
+    public function streamOut() : Stream<Message<T>> return _streamOut;
 
-    private function get_logLevel() : Int {
-        return _logLevel;
-    }
+    private function get_logLevel() : Int return _logLevel;
 
     private function set_logLevel(value : Int) : Int {
         _logLevel = value;
@@ -65,9 +57,7 @@ class Logger<T> {
 
 class LoggerTypes {
 
-    public static function pipe<T>(logger : Logger<T>, ouput : Output<T>) : Void {
-        ouput.add(logger.streamOut());
-    }
+    public static function pipe<T>(logger : Logger<T>, ouput : Output<T>) : Void ouput.add(logger.streamOut());
 
     public static function zip<T1, T2>(logger0 : Logger<T1>, logger1 : Logger<T2>) : Logger<Tuple2<T1, T2>> {
         return new ZippedLogger(logger0.tag(), logger0.streamIn().zipAny(logger1.streamIn()));
@@ -104,7 +94,5 @@ private class ZippedLogger<T1, T2> extends Logger<Tuple2<T1, T2>> {
         init();
     }
 
-    override public function streamIn() : Stream<LogLevel<Tuple2<T1, T2>>> {
-        return _zippedStream;
-    }
+    override public function streamIn() : Stream<LogLevel<Tuple2<T1, T2>>> return _zippedStream;
 }

@@ -2,26 +2,19 @@ package funk.io.logging;
 
 import funk.io.logging.LogLevel;
 import funk.reactives.Stream;
+import funk.types.AnyRef;
 
 class Log {
 
-    private static var defaultLogger : Logger<Dynamic>;
+    private static var defaultLogger : Logger<AnyRef>;
 
-    public static function init() {
-        defaultLogger = new Logger(Tag("Default"));
-    }
+    public static function init() defaultLogger = new Logger(Tag("Default"));
 
-    public static function logger() : Logger<Dynamic> {
-        return defaultLogger;
-    }
+    public static function logger() : Logger<AnyRef> return defaultLogger;
 
-    public static function streamIn() : Stream<LogLevel<Dynamic>> {
-        return defaultLogger.streamIn();
-    }
+    public static function streamIn() : Stream<LogLevel<AnyRef>> return defaultLogger.streamIn();
 
-    public static function streamOut() : Stream<Message<Dynamic>> {
-        return defaultLogger.streamOut();
-    }
+    public static function streamOut() : Stream<Message<AnyRef>> return defaultLogger.streamOut();
 }
 
 class LogTypes {
