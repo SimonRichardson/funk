@@ -219,6 +219,8 @@ class ActorCell implements Cell implements ActorContext {
 
     public function initChild(ref : ActorRef) : Option<ActorRef> return _children.initChild(ref);
 
+    public function attachChild(props : Props, name : String) : ActorRef return _children.attachChild(props, name);
+
     private function actorRecieve() : Predicate1<AnyRef> {
         return function(value : AnyRef) : Bool {
             _actor.receive(value);
@@ -439,6 +441,7 @@ private class Children {
         }
     }
 
+    @:allow(funk.actors)
     private function attachChild(props : Props, name : String) : ActorRef {
         return makeChild(_cell, props, checkName(name));
     }

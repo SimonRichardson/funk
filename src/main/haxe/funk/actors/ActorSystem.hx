@@ -42,7 +42,7 @@ class ActorSystem {
         return _provider.guardian().context().actorOf(props, name);
     }
 
-    public function actorFor(path : ActorPath) :Option<ActorRef> return _provider.guardian().context().actorFor(path);
+    public function actorFor(path : ActorPath) : Option<ActorRef> return _provider.guardian().context().actorFor(path);
 
     public function start() : ActorSystem {
         _provider.init(this);
@@ -65,6 +65,18 @@ class ActorSystem {
 
     @:allow(funk.actors)
     private function provider() : ActorRefProvider return _provider;
+
+    @:allow(funk.actors)
+    @:allow(funk.actors.events)
+    private function systemActorOf(props : Props, name : String) : ActorRef {
+        var systemGuardian = _provider.systemGuardian();
+        return if (AnyTypes.isInstanceOf(systemGuardian, LocalActorRef)) {
+            var local : LocalActorRef = cast systemGuardian;
+            local.underlying().attachChild(props, name);
+        } else {
+            Funk.error(IllegalOperationError());
+        }
+    }
 
     public function toString() return '[ActorSystem]';
 }

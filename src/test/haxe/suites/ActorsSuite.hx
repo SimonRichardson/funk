@@ -14,10 +14,16 @@ import funk.actors.patterns.MVCSupportTest;
 import funk.actors.patterns.WorkerActorSupportTest;
 import funk.actors.routing.RoundRobinRouterTest;
 
+import funk.io.logging.Log;
+import funk.io.logging.outputs.TraceOutput;
+
 class ActorsSuite extends TestSuite {
 
     public function new() {
         super();
+
+        var output = new TraceOutput();
+        output.add(Log.init().streamOut());
 
         add(funk.actors.ActorRefTest);
         add(funk.actors.ActorSystemTest);

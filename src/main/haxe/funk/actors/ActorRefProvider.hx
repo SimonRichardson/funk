@@ -12,6 +12,8 @@ import funk.actors.routing.RoundRobinRouter;
 import funk.actors.routing.Routing;
 import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
+import funk.io.logging.LogLevel;
+import funk.io.logging.LogValue;
 
 using funk.types.Option;
 using funk.collections.immutable.List;
@@ -122,6 +124,9 @@ class LocalActorRefProvider implements ActorRefProvider {
         _systemGuardian.start();
 
         rootGuardian.start();
+
+        // We don't have an option to do this earlier as we're waiting for the system guardian.
+        _eventStream.setupDefaultLoggers(system, Debug(Data({})));
     }
 
     public function rootPath() : ActorPath return _guardian.path();

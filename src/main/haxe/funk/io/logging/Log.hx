@@ -8,7 +8,10 @@ class Log {
 
     private static var defaultLogger : Logger<AnyRef>;
 
-    public static function init() defaultLogger = new Logger(Tag("Default"));
+    public static function init() : Logger<AnyRef> {
+        defaultLogger = new Logger(Tag("Default"));
+        return defaultLogger;
+    }
 
     public static function logger() : Logger<AnyRef> return defaultLogger;
 
