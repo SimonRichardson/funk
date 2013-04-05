@@ -11,9 +11,7 @@ class Lazys {
         var value : R = null;
 
         return function() {
-            if (value == null) {
-                value = func();
-            }
+            if (value == null) value = func();
             return value;
         };
     }

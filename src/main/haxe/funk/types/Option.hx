@@ -20,14 +20,10 @@ abstract Option<T>(OptionType<T>) from OptionType<T> to OptionType<T> {
     }
 
     @:from
-    inline public static function fromValue<T>(value : T) : Option<T> {
-        return OptionTypes.toOption(value);
-    }
-
+    inline public static function fromValue<T>(value : T) : Option<T> return OptionTypes.toOption(value);
+    
     @:to
-    inline public static function toString<T>(option : OptionType<T>) : String {
-        return OptionTypes.toString(option);
-    }
+    inline public static function toString<T>(option : OptionType<T>) : String return OptionTypes.toString(option);
 }
 
 class OptionTypes {
@@ -105,10 +101,7 @@ class OptionTypes {
                 switch(b) {
                     case Some(value1):
                         // Create the function when needed.
-                        var eq : Predicate2<T, T> = function(a, b) : Bool {
-                            return null != func ? func(a, b) : a == b;
-                        };
-
+                        var eq : Predicate2<T, T> = function(a, b) : Bool return null != func ? func(a, b) : a == b;
                         eq(value0, value1);
                     case _: false;
                 }
@@ -125,9 +118,7 @@ class OptionTypes {
         return switch (option) {
             case Some(value): Left(value);
             case _:
-                if (null == func) {
-                    Funk.error(ArgumentError());
-                }
+                if (null == func) Funk.error(ArgumentError());
                 Right(func());
         }
     }
@@ -136,9 +127,7 @@ class OptionTypes {
         return switch (option) {
             case Some(value): Right(value);
             case _:
-                if (null == func) {
-                    Funk.error(ArgumentError());
-                }
+                if (null == func) Funk.error(ArgumentError());
                 Left(func());
         }
     }
