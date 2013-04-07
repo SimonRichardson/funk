@@ -59,8 +59,5 @@ private class MockClass extends Actor {
         super();
     }
 
-    override public function receive(value : AnyRef) : Void {
-        trace("WTF");
-        trace(value);
-    }
+    override public function receive(value : AnyRef) : Void {}
 }

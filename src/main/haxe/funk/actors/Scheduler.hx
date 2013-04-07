@@ -137,30 +137,45 @@ private class DefaultTimer {
 
         _deferred = new Deferred();
 
-        _task = if (interval <= 0) {
+        var hasInterval = interval > 0;
+        var hasInitalDelay = initialDelay > 0;
+
+        _task = if (!hasInterval && !hasInitalDelay) {
+
+            // Execute it without delay or interval
             if (once) runnable.run();
             else Funk.error(ActorError("Invalid time interval for continuous execution"));
 
             _deferred.resolve(this);
-
             None;
+
+        } else if (!hasInterval && hasInitalDelay) {
+
+            // Execute it with a delay
+            Process.start(function() {
+                if (once) runnable.run();
+                else Funk.error(ActorError("Invalid time interval for continuous execution"));
+
+                _deferred.resolve(this);
+            }, initialDelay);
+
+        } else if (hasInterval && !hasInitalDelay) {
+
+            // Execute it without a delay, but with an interval
+            Process.start(function() {
+                runnable.run();
+
+                if (once) {
+                    task().stop();
+                    _deferred.resolve(this);
+                }
+            }, interval);
+
         } else {
 
-            if (initialDelay > 0) {
-
-                Process.start(function() {
-                    _task = Process.start(function() {
-                        runnable.run();
-
-                        if (once) {
-                            task().stop();
-                            _deferred.resolve(this);
-                        }
-                    }, interval);
-                }, initialDelay);
-
-            } else {
-                Process.start(function() {
+            // Execute it with a delay and a interval
+            Process.start(function() {
+                _task = Process.start(function() {
                     runnable.run();
 
                     if (once) {
@@ -168,7 +183,8 @@ private class DefaultTimer {
                         _deferred.resolve(this);
                     }
                 }, interval);
-            }
+            }, initialDelay);
+
         }
     }
 

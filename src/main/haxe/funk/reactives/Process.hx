@@ -78,16 +78,13 @@ class Task {
         };
 
         // Note (Simon) : Should use externs for this.
-        var time_ms = Std.int(time);
         var scope = this;
         #if flash9
-            id = untyped __global__["flash.utils.setInterval"](function() { scope._run(); }, time_ms);
-        #elseif flash
-            id = untyped _global["setInterval"](function() { scope._run(); }, time_ms);
+            id = untyped __global__["flash.utils.setInterval"](function() scope._run(), time);
         #elseif js
-            id = untyped window.setInterval(function() { scope._run(); }, time_ms);
+            id = js.Browser.window.setInterval(function() scope._run(), Std.int(time));
         #elseif (neko || cpp)
-            id = Thread.create(function() { scope.runLoop(time_ms); } );
+            id = Thread.create(function() scope.runLoop(Std.int(time)));
         #end
     }
 
@@ -104,10 +101,8 @@ class Task {
         // Note (Simon) : Should use externs for this.
         #if flash9
             untyped __global__["flash.utils.clearInterval"](id);
-        #elseif flash
-            untyped _global["clearInterval"](id);
         #elseif js
-            untyped window.clearInterval(id);
+            js.Browser.window.clearInterval(id);
         #elseif (neko || cpp)
             id.sendMessage("stop");
         #end
