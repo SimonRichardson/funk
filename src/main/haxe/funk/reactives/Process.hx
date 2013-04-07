@@ -82,7 +82,8 @@ class Task {
         #if flash9
             id = untyped __global__["flash.utils.setInterval"](function() scope._run(), time);
         #elseif js
-            id = js.Browser.window.setInterval(function() scope._run(), Std.int(time));
+            id = untyped __js__("setInterval")(function() scope._run(), time);
+            //id = js.Browser.window.setInterval(function() scope._run(), Std.int(time));
         #elseif (neko || cpp)
             id = Thread.create(function() scope.runLoop(Std.int(time)));
         #end
@@ -102,7 +103,7 @@ class Task {
         #if flash9
             untyped __global__["flash.utils.clearInterval"](id);
         #elseif js
-            js.Browser.window.clearInterval(id);
+            untyped __js__("clearInterval")(id);
         #elseif (neko || cpp)
             id.sendMessage("stop");
         #end

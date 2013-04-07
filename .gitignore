@@ -11,6 +11,7 @@
 *.zip
 *.log
 *_test.*
+*.d8_history
 .temp
 bin/*
 dump/*
