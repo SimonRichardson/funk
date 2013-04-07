@@ -1,6 +1,7 @@
 package funk.actors.dispatch;
 
 import funk.actors.dispatch.Dispatcher;
+import funk.types.Any;
 
 using funk.collections.immutable.List;
 using funk.types.Option;
@@ -14,9 +15,12 @@ class Dispatchers {
 
     private var _defaultGlobalDispatcher : Dispatcher;
 
-    public function new() {
+    public function new(system : ActorSystem) {
+        var scheduler = system.scheduler();
+        if (!AnyTypes.toBool(scheduler)) Funk.error(ArgumentError());
+
         _dispatchers = Nil;
-        _dispatchers = _dispatchers.prepend(new MessageDispatcher(DefaultDispatcherId));
+        _dispatchers = _dispatchers.prepend(new MessageDispatcher(DefaultDispatcherId, system.scheduler()));
 
         _defaultGlobalDispatcher = find(DefaultDispatcherId);
     }

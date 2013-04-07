@@ -40,8 +40,12 @@ class MessageDispatcher implements Dispatcher {
 
     private var _inhabitants : Int;
 
-    public function new(name : String) {
+    private var _scheduler : Scheduler;
+
+    public function new(name : String, scheduler : Scheduler) {
         _name = name;
+        _scheduler = scheduler;
+
         _actors = Nil;
         _inhabitants = 0;
     }
@@ -77,9 +81,7 @@ class MessageDispatcher implements Dispatcher {
     public function registerForExecution(mailbox : Mailbox, hasMessageHint: Bool, hasSystemMessageHint: Bool) : Void {
         if (mailbox.canBeScheduledForExecution(hasMessageHint, hasSystemMessageHint)) {
             if(mailbox.setAsScheduled()) {
-                try {
-                    mailbox.run();
-                } catch (e : Dynamic) {
+                try _scheduler.scheduleRunnerOnce(0, 0, mailbox) catch (e : Dynamic) {
                     mailbox.setAsIdle();
                 }
             }
@@ -118,6 +120,9 @@ class MessageDispatcher implements Dispatcher {
     }
 
     private function shutdown() : Void {
-
+        try _scheduler.close() catch(e : Dynamic) {
+            // FIXME (Simon) : Log out error
+            throw e;
+        }
     }
 }

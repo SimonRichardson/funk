@@ -62,9 +62,13 @@ class Task {
     private var _run : Function0<Void>;
     private var _func : Function0<Void>;
 
+    private var _isCancelled : Bool;
+
     public function new(func : Function0<Void>, time : Float) {
         _func = func;
         _time = time;
+
+        _isCancelled = false;
     }
 
     public function start() : Void {
@@ -92,6 +96,8 @@ class Task {
             return;
         }
 
+        _isCancelled = true;
+
         _run = function() {
         };
 
@@ -111,6 +117,8 @@ class Task {
         #end
     }
 
+    public function isCancelled() : Bool return _isCancelled;
+
     #if (neko||cpp)
     private function runLoop(time_ms) : Void {
         var shouldStop = false;
@@ -129,11 +137,7 @@ class Task {
     }
     #end
 
-    private function get_time() : Float {
-        return _time;
-    }
+    private function get_time() : Float return _time;
 
-    private function get_func() : Function0<Void> {
-        return _func;
-    }
+    private function get_func() : Function0<Void> return _func;
 }

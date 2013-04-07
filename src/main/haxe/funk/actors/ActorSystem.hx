@@ -4,6 +4,7 @@ import funk.actors.ActorPath;
 import funk.actors.ActorRefProvider;
 import funk.actors.dispatch.Dispatchers;
 import funk.actors.events.EventStream;
+import funk.actors.Scheduler;
 import funk.types.AnyRef;
 
 using funk.actors.ActorRef;
@@ -23,13 +24,16 @@ class ActorSystem {
 
     private var _dispatchers : Dispatchers;
 
+    private var _scheduler : Scheduler;
+
     function new(name : String, refProvider : ActorRefProvider) {
         _name = name;
 
         _isTerminated = false;
         _provider = refProvider;
 
-        _dispatchers = new Dispatchers();
+        _scheduler = new DefaultScheduler();
+        _dispatchers = new Dispatchers(this);
     }
 
     public static function create(name : String, ?refProvider : ActorRefProvider) : ActorSystem {
@@ -62,6 +66,8 @@ class ActorSystem {
     public function eventStream() : EventStream return _provider.eventStream();
 
     public function settings() : Settings return _provider.settings();
+
+    public function scheduler() : Scheduler return _scheduler;
 
     @:allow(funk.actors)
     private function provider() : ActorRefProvider return _provider;
