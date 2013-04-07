@@ -104,7 +104,7 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
 
 class ListTypes {
 
-    inline public static function contains<T>(list : List<T>, item : T, ?func : Predicate2<T, T>) : Bool {
+    public static function contains<T>(list : List<T>, item : T, ?func : Predicate2<T, T>) : Bool {
         var eq = function(a, b) {
             return null != func ? func(a, b) : a == b;
         };
@@ -121,7 +121,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function count<T>(list : List<T>, func : Predicate1<T>) : Int {
+    public static function count<T>(list : List<T>, func : Predicate1<T>) : Int {
         var counter = 0;
 
         var p = list;
@@ -134,7 +134,7 @@ class ListTypes {
         return counter;
     }
 
-    inline public static function dropLeft<T>(list : List<T>, amount : Int) : List<T> {
+    public static function dropLeft<T>(list : List<T>, amount : Int) : List<T> {
         if (amount < 0) {
             Funk.error(ArgumentError('Amount must be positive'));
         }
@@ -156,7 +156,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function dropRight<T>(list : List<T>, amount : Int) : List<T> {
+    public static function dropRight<T>(list : List<T>, amount : Int) : List<T> {
         var p = list;
 
         return if (amount < 0) {
@@ -182,7 +182,7 @@ class ListTypes {
         }
     }
 
-    inline public static function dropWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+    public static function dropWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
         var p = list;
         var result = Nil;
         while (nonEmpty(p)) {
@@ -197,7 +197,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function exists<T>(list : List<T>, func : Predicate1<T>) : Bool {
+    public static function exists<T>(list : List<T>, func : Predicate1<T>) : Bool {
         var p = list;
         var result = false;
         while (nonEmpty(p)) {
@@ -211,7 +211,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function flatMap<T1, T2>(list : List<T1>, func : Function1<T1, List<T2>>) : List<T2> {
+    public static function flatMap<T1, T2>(list : List<T1>, func : Function1<T1, List<T2>>) : List<T2> {
         var stack = Nil;
         var p = list;
         while (nonEmpty(p)) {
@@ -228,7 +228,7 @@ class ListTypes {
         });
     }
 
-    inline public static function filter<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+    public static function filter<T>(list : List<T>, func : Predicate1<T>) : List<T> {
         var stack = Nil;
         var allFiltered = true;
 
@@ -249,7 +249,7 @@ class ListTypes {
         return allFiltered ? all : reverse(stack);
     }
 
-    inline public static function filterNot<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+    public static function filterNot<T>(list : List<T>, func : Predicate1<T>) : List<T> {
         var stack = Nil;
         var allFiltered = true;
 
@@ -270,7 +270,7 @@ class ListTypes {
         return allFiltered ? all : reverse(stack);
     }
 
-    inline public static function find<T>(list : List<T>, func : Predicate1<T>) : Option<T> {
+    public static function find<T>(list : List<T>, func : Predicate1<T>) : Option<T> {
         var result = None;
         var p = list;
         while (nonEmpty(p)) {
@@ -283,7 +283,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function findIndexOf<T>(list : List<T>, func : Predicate1<T>) : Int {
+    public static function findIndexOf<T>(list : List<T>, func : Predicate1<T>) : Int {
         var index = 0;
         var p = list;
         var result = -1;
@@ -298,7 +298,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function foldLeft<T1, T2>( list : List<T1>,
+    public static function foldLeft<T1, T2>( list : List<T1>,
                                                     value : T2,
                                                     func : Function2<T2, T1, T2>
                                                     ) : Option<T2> {
@@ -310,7 +310,7 @@ class ListTypes {
         return Some(value);
     }
 
-    inline public static function foldRight<T1, T2>(    list : List<T1>,
+    public static function foldRight<T1, T2>(    list : List<T1>,
                                                         value : T2,
                                                         func : Function2<T2, T1, T2>
                                                         ) : Option<T2> {
@@ -323,7 +323,7 @@ class ListTypes {
         return Some(value);
     }
 
-    inline public static function forall<T>(list : List<T>, func : Predicate1<T>) : Bool {
+    public static function forall<T>(list : List<T>, func : Predicate1<T>) : Bool {
         var p = list;
         var result = true;
         while (nonEmpty(p)) {
@@ -336,7 +336,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function foreach<T>(list : List<T>, func : Function1<T, Void>) : Void {
+    public static function foreach<T>(list : List<T>, func : Function1<T, Void>) : Void {
         var p = list;
         while (nonEmpty(p)) {
             func(head(p));
@@ -344,7 +344,7 @@ class ListTypes {
         }
     }
 
-    inline public static function get<T>(list : List<T>, index : Int) : Option<T> {
+    public static function get<T>(list : List<T>, index : Int) : Option<T> {
         var p = list;
         return if (index < 0 || index > size(p)) {
             None;
@@ -365,7 +365,7 @@ class ListTypes {
         }
     }
 
-    inline public static function indexOf<T>(list : List<T>, value : T) : Int {
+    public static function indexOf<T>(list : List<T>, value : T) : Int {
         var index = 0;
         var p = list;
         var result = -1;
@@ -380,7 +380,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function insert<T>(list : List<T>, value : T, index : Int) : List<T> {
+    public static function insert<T>(list : List<T>, value : T, index : Int) : List<T> {
         var added = false;
 
         var stack = Nil;
@@ -403,7 +403,7 @@ class ListTypes {
         return reverse(stack);
     }
 
-    inline public static function map<T, E>(list : List<T>, func : Function1<T, E>) : List<E> {
+    public static function map<T, E>(list : List<T>, func : Function1<T, E>) : List<E> {
         var stack = Nil;
         var p = list;
         while (nonEmpty(p)) {
@@ -413,7 +413,7 @@ class ListTypes {
         return reverse(stack);
     }
 
-    inline public static function partition<T>(list : List<T>, func : Predicate1<T>) : Tuple2<List<T>, List<T>> {
+    public static function partition<T>(list : List<T>, func : Predicate1<T>) : Tuple2<List<T>, List<T>> {
         var left = Nil;
         var right = Nil;
 
@@ -431,7 +431,7 @@ class ListTypes {
         return tuple2(reverse(left), reverse(right));
     }
 
-    inline public static function reduceLeft<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
+    public static function reduceLeft<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
         var p = list;
         return if (size(p) < 1) {
             None;
@@ -448,7 +448,7 @@ class ListTypes {
         }
     }
 
-    inline public static function reduceRight<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
+    public static function reduceRight<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
         var p = list;
         return if (size(p) < 1) {
             None;
@@ -466,7 +466,7 @@ class ListTypes {
         }
     }
 
-    inline public static function takeLeft<T>(list : List<T>, amount : Int) : List<T> {
+    public static function takeLeft<T>(list : List<T>, amount : Int) : List<T> {
         var p = list;
         return if (amount < 0) {
             Funk.error(ArgumentError('Amount must be positive'));
@@ -486,7 +486,7 @@ class ListTypes {
         }
     }
 
-    inline public static function takeRight<T>(list : List<T>, amount : Int) : List<T> {
+    public static function takeRight<T>(list : List<T>, amount : Int) : List<T> {
         var p = list;
         return if (amount < 0) {
             Funk.error(ArgumentError('Amount must be positive'));
@@ -508,7 +508,7 @@ class ListTypes {
         }
     }
 
-    inline public static function takeWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
+    public static function takeWhile<T>(list : List<T>, func : Predicate1<T>) : List<T> {
         var stack = Nil;
         var p = list;
         while (nonEmpty(p)) {
@@ -521,7 +521,7 @@ class ListTypes {
         return reverse(stack);
     }
 
-    inline public static function zip<T1, T2>(list : List<T1>, other : List<T2>) : List<Tuple2<T1, T2>> {
+    public static function zip<T1, T2>(list : List<T1>, other : List<T2>) : List<Tuple2<T1, T2>> {
         var p = list;
         var amount = Std.int(Math.min(size(p), size(other)));
 
@@ -559,7 +559,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function appendIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
+    public static function appendIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
         var result : List<T> = Nil;
         while(iterator.hasNext()) {
             result = Cons(iterator.next(), result);
@@ -567,7 +567,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function appendIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
+    public static function appendIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
         var p = list;
         return appendIterator(p, iterable.iterator());
     }
@@ -577,7 +577,7 @@ class ListTypes {
         return Cons(item, p);
     }
 
-    inline public static function prependAll<T>(list : List<T>, items : List<T>) : List<T> {
+    public static function prependAll<T>(list : List<T>, items : List<T>) : List<T> {
         var p = list;
         var result = p;
 
@@ -589,7 +589,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function prependIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
+    public static function prependIterator<T>(list : List<T>, iterator : Iterator<T>) : List<T> {
         var result : List<T> = Nil;
         while(iterator.hasNext()) {
             result = Cons(iterator.next(), result);
@@ -597,7 +597,7 @@ class ListTypes {
         return result;
     }
 
-    inline public static function prependIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
+    public static function prependIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
         var p = list;
         return prependIterator(p, iterable.iterator());
     }
@@ -650,7 +650,7 @@ class ListTypes {
         return recursive(list, Nil);
     }
 
-    inline public static function size<T>(list : List<T>) : Int {
+    public static function size<T>(list : List<T>) : Int {
         var count = 0;
 
         var p = list;
@@ -662,7 +662,7 @@ class ListTypes {
         return count;
     }
 
-    inline public static function indices<T>(list : List<T>) : List<Int> {
+    public static function indices<T>(list : List<T>) : List<Int> {
         var p = list;
         var n = size(p);
         var stack = Nil;
@@ -677,7 +677,7 @@ class ListTypes {
         return dropRight(p, 1);
     }
 
-    inline public static function last<T>(list : List<T>) : Option<T> {
+    public static function last<T>(list : List<T>) : Option<T> {
         var value = None;
 
         var p = list;
@@ -689,7 +689,7 @@ class ListTypes {
         return value;
     }
 
-    inline public static function zipWithIndex<T>(list : List<T>) : List<Tuple2<T, Int>> {
+    public static function zipWithIndex<T>(list : List<T>) : List<Tuple2<T, Int>> {
         var p = list;
         var amount = size(p);
 
