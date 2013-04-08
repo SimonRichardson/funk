@@ -2,5 +2,5 @@ version=0.9.2.5
 src=src/test/haxe
 bin=bin
 report=bin/report
-hxml=test.hxml
+hxml=build/test.hxml
 classPaths=src/main/haxe

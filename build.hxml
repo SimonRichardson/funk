@@ -1,5 +1,0 @@
-# js debug
--js bin/main.js
--main funk.Funk
--cp src/main/haxe
--debug
