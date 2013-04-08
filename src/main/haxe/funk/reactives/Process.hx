@@ -51,8 +51,10 @@ class Process {
 
     #if test
     dynamic
+    #else
+    inline
     #end
-    inline public static function stamp() : Float {
+    public static function stamp() : Float {
         #if js
         return _performance.now(); 
         #else

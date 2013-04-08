@@ -138,7 +138,7 @@ class LocalActorRef implements InternalActorRef {
 
     private function initCell() : Void _actorCell.init(Strings.uuid());
 
-    public function toString() return '[ActorRef (path=${path()})]';
+    public function toString() return '[ActorRef (path=${path().toString()})]';
 }
 
 class EmptyActorRef implements InternalActorRef {
@@ -179,5 +179,5 @@ class EmptyActorRef implements InternalActorRef {
 
     public function getChild(names : List<String>) : Option<InternalActorRef> return None;
 
-    public function toString() return '[EmptyActorRef (path=${path()})]';
+    public function toString() return '[EmptyActorRef (path=${path().toString()})]';
 }

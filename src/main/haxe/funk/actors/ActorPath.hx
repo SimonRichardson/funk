@@ -121,25 +121,33 @@ class ChildActorPath implements ActorPath {
 // TODO (Simon) : Check if this needs optimizing.
 private class StringBuffer {
 
-    private var _buffer : List<String>;
+    private var _buffer : Array<String>;
 
     public function new() {
-        _buffer = Nil;
-    }
-
-    public function append(value : String) : StringBuffer {
-        _buffer = _buffer.append(value);
-        return this;
+        _buffer = [];
     }
 
     public function prepend(value : String) : StringBuffer {
-        _buffer = _buffer.prepend(value);
+        _buffer.push(value);
         return this;
     }
 
     public function toString() : String {
+        // This is done for performance reasons.
+        #if (js || flash)
+        var buf = "";
+        var index = _buffer.length;
+        while(--index>-1) {
+            buf += _buffer[index];
+        }
+        return buf;
+        #else 
         var buf = new StringBuf();
-        _buffer.foreach(function(value) buf.add(value));
+        var index = _buffer.length;
+        while(--index>-1) {
+            buf.add(_buffer[index]);
+        }
         return buf.toString();
+        #end
     }
 }
