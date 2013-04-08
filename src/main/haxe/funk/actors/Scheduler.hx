@@ -85,25 +85,38 @@ class DefaultScheduler implements Scheduler {
     }
 
     public function scheduleRunner(initialDelay : Float, interval : Float, runnable : Runnable) : Cancellable {
-        var timer = new DefaultTimer(initialDelay, interval, runnable);
-        timer.promise().then(function(timer){
-            _timers = _timers.filterNot(function(value) return value == timer);
-        });
+        var hasInterval = interval > 0;
 
-        _timers = _timers.prepend(timer);
+        return if (hasInterval) {
+            var timer = new DefaultTimer(initialDelay, interval, runnable);
+            timer.promise().then(function(timer){
+                _timers = _timers.filterNot(function(value) return value == timer);
+            });
 
-        return timer;
+            _timers = _timers.prepend(timer);
+            timer.start();
+        } else {
+            Funk.error(ActorError("Invalid time interval for continuous execution"));
+        }
     }
 
     public function scheduleRunnerOnce(initialDelay : Float, interval : Float, runnable : Runnable) : Cancellable {
-        var timer = new DefaultTimer(initialDelay, interval, runnable, true);
-        timer.promise().then(function(timer){
-            _timers = _timers.filterNot(function(value) return value == timer);
-        });
+        var hasInterval = interval > 0;
+        var hasInitalDelay = initialDelay > 0;
 
-        _timers = _timers.prepend(timer);
+        // If we inline this we get a massive speed upgrade.
+        return if (hasInterval && hasInitalDelay) {
+            var timer = new DefaultTimer(initialDelay, interval, runnable, true);
+            timer.promise().then(function(timer){
+                _timers = _timers.filterNot(function(value) return value == timer);
+            });
 
-        return timer;
+            _timers = _timers.prepend(timer);
+            timer.start();
+        } else {
+            runnable.run();
+            null;
+        }
     }
 
     private function cancel(timer : DefaultTimer) : Void {
@@ -131,19 +144,25 @@ private class DefaultTimer {
 
     private var _deferred : Deferred<DefaultTimer>;
 
+    private var _initialDelay : Float;
+
+    private var _interval : Float;
+
     public function new(initialDelay : Float, interval : Float, runnable : Runnable, ?once : Bool = false) {
         _runnable = runnable;
         _once = once;
 
         _deferred = new Deferred();
+    }
 
-        var hasInterval = interval > 0;
-        var hasInitalDelay = initialDelay > 0;
+    public function start() : DefaultTimer {
+        var hasInterval = _interval > 0;
+        var hasInitalDelay = _initialDelay > 0;
 
         _task = if (!hasInterval && !hasInitalDelay) {
 
             // Execute it without delay or interval
-            if (once) runnable.run();
+            if (_once) _runnable.run();
             else Funk.error(ActorError("Invalid time interval for continuous execution"));
 
             _deferred.resolve(this);
@@ -153,39 +172,40 @@ private class DefaultTimer {
 
             // Execute it with a delay
             Process.start(function() {
-                if (once) runnable.run();
+                if (_once) _runnable.run();
                 else Funk.error(ActorError("Invalid time interval for continuous execution"));
 
                 _deferred.resolve(this);
-            }, initialDelay);
+            }, _initialDelay);
 
         } else if (hasInterval && !hasInitalDelay) {
 
             // Execute it without a delay, but with an interval
             Process.start(function() {
-                runnable.run();
+                _runnable.run();
 
-                if (once) {
+                if (_once) {
                     task().stop();
                     _deferred.resolve(this);
                 }
-            }, interval);
+            }, _interval);
 
         } else {
 
             // Execute it with a delay and a interval
             Process.start(function() {
                 _task = Process.start(function() {
-                    runnable.run();
+                    _runnable.run();
 
-                    if (once) {
+                    if (_once) {
                         task().stop();
                         _deferred.resolve(this);
                     }
-                }, interval);
-            }, initialDelay);
-
+                }, _interval);
+            }, _initialDelay);
         }
+
+        return this;
     }
 
     public function task() : Task return _task.getOrElse(function() {

@@ -16,9 +16,13 @@ class Performance01 {
         var system = ActorSystem.create('system');
         var actor = system.actorOf(new Props(SimpleActor), 'simples');
 
+        var t = Process.stamp();
+
         for (i in 0...999) {
             actor.send('hello ${i}', actor);
         }
+
+        trace((Process.stamp() - t) / 1000 + ' seconds');
     }
 
     public static function main() {

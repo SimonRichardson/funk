@@ -13,6 +13,17 @@ import cpp.vm.Thread;
 
 class Process {
 
+    #if js
+    private static var _performance = untyped __js__('performance || {}; 
+            performance.now = (function() {
+                return  performance.now || 
+                        performance.mozNow ||
+                        function() {
+                            return new Date().getTime();
+                        };
+            })();');
+    #end
+
     #if test
     dynamic
     #end
@@ -41,8 +52,12 @@ class Process {
     #if test
     dynamic
     #end
-    public static function stamp() : Float {
+    inline public static function stamp() : Float {
+        #if js
+        return _performance.now(); 
+        #else
         return Date.now().getTime();
+        #end
     }
 }
 
@@ -83,7 +98,6 @@ class Task {
             id = untyped __global__["flash.utils.setInterval"](function() scope._run(), time);
         #elseif js
             id = untyped __js__("setInterval")(function() scope._run(), time);
-            //id = js.Browser.window.setInterval(function() scope._run(), Std.int(time));
         #elseif (neko || cpp)
             id = Thread.create(function() scope.runLoop(Std.int(time)));
         #end
