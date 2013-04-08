@@ -51,10 +51,12 @@ class AnyTest {
         AnyTypes.isInstanceOf(2147483647, Int).isTrue();
     }
 
+    #if !cpp
     @Test
     public function calling_isInstanceOf_2147483649_is_not_Int() : Void {
         AnyTypes.isInstanceOf(2147483648, Int).isFalse();
     }
+    #end
 
     @Test
     public function calling_isInstanceOf_minus_1_is_Int() : Void {

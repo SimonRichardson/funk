@@ -37,3 +37,18 @@
 -D test
 -D parallel
 -D net
+
+# cpp
+
+--next
+-cpp bin/cpp
+-main TestMain
+-cp src/main/haxe
+-cp src/test/haxe
+-debug
+-lib munit
+-lib hamcrest
+-D HXCPP_M64
+-D test
+-D parallel
+-D net

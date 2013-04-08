@@ -5,14 +5,6 @@ import funk.ioc.Injector;
 using funk.types.extensions.Strings;
 using massive.munit.Assert;
 using unit.Asserts;
-using funk.ioc.BindingTest.Strings;
-
-class Strings {
-
-    public static function unbox(value : String) : String {
-        return value.toString();
-    }
-}
 
 class BindingTest {
 
@@ -73,7 +65,7 @@ class BindingTest {
     public function binding_with_to_and_calling_getInstance_should_return_now_string() {
         var binding = new Binding(module);
         binding.to(String);
-        binding.getInstance().areEqual(new String("").unbox());
+        binding.getInstance().areEqual("");
     }
 
     @Test
