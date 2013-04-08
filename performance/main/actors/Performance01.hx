@@ -18,7 +18,7 @@ class Performance01 {
 
         var t = Process.stamp();
 
-        for (i in 0...9999) {
+        for (i in 0...(12 << 12)) {
             actor.send('hello ${i}', actor);
         }
 
@@ -26,7 +26,7 @@ class Performance01 {
     }
 
     public static function main() {
-        Process.start(function() new Performance01(), 5000);
+        Process.start(function() new Performance01(), 2000);
     }
 }
 

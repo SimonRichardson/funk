@@ -138,7 +138,9 @@ class LocalActorRef implements InternalActorRef {
 
     private function initCell() : Void _actorCell.init(Strings.uuid());
 
-    public function toString() return '[ActorRef (path=${path().toString()})]';
+    // Prevent printing out the path in the toString method as it causes massive slowdown if the path is
+    // a complex one. This refers to the js.Boot.__instanceof method, causing the toString method to be called.
+    public function toString() return '[ActorRef]';
 }
 
 class EmptyActorRef implements InternalActorRef {
@@ -179,5 +181,5 @@ class EmptyActorRef implements InternalActorRef {
 
     public function getChild(names : List<String>) : Option<InternalActorRef> return None;
 
-    public function toString() return '[EmptyActorRef (path=${path().toString()})]';
+    public function toString() return '[EmptyActorRef]';
 }

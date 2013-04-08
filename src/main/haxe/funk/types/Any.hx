@@ -48,7 +48,7 @@ class AnyTypes {
 
     public static function getClass<T>(value : T) : Class<T> return Type.getClass(value);
 
-    public static function isTypeOf<T>(value : T, possible : String) : Bool {
+    inline public static function isTypeOf<T>(value : T, possible : String) : Bool {
         var value = switch(Type.typeof(value)) {
             case TUnknown: 'unknown';
             case TObject: 'object';
@@ -79,7 +79,7 @@ class AnyTypes {
 
     public static function isBoolean<T>(value : T) : Bool return isTypeOf(value, 'bool');
 
-    public static function isInstanceOf<T : AnyRef>(value : T, possible : AnyRef) : Bool return Std.is(value, possible);
+    inline public static function isInstanceOf<T : AnyRef>(value : T, possible : AnyRef) : Bool return Std.is(value, possible);
 
     public static function toBool<T>(value : Null<T>) : Bool {
         return if(value == null) false;

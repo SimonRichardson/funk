@@ -13,6 +13,7 @@ import funk.actors.ActorRefProvider;
 import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
 import funk.types.Predicate1;
+import funk.types.extensions.EnumValues;
 import haxe.ds.StringMap;
 import haxe.Serializer;
 import haxe.Unserializer;
@@ -196,7 +197,8 @@ class ActorCell implements Cell implements ActorContext {
         _currentMessage = message;
         var msg : AnyRef = message.message();
         switch(msg) {
-            case _ if(Std.is(msg, Enum)): autoReceiveMessage(message);
+            case _ if(AnyTypes.isEnum(msg) && EnumValues.getEnum(msg) == ActorMessages): 
+                autoReceiveMessage(message);
             case _: receiveMessage(msg);
         }
         _currentMessage = null;
