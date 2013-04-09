@@ -1,17 +1,17 @@
 # server
--neko bin/server.n
+-neko ../bin/server.n
 -main tools.ServerMain
--cp src/test/haxe/
+-cp ../src/test/haxe/
 -D output
 
 # echo client
 --next
--neko bin/echo.n
+-neko ../bin/echo.n
 -main tools.EchoMain
--cp src/test/haxe
+-cp ../src/test/haxe
 -D output
 
 # run server
 --next
--cmd cd bin
+-cmd cd ../bin
 -cmd neko server.n
