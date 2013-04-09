@@ -31,10 +31,7 @@ class LoaderTypes {
 
         return if (mime.isJson()) cast new JsonLoader(request);
         else if(mime.isXml()) cast new XmlLoader(request);
-        else if(mime.isText()) {
-            cast new UriLoader(request, function (value) {
-                return value;
-            });
-        } else Funk.error(ArgumentError("Unsupported MimeType"));
+        else if(mime.isText()) cast new UriLoader(request, function (value) return value);
+        else Funk.error(ArgumentError("Unsupported MimeType"));
     }
 }

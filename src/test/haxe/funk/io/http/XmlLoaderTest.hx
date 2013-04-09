@@ -11,12 +11,12 @@ import haxe.Http;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
-using funk.collections.immutable.List;
+using funk.types.Option;
 using funk.net.http.HttpHeader;
 using funk.net.http.HttpStatusCode;
 using funk.net.http.UriRequest;
 using funk.net.http.Uri;
-using funk.types.Option;
+using funk.collections.immutable.List;
 using massive.munit.Assert;
 using unit.Asserts;
 

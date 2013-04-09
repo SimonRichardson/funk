@@ -108,6 +108,12 @@ class MapTypes {
         return new MapInstanceImpl(map);
     }
 
+    public static function list<K : String, V>(map : Map<K, V>) : List<Tuple2<K, V>> {
+        var list = Nil;
+        MapTypes.foreach(map, function(value) list = list.prepend(value));
+        return list;
+    }
+
     inline public static function iterable<K : String, V>(map : Map<K, V>) : Iterable<Tuple2<K, V>> {
         return new MapInstanceImpl(map);
     }

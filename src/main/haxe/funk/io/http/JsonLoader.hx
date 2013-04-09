@@ -23,6 +23,7 @@ using funk.reactives.Stream;
 using funk.types.Option;
 using funk.collections.Collection;
 using funk.collections.immutable.List;
+using funk.collections.immutable.Map;
 
 #if !js
 class JsonLoader<T : Dynamic> {
@@ -110,7 +111,7 @@ class JsonLoader<T : Dynamic> {
         _requestUri = switch(_request.url()) {
             case Some(url):
 
-                var parameters = _request.parameters().map(function(tuple) {
+                var parameters = _request.parameters().list().map(function(tuple) {
                     var key = tuple._1();
                     return switch (tuple._2()) {
                         case Some(value): '${key}=${value}';

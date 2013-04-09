@@ -1,6 +1,9 @@
 package funk.net.http;
 
+using Lambda;
 using funk.types.Option;
+using funk.types.Tuple2;
+using funk.types.extensions.Strings;
 using funk.collections.immutable.Map;
 using funk.collections.immutable.List;
 
@@ -101,7 +104,7 @@ class UriTypes {
     }
 
     public static function parameters(request : UriRequest) : Map<String, Option<String>> {
-        var map = Nil;
+        var map = Empty;
 
         // TODO (Simon) : This seems weak
         var opt = match(uri(request), 10);
@@ -110,8 +113,10 @@ class UriTypes {
             each.iter(function(value) {
                 var parts = value.split("=");
                 var l = parts[0];
-                var r = parts.length < 1 || parts[1] == null || parts[1].isEmptyOrBlank() ? None : Some(parts[1]);
-                map = map.prepend(tuple2(l, r));
+                var r : Option<String> = if(parts.length < 1 || parts[1] == null || parts[1].isEmptyOrBlank()) None;
+                else Some(parts[1]);
+
+                map = map.add(l, r);
             });
         });
 

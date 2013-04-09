@@ -1,34 +1,26 @@
 package funk.io.http;
 
 import funk.Funk;
-import funk.collections.Collection;
-import funk.collections.immutable.List;
-import funk.collections.immutable.Map;
-import funk.net.http.HttpHeader;
 import funk.net.http.HttpMethod;
-import funk.net.http.UriRequest;
 import funk.net.http.HttpResponse;
-import funk.net.http.HttpStatusCode;
-import funk.reactive.Stream;
-import funk.types.Deferred;
+import funk.futures.Deferred;
+import funk.futures.Promise;
 import funk.types.Function1;
-import funk.types.Promise;
-import haxe.ds.Option;
-import funk.types.Tuple2;
 import haxe.Http;
 
 using StringTools;
-using funk.collections.immutable.extensions.Lists;
-using funk.collections.extensions.Collections;
-using funk.net.http.extensions.HttpHeaders;
-using funk.net.http.extensions.HttpStatusCodes;
-using funk.net.http.extensions.UriRequests;
-using funk.net.http.extensions.Uris;
-using funk.reactive.extensions.Streams;
-using funk.types.extensions.Attempts;
+using funk.net.http.HttpHeader;
+using funk.net.http.HttpStatusCode;
+using funk.net.http.UriRequest;
+using funk.net.http.Uri;
+using funk.types.Option;
+using funk.types.Tuple2;
 using funk.types.extensions.Bools;
-using funk.types.extensions.Options;
-using funk.types.extensions.Tuples2;
+using funk.types.Attempt;
+using funk.reactives.Stream;
+using funk.collections.Collection;
+using funk.collections.immutable.Map;
+using funk.collections.immutable.List;
 
 class UriLoader<T> {
 
@@ -72,7 +64,7 @@ class UriLoader<T> {
             });
         });
 
-        _statusStream = Streams.identity(None);
+        _statusStream = StreamTypes.identity(None);
         _statusStream.dispatch(None);
 
         // Grab the last status value

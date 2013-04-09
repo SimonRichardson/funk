@@ -6,10 +6,10 @@ import funk.net.http.HttpMethod;
 import funk.net.http.HttpResponse;
 import funk.net.http.HttpStatusCode;
 import funk.net.http.UriRequest;
-import funk.reactive.Stream;
-import funk.types.Deferred;
-import funk.types.Promise;
-import haxe.ds.Option;
+import funk.reactives.Stream;
+import funk.futures.Deferred;
+import funk.futures.Promise;
+import funk.types.Option;
 import haxe.Http;
 
 class XmlLoader {

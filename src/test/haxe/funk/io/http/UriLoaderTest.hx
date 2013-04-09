@@ -4,19 +4,19 @@ import funk.io.http.JsonLoader;
 import funk.net.http.HttpMethod;
 import funk.reactives.Stream;
 import funk.types.Attempt;
-import funk.futures.Promise;
 import funk.types.Option;
 import haxe.Http;
 
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
+using funk.types.Option;
 using funk.collections.immutable.List;
 using funk.net.http.HttpHeader;
 using funk.net.http.HttpStatusCode;
 using funk.net.http.UriRequest;
 using funk.net.http.Uri;
-using funk.types.Option;
+using funk.futures.Promise;
 using massive.munit.Assert;
 using unit.Asserts;
 
