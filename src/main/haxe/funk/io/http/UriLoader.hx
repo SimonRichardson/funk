@@ -10,13 +10,13 @@ import haxe.Http;
 
 using StringTools;
 using funk.net.http.HttpHeader;
-using funk.net.http.HttpStatusCode;
 using funk.net.http.UriRequest;
 using funk.net.http.Uri;
 using funk.types.Option;
 using funk.types.Tuple2;
 using funk.types.extensions.Bools;
 using funk.types.Attempt;
+using funk.net.http.HttpStatusCode;
 using funk.reactives.Stream;
 using funk.collections.Collection;
 using funk.collections.immutable.Map;
@@ -86,7 +86,7 @@ class UriLoader<T> {
             }
         };
         _loader.onError = function (error : String) {
-            _statusStream.dispatch(HttpClientError(Failure).toOption());
+            _statusStream.dispatch(Some(HttpClientError(Failure)));
             _deferred.reject(HttpError('$error for url ${_request.uri()}'));
         };
     }

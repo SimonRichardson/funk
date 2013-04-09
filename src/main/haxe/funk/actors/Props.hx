@@ -9,7 +9,7 @@ import funk.types.Function0;
 import funk.types.Pass;
 
 interface Creator {
-    function create(): Actor;
+    function create() : Actor;
 }
 
 class Props {

@@ -18,9 +18,6 @@ class Log {
     public static function streamIn() : Stream<LogLevel<AnyRef>> return defaultLogger.streamIn();
 
     public static function streamOut() : Stream<Message<AnyRef>> return defaultLogger.streamOut();
-}
-
-class LogTypes {
 
     public static function log<T>(output : LogLevel<T>) : LogLevel<T> {
         Log.streamIn().dispatch(output);

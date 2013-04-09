@@ -80,7 +80,7 @@ class StdOutLogger extends Actor {
         switch(Type.typeof(value)) {
             case TEnum(e) if(e == LogLevel):
                 var logLevel : LogLevel<AnyRef> = cast value;
-                LogTypes.log(logLevel);
+                Log.log(logLevel);
             case _:
         }
     }
