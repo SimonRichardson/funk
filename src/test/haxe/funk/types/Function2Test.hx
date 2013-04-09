@@ -1,8 +1,10 @@
 package funk.types;
 
 using Type;
+using funk.types.Any;
 using funk.types.Function2;
 using funk.types.Tuple2;
+using funk.types.Wildcard;
 using massive.munit.Assert;
 
 class Function2Test {
@@ -90,5 +92,37 @@ class Function2Test {
             return t;
         }.tuple()(false, true);
         a.areEqual(tuple2(false, true));
+    }
+
+    @Test
+    public function when_carries_first_argument() : Void {
+        var a = function(value1, value2) {
+            return value1 + value2;
+        }.carries(_, 1)(2);
+        Assert.areEqual(a, 3);
+    }
+
+    @Test
+    public function when_carries_second_argument() : Void {
+        var a = function(value1, value2) {
+            return value1 + value2;
+        }.carries(1, _)(2);
+        Assert.areEqual(a, 3);
+    }
+
+    @Test
+    public function when_carries_both_arguments() : Void {
+        var a = function(value1, value2) {
+            return value1 + value2;
+        }.carries(_, _)(1)(2);
+        Assert.areEqual(a, 3);
+    }
+
+    @Test
+    public function when_carries_no_arguments() : Void {
+        var a = function(value1, value2) {
+            return value1 + value2;
+        }.carries(1, 2);
+        Assert.areEqual(a, 3);
     }
 }

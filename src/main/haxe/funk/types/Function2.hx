@@ -1,5 +1,8 @@
 package funk.types;
 
+import funk.types.Any;
+import funk.types.Wildcard;
+
 using funk.types.Function0;
 using funk.types.Function1;
 using funk.types.Option;
@@ -33,6 +36,19 @@ class Function2Types {
                                                 mapper : Function1<M, R>
                                                 ) : Function2<T1, T2, R> {
         return function(value0 : T1, value1 : T2) return mapper(func(value0, value1));
+    }
+
+    public static function carries<T1, T2, R>(  func : Function2<T1, T2, R>,
+                                                value0 : AnyRef,
+                                                value1 : AnyRef
+                                                ) : AnyRef {
+        var wildcard0 = AnyTypes.isInstanceOf(value0, WildcardType);
+        var wildcard1 = AnyTypes.isInstanceOf(value1, WildcardType);
+
+        if(wildcard0 && wildcard1) return curry(func);
+        else if(wildcard0 && !wildcard1) return function(value0) return func(value0, value1);
+        else if(!wildcard0 && wildcard1) return function(value1) return func(value0, value1);
+        else return func(value0, value1);
     }
 
     public static function curry<T1, T2, R>(func : Function2<T1, T2, R>) : Curry2<T1, T2, R> {

@@ -1,8 +1,10 @@
 package funk.types;
 
 using Type;
+using funk.types.Any;
 using funk.types.Function3;
 using funk.types.Tuple3;
+using funk.types.Wildcard;
 using massive.munit.Assert;
 
 class Function3Test {
@@ -102,5 +104,70 @@ class Function3Test {
             return t;
         }.tuple()(false, true, false);
         a.areEqual(tuple3(false, true, false));
+    }
+
+
+    @Test
+    public function when_carries_first_argument() : Void {
+        var a = function(value1, value2, value3) {
+            return value1 + value2 + value3;
+        }.carries(_, 2, 3)(1);
+        Assert.areEqual(a, 6);
+    }
+
+    @Test
+    public function when_carries_second_argument() : Void {
+        var a = function(value1, value2, value3) {
+            return value1 + value2 + value3;
+        }.carries(1, _, 3)(2);
+        Assert.areEqual(a, 6);
+    }
+
+    @Test
+    public function when_carries_third_argument() : Void {
+        var a = function(value1, value2, value3) {
+            return value1 + value2 + value3;
+        }.carries(1, 2, _)(3);
+        Assert.areEqual(a, 6);
+    }
+
+    @Test
+    public function when_carries_first_and_second_arguments() : Void {
+        var a = function(value1, value2, value3) {
+            return value1 + value2 + value3;
+        }.carries(_, _, 3)(1)(2);
+        Assert.areEqual(a, 6);
+    }
+
+    @Test
+    public function when_carries_first_and_third_arguments() : Void {
+        var a = function(value1, value2, value3) {
+            return value1 + value2 + value3;
+        }.carries(_, 2, _)(1)(3);
+        Assert.areEqual(a, 6);
+    }
+
+    @Test
+    public function when_carries_second_and_third_arguments() : Void {
+        var a = function(value1, value2, value3) {
+            return value1 + value2 + value3;
+        }.carries(1, _, _)(2)(3);
+        Assert.areEqual(a, 6);
+    }
+
+    @Test
+    public function when_carries_all_arguments() : Void {
+        var a = function(value1, value2, value3) {
+            return value1 + value2 + value3;
+        }.carries(_, _, _)(1)(2)(3);
+        Assert.areEqual(a, 6);
+    }
+
+    @Test
+    public function when_carries_no_arguments() : Void {
+        var a = function(value1, value2, value3) {
+            return value1 + value2 + value3;
+        }.carries(1, 2, 3);
+        Assert.areEqual(a, 6);
     }
 }

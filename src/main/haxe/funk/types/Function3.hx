@@ -1,5 +1,8 @@
 package funk.types;
 
+import funk.types.Any;
+import funk.types.Wildcard;
+
 using funk.types.Function0;
 using funk.types.Function1;
 using funk.types.Option;
@@ -33,6 +36,43 @@ class Function3Types {
                                                     mapper : Function1<M, R>
                                                     ) : Function3<T1, T2, T3, R> {
         return function(value0 : T1, value1 : T2, value2 : T3) return mapper(func(value0, value1, value2));
+    }
+
+    public static function carries<T1, T2, T3, R>(  func : Function3<T1, T2, T3, R>,
+                                                    value0 : AnyRef,
+                                                    value1 : AnyRef,
+                                                    value2 : AnyRef
+                                                    ) : AnyRef {
+        var wildcard0 = AnyTypes.isInstanceOf(value0, WildcardType);
+        var wildcard1 = AnyTypes.isInstanceOf(value1, WildcardType);
+        var wildcard2 = AnyTypes.isInstanceOf(value2, WildcardType);
+
+        if(wildcard0 && wildcard1 && wildcard2) return curry(func);
+        else if(wildcard0 && !wildcard1 && !wildcard2) return function(value0) return func(value0, value1, value2);
+        else if(wildcard0 && wildcard1 && !wildcard2) {
+            return function(value0) {
+                return function(value1) {
+                    return func(value0, value1, value2);
+                }
+            }
+        }
+        else if(!wildcard0 && wildcard1 && !wildcard2) return function(value1) return func(value0, value1, value2);
+        else if(!wildcard0 && !wildcard1 && wildcard2) return function(value2) return func(value0, value1, value2);
+        else if(!wildcard0 && wildcard1 && wildcard2) {
+            return function(value1) {
+                return function(value2) {
+                    return func(value0, value1, value2);
+                }
+            }
+        }
+        else if(wildcard0 && !wildcard1 && wildcard2) {
+            return function(value0) {
+                return function(value2) {
+                    return func(value0, value1, value2);
+                }
+            }
+        }
+        else return func(value0, value1, value2);
     }
 
     public static function curry<T1, T2, T3, R>(func : Function3<T1, T2, T3, R>) : Curry3<T1, T2, T3, R> {
