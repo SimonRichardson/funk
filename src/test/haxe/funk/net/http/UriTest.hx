@@ -117,8 +117,8 @@ class UriTest {
     }
 
     @Test
-    public function should_calling_a_url_on_parameters_return_Nil() : Void {
-        "http://www.localhost.com:8080#hash".fromUri().parameters().areEqual(Nil);
+    public function should_calling_a_url_on_parameters_return_Empty() : Void {
+        "http://www.localhost.com:8080#hash".fromUri().parameters().areEqual(Empty);
     }
 
     @Test
@@ -138,16 +138,31 @@ class UriTest {
 
     @Test
     public function should_calling_a_url_on_parameters_return_toString() : Void {
-        "http://www.localhost.com:8080?id0=0&id1=1&id2=2&id3=3#hash".fromUri().parameters().toString().areEqual('List(tuple2(id3,Some(3)), tuple2(id2,Some(2)), tuple2(id1,Some(1)), tuple2(id0,Some(0)))');
+        var str = "http://www.localhost.com:8080?id0=0&id1=1&id2=2&id3=3#hash".fromUri().parameters().toString();
+        str.substr(0, 3).areEqual('Map');
+        (str.indexOf('id3 => Some(3)') >= 0).isTrue();
+        (str.indexOf('id2 => Some(2)') >= 0).isTrue();
+        (str.indexOf('id1 => Some(1)') >= 0).isTrue();
+        (str.indexOf('id0 => Some(0)') >= 0).isTrue();
     }
 
     @Test
     public function should_calling_a_url_on_parameters_with_missing_values_return_toString() : Void {
-        "http://www.localhost.com:8080?id0&id1=1&id2&id3=3#hash".fromUri().parameters().toString().areEqual('List(tuple2(id3,Some(3)), tuple2(id2,None), tuple2(id1,Some(1)), tuple2(id0,None))');
+        var str = "http://www.localhost.com:8080?id0&id1&id2&id3=3#hash".fromUri().parameters().toString();
+        str.substr(0, 3).areEqual('Map');
+        (str.indexOf('id3 => Some(3)') >= 0).isTrue();
+        (str.indexOf('id2 => None') >= 0).isTrue();
+        (str.indexOf('id1 => None') >= 0).isTrue();
+        (str.indexOf('id0 => None') >= 0).isTrue();
     }
 
     @Test
     public function should_calling_a_url_on_parameters_with_missing_values_but_with_equality_return_toString() : Void {
-        "http://www.localhost.com:8080?id0&id1=1&id2=&id3=3#hash".fromUri().parameters().toString().areEqual('List(tuple2(id3,Some(3)), tuple2(id2,None), tuple2(id1,Some(1)), tuple2(id0,None))');
+        var str = "http://www.localhost.com:8080?id0&id1=1&id2=&id3=3#hash".fromUri().parameters().toString();
+        str.substr(0, 3).areEqual('Map');
+        (str.indexOf('id3 => Some(3)') >= 0).isTrue();
+        (str.indexOf('id2 => None') >= 0).isTrue();
+        (str.indexOf('id1 => Some(1)') >= 0).isTrue();
+        (str.indexOf('id0 => None') >= 0).isTrue();
     }
 }

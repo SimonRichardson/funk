@@ -69,7 +69,7 @@ class MapTypes {
     }
 
     public static function indices<K : String, V>(map : Map<K, V>) : List<K> {
-        return ListUtil.toList(nativeKeys(map));
+        return Nil.prependIterator(nativeKeys(map));
     }
 
     public static function map<K1 : String, V1, K2 : String, V2>(   map : Map<K1, V1>,
@@ -109,9 +109,9 @@ class MapTypes {
     }
 
     public static function list<K : String, V>(map : Map<K, V>) : List<Tuple2<K, V>> {
-        var list = Nil;
-        MapTypes.foreach(map, function(value) list = list.prepend(value));
-        return list;
+        var result = Nil;
+        MapTypes.foreach(map, function(value) result = result.prepend(value));
+        return result;
     }
 
     inline public static function iterable<K : String, V>(map : Map<K, V>) : Iterable<Tuple2<K, V>> {
