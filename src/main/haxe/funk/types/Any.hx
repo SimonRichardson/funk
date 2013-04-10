@@ -84,7 +84,6 @@ class AnyTypes {
         #if js
         untyped {
             if(__js__('value === null || possible === null')) return false;
-            if(value == possible) return true;
 
             if(__js__('typeof(possible) === "function"')) {
                 if(__js__("value instanceof possible")) {
