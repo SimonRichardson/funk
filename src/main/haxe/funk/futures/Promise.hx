@@ -13,11 +13,11 @@ using funk.types.Tuple2;
 
 interface Promise<T> {
 
-    function then(func : Function1<T, Void>) : Promise<T>;
+    function then<R>(func : Function1<T, R>) : Promise<R>;
 
-    function but(func : Function1<Errors, Void>) : Promise<T>;
+    function but<R>(func : Function1<Errors, R>) : Promise<R>;
 
-    function when(func : Function1<Attempt<T>, Void>) : Promise<T>;
+    function when<R>(func : Function1<Attempt<T>, R>) : Promise<R>;
 
     function progress(func : Function1<Float, Void>) : Promise<T>;
 }

@@ -61,50 +61,50 @@ class Deferred<T> {
         };
     }
 
-    public function progress(value : Float) : Void {
-        switch (_values.last()) {
+    public function progress(value : Float) : Float {
+       return switch (_values.last()) {
             case Some(state):
                 switch(state) {
-                    case Pending: _progressStream.dispatch(value);
+                    case Pending: 
+                        _progressStream.dispatch(value);
+                        value;
                     case _: Funk.error(IllegalOperationError('Invalid state'));
                 }
-            case None: Funk.error(IllegalOperationError('Invalid value'));
+            case _: Funk.error(IllegalOperationError('Invalid value'));
         }
     }
 
-    public function resolve(value : T) : Void {
-        switch(_values.last()) {
+    public function resolve(value : T) : T {
+        return switch(_values.last()) {
             case Some(state):
                 switch(state) {
-                    case Pending: _stateStream.dispatch(Resolved(Some(value)));
+                    case Pending: 
+                        _stateStream.dispatch(Resolved(Some(value)));
+                        value;
                     case _: Funk.error(IllegalOperationError('Invalid state'));
                 }
-            case None: Funk.error(IllegalOperationError('Invalid value'));
+            case _: Funk.error(IllegalOperationError('Invalid value'));
         }
     }
 
-    public function reject(error : Errors) : Void {
-        switch(_values.last()) {
+    public function reject(error : Errors) : Errors {
+        return switch(_values.last()) {
             case Some(state):
                 switch(state) {
-                    case Pending: _stateStream.dispatch(Rejected(error));
+                    case Pending: 
+                        _stateStream.dispatch(Rejected(error));
+                        error;
                     case _: Funk.error(IllegalOperationError('Invalid state'));
                 }
-            case None: Funk.error(IllegalOperationError('Invalid value'));
+            case _: Funk.error(IllegalOperationError('Invalid value'));
         }
     }
 
-    public function abort() : Void {
-        _stateStream.dispatch(Aborted);
-    }
+    public function abort() : Void _stateStream.dispatch(Aborted);
 
-    public function promise() : Promise<T> {
-        return new PromiseImpl<T>(_stateStream, _progressStream, _values.last());
-    }
+    public function promise() : Promise<T> return new PromiseImpl<T>(_stateStream, _progressStream, _values.last());
 
-    public function states() : Collection<State<T>> {
-        return _values;
-    }
+    public function states() : Collection<State<T>> return _values;
 
     public function values() : Collection<T> {
         return cast _values.map(function(state) {
@@ -172,32 +172,47 @@ private class PromiseImpl<T> implements Promise<T> {
         });
     }
 
-    public function then(func : Function1<T, Void>) : Promise<T> {
+    public function then<R>(func : Function1<T, R>) : Promise<R> {
+        var deferred = new Deferred();
+        var promise = deferred.promise();
         switch(_state){
-            case Pending: _then.add(func);
-            case Resolved(option): func(option.get());
+            case Pending: _then.add(function(v) return deferred.resolve(func(v)));
+            case Resolved(option): deferred.resolve(func(option.get()));
             case _:
         }
-        return this;
+        return promise;
     }
 
-    public function but(func : Function1<Errors, Void>) : Promise<T> {
+    public function but<R>(func : Function1<Errors, R>) : Promise<R> {
+        var deferred = new Deferred();
+        var promise = deferred.promise();
         switch(_state){
-            case Pending: _but.add(func);
-            case Rejected(value): func(value);
+            case Pending: _but.add(function(v) {
+                var result = func(v);
+                deferred.reject(v);
+                return result;
+            });
+            case Rejected(value): deferred.reject(cast func(value));
             case _:
         }
-        return this;
+        return promise;
     }
 
-    public function when(func : Function1<Attempt<T>, Void>) : Promise<T> {
+    public function when<R>(func : Function1<Attempt<T>, R>) : Promise<R> {
+        var deferred = new Deferred();
+        var promise = deferred.promise();
         switch(_state){
-            case Pending: _when.add(func);
-            case Resolved(option): func(Success(option.get()));
-            case Rejected(value): func(Failure(value));
+            case Pending: _when.add(function(attempt) {
+                return switch(attempt) {
+                    case Success(_): deferred.resolve(func(attempt));
+                    case _: cast deferred.reject(cast func(attempt));
+                };
+            });
+            case Resolved(option): deferred.resolve(func(Success(option.get())));
+            case Rejected(value): deferred.reject(cast func(Failure(value)));
             case _:
         }
-        return this;
+        return promise;
     }
 
     public function progress(func : Function1<Float, Void>) : Promise<T> {
@@ -208,22 +223,13 @@ private class PromiseImpl<T> implements Promise<T> {
 
 class EmptyPromise<T> implements Promise<T> {
 
-    public function new() {
-    }
+    public function new() {}
 
-    public function then(func : Function1<T, Void>) : Promise<T> {
-        return this;
-    }
+    public function then<R>(func : Function1<T, R>) : Promise<R> return new Deferred().promise();
 
-    public function but(func : Function1<Errors, Void>) : Promise<T> {
-        return this;
-    }
+    public function but<R>(func : Function1<Errors, R>) : Promise<R> return new Deferred().promise();
 
-    public function when(func : Function1<Attempt<T>, Void>) : Promise<T> {
-        return this;
-    }
+    public function when<R>(func : Function1<Attempt<T>, R>) : Promise<R> return new Deferred().promise();
 
-    public function progress(func : Function1<Float, Void>) : Promise<T> {
-        return this;
-    }
+    public function progress(func : Function1<Float, Void>) : Promise<T> return new Deferred().promise();
 }
