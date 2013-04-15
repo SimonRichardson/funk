@@ -8,7 +8,7 @@
 -lib hamcrest
 -D test
 -D parallel
--D net
+#-D net
 
 # Neko
 
@@ -21,7 +21,7 @@
 -lib munit
 -lib hamcrest
 -D test
--D net
+#-D net
 
 # as3
 
@@ -36,7 +36,7 @@
 -lib hamcrest
 -D test
 -D parallel
--D net
+#-D net
 
 # cpp
 

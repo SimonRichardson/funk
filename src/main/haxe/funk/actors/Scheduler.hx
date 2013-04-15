@@ -159,51 +159,27 @@ private class DefaultTimer {
         var hasInterval = _interval > 0;
         var hasInitalDelay = _initialDelay > 0;
 
-        _task = if (!hasInterval && !hasInitalDelay) {
-
+        function callable0() {
             // Execute it without delay or interval
             if (_once) _runnable.run();
             else Funk.error(ActorError("Invalid time interval for continuous execution"));
 
             _deferred.resolve(this);
-            None;
-
-        } else if (!hasInterval && hasInitalDelay) {
-
-            // Execute it with a delay
-            Process.start(function() {
-                if (_once) _runnable.run();
-                else Funk.error(ActorError("Invalid time interval for continuous execution"));
-
-                _deferred.resolve(this);
-            }, _initialDelay);
-
-        } else if (hasInterval && !hasInitalDelay) {
-
-            // Execute it without a delay, but with an interval
-            Process.start(function() {
-                _runnable.run();
-
-                if (_once) {
-                    task().stop();
-                    _deferred.resolve(this);
-                }
-            }, _interval);
-
-        } else {
-
-            // Execute it with a delay and a interval
-            Process.start(function() {
-                _task = Process.start(function() {
-                    _runnable.run();
-
-                    if (_once) {
-                        task().stop();
-                        _deferred.resolve(this);
-                    }
-                }, _interval);
-            }, _initialDelay);
         }
+
+        function callable1() {
+            _runnable.run();
+
+            if (_once) {
+                task().stop();
+                _deferred.resolve(this);
+            }
+        }
+
+        _task = if (!hasInterval && !hasInitalDelay) { callable0(); None; }
+        else if (!hasInterval && hasInitalDelay) Process.start(function() callable0(), _initialDelay);
+        else if (hasInterval && !hasInitalDelay) Process.start(function() callable1(), _interval);
+        else Process.start(function() _task = Process.start(function() callable1(), _interval), _initialDelay);
 
         return this;
     }
