@@ -8,6 +8,7 @@ import funk.actors.ActorTest;
 import funk.actors.PropsTest;
 import funk.actors.ReactorTest;
 import funk.actors.SchedulerTest;
+import funk.actors.StashActorTest;
 import funk.actors.events.EventStreamTest;
 import funk.actors.patterns.ActSupportTest;
 import funk.actors.patterns.AskSupportTest;
@@ -32,6 +33,7 @@ class ActorsSuite extends TestSuite {
         add(funk.actors.PropsTest);
         add(funk.actors.ReactorTest);
         add(funk.actors.SchedulerTest);
+        add(funk.actors.StashActorTest);
 
         add(funk.actors.events.EventStreamTest);
 

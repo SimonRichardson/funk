@@ -26,6 +26,10 @@ class Props {
         _dispatcher = Dispatchers.DefaultDispatcherId;
     }
 
+    public function create(actor : Actor) : Props {
+        return new Props().withCreator(new SingletonCreatorImpl(actor));
+    }
+
     public function creator() : Function0<Actor> return _creator.create;
 
     public function dispatcher() : String return _dispatcher;
@@ -69,4 +73,15 @@ private class CreatorImpl implements Creator {
         return if (AnyTypes.toBool(_actor)) Pass.instanceOf(_actor)();
         else Funk.error(ActorError("Actor instance passed to Props can't be 'null'"));
     }
+}
+
+private class SingletonCreatorImpl implements Creator {
+
+    private var _actor : Actor;
+
+    public function new(actor : Actor) {
+        _actor = actor;
+    }
+
+    public function create() : Actor return _actor;
 }

@@ -131,6 +131,7 @@ class LocalActorRef implements InternalActorRef {
     }
 
     @:allow(funk.actors)
+    @:allow(funk.actors.dispatch)
     @:allow(funk.actors.patterns)
     private function underlying() : ActorCell return cast _actorCell;
 

@@ -79,6 +79,11 @@ class AnyTypes {
 
     public static function isBoolean<T>(value : T) : Bool return isTypeOf(value, 'bool');
 
+    public static function asInstanceOf<T : AnyRef, R>(value : T, possible : Class<R>) : R {
+        // Runtime cast, rather than a compile type cast.
+        return Std.is(value, possible) ? cast value : throw 'Cannot cast $value to $possible';
+    }
+
     public static function isInstanceOf<T : AnyRef>(value : T, possible : AnyRef) : Bool {
         // Performance optimisation.
         #if js

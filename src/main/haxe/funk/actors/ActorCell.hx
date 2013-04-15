@@ -373,6 +373,9 @@ class ActorCell implements Cell implements ActorContext {
     @:allow(funk.actors)
     private function unreserveChild(name : String) : Void _children.unreserveChild(name);
 
+    @:allow(funk.actors)
+    private function currentMessage() : EnvelopeMessage return _currentMessage;
+
     public function toString() return '[ActorCell (path=${self().path()})]';
 }
 

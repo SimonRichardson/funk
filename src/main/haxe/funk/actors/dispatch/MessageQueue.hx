@@ -16,6 +16,8 @@ interface MessageQueue {
   function numberOfMessages() : Int;
 
   function hasMessages() : Bool;
+
+  function cleanUp(owner : ActorRef, deadLetters : MessageQueue) : Void;
 }
 
 interface SystemMessageQueue {
@@ -29,6 +31,13 @@ interface SystemMessageQueue {
     function hasSystemMessages() : Bool;
 }
 
+interface QueueBaseMessageQueue extends MessageQueue {
+    
+    function queue() : List<EnvelopeMessage>;
+
+    function enqueueFirst(receiver : ActorRef, handle : EnvelopeMessage) : Void;
+}
+
 class MailboxMessageQueue {
 
     public static function create(actor : Option<ActorCell>) : MessageQueue {
@@ -39,7 +48,7 @@ class MailboxMessageQueue {
     }
 }
 
-private class UnboundedMessageQueue implements MessageQueue {
+private class UnboundedMessageQueue implements QueueBaseMessageQueue {
 
     private var _list : List<EnvelopeMessage>;
 
@@ -49,13 +58,27 @@ private class UnboundedMessageQueue implements MessageQueue {
 
     public function enqueue(receiver : ActorRef, handle : EnvelopeMessage) : Void _list = _list.append(handle);
 
+    public function enqueueFirst(receiver : ActorRef, handle : EnvelopeMessage) : Void _list = _list.prepend(handle);
+
     public function dequeue() : Option<EnvelopeMessage> {
         var head = _list.headOption();
         _list = ListTypes.tail(_list);
         return head;
     }
 
+    public function queue() : List<EnvelopeMessage> return _list;
+
     public function numberOfMessages() : Int return _list.size();
 
     public function hasMessages() : Bool return _list.nonEmpty();
+
+    public function cleanUp(owner : ActorRef, deadLetters : MessageQueue) : Void {
+        if (hasMessages()) {
+            var p = _list;
+            while(p.nonEmpty()) {
+                deadLetters.enqueue(owner, p.head());
+                p = p.tail();
+            }  
+        }
+    }
 }

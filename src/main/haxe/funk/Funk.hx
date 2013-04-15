@@ -80,6 +80,7 @@ class Funk {
 
         #if (debug && !sys) trace(error.toString()); #end
 
+        // Why does this not bubble up, I wonder who is catching this?
         throw error;
 
         return null;

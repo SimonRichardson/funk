@@ -3,6 +3,8 @@ package funk.actors;
 import funk.actors.ActorPath;
 import funk.actors.ActorRefProvider;
 import funk.actors.dispatch.Dispatchers;
+import funk.actors.dispatch.Mailbox;
+import funk.actors.dispatch.MessageQueue;
 import funk.actors.events.EventStream;
 import funk.actors.Scheduler;
 import funk.types.AnyRef;
@@ -79,6 +81,30 @@ class ActorSystem {
         return if (AnyTypes.isInstanceOf(systemGuardian, LocalActorRef)) {
             var local : LocalActorRef = cast systemGuardian;
             local.underlying().attachChild(props, name);
+        } else {
+            Funk.error(IllegalOperationError());
+        }
+    }
+
+    @:allow(funk.actors)
+    @:allow(funk.actors.events)
+    private function deadLetterMailbox() : Mailbox {
+        var deadLetters = _provider.deadLetters();
+        return if (AnyTypes.isInstanceOf(deadLetters, LocalActorRef)) {
+            var local : LocalActorRef = cast deadLetters;
+            local.underlying().mailbox();
+        } else {
+            Funk.error(IllegalOperationError());
+        }
+    }
+
+    @:allow(funk.actors)
+    @:allow(funk.actors.events)
+    private function deadLetterQueue() : MessageQueue {
+        var deadLetters = _provider.deadLetters();
+        return if (AnyTypes.isInstanceOf(deadLetters, LocalActorRef)) {
+            var local : LocalActorRef = cast deadLetters;
+            local.underlying().mailbox().messageQueue();
         } else {
             Funk.error(IllegalOperationError());
         }

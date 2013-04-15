@@ -197,6 +197,29 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
             }
         }
     }
+
+    public function messageQueue() : MessageQueue return _messageQueue;
+
+    public function cleanUp(owner : ActorRef, deadLetters : MessageQueue) : Void {
+        // We could dispose of things here.
+        dispose();
+    }
+
+    public function dispose() : Void {
+        if (_actor.toBool()) {
+            var self = _actor.self();
+            var sys = _actor.system();
+            var dlm = sys.deadLetterMailbox();
+            while(hasSystemMessages()) {
+                switch(systemDequeue()) {
+                    case Some(msg): dlm.systemEnqueue(self, msg);
+                    case _:
+                }
+            }
+
+            if(_messageQueue.toBool()) _messageQueue.cleanUp(self, sys.deadLetterQueue());
+        }
+    }
 }
 
 private class DefaultSystemMessageQueue implements SystemMessageQueue {
