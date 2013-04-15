@@ -18,7 +18,6 @@ class ActorTest {
     public function setup() : Void {
         _system = ActorSystem.create('system');
         _actor = _system.actorOf(new Props(MockClass), "listener");
-        trace(_system.printTree());
     }
 
     @Test

@@ -46,6 +46,21 @@ class AnyTypes {
         }
     }
 
+    public static function getSimpleName<T>(value : T)  : String {
+        function extract(name : String) {
+            var runtimeIndexName = name.indexOf('{');
+            return if (runtimeIndexName >= 0) 'Unknown';
+            else name.substr(name.lastIndexOf(".") + 1);
+        }
+
+        var name = getName(value);
+        return switch (Type.typeof(value)) {
+            case TObject: extract(name);
+            case TClass(_): extract(name);
+            case _: name;
+        }
+    }
+
     public static function getClass<T>(value : T) : Class<T> return Type.getClass(value);
 
     inline public static function isTypeOf<T>(value : T, possible : String) : Bool {
@@ -81,7 +96,7 @@ class AnyTypes {
 
     public static function asInstanceOf<T : AnyRef, R>(value : T, possible : Class<R>) : R {
         // Runtime cast, rather than a compile type cast.
-        return Std.is(value, possible) ? cast value : throw 'Cannot cast $value to $possible';
+        return isInstanceOf(value, possible) ? cast value : throw 'Cannot cast $value to $possible';
     }
 
     public static function isInstanceOf<T : AnyRef>(value : T, possible : AnyRef) : Bool {

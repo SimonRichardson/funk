@@ -185,14 +185,16 @@ class RootGuardianActorRef extends EmptyActorRef {
     }
 
     override public function getChild(names : List<String>) : Option<InternalActorRef> {
-        if (!Std.is(_provider, LocalActorRefProvider)) {
+        if (!AnyTypes.isInstanceOf(_provider, LocalActorRefProvider)) {
             Funk.error(IllegalOperationError());
         }
 
         var local : LocalActorRefProvider = cast _provider;
         return switch(names.head()) {
             case "deadLetters": Some(cast local.deadLetters());
-            case "user": cast local.actorFrom(cast local.guardian(), names.tail());
+            case "user":
+                if (names.tail().isEmpty()) Some(cast local.guardian());
+                else cast local.actorFrom(cast local.guardian(), names.tail());
             case "system": cast local.actorFrom(cast local.systemGuardian(), names.tail());
             case _: None;
         }

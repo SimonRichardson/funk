@@ -121,17 +121,17 @@ class ActorSystem {
                     var local : LocalActorRef = cast node;
                     var buffer = '';
                     buffer += indent.isEmpty() ? '-> ' : indent.dropRight(1) + '|-> ';
-                    buffer += '${node.path().name()} ${AnyTypes.getName(name)} ';
+                    buffer += '${node.path().name()} ${AnyTypes.getSimpleName(local)} ';
 
                     var cell = local.underlying();
                     buffer += switch(cell) {
-                        case _ if(cell.actor().toBool()): AnyTypes.getName(cell.actor());
+                        case _ if(cell.actor().toBool()): AnyTypes.getSimpleName(cell.actor());
                         case _ if(!cell.actor().toBool()): 'null';
-                        case _:  AnyTypes.getName(cell);
+                        case _:  AnyTypes.getSimpleName(cell);
                     }
 
                     buffer += switch(cell) {
-                        case _ if(cell.actor().toBool()): ' status=${cell.mailbox().status()}';
+                        case _ if(cell.actor().toBool()): ' status=\'${cell.mailbox().status()}\'';
                         case _: '';
                     }
 
@@ -145,7 +145,7 @@ class ActorSystem {
                         case _ if(AnyTypes.isInstanceOf(refs, TerminatedChildrenContainer)):
                             refs.toString();
                         case _ if(AnyTypes.isInstanceOf(refs, NormalChildrenContainer)):
-                            '${children.size()} children';
+                            'numChildren=\'${children.size()}\' children';
                         case _: AnyTypes.getName(refs);
                     }
 
@@ -159,6 +159,7 @@ class ActorSystem {
 
             }
         }
-        return printNode(actorFor(actorPath()).get(), "");
+
+        return '\n${printNode(actorFor(actorPath()).get(), "")}';
     }
 }
