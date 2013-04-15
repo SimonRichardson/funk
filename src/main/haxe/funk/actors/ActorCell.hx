@@ -362,6 +362,9 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     @:allow(funk.actors)
+    private function actor() : Actor return _actor;
+
+    @:allow(funk.actors)
     private function provider() : ActorRefProvider return _system.provider();
 
     @:allow(funk.actors)
@@ -375,6 +378,9 @@ class ActorCell implements Cell implements ActorContext {
 
     @:allow(funk.actors)
     private function currentMessage() : EnvelopeMessage return _currentMessage;
+
+    @:allow(funk.actors)
+    private function childrenRefs() : ChildrenContainer return _children.container();
 
     public function toString() return '[ActorCell (path=${self().path()})]';
 }
@@ -446,6 +452,8 @@ private class Children {
         }
     }
 
+    public function container() : ChildrenContainer return _container;
+
     @:allow(funk.actors)
     private function attachChild(props : Props, name : String) : ActorRef {
         return makeChild(_cell, props, checkName(name));
@@ -505,12 +513,12 @@ interface ChildrenContainer {
     function isNormal(): Bool;
 }
 
-private enum ChildStats {
+enum ChildStats {
     ChildNameReserved;
     ChildRestartStats(child : ActorRef);
 }
 
-private class NormalChildrenContainer implements ChildrenContainer {
+class NormalChildrenContainer implements ChildrenContainer {
 
     private var _map : Map<String, ChildStats>;
 
@@ -570,7 +578,7 @@ private class NormalChildrenContainer implements ChildrenContainer {
     public function isNormal() : Bool return true;
 }
 
-private class TerminatingChildrenContainer implements ChildrenContainer {
+class TerminatingChildrenContainer implements ChildrenContainer {
 
     private var _map : Map<String, ChildStats>;
 
@@ -631,7 +639,7 @@ private class TerminatingChildrenContainer implements ChildrenContainer {
     public function isNormal() : Bool return _userRequest;
 }
 
-private class TerminatedChildrenContainer implements ChildrenContainer {
+class TerminatedChildrenContainer implements ChildrenContainer {
 
     public function new() {}
 

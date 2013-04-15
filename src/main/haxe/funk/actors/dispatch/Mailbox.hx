@@ -90,6 +90,8 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
 
     public function name() : String return _dispatcher.name();
 
+    public function status() : Int return _status;
+
     public function becomeOpen() : Bool {
         return switch(_status) {
             case _ if((_status & Closed) == Closed):

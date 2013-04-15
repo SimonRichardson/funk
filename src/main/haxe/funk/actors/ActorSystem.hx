@@ -1,5 +1,6 @@
 package funk.actors;
 
+import funk.actors.ActorCell;
 import funk.actors.ActorPath;
 import funk.actors.ActorRefProvider;
 import funk.actors.dispatch.Dispatchers;
@@ -10,9 +11,10 @@ import funk.actors.Scheduler;
 import funk.types.AnyRef;
 
 using funk.actors.ActorRef;
-using funk.collections.immutable.List;
-using funk.types.Any;
 using funk.types.Option;
+using funk.collections.immutable.List;
+using funk.types.extensions.Strings;
+using funk.types.Any;
 using funk.futures.Promise;
 using funk.types.Lazy;
 
@@ -111,4 +113,52 @@ class ActorSystem {
     }
 
     public function toString() return '[ActorSystem]';
+
+    public function printTree() : String {
+        function printNode(node : ActorRef, indent : String) : String {
+            return switch(node) {
+                case _ if(AnyTypes.isInstanceOf(node, LocalActorRef)):
+                    var local : LocalActorRef = cast node;
+                    var buffer = '';
+                    buffer += indent.isEmpty() ? '-> ' : indent.dropRight(1) + '|-> ';
+                    buffer += '${node.path().name()} ${AnyTypes.getName(name)} ';
+
+                    var cell = local.underlying();
+                    buffer += switch(cell) {
+                        case _ if(cell.actor().toBool()): AnyTypes.getName(cell.actor());
+                        case _ if(!cell.actor().toBool()): 'null';
+                        case _:  AnyTypes.getName(cell);
+                    }
+
+                    buffer += switch(cell) {
+                        case _ if(cell.actor().toBool()): ' status=${cell.mailbox().status()}';
+                        case _: '';
+                    }
+
+                    buffer += ' ';
+
+                    var refs = cell.childrenRefs();
+                    var children = refs.children();
+                    buffer += switch(refs) {
+                        case _ if(AnyTypes.isInstanceOf(refs, TerminatingChildrenContainer)):
+                            'Terminating() ';
+                        case _ if(AnyTypes.isInstanceOf(refs, TerminatedChildrenContainer)):
+                            refs.toString();
+                        case _ if(AnyTypes.isInstanceOf(refs, NormalChildrenContainer)):
+                            '${children.size()} children';
+                        case _: AnyTypes.getName(refs);
+                    }
+
+                    buffer += children.isEmpty() ? '' : '\n';
+                    children.foreach(function(child) {
+                        buffer += printNode(child, '$indent  |');
+                    });
+                    buffer += '\n';
+
+                case _: '$indent ${node.path().name()} ${AnyTypes.getName(node)}';
+
+            }
+        }
+        return printNode(actorFor(actorPath()).get(), "");
+    }
 }

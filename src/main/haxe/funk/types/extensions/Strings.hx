@@ -6,6 +6,14 @@ using StringTools;
 
 class Strings {
 
+    public static function dropLeft(value : String, num : Int) : String {
+        return value.substr(num);
+    }
+
+    public static function dropRight(value : String, num : Int) : String {
+        return value.substr(0, value.length - num);
+    }
+
     public static function isEmpty(value : String) : Bool {
         return value == null || value.length < 1;
     }
