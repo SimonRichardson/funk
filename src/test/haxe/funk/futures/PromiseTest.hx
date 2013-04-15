@@ -31,9 +31,9 @@ class PromiseTest {
 
     @Test
     public function when_adding_then__should_return_the_same_future() : Void {
-        promise.then(function(value){
+        Std.is(promise.then(function(value){
             Assert.fail("fail if called");
-        }).areEqual(promise);
+        }), Promise).isTrue();
     }
 
     @Test
@@ -68,9 +68,9 @@ class PromiseTest {
 
     @Test
     public function when_adding_but__should_return_the_same_future() : Void {
-        promise.but(function(value){
+        Std.is(promise.but(function(value){
             Assert.fail("fail if called");
-        }).areEqual(promise);
+        }), Promise).isTrue();
     }
 
     @Test
@@ -115,9 +115,9 @@ class PromiseTest {
 
     @Test
     public function when_adding_when__should_return_the_same_future() : Void {
-        promise.when(function(value){
+        Std.is(promise.when(function(value){
             Assert.fail("fail if called");
-        }).areEqual(promise);
+        }), Promise).isTrue();
     }
 
     @Test
@@ -279,7 +279,7 @@ class PromiseTest {
     @Test
     public function when_chaining_promises__should_be_called() : Void {
         var called : Bool = false;
-        promise._then(function (value) {
+        promise.then(function (value) {
             return Std.string(value);
         }).then(function (value) {
             called = true;
@@ -292,7 +292,7 @@ class PromiseTest {
     public function when_chaining_promises__should_pass_correctly_mapped_value() : Void {
         var expected : String = "_1_";
         var actual : String = "";
-        promise._then(function (value) {
+        promise.then(function (value) {
             return '_${Std.string(value)}_';
         }).then(function (value) {
             actual = value;
