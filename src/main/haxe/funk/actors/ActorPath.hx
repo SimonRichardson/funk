@@ -141,7 +141,7 @@ private class StringBuffer {
             buf += _buffer[index];
         }
         return buf;
-        #else 
+        #else
         var buf = new StringBuf();
         var index = _buffer.length;
         while(--index>-1) {

@@ -121,11 +121,11 @@ class ActorSystem {
                     var local : LocalActorRef = cast node;
                     var buffer = '';
                     buffer += indent.isEmpty() ? '-> ' : indent.dropRight(1) + '|-> ';
-                    buffer += '${node.path().name()} ${AnyTypes.getSimpleName(local)} ';
+                    buffer += '${node.path().name()} actorRef=\'${AnyTypes.getSimpleName(local)}\' ';
 
                     var cell = local.underlying();
                     buffer += switch(cell) {
-                        case _ if(cell.actor().toBool()): AnyTypes.getSimpleName(cell.actor());
+                        case _ if(cell.actor().toBool()): 'actor=\'${AnyTypes.getSimpleName(cell.actor())}\'';
                         case _ if(!cell.actor().toBool()): 'null';
                         case _:  AnyTypes.getSimpleName(cell);
                     }
@@ -141,19 +141,20 @@ class ActorSystem {
                     var children = refs.children();
                     buffer += switch(refs) {
                         case _ if(AnyTypes.isInstanceOf(refs, TerminatingChildrenContainer)):
-                            'Terminating() ';
+                            'Terminating(userRequest=\'${refs.isNormal()}\') ';
                         case _ if(AnyTypes.isInstanceOf(refs, TerminatedChildrenContainer)):
-                            refs.toString();
+                            'Terminated ';
                         case _ if(AnyTypes.isInstanceOf(refs, NormalChildrenContainer)):
                             'numChildren=\'${children.size()}\' children';
                         case _: AnyTypes.getName(refs);
                     }
 
-                    buffer += children.isEmpty() ? '' : '\n';
+                    var isEmpty = children.isEmpty();
+                    buffer += isEmpty ? '' : '\n';
                     children.foreach(function(child) {
                         buffer += printNode(child, '$indent  |');
                     });
-                    buffer += '\n';
+                    buffer;
 
                 case _: '$indent ${node.path().name()} ${AnyTypes.getName(node)}';
 
