@@ -4,6 +4,8 @@ import funk.Funk;
 import funk.actors.Address;
 
 using funk.actors.Address;
+using funk.types.extensions.Strings;
+using funk.collections.immutable.ListUtil;
 using funk.collections.immutable.List;
 
 interface ActorPath {
@@ -28,6 +30,41 @@ interface ActorPath {
 class ActorPathName {
 
     public static var NameRegexp = ~/^[a-zA-Z0-9\\_\\-]+$/;
+}
+
+class RelativeActorPath implements ActorPath {
+
+    private var _name : String;
+
+    private var _names : List<String>;
+
+    public function new(name : String = "/") {
+        // This bit is a wee bit funky, essentially we want the root path if it's exists.
+        var n = if (name.indexOf("/") == 0) {
+            _name = "/";
+            name.substr(1);
+        } else name;
+
+        var parts = n.split("/");
+        _name = _name.isEmpty() ? parts.shift() : _name;
+        _names = parts.toList();
+    }
+
+    public function address() : AddressType return null;
+
+    public function name() : String return _name;
+
+    public function root() : RootActorPath return null;
+
+    public function parent() : ActorPath return null;
+
+    public function child(name : String) : ActorPath return null;
+
+    public function childs(names : List<String>) : ActorPath return null;
+
+    public function elements() : List<String> return _names;
+
+    public function toString() : String return _names.toString();
 }
 
 class RootActorPath implements ActorPath {

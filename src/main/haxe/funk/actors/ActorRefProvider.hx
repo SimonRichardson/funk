@@ -158,7 +158,16 @@ class LocalActorRefProvider implements ActorRefProvider {
     }
 
     public function actorFor(path : ActorPath) : Option<ActorRef> {
-        return (path.root() == _rootPath) ? actorFrom(_rootGuardian, path.elements()) : Some(deadLetters());
+        return switch(path) {
+            case _ if(AnyTypes.isInstanceOf(path, RelativeActorPath)):
+                var relative : RelativeActorPath = cast path;
+                switch(relative.name()) {
+                    case '/': actorFrom(_rootGuardian, path.elements());
+                    case _: Some(deadLetters());
+                }
+            case _ if(path.root() == _rootPath): actorFrom(_rootGuardian, path.elements());
+            case _: Some(deadLetters());
+        }
     }
 
     @:allow(funk.actors)
@@ -195,7 +204,9 @@ class RootGuardianActorRef extends EmptyActorRef {
             case "user":
                 if (names.tail().isEmpty()) Some(cast local.guardian());
                 else cast local.actorFrom(cast local.guardian(), names.tail());
-            case "system": cast local.actorFrom(cast local.systemGuardian(), names.tail());
+            case "system": 
+                if (names.tail().isEmpty()) Some(cast local.systemGuardian());
+                else cast local.actorFrom(cast local.systemGuardian(), names.tail());
             case _: None;
         }
     }

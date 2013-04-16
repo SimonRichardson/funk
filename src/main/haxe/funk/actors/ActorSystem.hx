@@ -161,6 +161,6 @@ class ActorSystem {
             }
         }
 
-        return '\n${printNode(actorFor(actorPath()).get(), "")}';
+        return '\n${printNode(actorFor(new RelativeActorPath("/user")).get(), "")}';
     }
 }
