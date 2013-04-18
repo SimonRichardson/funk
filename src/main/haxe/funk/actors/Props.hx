@@ -14,6 +14,8 @@ interface Creator {
 
 class Props {
 
+    private var _actor : Class<Actor>;
+
     private var _router : RouterConfig;
 
     private var _creator : Creator;
@@ -21,6 +23,7 @@ class Props {
     private var _dispatcher : String;
 
     public function new(?actor : Class<Actor> = null) {
+        _actor = actor;
         _router = new NoRouter();
         _creator = new CreatorImpl(actor);
         _dispatcher = Dispatchers.DefaultDispatcherId;
@@ -47,6 +50,9 @@ class Props {
     public function withRouter(router : RouterConfig) : Props {
         return clone({router: router});
     }
+
+    @:allow(funk.actors.patterns)
+    private function actor() : Class<Actor> return _actor;
 
     private function clone(overrides : AnyRef) : Props {
         var o = AnyTypes.toBool(overrides) ? overrides : {};
