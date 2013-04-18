@@ -303,7 +303,10 @@ class ActorCell implements Cell implements ActorContext {
                     publish(Warn(Values([self().path().toString(), Type.getClass(_actor), msg])));
                     Funk.error(ActorError(msg));
             }
-        }
+        } else publish(Debug(Values([   self().path().toString(),
+                                        Type.getClass(_actor),
+                                        'unable to supervise when terminating'
+                                        ])));
     }
 
     private function handleSystemSupervise(child : ChildStats, async : Bool) : Void {

@@ -5,6 +5,8 @@ import funk.types.Any;
 import funk.types.AnyRef;
 import funk.types.extensions.EnumValues;
 import funk.types.Pass;
+import funk.io.logging.LogLevel;
+import funk.io.logging.LogValue;
 
 using funk.types.Option;
 using funk.collections.immutable.List;
@@ -33,7 +35,7 @@ class Facade extends Actor {
         _controller = actorOf(controller.withCreator(new Injector(controller.actor(), _model)), "controller");
     }
 
-    override public function receive(value : AnyRef) : Void _controller.send(value, sender().get());
+    override public function receive(value : AnyRef) : Void _controller.send(value);
 }
 
 class Model extends Actor {
@@ -63,7 +65,13 @@ class Model extends Actor {
                         s.send(TheState(this, _state), s);
                     case _: // Nothing to do here.
                 }
-            case _: context().system().deadLetters().send(value);
+            case _:
+                var system = context().system();
+                system.eventStream().publish(Debug(Values([ context().self().path().toString(),
+                                                            value,
+                                                            'sending to deadLetters'
+                                                            ])));
+                system.deadLetters().send(value);
         }
     }
 }
@@ -113,7 +121,7 @@ class FacadeCreator implements Creator {
     public function new(?model : Props, ?view : Props, ?controller : Props) {
         _model = AnyTypes.toBool(model) ? model : new Props(Model);
         _view = AnyTypes.toBool(view) ? view : new Props(View);
-        _controller = AnyTypes.toBool(controller) ? model : new Props(Controller);
+        _controller = AnyTypes.toBool(controller) ? controller : new Props(Controller);
     }
 
     public function create() : Actor return Pass.instanceOf(Facade, [_model, _view, _controller])();
