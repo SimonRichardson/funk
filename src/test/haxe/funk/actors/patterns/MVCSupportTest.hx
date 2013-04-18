@@ -24,13 +24,12 @@ class MVCSupportTest {
 
     @Test
     public function calling_ask_support_will_call_ref() : Void {
-        var model = _system.actorOf(new Props().withCreator(new ModelCreator()), 'model');
-        var view = _system.actorOf(new Props().withCreator(new ViewCreator(model)), 'view');
-        var controller = _system.actorOf(new Props().withCreator(new ControllerCreator(model)), 'controller');
+        var facade = _system.actorOf(new Props().withCreator(new FacadeCreator()), "facade");
+        var view = _system.actorFor(facade.path().child("view")).get();
 
         var actual = '';
         var expected = 'hello';
-        
+
         view.react().foreach(function(value) {
             var note : Notifications = cast value;
             switch(note) {
@@ -40,7 +39,7 @@ class MVCSupportTest {
             return true;
         });
 
-        controller.send(expected);
+        facade.send(expected);
 
         actual.areEqual(expected);
     }

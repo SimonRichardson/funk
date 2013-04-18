@@ -13,18 +13,11 @@ class Output<T> {
     public function add(stream : Stream<Message<T>>) : Void {
         _isActive = true;
 
-        stream.foreach(function (message) {
-            if (_isActive) {
-                process(message);
-            }
-        });
+        stream.foreach(function (message) if (_isActive) process(message));
     }
 
-    public function remove(stream : Stream<Message<T>>) : Void {
-        _isActive = false;
-    }
+    public function remove(stream : Stream<Message<T>>) : Void _isActive = false;
 
     @:overridable
-    private function process(message : Message<T>) : Void {
-    }
+    private function process(message : Message<T>) : Void {}
 }

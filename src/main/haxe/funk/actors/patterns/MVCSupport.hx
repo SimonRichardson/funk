@@ -1,6 +1,7 @@
 package funk.actors.patterns;
 
 import funk.actors.Props.Creator;
+import funk.types.Any;
 import funk.types.AnyRef;
 import funk.types.extensions.EnumValues;
 import funk.types.Pass;
@@ -109,10 +110,10 @@ class FacadeCreator implements Creator {
 
     private var _controller : Props;
 
-    public function new(model : Props, view : Props, controller : Props) {
-        _model = model;
-        _view = view;
-        _controller = controller;
+    public function new(?model : Props, ?view : Props, ?controller : Props) {
+        _model = AnyTypes.toBool(model) ? model : new Props(Model);
+        _view = AnyTypes.toBool(view) ? view : new Props(View);
+        _controller = AnyTypes.toBool(controller) ? model : new Props(Controller);
     }
 
     public function create() : Actor return Pass.instanceOf(Facade, [_model, _view, _controller])();

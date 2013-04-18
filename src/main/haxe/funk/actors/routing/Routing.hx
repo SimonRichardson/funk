@@ -55,17 +55,15 @@ class RoutedActorCell extends ActorCell {
                             .withDispatcher(Dispatchers.DefaultDispatcherId),
                             parent);
         _routedProps = props;
+        _routeeProvider = _props.router().createRouteeProvider(this, _routedProps.withRouter(new NoRouter()));
 
         _routees = Nil;
     }
 
     override public function init(uid : String, ?sendSupervise : Bool = true) : Void {
+        _route = routerConfig().createRoute(_routeeProvider);
+
         super.init(uid, sendSupervise);
-
-        var routerConfig = _props.router();
-
-        _routeeProvider = routerConfig.createRouteeProvider(this, _routedProps.withRouter(new NoRouter()));
-        _route = routerConfig.createRoute(_routeeProvider);
     }
 
     public function applyRoute(sender : ActorRef, message : AnyRef) : List<Destination> {

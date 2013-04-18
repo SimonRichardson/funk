@@ -62,7 +62,7 @@ class LoggingBus extends EventBus {
         var bits = LogLevelTypes.bits();
         var from = logLevel.bit();
 
-        for(i in bits.iterator()) if (from >= i) subscribe(actor, LogLevelTypes.index(i));
+        for(i in bits.iterator()) if (from <= i) subscribe(actor, LogLevelTypes.index(i));
 
         publish(Debug(Data('$logName, logger ${name} started')));
 

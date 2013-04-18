@@ -61,11 +61,11 @@ private class PongActor extends Actor {
 
     override public function receive(value : AnyRef) : Void {
         switch(value) {
-            case _ if(AnyTypes.isInstanceOf(value, Ping)): 
+            case _ if(AnyTypes.isInstanceOf(value, Ping)):
                 trace("Ping");
                 context().system().eventStream().publish(new Pong());
             case _:
-        }   
+        }
     }
 }
 

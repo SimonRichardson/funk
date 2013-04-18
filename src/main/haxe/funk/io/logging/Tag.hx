@@ -6,11 +6,7 @@ enum Tag {
 
 class TagTypes {
 
-    public static function value(tag : Tag) : String {
-        return Type.enumParameters(tag)[0];
-    }
+    public static function value(tag : Tag) : String return Type.enumParameters(tag)[0];
 
-    public static function toString(tag : Tag) : String {
-        return '[${value(tag)}]';
-    }
+    public static function toString(tag : Tag) : String return '[${value(tag)}]';
 }

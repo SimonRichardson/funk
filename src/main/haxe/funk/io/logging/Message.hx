@@ -10,9 +10,7 @@ enum Message<T> {
 
 class MessageTypes {
 
-    public static function tag<T>(message : Message<T>) : Tag {
-        return Type.enumParameters(message)[0];
-    }
+    public static function tag<T>(message : Message<T>) : Tag return Type.enumParameters(message)[0];
 
     public static function logLevel<T>(message : Message<T>) : LogLevel<T> {
         return Type.enumParameters(message)[1];

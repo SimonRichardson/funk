@@ -14,6 +14,8 @@ import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
 import funk.types.Predicate1;
 import funk.types.extensions.EnumValues;
+import funk.io.logging.LogLevel;
+import funk.io.logging.LogValue;
 import haxe.ds.StringMap;
 import haxe.Serializer;
 import haxe.Unserializer;
@@ -83,27 +85,30 @@ class ActorCell implements Cell implements ActorContext {
         _becomingStack = Nil.prepend(actorRecieve());
 
         _children = new Children(this);
-    }
 
-    public function init(uid : String, ?sendSupervise : Bool = true) : Void {
         var dispatchers = _system.dispatchers();
         _dispatcher = dispatchers.find(_props.dispatcher());
 
         _mailbox = _dispatcher.createMailbox(this);
+    }
+
+    public function init(uid : String, ?sendSupervise : Bool = true) : Void {
         _mailbox.systemEnqueue(_self, Create(uid));
 
         if (sendSupervise) {
-            _parent.sendSystemMessage(Supervise(_self));
+            _parent.sendSystemMessage(Supervise(_self, false, uid));
+            // TODO (Simon) : Because we don't have async executions we can't send this.
+            //_parent.send(NullMessage);
         }
     }
 
     public function start() : ActorContext {
-        _dispatcher.attach(this);
+        try _dispatcher.attach(this) catch (e : Dynamic) handleException(e);
         return this;
     }
 
     public function stop() : ActorContext {
-        _dispatcher.systemDispatch(this, Terminate);
+        try _dispatcher.systemDispatch(this, Terminate) catch (e : Dynamic) handleException(e);
         return this;
     }
 
@@ -125,6 +130,14 @@ class ActorCell implements Cell implements ActorContext {
 
     public function getChildByName(name : String) : Option<ChildStats> return _children.getChildByName(name);
 
+    public function isTerminating() : Bool return _children.isTerminating();
+
+    public function isTerminated() : Bool return _mailbox.isClosed();
+
+    public function hasMessages() : Bool return _mailbox.hasMessages();
+
+    public function numberOfMessages() : Int return _mailbox.numberOfMessages();
+
     public function sender() : Option<ActorRef> {
         return switch (_currentMessage) {
             case _ if(_currentMessage == null): Some(_system.deadLetters());
@@ -134,26 +147,18 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     public function watch(actor : ActorRef) : Void {
-        switch(actor) {
-            case _ if(Std.is(actor, InternalActorRef)):
-                var a : InternalActorRef = cast actor;
-                if(a != self() && !_watching.exists(function(child) return child == a)) {
-                    a.sendSystemMessage(Watch(a, self()));
-                    _watching = _watching.prepend(a);
-                }
-            case _:
+        var a = AnyTypes.asInstanceOf(actor, InternalActorRef);
+        if(a != self() && !_watching.exists(function(child) return child == a)) {
+            a.sendSystemMessage(Watch(a, self()));
+            _watching = _watching.prepend(a);
         }
     }
 
     public function unwatch(actor : ActorRef) : Void {
-        switch(actor) {
-            case _ if(Std.is(actor, InternalActorRef)):
-                var a : InternalActorRef = cast actor;
-                if(a != self() && _watching.exists(function(child) return child == a)) {
-                    a.sendSystemMessage(Unwatch(a, self()));
-                    _watching = _watching.filterNot(function(child) return child == a);
-                }
-            case _:
+        var a = AnyTypes.asInstanceOf(actor, InternalActorRef);
+        if(a != self() && _watching.exists(function(child) return child == a)) {
+            a.sendSystemMessage(Unwatch(a, self()));
+            _watching = _watching.filterNot(function(child) return child == a);
         }
     }
 
@@ -168,16 +173,14 @@ class ActorCell implements Cell implements ActorContext {
 
             _dispatcher.dispatch(this, Envelope(message, ref));
         } catch(e : Dynamic) {
-            // TODO (Simon) : handle with a log
+            handleException(e);
             throw e;
         }
     }
 
     public function sendSystemMessage(message : SystemMessage) : Void {
-        try {
-            _dispatcher.systemDispatch(this, message);
-        } catch(e : Dynamic) {
-            // TODO (Simon) : handle with a log
+        try _dispatcher.systemDispatch(this, message) catch(e : Dynamic) {
+            handleException(e);
             throw e;
         }
     }
@@ -185,11 +188,12 @@ class ActorCell implements Cell implements ActorContext {
     public function systemInvoke(message : SystemMessage) : Void {
         switch(message) {
             case Create(uid): systemCreate(uid);
-            case Supervise(cell): systemSupervise(cell);
+            case Supervise(cell, async, uid): systemSupervise(cell, async, uid);
             case ChildTerminated(child): handleChildTerminated(child);
             case Terminate: systemTerminate();
             case Watch(watchee, watcher): addWatcher(watchee, watcher);
             case Unwatch(watchee, watcher): remWatcher(watchee, watcher);
+            case _:
         }
     }
 
@@ -197,7 +201,7 @@ class ActorCell implements Cell implements ActorContext {
         _currentMessage = message;
         var msg : AnyRef = message.message();
         switch(msg) {
-            case _ if(AnyTypes.isEnum(msg) && EnumValues.getEnum(msg) == ActorMessages): 
+            case _ if(AnyTypes.isEnum(msg) && EnumValues.getEnum(msg) == ActorMessages):
                 autoReceiveMessage(message);
             case _: receiveMessage(msg);
         }
@@ -219,7 +223,7 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
-    public function initChild(ref : ActorRef) : Option<ActorRef> return _children.initChild(ref);
+    public function initChild(ref : ActorRef) : Option<ChildStats> return _children.initChild(ref);
 
     public function attachChild(props : Props, name : String) : ActorRef return _children.attachChild(props, name);
 
@@ -261,6 +265,7 @@ class ActorCell implements Cell implements ActorContext {
             }
         } catch(e : Dynamic) {
             finally();
+            publish(Error(Values([e, self().path().toString(), null, 'unable to create new actor'])));
             throw e;
         }
 
@@ -281,34 +286,36 @@ class ActorCell implements Cell implements ActorContext {
                 _actor = null;
                 _currentMessage = null;
             }
+            publish(Error(Values([e, self().path().toString(), null, 'unable to create system ${uid}'])));
             throw e;
         }
     }
 
-    private function systemSupervise(child : ActorRef) : Void {
-        switch(_children.initChild(child)) {
-            case Some(_): // TODO
-            case _:
-                trace('received Supervise from unregistered child "${child.path()}", this will not end well');
-                Funk.error(ActorError('received Supervise from unregistered child $child, this will not end well'));
+    private function systemSupervise(child : ActorRef, async : Bool, uid : String) : Void {
+        if (!isTerminating()) {
+            switch(_children.initChild(child)) {
+                case Some(crs):
+                    // Work out what to do here, is the uid required?
+                    // crs.uid = uid;
+                    handleSystemSupervise(crs, async);
+                case _:
+                    var msg = 'received Supervise from unregistered child "${child.path()}", this will not end well';
+                    publish(Warn(Values([self().path().toString(), Type.getClass(_actor), msg])));
+                    Funk.error(ActorError(msg));
+            }
         }
+    }
+
+    private function handleSystemSupervise(child : ChildStats, async : Bool) : Void {
+        // TODO (Simon) : Implement RepointableActorRef.
     }
 
     private function systemTerminate() : Void {
         unwatchWatchedActors(_actor);
 
-        children().foreach(function(child) {
-            if(Std.is(child, InternalActorRef)) {
-                var c : InternalActorRef = cast child;
-                c.stop();
-            } else {
-                // TODO (Simon) : Log out that the stop didn't happen.
-            }
-        });
+        children().foreach(function(child) AnyTypes.asInstanceOf(child, InternalActorRef).stop());
 
-        if(!setChildrenTerminationReason(Termination)) {
-            finishTerminate();
-        }
+        if(!setChildrenTerminationReason(Termination)) finishTerminate();
     }
 
     private function setChildrenTerminationReason(reason : Containers) : Bool {
@@ -361,6 +368,19 @@ class ActorCell implements Cell implements ActorContext {
 
     }
 
+    private function handleException(e : Dynamic) : Void {
+        // TODO (Simon) : Handle other errors.
+        switch(e){
+            case _: publish(Error(Values([  e,
+                                            self().path().toString(),
+                                            Type.getClass(_actor),
+                                            "exception during system message send"
+                                            ])));
+        }
+    }
+
+    private function publish(event : AnyRef) : Void system().eventStream().publish(event);
+
     @:allow(funk.actors)
     private function actor() : Actor return _actor;
 
@@ -402,12 +422,14 @@ private class Children {
         _container = new NormalChildrenContainer(Empty);
     }
 
-    public function initChild(ref : ActorRef) : Option<ActorRef> {
+    public function initChild(ref : ActorRef) : Option<ChildStats> {
         var name = ref.path().name();
         var opt = _container.getByName(name);
         return switch(opt) {
-            case Some(ChildRestartStats(value)): Some(value);
-            case Some(ChildNameReserved): _container = _container.add(name, ref); Some(ref);
+            case Some(ChildRestartStats(_)): opt;
+            case Some(ChildNameReserved):
+                _container = _container.add(name, ref);
+                _container.getByName(name);
             case _: None;
         }
     }
@@ -453,6 +475,8 @@ private class Children {
     }
 
     public function container() : ChildrenContainer return _container;
+
+    public function isTerminating() : Bool return _container.isTerminating();
 
     @:allow(funk.actors)
     private function attachChild(props : Props, name : String) : ActorRef {
@@ -571,34 +595,45 @@ class NormalChildrenContainer implements ChildrenContainer {
         } else this;
     }
 
-    public function toTermination() : TerminatingChildrenContainer return new TerminatingChildrenContainer(_map, true);
+    public function toTermination() : TerminatingChildrenContainer {
+        return new TerminatingChildrenContainer(_map, UserRequest);
+    }
 
     public function isTerminating() : Bool return false;
 
     public function isNormal() : Bool return true;
 }
 
+enum TerminationReason {
+    UserRequest;
+    Termination;
+}
+
 class TerminatingChildrenContainer implements ChildrenContainer {
 
     private var _map : Map<String, ChildStats>;
 
-    private var _userRequest : Bool;
+    private var _reason : TerminationReason;
 
-    public function new(map : Map<String, ChildStats>, userRequest : Bool) {
+    public function new(map : Map<String, ChildStats>, reason : TerminationReason) {
         _map = map;
-        _userRequest = userRequest;
+        _reason = reason;
     }
 
     public function add(name : String, child : ActorRef) : ChildrenContainer {
         var map = _map.add(name, ChildRestartStats(child));
-        return new TerminatingChildrenContainer(map, _userRequest);
+        return new TerminatingChildrenContainer(map, _reason);
     }
 
     public function remove(child : ActorRef) : ChildrenContainer {
         var map = _map.remove(child.path().name());
 
-        return if (map.isEmpty()) new TerminatedChildrenContainer();
-        else new TerminatingChildrenContainer(map, _userRequest);
+        return if (map.isEmpty()) {
+            switch(_reason) {
+                case Termination: new TerminatedChildrenContainer();
+                case _: new NormalChildrenContainer(map);
+            }
+        } else new TerminatingChildrenContainer(map, UserRequest);
     }
 
     public function getByName(name : String) : Option<ChildStats> return _map.get(name);
@@ -630,13 +665,13 @@ class TerminatingChildrenContainer implements ChildrenContainer {
     public function unreserve(name : String) : ChildrenContainer {
         return if(_map.exists(name)) {
             var map = _map.remove(name);
-            new TerminatingChildrenContainer(map, _userRequest);
+            new TerminatingChildrenContainer(map, _reason);
         } else this;
     }
 
-    public function isTerminating() : Bool return true;
+    public function isTerminating() : Bool return EnumValues.equals(_reason, Termination);
 
-    public function isNormal() : Bool return _userRequest;
+    public function isNormal() : Bool return EnumValues.equals(_reason, UserRequest);
 }
 
 class TerminatedChildrenContainer implements ChildrenContainer {

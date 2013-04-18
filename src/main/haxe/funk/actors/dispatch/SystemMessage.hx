@@ -5,8 +5,9 @@ import funk.types.AnyRef;
 using funk.Funk;
 
 enum SystemMessage {
+    NullMessage;
     Create(uid : String);
-    Supervise(cell : ActorRef);
+    Supervise(cell : ActorRef, async : Bool, uid : String);
     ChildTerminated(cell : ActorRef);
     Terminate;
     Watch(watchee : ActorRef, watcher : ActorRef);

@@ -17,9 +17,7 @@ enum LogLevel<T> {
 
 class LogLevelTypes {
 
-    public static function value<T>(level : LogLevel<T>) : LogValue<T> {
-        return Type.enumParameters(level)[0];
-    }
+    public static function value<T>(level : LogLevel<T>) : LogValue<T> return Type.enumParameters(level)[0];
 
     public static function bit<T>(level : LogLevel<T>) : Int {
         return switch (level) {
