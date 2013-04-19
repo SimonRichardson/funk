@@ -16,20 +16,26 @@ using funk.types.AnyRef;
 using funk.types.Tuple2;
 using funk.collections.immutable.List;
 
+enum LogMessages {
+    DebugMessage(path : String, ref : Class<AnyRef>, message : String);
+    WarnMessage(path : String, ref : Class<AnyRef>, message : String);
+    ErrorMessage(error : Dynamic, path : String, ref : Class<AnyRef>, message : String);
+}
+
 class LoggingBus extends EventBus {
 
     private var _loggers : List<ActorRef>;
 
-    private var _logLevel : LogLevel<AnyRef>;
+    private var _logLevel : LogLevel;
 
     public function new() {
         super();
 
         _loggers = Nil;
-        _logLevel = Trace(Data({}));
+        _logLevel = Trace;
     }
 
-    public function setLogLevel(level : LogLevel<AnyRef>) : Void {
+    public function setLogLevel(level : LogLevel) : Void {
         var bits = LogLevelTypes.bits();
 
         var from = _logLevel.bit();
@@ -46,13 +52,13 @@ class LoggingBus extends EventBus {
     }
 
     @:allow(funk.actors)
-    private function setupDefaultLoggers(system : ActorSystem, level : LogLevel<AnyRef>) : Void {
+    private function setupDefaultLoggers(system : ActorSystem, level : LogLevel) : Void {
         _loggers = _loggers.prepend(addLogger(system, StdOutLogger, level, 'StdOut'));
     }
 
     private function addLogger( system : ActorSystem,
                                 logClass : Class<Actor>,
-                                logLevel : LogLevel<AnyRef>,
+                                logLevel : LogLevel,
                                 logName : String
                                 ) : ActorRef {
         var className = AnyTypes.getName(logClass).replace('.', '_');
@@ -62,11 +68,20 @@ class LoggingBus extends EventBus {
         var bits = LogLevelTypes.bits();
         var from = logLevel.bit();
 
-        for(i in bits.iterator()) if (from <= i) subscribe(actor, LogLevelTypes.index(i));
+        for(i in bits.iterator()) {
+            if (from <= i) subscribe(actor, LogLevelTypes.index(i));
+        }
 
-        publish(Debug(Data('$logName, logger ${name} started')));
+        publish(Data(Debug, '$logName, logger ${name} started'));
 
         return actor;
+    }
+
+    override private function classify(event : Event) : Classifier {
+        return switch(Type.typeof(event)) {
+            case TEnum(e) if(e == LogValue): super.classify(LogValueTypes.level(cast event));
+            case _: super.classify(event);
+        }
     }
 }
 
@@ -78,9 +93,9 @@ class StdOutLogger extends Actor {
 
     override public function receive(value : AnyRef) : Void {
         switch(Type.typeof(value)) {
-            case TEnum(e) if(e == LogLevel):
-                var logLevel : LogLevel<AnyRef> = cast value;
-                Log.log(logLevel);
+            case TEnum(e) if(e == LogValue):
+                var logValue : LogValue<AnyRef> = cast value;
+                Log.log(logValue);
             case _:
         }
     }

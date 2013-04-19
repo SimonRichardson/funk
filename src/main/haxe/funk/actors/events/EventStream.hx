@@ -25,21 +25,21 @@ class EventStream extends LoggingBus {
 
     override public function subscribe(subscriber : Subscriber, to : Classifier) : Bool {
         if (!subscriber.toBool()) Funk.error(ArgumentError('subscriber is null'));
-        if (_debug) publish(Debug(Data('${this.simpleName()}, subscribing ${subscriber} to channel ${to}')));
+        if (_debug) publish(Data(Debug, '${this.simpleName()}, subscribing ${subscriber} to channel ${to}'));
         return super.subscribe(subscriber, to);
     }
 
     override public function unsubscribe(subscriber : Subscriber, from : Classifier) : Bool {
         if (!subscriber.toBool()) Funk.error(ArgumentError('subscriber is null'));
         var result = super.unsubscribe(subscriber, from);
-        if (_debug) publish(Debug(Data('${this.simpleName()}, unsubscribing ${subscriber} from channel ${from}')));
+        if (_debug) publish(Data(Debug, '${this.simpleName()}, unsubscribing ${subscriber} from channel ${from}'));
         return result;
     }
 
     override public function unsubscribeFromAll(subscriber : Subscriber) : Void {
         if (!subscriber.toBool()) Funk.error(ArgumentError('subscriber is null'));
         super.unsubscribeFromAll(subscriber);
-        if (_debug) publish(Debug(Data('${this.simpleName()}, unsubscribing ${subscriber} from all channels')));
+        if (_debug) publish(Data(Debug, '${this.simpleName()}, unsubscribing ${subscriber} from all channels'));
     }
 
     override private function publishEvent(event : Event, subscriber : Subscriber) : Void {

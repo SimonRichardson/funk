@@ -11,19 +11,17 @@ using funk.reactives.Stream;
 
 class Logger<T> {
 
-    public var logLevel(get_logLevel, set_logLevel) : Int;
-
     private var _tag : Tag;
 
-    private var _streamIn : Stream<LogLevel<T>>;
+    private var _streamIn : Stream<LogValue<T>>;
 
     private var _streamOut : Stream<Message<T>>;
 
-    private var _logLevel : Int;
+    private var _logLevel : LogLevel;
 
-    public function new(tag : Tag) {
+    public function new(tag : Tag, logLevel : LogLevel) {
         _tag = tag;
-        _logLevel = 1;
+        _logLevel = logLevel;
 
         _streamIn = StreamTypes.identity(None);
         _streamOut = StreamTypes.identity(None);
@@ -33,26 +31,20 @@ class Logger<T> {
 
     @:overridable
     private function init() : Void {
-        function(value : LogLevel<T>) {
+        var levelIndex = _logLevel.bit();
+        function(value : LogValue<T>) {
             // TODO (Simon) : It should be possible to intercept this and then map the value.
-            if (value.bit() >= logLevel) {
-                streamOut().dispatch(Message(tag(), value));
-            }
+            if (value.level().bit() >= levelIndex) streamOut().dispatch(Message(tag(), value));
         }.bindTo(streamIn());
     }
 
     public function tag() : Tag return _tag;
 
-    public function streamIn() : Stream<LogLevel<T>> return _streamIn;
+    public function logLevel() : LogLevel return _logLevel;
+
+    public function streamIn() : Stream<LogValue<T>> return _streamIn;
 
     public function streamOut() : Stream<Message<T>> return _streamOut;
-
-    private function get_logLevel() : Int return _logLevel;
-
-    private function set_logLevel(value : Int) : Int {
-        _logLevel = value;
-        return _logLevel;
-    }
 }
 
 class LoggerTypes {
@@ -60,39 +52,30 @@ class LoggerTypes {
     public static function pipe<T>(logger : Logger<T>, ouput : Output<T>) : Void ouput.add(logger.streamOut());
 
     public static function zip<T1, T2>(logger0 : Logger<T1>, logger1 : Logger<T2>) : Logger<Tuple2<T1, T2>> {
-        return new ZippedLogger(logger0.tag(), logger0.streamIn().zipAny(logger1.streamIn()));
+        return new ZippedLogger(logger0.tag(), logger0.logLevel(), logger0.streamIn().zipAny(logger1.streamIn()));
     }
 }
 
 private class ZippedLogger<T1, T2> extends Logger<Tuple2<T1, T2>> {
 
-    private var _zippedStream : Stream<LogLevel<Tuple2<T1, T2>>>;
+    private var _zippedStream : Stream<LogValue<Tuple2<T1, T2>>>;
 
-    public function new(tag : Tag, zippedStreamIn : Stream<Tuple2<LogLevel<T1>, LogLevel<T2>>>) {
-        super(tag);
+    public function new(tag : Tag, level : LogLevel, zippedStreamIn : Stream<Tuple2<LogValue<T1>, LogValue<T2>>>) {
+        super(tag, level);
 
         _zippedStream = StreamTypes.identity(None);
 
         zippedStreamIn.foreach(function(tuple) {
-            var level0 : LogLevel<T1> = tuple._1();
-            var level1 : LogLevel<T2> = tuple._2();
+            var value0 : LogValue<T1> = tuple._1();
+            var value1 : LogValue<T2> = tuple._2();
 
-            var t = tuple2(level0.value().data(), level1.value().data());
+            var tup = tuple2(value0.data(), value1.data());
 
-            var logLevel : LogLevel<Tuple2<T1, T2>> = switch(level0) {
-                case Trace(_): Trace(Data(t));
-                case Debug(_): Debug(Data(t));
-                case Info(_): Info(Data(t));
-                case Warn(_): Warn(Data(t));
-                case Error(_): Error(Data(t));
-                case Fatal(_): Fatal(Data(t));
-            }
-
-            _zippedStream.dispatch(logLevel);
+            _zippedStream.dispatch(Data(value0.level(), tup));
         });
 
         init();
     }
 
-    override public function streamIn() : Stream<LogLevel<Tuple2<T1, T2>>> return _zippedStream;
+    override public function streamIn() : Stream<LogValue<Tuple2<T1, T2>>> return _zippedStream;
 }

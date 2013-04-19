@@ -10,6 +10,7 @@ import funk.actors.ActorSystem;
 import funk.actors.ActorPath;
 import funk.actors.ActorRef;
 import funk.actors.ActorRefProvider;
+import funk.actors.events.LoggingBus;
 import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
 import funk.types.Predicate1;
@@ -265,7 +266,7 @@ class ActorCell implements Cell implements ActorContext {
             }
         } catch(e : Dynamic) {
             finally();
-            publish(Error(Values([e, self().path().toString(), null, 'unable to create new actor'])));
+            publish(Error, ErrorMessage(e, self().path().toString(), null, 'unable to create new actor'));
             throw e;
         }
 
@@ -286,7 +287,7 @@ class ActorCell implements Cell implements ActorContext {
                 _actor = null;
                 _currentMessage = null;
             }
-            publish(Error(Values([e, self().path().toString(), null, 'unable to create system ${uid}'])));
+            publish(Error, ErrorMessage(e, self().path().toString(), null, 'unable to create system ${uid}'));
             throw e;
         }
     }
@@ -300,13 +301,13 @@ class ActorCell implements Cell implements ActorContext {
                     handleSystemSupervise(crs, async);
                 case _:
                     var msg = 'received Supervise from unregistered child "${child.path()}", this will not end well';
-                    publish(Warn(Values([self().path().toString(), Type.getClass(_actor), msg])));
+                    publish(Warn, WarnMessage(self().path().toString(), Type.getClass(_actor), msg));
                     Funk.error(ActorError(msg));
             }
-        } else publish(Debug(Values([   self().path().toString(),
-                                        Type.getClass(_actor),
-                                        'unable to supervise when terminating'
-                                        ])));
+        } else publish(Debug, DebugMessage( self().path().toString(),
+                                            Type.getClass(_actor),
+                                            'unable to supervise when terminating'
+                                            ));
     }
 
     private function handleSystemSupervise(child : ChildStats, async : Bool) : Void {
@@ -374,15 +375,17 @@ class ActorCell implements Cell implements ActorContext {
     private function handleException(e : Dynamic) : Void {
         // TODO (Simon) : Handle other errors.
         switch(e){
-            case _: publish(Error(Values([  e,
-                                            self().path().toString(),
-                                            Type.getClass(_actor),
-                                            "exception during system message send"
-                                            ])));
+            case _: publish(Error, ErrorMessage(    e, 
+                                                    self().path().toString(), 
+                                                    Type.getClass(_actor),
+                                                    "exception during system message send"
+                                                    ));
         }
     }
 
-    private function publish(event : AnyRef) : Void system().eventStream().publish(event);
+    private function publish(level : LogLevel, event : LogMessages) : Void {
+        system().eventStream().publish(Data(level, event));
+    }
 
     @:allow(funk.actors)
     private function actor() : Actor return _actor;

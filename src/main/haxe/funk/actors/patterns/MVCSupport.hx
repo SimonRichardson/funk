@@ -7,6 +7,7 @@ import funk.types.extensions.EnumValues;
 import funk.types.Pass;
 import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
+import funk.actors.events.LoggingBus;
 
 using funk.types.Option;
 using funk.collections.immutable.List;
@@ -67,10 +68,10 @@ class Model extends Actor {
                 }
             case _:
                 var system = context().system();
-                system.eventStream().publish(Debug(Values([ context().self().path().toString(),
-                                                            value,
-                                                            'sending to deadLetters'
-                                                            ])));
+                system.eventStream().publish(Data(Debug, DebugMessage(  context().self().path().toString(),
+                                                                        value,
+                                                                        'sending to deadLetters'
+                                                                        )));
                 system.deadLetters().send(value);
         }
     }

@@ -10,6 +10,7 @@ import funk.reactives.Process;
 import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
 import funk.io.logging.LogLevel;
+import funk.io.logging.LogValue;
 
 using funk.collections.immutable.List;
 using funk.types.Option;
@@ -157,7 +158,7 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
 
     private function processAllSystemMessages() {
         function dispatch(msg : AnyRef) {
-            _actor.system().eventStream().publish(Debug(Data('Error while sending $msg to deadLetters')));
+            _actor.system().eventStream().publish(Data(Debug, 'Error while sending $msg to deadLetters'));
         }
 
         while(!isClosed() && hasSystemMessages()) {

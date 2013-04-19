@@ -30,7 +30,7 @@ class LogTest {
         var actual = "";
 
         Log.streamOut().foreach(function (message) {
-            actual = message.logLevel().value().toString();
+            actual = message.value().values().toString();
         });
 
         expected.debug();
@@ -44,7 +44,7 @@ class LogTest {
         var actual = "";
 
         Log.streamOut().foreach(function (message) {
-            actual = message.logLevel().value().toString();
+            actual = message.value().values().toString();
         });
 
         "Hello".debugWithValue(", world!");
@@ -54,22 +54,21 @@ class LogTest {
 
     @Test
     public function should_creating_two_loggers_zipped_together__should_ouput_to_one_log() {
-        var logger0 = new Logger(Tag("Logger0"));
-        var logger1 = new Logger(Tag("Logger1"));
+        var logger0 = new Logger(Tag("Logger0"), Trace);
+        var logger1 = new Logger(Tag("Logger1"), Trace);
 
         var expected = "(1, 2)";
         var actual = "";
 
         var logger2 = logger0.zip(logger1);
         logger2.streamOut().foreach(function (message) {
-            var level : LogLevel<Tuple2<Int, Int>> = message.logLevel();
-            var value : LogValue<Tuple2<Int, Int>> = level.value();
+            var value : LogValue<Tuple2<Int, Int>> = message.value();
 
             actual = value.data().toString();
         });
 
-        logger0.streamIn().dispatch(Debug(Data(1)));
-        logger1.streamIn().dispatch(Debug(Data(2)));
+        logger0.streamIn().dispatch(Data(Debug, 1));
+        logger1.streamIn().dispatch(Data(Debug, 2));
 
         actual.areEqual(expected);
     }

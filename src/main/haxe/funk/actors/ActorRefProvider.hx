@@ -126,7 +126,7 @@ class LocalActorRefProvider implements ActorRefProvider {
         rootGuardian.start();
 
         // We don't have an option to do this earlier as we're waiting for the system guardian.
-        _eventStream.setupDefaultLoggers(system, Debug(Data({})));
+        _eventStream.setupDefaultLoggers(system, Trace);
     }
 
     public function rootPath() : ActorPath return _guardian.path();
