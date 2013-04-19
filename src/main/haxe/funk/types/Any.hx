@@ -145,8 +145,7 @@ class AnyTypes {
 
     public static function toString<T>(value : T, ?func : Function1<T, String>) : String {
         // NOTE (Simon) : Workout if the value has a toString method
-        return if(toBool(func)) func(value)
-        else if(Reflect.hasField(value, 'toString')) Reflect.callMethod(value, Reflect.field(value, 'toString'), []);
+        return if(toBool(func)) func(value);
         else Std.string(value);
     }
 

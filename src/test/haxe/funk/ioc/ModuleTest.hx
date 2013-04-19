@@ -1,6 +1,7 @@
 package funk.ioc;
 
 import funk.ioc.Injector;
+import funk.types.Any;
 
 using funk.types.Option;
 using massive.munit.Assert;
@@ -65,7 +66,7 @@ class ModuleTest {
 
     @Test
     public function when_creating_new_module_calling_bind_return_binding() {
-        Assert.isTrue(Std.is(module.bind(String), Binding));
+        Assert.isTrue(AnyTypes.isInstanceOf(module.bind(String), Binding));
     }
 
     @Test

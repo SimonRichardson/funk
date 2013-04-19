@@ -1,6 +1,7 @@
 package funk.ioc;
 
 import funk.ioc.Injector;
+import funk.types.Any;
 
 using funk.types.Option;
 using massive.munit.Assert;

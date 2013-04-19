@@ -2,6 +2,7 @@ package funk.actors.patterns;
 
 import funk.actors.ActorRef;
 import funk.reactives.Stream;
+import funk.types.Any;
 import funk.types.AnyRef;
 
 using funk.types.Option;
@@ -9,7 +10,7 @@ using funk.types.Option;
 class ReactSupport {
 
     public static function react(actor : ActorRef, ?bubble : Bool = true) : Stream<AnyRef> {
-        if (!Std.is(actor, LocalActorRef)) {
+        if (!AnyTypes.isInstanceOf(actor, LocalActorRef)) {
             Funk.error(IllegalOperationError('Expected a LocalActorRef'));
         }
 

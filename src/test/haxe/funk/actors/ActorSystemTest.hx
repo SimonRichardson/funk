@@ -2,6 +2,7 @@ package funk.actors;
 
 import funk.actors.ActorRef;
 import funk.futures.Promise;
+import funk.types.Any;
 import funk.types.AnyRef;
 import funk.types.extensions.Strings;
 import massive.munit.async.AsyncFactory;
@@ -28,7 +29,7 @@ class ActorSystemTest {
     @Test
     public function calling_actorOf_should_return_valid_ActorRef() : Void {
         var ref = _system.actorOf(new Props(MockClass), "listener");
-        Std.is(ref, ActorRef).isTrue();
+        AnyTypes.isInstanceOf(ref, ActorRef).isTrue();
     }
 
     @Test
@@ -77,7 +78,7 @@ class ActorSystemTest {
 
         var ref = _system.actorOf(new Props(MockClass), expected);
 
-        Std.is(_system.actorFor(ref.path()).get(), EmptyActorRef).isFalse();
+        AnyTypes.isInstanceOf(_system.actorFor(ref.path()).get(), EmptyActorRef).isFalse();
     }
 
     @Test

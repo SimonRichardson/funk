@@ -17,7 +17,7 @@ class Pass {
     private static function createInstance<T>(type : Class<T>, args : Array<Dynamic>) : T {
         // Cover the native std types.
         function capture(type : Dynamic, args : Array<Dynamic>, defaultValue : Dynamic) : Dynamic {
-            return if (args.length == 1 && Std.is(args[0], type)) {
+            return if (args.length == 1 && AnyTypes.isInstanceOf(args[0], type)) {
                 args[0];
             } else {
                 defaultValue;

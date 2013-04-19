@@ -105,7 +105,7 @@ class LocalActorRef implements InternalActorRef {
     public function getChild(names : List<String>) : Option<InternalActorRef> {
         function rec(ref : InternalActorRef, names : Iterator<String>) : Option<InternalActorRef> {
             return switch(ref) {
-                case _ if(Std.is(ref, LocalActorRef)):
+                case _ if(AnyTypes.isInstanceOf(ref, LocalActorRef)):
                     var local : LocalActorRef = cast ref;
                     var any = names.next();
                     var next : Option<InternalActorRef> = switch (any) {
@@ -125,7 +125,7 @@ class LocalActorRef implements InternalActorRef {
 
     private function getSingleChild(name : String) : Option<InternalActorRef> {
         return switch(_actorCell.getChildByName(name)) {
-            case Some(ChildRestartStats(val)) if(Std.is(val, InternalActorRef)): Some(cast val);
+            case Some(ChildRestartStats(val)) if(AnyTypes.isInstanceOf(val, InternalActorRef)): Some(cast val);
             case _: None;
         }
     }

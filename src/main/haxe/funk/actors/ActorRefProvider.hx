@@ -147,7 +147,7 @@ class LocalActorRefProvider implements ActorRefProvider {
                                 path : ActorPath) : InternalActorRef {
         var router = props.router();
         return switch(router) {
-            case _ if(Std.is(router, NoRouter)): new LocalActorRef(system, props, supervisor, path);
+            case _ if(AnyTypes.isInstanceOf(router, NoRouter)): new LocalActorRef(system, props, supervisor, path);
             case _:
                 // TODO (Simon) : Work out if we need to fall-back onto a router if we can't locate it.
                 // TODO (Simon) : Make this configurable
@@ -227,7 +227,7 @@ class Guardian extends Actor {
         }
 
         switch(value) {
-            case _ if(Std.is(value, LocalActorMessage)):
+            case _ if(AnyTypes.isInstanceOf(value, LocalActorMessage)):
                 var local : LocalActorMessage = cast value;
                 switch(local) {
                     case CreateChild(props, name):

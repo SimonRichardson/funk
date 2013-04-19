@@ -3,6 +3,7 @@ package funk.ioc;
 import funk.ioc.Injector;
 import funk.ioc.Inject;
 import funk.ioc.Module;
+import funk.types.Any;
 
 using funk.collections.immutable.List;
 using funk.types.Option;
@@ -46,13 +47,13 @@ class InjectTest {
     @Test
     public function when_creating_an_object_by_interface_should_return_correct_interface() {
         var instance : Option<MockObject> = module.getInstance(MockObject);
-        Std.is(instance.get().byInterface, IAnotherObject).isTrue();
+        AnyTypes.isInstanceOf(instance.get().byInterface, IAnotherObject).isTrue();
     }
 
     @Test
     public function when_creating_an_object_by_interface_should_return_correct_object() {
         var instance : Option<MockObject> = module.getInstance(MockObject);
-        Std.is(instance.get().byInterface, AnotherObject).isTrue();
+        AnyTypes.isInstanceOf(instance.get().byInterface, AnotherObject).isTrue();
     }
 
     @Test
@@ -110,20 +111,20 @@ class InjectTest {
     @Test
     public function when_inject_withIn_should_be_instance_of_correct_object() {
         var instance : Option<MockObject> = module.getInstance(MockObject);
-        Std.is(Inject.withIn(IAnotherObject, MockModule).get(), IAnotherObject).isTrue();
+        AnyTypes.isInstanceOf(Inject.withIn(IAnotherObject, MockModule).get(), IAnotherObject).isTrue();
     }
 
     @Test
     public function when_injecting_into_a_module_with_an_interface() {
         Injector.add(new GeneralModule());
-        Std.is(Inject.as(Renderer).get(), HtmlDomRenderer).isTrue();
+        AnyTypes.isInstanceOf(Inject.as(Renderer).get(), HtmlDomRenderer).isTrue();
     }
 
     @Test
     public function when_doing_nesting_injection() {
         Injector.add(new GeneralModule());
         Injector.add(new OtherModule());
-        Std.is(Inject.as(Other).get(), Other).isTrue();
+        AnyTypes.isInstanceOf(Inject.as(Other).get(), Other).isTrue();
     }
 }
 

@@ -4,6 +4,7 @@ import Type;
 import funk.Funk;
 import funk.collections.Collection;
 import funk.types.extensions.Strings;
+import funk.types.Any;
 import funk.types.Function0;
 import funk.types.Option;
 import funk.reactives.Behaviour;
@@ -32,7 +33,7 @@ class CollectionUtil {
         var iterable : Iterable<R> = null;
 
         // Because array is the likely option to a collection, let's optimize this to as much as possible
-        if (Std.is(x, Array)) {
+        if (AnyTypes.isInstanceOf(x, Array)) {
             var array : Array<R> = cast x;
             size = array.length;
             iterable = array;

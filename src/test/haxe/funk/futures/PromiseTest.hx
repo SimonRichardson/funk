@@ -1,6 +1,7 @@
 package funk.futures;
 
 import funk.Funk;
+import funk.types.Any;
 
 using funk.collections.Collection;
 using funk.collections.CollectionUtil;
@@ -31,7 +32,7 @@ class PromiseTest {
 
     @Test
     public function when_adding_then__should_return_the_same_future() : Void {
-        Std.is(promise.then(function(value){
+        AnyTypes.isInstanceOf(promise.then(function(value){
             Assert.fail("fail if called");
         }), Promise).isTrue();
     }
@@ -68,7 +69,7 @@ class PromiseTest {
 
     @Test
     public function when_adding_but__should_return_the_same_future() : Void {
-        Std.is(promise.but(function(value){
+        AnyTypes.isInstanceOf(promise.but(function(value){
             Assert.fail("fail if called");
         }), Promise).isTrue();
     }
@@ -115,7 +116,7 @@ class PromiseTest {
 
     @Test
     public function when_adding_when__should_return_the_same_future() : Void {
-        Std.is(promise.when(function(value){
+        AnyTypes.isInstanceOf(promise.when(function(value){
             Assert.fail("fail if called");
         }), Promise).isTrue();
     }

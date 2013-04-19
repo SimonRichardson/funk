@@ -1,6 +1,7 @@
 package funk.actors;
 
 import funk.futures.Promise;
+import funk.types.Any;
 import funk.types.AnyRef;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
@@ -29,7 +30,7 @@ class ActorTest {
     @Test
     public function calling_send_should_create_a_new_actorOf() : Void {
         _actor.send(GetActorOf, _actor);
-        Std.is(MockClass.Actor, ActorRef).isTrue();
+        AnyTypes.isInstanceOf(MockClass.Actor, ActorRef).isTrue();
     }
 }
 

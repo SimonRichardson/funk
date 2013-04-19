@@ -1,6 +1,7 @@
 package funk.ioc;
 
 import funk.Funk;
+import funk.types.Any;
 
 using funk.collections.immutable.List;
 using funk.ioc.Module;
@@ -133,7 +134,7 @@ class Injector {
         while (modules.nonEmpty()) {
             var module : IModule = modules.head();
 
-            if (Std.is(module, type)) {
+            if (AnyTypes.isInstanceOf(module, type)) {
                 _map = _map.prepend(tuple2(type, module));
 
                 return modules.headOption();

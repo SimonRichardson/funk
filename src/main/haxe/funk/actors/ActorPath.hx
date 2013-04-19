@@ -1,6 +1,7 @@
 package funk.actors;
 
 import funk.Funk;
+import funk.types.Any;
 import funk.actors.Address;
 
 using funk.actors.Address;
@@ -118,7 +119,7 @@ class ChildActorPath implements ActorPath {
     public function root() : RootActorPath {
         function rec(p : ActorPath) : RootActorPath {
             return switch(p) {
-                case _ if(Std.is(p, RootActorPath)): cast p;
+                case _ if(AnyTypes.isInstanceOf(p, RootActorPath)): cast p;
                 case _: rec(p.parent());
             }
         }
@@ -137,7 +138,7 @@ class ChildActorPath implements ActorPath {
     public function elements() : List<String> {
         function rec(p : ActorPath, list : List<String>) {
             return switch(p) {
-                case _ if(Std.is(p, RootActorPath)): list;
+                case _ if(AnyTypes.isInstanceOf(p, RootActorPath)): list;
                 case _: rec(p.parent(), list.prepend(p.name()));
             }
         }
@@ -147,7 +148,7 @@ class ChildActorPath implements ActorPath {
     public function toString() : String {
         function rec(p : ActorPath, buffer : StringBuffer) : StringBuffer {
             return switch(p) {
-                case _ if(Std.is(p, RootActorPath)): buffer.prepend(p.toString());
+                case _ if(AnyTypes.isInstanceOf(p, RootActorPath)): buffer.prepend(p.toString());
                 case _: rec(p.parent(), buffer.prepend("/").prepend(p.name()));
             }
         }

@@ -353,7 +353,7 @@ class ActorCell implements Cell implements ActorContext {
     private function unwatchWatchedActors(actor : Actor) : Void {
         if(!_watching.isEmpty()) {
             _watching.foreach(function(a) {
-                if(Std.is(a, InternalActorRef)) {
+                if(AnyTypes.isInstanceOf(a, InternalActorRef)) {
                     var watchee : InternalActorRef = cast a;
                     watchee.sendSystemMessage(Unwatch(watchee, self()));
                 }
@@ -439,7 +439,7 @@ private class Children {
 
     public function removeChild(ref : ActorRef) : Option<ActorRef> {
         return switch(_container) {
-            case _ if(Std.is(_container, TerminatedChildrenContainer)): None;
+            case _ if(AnyTypes.isInstanceOf(_container, TerminatedChildrenContainer)): None;
             case _:
                 switch(_container.getByRef(ref)) {
                     case Some(ChildRestartStats(a)):
@@ -453,7 +453,7 @@ private class Children {
     public function setChildrenTerminationReason(reason : Containers) : Bool {
         // Return true on change
         return switch(reason) {
-            case Termination if(Std.is(_container, NormalChildrenContainer)):
+            case Termination if(AnyTypes.isInstanceOf(_container, NormalChildrenContainer)):
                 var c : NormalChildrenContainer = cast _container;
                 _container = c.toTermination();
                 true;

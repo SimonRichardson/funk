@@ -3,6 +3,7 @@ package funk.collections.immutable;
 import funk.Funk;
 import funk.types.Function0;
 import funk.types.Function1;
+import funk.types.Any;
 import funk.types.Option;
 import funk.types.extensions.EnumValues;
 import funk.types.extensions.Strings;
@@ -27,9 +28,9 @@ class ListUtil {
 
         switch(Type.typeof(any)) {
             case TObject:
-                if (Std.is(any, Array)) {
+                if (AnyTypes.isInstanceOf(any, Array)) {
                     result = arrayToList(cast any);
-                } else if (Std.is(any, String)) {
+                } else if (AnyTypes.isInstanceOf(any, String)) {
                     result = stringToList(cast any);
                 }
             case TEnum(e):

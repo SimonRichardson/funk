@@ -138,14 +138,14 @@ class Router extends Actor {
 
         var c = context();
         _ref = switch(c) {
-            case _ if(Std.is(c, RoutedActorCell)): cast c;
+            case _ if(AnyTypes.isInstanceOf(c, RoutedActorCell)): cast c;
             case _: Funk.error(ActorError('Router actor can only be used in RoutedActorRef, not in ${c}'));
         }
     }
 
     override public function receive(value : AnyRef) : Void {
         switch(value) {
-            case _ if(Std.is(value, ActorMessages)):
+            case _ if(AnyTypes.isInstanceOf(value, ActorMessages)):
                 var actorMsg : ActorMessages = cast value;
                 switch(actorMsg) {
                     case Terminated(child):
