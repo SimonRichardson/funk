@@ -11,12 +11,18 @@ The Funk library supports functional development in Haxe. Some of its key featur
   * Closure wrapping
   * Continuations (Not to confuse with continuation-passing style)
 * Actor model
+  * Reactor support
+  * ModelViewController support, via a Facade.
+  * WebWorker support (initial working example)
+  * Ask support, via Futures
 * Immutable collections
 * Reactive streams
+* Futures (Promises)
 * Option type
 * Tuple type
 * IoC Container (no reflections, no Metadata and immutable!)
 * Signals
+* Logging
 
 # Building
 The Funk library doesn't not necessarily build anything as it's a library. So the idea is to import 
