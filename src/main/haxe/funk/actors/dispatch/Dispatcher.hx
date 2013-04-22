@@ -5,6 +5,10 @@ import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.dispatch.Mailbox;
 import funk.actors.dispatch.MessageQueue;
 import funk.actors.dispatch.SystemMessage;
+import funk.actors.events.EventStream;
+import funk.actors.events.LoggingBus;
+import funk.io.logging.LogLevel;
+import funk.io.logging.LogValue;
 
 using funk.types.Option;
 using funk.collections.immutable.List;
@@ -32,6 +36,13 @@ interface Dispatcher {
     function isThroughputDeadlineTimeDefined() : Bool;
 }
 
+interface DispatcherPrerequisites {
+
+    function scheduler() : Scheduler;
+
+    function eventStream() : EventStream;
+}
+
 class MessageDispatcher implements Dispatcher {
 
     private var _name : String;
@@ -42,9 +53,14 @@ class MessageDispatcher implements Dispatcher {
 
     private var _scheduler : Scheduler;
 
-    public function new(name : String, scheduler : Scheduler) {
+    private var _prerequisites : DispatcherPrerequisites;
+
+    public function new(name : String, prerequisites : DispatcherPrerequisites) {
         _name = name;
-        _scheduler = scheduler;
+        _prerequisites = prerequisites;
+
+        // TODO (Simon) This needs to be changed to executioner.
+        _scheduler = _prerequisites.scheduler();
 
         _actors = Nil;
         _inhabitants = 0;
@@ -121,7 +137,11 @@ class MessageDispatcher implements Dispatcher {
 
     private function shutdown() : Void {
         try _scheduler.close() catch(e : Dynamic) {
-            // FIXME (Simon) : Log out error
+            _prerequisites.eventStream().publish(Data(Error, ErrorMessage(  e,
+                                                                            '',
+                                                                            null,
+                                                                            "exception during shutdown"
+                                                                            )));
             throw e;
         }
     }

@@ -1,6 +1,8 @@
 package funk.actors.dispatch;
 
 import funk.actors.dispatch.Dispatcher;
+import funk.actors.events.EventStream;
+import funk.actors.events.LoggingBus;
 import funk.types.Any;
 
 using funk.collections.immutable.List;
@@ -19,8 +21,10 @@ class Dispatchers {
         var scheduler = system.scheduler();
         if (!AnyTypes.toBool(scheduler)) Funk.error(ArgumentError());
 
+        var prerequisites = new MessageDispatcherPrerequisites(system.scheduler(), system.eventStream());
+
         _dispatchers = Nil;
-        _dispatchers = _dispatchers.prepend(new MessageDispatcher(DefaultDispatcherId, system.scheduler()));
+        _dispatchers = _dispatchers.prepend(new MessageDispatcher(DefaultDispatcherId, prerequisites));
 
         _defaultGlobalDispatcher = find(DefaultDispatcherId);
     }
@@ -34,4 +38,20 @@ class Dispatchers {
     }
 
     public function defaultGlobalDispatcher() : Dispatcher return _defaultGlobalDispatcher;
+}
+
+private class MessageDispatcherPrerequisites implements DispatcherPrerequisites {
+
+    private var _scheduler : Scheduler;
+
+    private var _eventStream : EventStream;
+
+    public function new(scheduler : Scheduler, eventStream : EventStream) {
+        _scheduler = scheduler;
+        _eventStream = eventStream;
+    }
+
+    public function scheduler() : Scheduler return _scheduler;
+
+    public function eventStream() : EventStream return _eventStream;
 }
