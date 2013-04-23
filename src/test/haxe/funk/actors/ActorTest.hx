@@ -23,19 +23,26 @@ class ActorTest {
 
     @Test
     public function calling_send_should_create_a_new_actorOf_which_is_not_null() : Void {
-        _actor.send(GetActorOf, _actor);
+        _actor.send(GetActorOf);
         MockClass.Actor.isNotNull();
     }
 
     @Test
     public function calling_send_should_create_a_new_actorOf() : Void {
-        _actor.send(GetActorOf, _actor);
+        _actor.send(GetActorOf);
         AnyTypes.isInstanceOf(MockClass.Actor, ActorRef).isTrue();
+    }
+
+    @Test
+    public function calling_send_should_create_a_new_actorOf_which_is_not_null() : Void {
+        _actor.send(FailWithError);
+        MockClass.Actor.isNotNull();
     }
 }
 
 private enum Tests {
     GetActorOf;
+    FailWithError;
 }
 
 private class MockClass extends Actor {
@@ -50,6 +57,7 @@ private class MockClass extends Actor {
         var tests : Tests = cast value;
         switch(tests) {
             case GetActorOf: Actor = actorOf(new Props(MockClass), "test");
+            case FailWithError:
         }
     }
 }
