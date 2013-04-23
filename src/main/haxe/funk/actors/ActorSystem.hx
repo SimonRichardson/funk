@@ -1,6 +1,7 @@
 package funk.actors;
 
 import funk.actors.ActorCell;
+import funk.actors.ActorCellChildren;
 import funk.actors.ActorPath;
 import funk.actors.ActorRefProvider;
 import funk.actors.dispatch.Dispatchers;
