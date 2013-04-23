@@ -217,9 +217,12 @@ class ActorCell implements Cell implements ActorContext {
                 case Supervise(cell, async, uid): systemSupervise(cell, async, uid);
                 case ChildTerminated(child): handleChildTerminated(child);
                 case Terminate: systemTerminate();
+                case Recreate(cause): systemRecreate(cause);
+                case Suspend: systemSuspend();
+                case Resume(inResponseToFailure): systemResume(inResponseToFailure);
                 case Watch(watchee, watcher): addWatcher(watchee, watcher);
                 case Unwatch(watchee, watcher): remWatcher(watchee, watcher);
-                case _:
+                case _: // got to catch'em all.
             }
         } catch (e: Dynamic) {
             handleInvokeFailure(Nil, e);
@@ -357,6 +360,27 @@ class ActorCell implements Cell implements ActorContext {
         if(!setChildrenTerminationReason(Termination)) finishTerminate();
     }
 
+    private function systemSuspend() : Void {
+        switch(_children.waitingForChildren()) {
+            case None: faultSuspend();
+            case _: // TODO (Simon) : Implement waiting children.
+        }
+    }
+
+    private function systemRecreate(cause : Dynamic) : Void {
+        switch(_children.waitingForChildren()) {
+            case None: faultRecreate(cause);
+            case _: // TODO (Simon) : Implement waiting children.
+        }
+    }
+
+    private function systemResume(inResponseToFailure : Dynamic) : Void {
+        switch(_children.waitingForChildren()) {
+            case None: faultResume(inResponseToFailure);
+            case _: // TODO (Simon) : Implement waiting children.
+        }
+    }
+
     private function setChildrenTerminationReason(reason : Containers) : Bool {
         return _children.setChildrenTerminationReason(reason);
     }
@@ -366,9 +390,20 @@ class ActorCell implements Cell implements ActorContext {
         _actor._self = null;
     }
 
+    private function setActorFields(actor : Actor, context : ActorContext, self : ActorRef) : Void {
+        if (AnyTypes.toBool(actor)) {
+            _actor._context = context;
+            _actor._self = self;
+        }
+    }
+
     private function clearActorCellFields(cell : ActorCell) : Void cell._props = terminatedActorProps;
 
     private function suspendChildren(exceptFor : List<ActorRef>) : Void _children.suspendChildren(exceptFor);
+
+    private function resumeChildren(causedByFailure : Dynamic, perp : ActorRef) : Void {
+        _children.resumeChildren(causedByFailure, perp);
+    }
 
     private function handleChildTerminated(child : ActorRef) : Void {
         _children.removeChild(child);
@@ -393,6 +428,107 @@ class ActorCell implements Cell implements ActorContext {
 
     private function remWatcher(watchee : ActorRef, watcher : ActorRef) : Void {
 
+    }
+
+    private function faultSuspend() : Void {
+        suspendNonRecursive();
+        suspendChildren(Nil);
+    }
+
+    private function faultRecreate(cause : Dynamic) : Void {
+        if (!AnyTypes.toBool(_actor)) {
+            publish(Error, ErrorMessage(    cause, 
+                                            _self.path().toString(), 
+                                            Type.getClass(_actor),
+                                            'changing Recreate into Create after $cause'
+                                            ));
+            faultCreate();
+        } else if(isNormal()) { 
+            var failedActor = _actor;
+
+            publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'restarting')); 
+
+            if (AnyTypes.toBool(failedActor)) {
+                var optionalMessage = AnyTypes.toBool(_currentMessage) ? Some(_currentMessage.message()) : None;
+                try {
+                    if (AnyTypes.toBool(failedActor.context())) failedActor.preRestart(cause, optionalMessage);
+                } catch (e : Dynamic) {
+                    publish(Error, ErrorMessage(e, _self.path().toString(), Type.getClass(_actor), Std.string(e)));
+                }
+
+                if (!_mailbox.isSuspended()) {
+                    Funk.error(ActorError('mailbox must be suspended during restart, status=${_mailbox.status()}'));
+                }
+
+                if (!setChildrenTerminationReason(Recreation(cause))) finishRecreate(cause, failedActor);
+            }
+        } else {
+            faultResume(null);
+        }
+    }
+
+    private function faultResume(causedByFailure : Dynamic) : Void {
+        var e = causedByFailure;
+        if (!AnyTypes.toBool(_actor)) {
+            publish(Error, ErrorMessage(e, _self.path().toString(), null, 'changing Resume into Create after $e'));
+            faultCreate();
+        } else if (!AnyTypes.toBool(_actor.context()) && !AnyTypes.toBool(causedByFailure)) {
+            publish(Error, ErrorMessage(    e, 
+                                            _self.path().toString(), 
+                                            Type.getClass(_actor),
+                                            'changing Resume into Restart after $e'
+                                            ));
+            faultRecreate(causedByFailure);
+        } else {
+            var perp = perpetrator();
+            try resumeNonRecursive() catch(e : Dynamic) {}
+            if (causedByFailure != null) clearFailed();
+            resumeChildren(causedByFailure, perp);
+        }
+    }
+
+    private function faultCreate() : Void {
+        if (!_mailbox.isSuspended()) {
+            Funk.error(ActorError('mailbox must be suspended during creation, status=${_mailbox.status()}'));
+        }
+
+        _children.children().foreach(function(child) child.context().stop());
+
+        if (!setChildrenTerminationReason(Creation)) finishCreate();
+    }
+
+    private function finishCreate() : Void {
+        try resumeNonRecursive() catch (error : Dynamic) {}
+        clearFailed();
+        systemCreate(_uid);
+    }
+
+    private function finishRecreate(cause : Dynamic, failedActor : Actor) : Void {
+        var survivors = _children.children();
+
+        try {
+            try resumeNonRecursive() catch (error : Dynamic) {}
+            clearFailed();
+
+            var freshActor = newActor();
+            _actor = freshActor;
+            if (freshActor == failedActor) setActorFields(freshActor, this, self());
+
+            freshActor.postRestart(cause);
+
+            survivors.foreach(function(child) {
+                try AnyTypes.asInstanceOf(child, InternalActorRef).restart(cause) catch(e : Dynamic) {
+                    publish(Error, ErrorMessage(    e, 
+                                                    _self.path().toString(), 
+                                                    Type.getClass(_actor),
+                                                    'restaring $child'
+                                                    ));
+                }
+            });
+        } catch(e : Dynamic) {
+            clearActorFields(_actor);
+            handleInvokeFailure(survivors, new PostRestartException(_self, e, cause));
+        }
     }
 
     private function handleInvokeFailure(childrenNotToSuspend : List<ActorRef>, error : Dynamic) : Void {
@@ -433,9 +569,15 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
+    private function isNormal() : Bool return _children.isNormal();
+
     private function isFailed() : Bool return !AnyTypes.toBool(_failed);
 
     private function setFailed(perpetrator : ActorRef) : Void _failed = perpetrator;
+
+    private function clearFailed() : Void _failed = null;
+
+    private function perpetrator() : ActorRef return _failed;
 
     private function handleException(e : Dynamic) : Void {
         // TODO (Simon) : Handle other errors.
@@ -501,6 +643,22 @@ class ActorCell implements Cell implements ActorContext {
     private function childrenRefs() : ChildrenContainer return _children.container();
 
     public function toString() return '[ActorCell (path=${self().path()})]';
+}
+
+@:final
+private class PostRestartException {
+
+    private var _self : InternalActorRef;
+
+    private var _error : Dynamic;
+
+    private var _cause : Dynamic;
+
+    public function new(self : InternalActorRef, error : Dynamic, cause : Dynamic) {
+        _self = self;
+        _error = error;
+        _cause = cause;
+    }
 }
 
 @:final

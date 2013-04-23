@@ -5,6 +5,7 @@ import funk.actors.ActorContext;
 import funk.actors.ActorSystem;
 import funk.actors.ActorPath;
 import funk.actors.ActorRef;
+import funk.actors.dispatch.SystemMessage;
 import funk.types.extensions.EnumValues;
 
 using funk.types.Any;
@@ -15,6 +16,8 @@ using funk.collections.immutable.List;
 enum Containers {
     Normal;
     Termination;
+    Creation;
+    Recreation(cause : Dynamic);
 }
 
 class Children {
@@ -66,6 +69,9 @@ class Children {
         }
     }
 
+    // TODO (Simon) : Implement waiting for children for Terminating containers.
+    public function waitingForChildren() : Option<WaitingForChildren> return None;
+
     public function actorOf(props : Props, name : String) : ActorRef return makeChild(_cell, props, checkName(name));
 
     public function children() : List<ActorRef> return _container.children();
@@ -85,6 +91,8 @@ class Children {
 
     public function isTerminating() : Bool return _container.isTerminating();
 
+    public function isNormal() : Bool return _container.isNormal();
+
     @:allow(funk.actors)
     private function attachChild(props : Props, name : String) : ActorRef {
         return makeChild(_cell, props, checkName(name));
@@ -100,6 +108,13 @@ class Children {
     private function suspendChildren(exceptFor : List<ActorRef>) : Void {
         _container.children().foreach(function(child) {
             if (!exceptFor.contains(child)) AnyTypes.asInstanceOf(child, InternalActorRef).suspend();
+        });
+    }
+
+    @:allow(funk.actors)
+    private function resumeChildren(causedByFailure : Dynamic, perp : ActorRef) : Void {
+        _container.children().foreach(function(child) {
+            AnyTypes.asInstanceOf(child, InternalActorRef).resume((perp == child) ? causedByFailure : null);
         });
     }
 
@@ -130,25 +145,42 @@ class Children {
     }
 }
 
+class WaitingForChildren {
+
+    private var _todo : List<SystemMessage>;
+
+    public function new(){
+        _todo = Nil;
+    }
+
+    public function enqueue(message : SystemMessage) : Void _todo.prepend(message);
+
+    public function dequeueAll() : List<SystemMessage> {
+        var result = _todo;
+        _todo = null;
+        return result;
+    }
+}
+
 interface ChildrenContainer {
 
-    function add(name: String, stats: ActorRef): ChildrenContainer;
+    function add(name : String, stats : ActorRef) : ChildrenContainer;
 
-    function remove(child: ActorRef): ChildrenContainer;
+    function remove(child : ActorRef) : ChildrenContainer;
 
-    function getByName(name: String): Option<ChildStats>;
+    function getByName(name : String) : Option<ChildStats>;
 
-    function getByRef(actor: ActorRef): Option<ChildStats>;
+    function getByRef(actor : ActorRef) : Option<ChildStats>;
 
-    function children(): List<ActorRef>;
+    function children() : List<ActorRef>;
 
-    function reserve(name: String): ChildrenContainer;
+    function reserve(name : String) : ChildrenContainer;
 
-    function unreserve(name: String): ChildrenContainer;
+    function unreserve(name : String) : ChildrenContainer;
 
-    function isTerminating(): Bool;
+    function isTerminating() : Bool;
 
-    function isNormal(): Bool;
+    function isNormal() : Bool;
 }
 
 enum ChildStats {
