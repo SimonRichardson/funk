@@ -406,7 +406,24 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     private function handleChildTerminated(child : ActorRef) : Void {
-        _children.removeChild(child);
+        // TODO (Simon) : Implement strategies 
+        var status = removeChildAndGetStateChange(child);
+
+        if (AnyTypes.toBool(_actor)) {
+            try _actor.supervisorStrategy().handleChildTerminated(this, child, children) catch(e : Dynamic) {
+                publish(Error, ErrorMessage(e, _self.path().toString(), Type.getClass(_actor), 'handleChildTerminated failed'));
+                handleInvokeFailure(Nil, e);
+            }
+        }
+
+        /*
+        switch(status) {
+          case Some(c @ ChildrenContainer.Recreation(cause)) ⇒ { finishRecreate(cause, actor); c.dequeueAll() }
+          case Some(c @ ChildrenContainer.Creation()) ⇒ { finishCreate(); c.dequeueAll() }
+          case Some(ChildrenContainer.Termination) ⇒ { finishTerminate(); null }
+          case _ ⇒ null
+        }
+        */
     }
 
     private function unwatchWatchedActors(actor : Actor) : Void {
