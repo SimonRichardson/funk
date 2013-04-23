@@ -37,6 +37,12 @@ interface Cell extends ActorContext {
 
     function stop() : ActorContext;
 
+    function suspend() : Void;
+
+    function resume(causedByFailure : Dynamic) : Void;
+
+    function restart(cause : Dynamic) : Void;
+
     function sendMessage(msg : EnvelopeMessage) : Void;
 
     function sendSystemMessage(msg : SystemMessage) : Void;
@@ -80,6 +86,8 @@ class ActorCell implements Cell implements ActorContext {
 
     private var _becomingStack : List<Predicate1<AnyRef>>;
 
+    private var _failed : ActorRef;
+
     public function new(system : ActorSystem, self : InternalActorRef, props : Props, parent : InternalActorRef) {
         _system = system;
         _self = self;
@@ -115,6 +123,18 @@ class ActorCell implements Cell implements ActorContext {
     public function stop() : ActorContext {
         try _dispatcher.systemDispatch(this, Terminate) catch (e : Dynamic) handleException(e);
         return this;
+    }
+
+    public function suspend() : Void {
+        try _dispatcher.systemDispatch(this, Suspend) catch (e : Dynamic) handleException(e);
+    }
+
+    public function resume(causedByFailure : Dynamic) : Void {
+        try _dispatcher.systemDispatch(this, Resume(causedByFailure)) catch (e : Dynamic) handleException(e);
+    }
+
+    public function restart(cause : Dynamic) : Void {
+        try _dispatcher.systemDispatch(this, Recreate(cause)) catch (e : Dynamic) handleException(e);
     }
 
     public function actorOf(props : Props, name : String) : ActorRef return _children.actorOf(props, name);
@@ -291,7 +311,7 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     private function systemCreate(uid : String) : Void {
-        this._uid = uid;
+        _uid = uid;
 
         try {
             _actor = newActor();
@@ -346,9 +366,9 @@ class ActorCell implements Cell implements ActorContext {
         _actor._self = null;
     }
 
-    private function clearActorCellFields(cell : ActorCell) : Void {
-        cell._props = terminatedActorProps;
-    }
+    private function clearActorCellFields(cell : ActorCell) : Void cell._props = terminatedActorProps;
+
+    private function suspendChildren(exceptFor : List<ActorRef>) : Void _children.suspendChildren(exceptFor);
 
     private function handleChildTerminated(child : ActorRef) : Void {
         _children.removeChild(child);
@@ -377,7 +397,29 @@ class ActorCell implements Cell implements ActorContext {
 
     private function handleInvokeFailure(childrenNotToSuspend : List<ActorRef>, error : Dynamic) : Void {
         try {
+            if (!isFailed()) {
+                suspendNonRecursive();
 
+                function fail() {
+                    setFailed(_self); 
+                    return Nil;
+                }
+
+                var skip = switch(_currentMessage) {
+                    case Envelope(msg, child):
+                        switch(cast msg) {
+                            case Failed(_, _):
+                                setFailed(child); 
+                                Nil.prepend(child);
+                            case _: fail();
+                        }
+                    case _: fail();
+                }
+
+                suspendChildren(skip.prependAll(childrenNotToSuspend));
+
+                _parent.send(Failed(error, _uid), _self);
+            }
         } catch (e : Dynamic) {
             publish(Error, ErrorMessage(    e, 
                                             _self.path().toString(), 
@@ -391,6 +433,10 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
+    private function isFailed() : Bool return !AnyTypes.toBool(_failed);
+
+    private function setFailed(perpetrator : ActorRef) : Void _failed = perpetrator;
+
     private function handleException(e : Dynamic) : Void {
         // TODO (Simon) : Handle other errors.
         switch(e){
@@ -401,6 +447,10 @@ class ActorCell implements Cell implements ActorContext {
                                                     ));
         }
     }
+
+    private function suspendNonRecursive() : Void _dispatcher.suspend(this);
+
+    private function resumeNonRecursive() : Void _dispatcher.resume(this);
 
     private function finishTerminate() : Void {
         /* The following order is crucial for things to work properly. Only change this if you're very confident and lucky.

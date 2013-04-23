@@ -101,9 +101,35 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
         finally();
     }
 
+    public function actor() : ActorCell return _actor;
+
+    public function dispatcher() : Dispatcher return _dispatcher;
+
     public function name() : String return _dispatcher.name();
 
     public function status() : Int return _status;
+
+    public function resume() : Bool {
+        return switch(_status) {
+            case _ if((_status & Closed) == Closed):
+                _status = Closed;
+                false;
+            case _:
+                _status &= ~Suspended;
+                true;
+        }
+    }
+
+    public function suspend() : Bool {
+        return switch(_status) {
+            case _ if((_status & Closed) == Closed):
+                _status = Closed;
+                false;
+            case _:
+                _status |= Suspended;
+                true;
+        }
+    }
 
     public function becomeOpen() : Bool {
         return switch(_status) {
@@ -111,18 +137,7 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
                 _status = Closed;
                 false;
             case _:
-                _status = Open | _status & Scheduled;
-                true;
-        }
-    }
-
-    public function becomeSuspended() : Bool {
-        return switch(_status) {
-            case _ if((_status & Closed) == Closed):
-                _status = Closed;
-                false;
-            case _:
-                _status = Suspended | _status & Scheduled;
+                _status |= Open;
                 true;
         }
     }
@@ -141,14 +156,14 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
     public function setAsScheduled() : Bool {
         return switch(_status) {
             case _ if((_status & Open) == Open):
-                _status = _status | Scheduled;
+                _status |= Scheduled;
                 true;
             case _: false;
         }
     }
 
     public function setAsIdle() : Bool {
-        _status = _status & ~Scheduled;
+        _status &= ~Scheduled;
         return (_status & Scheduled) != Scheduled;
     }
 

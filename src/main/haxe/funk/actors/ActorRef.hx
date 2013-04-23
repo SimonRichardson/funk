@@ -37,6 +37,12 @@ interface InternalActorRef extends ActorRef {
 
     function stop() : Void;
 
+    function suspend() : Void;
+
+    function resume(causedByFailure : Dynamic) : Void;
+
+    function restart(cause : Dynamic) : Void;
+
     function sendSystemMessage(message : SystemMessage) : Void;
 
     function getChild(name : List<String>) : Option<InternalActorRef>;
@@ -79,6 +85,12 @@ class LocalActorRef implements InternalActorRef {
     public function start() : Void _actorCell.start();
 
     public function stop() : Void _actorCell.stop();
+
+    public function suspend() : Void _actorCell.suspend();
+
+    public function resume(causedByFailure : Dynamic) : Void _actorCell.resume(causedByFailure);
+
+    public function restart(cause : Dynamic) : Void _actorCell.restart(cause);
 
     public function actorOf(props : Props, name : String) : ActorRef return _actorCell.actorOf(props, name);
 
@@ -158,6 +170,12 @@ class EmptyActorRef implements InternalActorRef {
     public function start() : Void {}
 
     public function stop() : Void {}
+
+    public function suspend() : Void {}
+
+    public function resume(causedByFailure : Dynamic) : Void {}
+
+    public function restart(cause : Dynamic) : Void {}
 
     public function send(msg : AnyRef, ?sender : ActorRef = null) : Void {}
 

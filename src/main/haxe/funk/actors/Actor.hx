@@ -9,6 +9,7 @@ using funk.types.Option;
 using funk.collections.immutable.List;
 
 enum ActorMessages {
+    Failed(cause : Dynamic, uid : String);
     Terminated(child : ActorRef);
     UnhandledMessage(message : AnyRef, sender : Option<ActorRef>, self : ActorRef);
 }

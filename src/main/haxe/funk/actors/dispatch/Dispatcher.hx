@@ -19,6 +19,10 @@ interface Dispatcher {
 
     function detach(actor : ActorCell) : Void;
 
+    function suspend(actor : ActorCell) : Void;
+
+    function resume(actor : ActorCell) : Void;    
+
     function createMailbox(actor : ActorCell) : Mailbox;
 
     function dispatch(actor : ActorCell, envelope : EnvelopeMessage) : Void;
@@ -78,6 +82,18 @@ class MessageDispatcher implements Dispatcher {
     public function detach(actor : ActorCell) : Void {
         unregister(actor);
         ifSensibleToDoSoThenScheduleShutdown();
+    }
+
+    public function suspend(actor : ActorCell) : Void {
+        var mbox = actor.mailbox();
+        if ((mbox.actor() == actor) && mbox.dispatcher() == this) mbox.suspend();
+    }
+
+    public function resume(actor : ActorCell) : Void {
+        var mbox = actor.mailbox();
+        if ((mbox.actor() == actor) && (mbox.dispatcher() == this) && mbox.resume()) {
+            registerForExecution(mbox, false, false);
+        }
     }
 
     public function dispatch(receiver : ActorCell, invocation : EnvelopeMessage) : Void {

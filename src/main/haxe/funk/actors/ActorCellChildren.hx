@@ -96,6 +96,13 @@ class Children {
     @:allow(funk.actors)
     private function unreserveChild(name : String) : Void _container = _container.unreserve(name);
 
+    @:allow(funk.actors)
+    private function suspendChildren(exceptFor : List<ActorRef>) : Void {
+        _container.children().foreach(function(child) {
+            if (!exceptFor.contains(child)) AnyTypes.asInstanceOf(child, InternalActorRef).suspend();
+        });
+    }
+
     private function checkName(name : String) : String {
         return switch(name) {
             case _ if(name == null): Funk.error(ArgumentError("actor name must not be null"));
