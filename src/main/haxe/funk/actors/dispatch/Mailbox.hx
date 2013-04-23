@@ -1,10 +1,12 @@
 package funk.actors.dispatch;
 
-import funk.actors.ActorRefProvider.DeadLetters;
 import funk.Funk;
+import funk.actors.ActorRefProvider.DeadLetters;
 import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.dispatch.SystemMessage;
 import funk.actors.dispatch.MessageQueue;
+import funk.actors.events.EventStream;
+import funk.actors.events.LoggingBus;
 import funk.actors.Scheduler;
 import funk.reactives.Process;
 import funk.types.Any.AnyTypes;
@@ -37,11 +39,15 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
 
     private var _status : Int;
 
+    private var _eventStream : EventStream;
+
     public function new(actor : ActorCell, messageQueue : MessageQueue) {
         _actor = actor;
-        _dispatcher = _actor.dispatcher();
         _messageQueue = messageQueue;
 
+        _dispatcher = _actor.dispatcher();
+        _eventStream = _actor.system().eventStream();
+        
         _systemMessageQueue = new DefaultSystemMessageQueue();
 
         _status = Open;
@@ -82,6 +88,12 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
             }
         } catch(e : Dynamic) {
             finally();
+
+            _eventStream.publish(Data(Error, ErrorMessage(  e, 
+                                                            _actor.self().path().toString(), 
+                                                            Type.getClass(_actor),
+                                                            "exception during processing or mailbox"
+                                                            )));
 
             throw e;
         }
@@ -187,7 +199,7 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
             switch(dequeue()) {
                 case Some(msg):
                     _actor.invoke(msg);
-
+                    
                     processAllSystemMessages();
 
                     if (left > 1 &&

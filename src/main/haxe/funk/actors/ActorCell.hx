@@ -13,6 +13,7 @@ import funk.actors.ActorRefProvider;
 import funk.actors.events.LoggingBus;
 import funk.types.Any.AnyTypes;
 import funk.types.AnyRef;
+import funk.types.Function0;
 import funk.types.Predicate1;
 import funk.types.extensions.EnumValues;
 import funk.io.logging.LogLevel;
@@ -51,6 +52,8 @@ interface Cell extends ActorContext {
 }
 
 class ActorCell implements Cell implements ActorContext {
+
+    private static var terminatedActorProps = new TerminatatedActorProps();
 
     private var _uid : String;
 
@@ -187,25 +190,36 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     public function systemInvoke(message : SystemMessage) : Void {
-        switch(message) {
-            case Create(uid): systemCreate(uid);
-            case Supervise(cell, async, uid): systemSupervise(cell, async, uid);
-            case ChildTerminated(child): handleChildTerminated(child);
-            case Terminate: systemTerminate();
-            case Watch(watchee, watcher): addWatcher(watchee, watcher);
-            case Unwatch(watchee, watcher): remWatcher(watchee, watcher);
-            case _:
+        try {
+            switch(message) {
+                case Create(uid): systemCreate(uid);
+                case Supervise(cell, async, uid): systemSupervise(cell, async, uid);
+                case ChildTerminated(child): handleChildTerminated(child);
+                case Terminate: systemTerminate();
+                case Watch(watchee, watcher): addWatcher(watchee, watcher);
+                case Unwatch(watchee, watcher): remWatcher(watchee, watcher);
+                case _:
+            }
+        } catch (e: Dynamic) {
+            handleInvokeFailure(Nil, e);
         }
     }
 
     public function invoke(message : EnvelopeMessage) : Void {
         _currentMessage = message;
+
         var msg : AnyRef = message.message();
-        switch(msg) {
-            case _ if(AnyTypes.isEnum(msg) && EnumValues.getEnum(msg) == ActorMessages):
-                autoReceiveMessage(message);
-            case _: receiveMessage(msg);
+        try {
+            switch(msg) {
+                case _ if(AnyTypes.isEnum(msg) && EnumValues.getEnum(msg) == ActorMessages):
+                    autoReceiveMessage(message);
+                case _: receiveMessage(msg);
+            }
+        } catch (e : Dynamic) {
+            _currentMessage = null;
+            handleInvokeFailure(Nil, e);
         }
+        
         _currentMessage = null;
     }
 
@@ -326,25 +340,13 @@ class ActorCell implements Cell implements ActorContext {
         return _children.setChildrenTerminationReason(reason);
     }
 
-    private function finishTerminate() : Void {
-        var a = _actor;
-
-        if(AnyTypes.toBool(a)) a.postStop();
-
-        _dispatcher.detach(this);
-        _parent.sendSystemMessage(ChildTerminated(_self));
-
-        if(AnyTypes.toBool(a)) {
-            unwatchWatchedActors(a);
-            clearActorFields(a);
-
-            _actor = null;
-        }
-    }
-
     private function clearActorFields(actor : Actor) : Void {
         _actor._context = null;
         _actor._self = null;
+    }
+
+    private function clearActorCellFields(cell : ActorCell) : Void {
+        cell._props = terminatedActorProps;
     }
 
     private function handleChildTerminated(child : ActorRef) : Void {
@@ -372,15 +374,54 @@ class ActorCell implements Cell implements ActorContext {
 
     }
 
+    private function handleInvokeFailure(childrenNotToSuspend : List<ActorRef>, error : Dynamic) : Void {
+        try {
+
+        } catch (e : Dynamic) {
+            publish(Error, ErrorMessage(    e, 
+                                            _self.path().toString(), 
+                                            Type.getClass(_actor),
+                                            "emergency stop: exception in failure handling"
+                                            ));
+
+            // Try and stop all the children in an emergency situation.
+            try _children.children().foreach(function(child) child.context().stop()) catch (e : Dynamic) {}
+            finishTerminate();
+        }
+    }
+
     private function handleException(e : Dynamic) : Void {
         // TODO (Simon) : Handle other errors.
         switch(e){
             case _: publish(Error, ErrorMessage(    e, 
-                                                    self().path().toString(), 
+                                                    _self.path().toString(), 
                                                     Type.getClass(_actor),
                                                     "exception during system message send"
                                                     ));
         }
+    }
+
+    private function finishTerminate() : Void {
+        /* The following order is crucial for things to work properly. Only change this if you're very confident and lucky.
+         *
+         * Please note that if a parent is also a watcher then ChildTerminated and Terminated must be processed in this
+         * specific order.
+         */
+        try if (AnyTypes.toBool(_actor)) _actor.context().stop()
+        catch (e : Dynamic) publish(Error, ErrorMessage(e, _self.path().toString(), Type.getClass(_actor), Std.string(e)));
+
+        try _dispatcher.detach(this) catch(e : Dynamic) {}
+        try _parent.sendSystemMessage(ChildTerminated(_self)) catch(e : Dynamic) {}
+        try unwatchWatchedActors(_actor) catch(e : Dynamic) {}
+
+        try {
+            publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'stopped'));
+
+            clearActorFields(_actor);
+            clearActorCellFields(this);
+        } catch(e : Dynamic) {}
+
+        _actor = null;
     }
 
     private function publish(level : LogLevel, event : LogMessages) : Void {
@@ -709,4 +750,16 @@ class TerminatedChildrenContainer implements ChildrenContainer {
     public function isTerminating() : Bool return true;
 
     public function isNormal() : Bool return false;
+}
+
+@:final
+private class TerminatatedActorProps extends Props {
+
+    public function new() {
+        super(null);
+    }
+
+    override public function creator() : Function0<Actor> {
+        return Funk.error(IllegalOperationError("This Actor has been terminated"));
+    }
 }
