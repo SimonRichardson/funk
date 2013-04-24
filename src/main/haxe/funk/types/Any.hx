@@ -9,6 +9,7 @@ import funk.types.Predicate1;
 import funk.types.Predicate2;
 import funk.types.Option;
 import funk.types.Attempt;
+import funk.types.Wildcard;
 import funk.types.extensions.Strings;
 
 typedef Any<T> = T;
@@ -130,6 +131,15 @@ class AnyTypes {
         #else
         return Std.is(value, possible);
         #end
+    }
+
+    public static function isValueOf<T : AnyRef>(value : T, possible : AnyRef) : Bool {
+        return if (value == null || possible == null) false;
+        else switch(Type.typeof(value)) {
+            case TEnum(_) if(isInstanceOf(possible, Enum)): Type.getEnum(value) == possible;
+            case TEnum(_) if(isEnum(possible) && Type.enumEq(value, possible)): true;
+            case _: equals(value, possible);
+        }
     }
 
     public static function toBool<T>(value : Null<T>) : Bool {

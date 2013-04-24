@@ -1,6 +1,7 @@
 package funk.types;
 
 import funk.types.Any;
+import funk.types.Wildcard;
 
 using massive.munit.Assert;
 
@@ -146,6 +147,26 @@ class AnyTest {
     public function calling_isInstanceOf_interfaceSubTest_is_ITest() : Void {
         AnyTypes.isInstanceOf(new InterfaceSubTest(), ITest).isTrue();
     }
+
+    @Test
+    public function calling_isValueOf_matching_EnumValues_with_no_parameters() : Void {
+        AnyTypes.isValueOf(A, A).isTrue();
+    }
+
+    @Test
+    public function calling_isValueOf_matching_Enum_and_EnumValue() : Void {
+        AnyTypes.isValueOf(A, TestEnum).isTrue();
+    }
+
+    @Test
+    public function calling_isValueOf_matching_EnumValues_with_different_parameters() : Void {
+        AnyTypes.isValueOf(B(1), B(2)).isFalse();
+    }
+
+    @Test
+    public function calling_isValueOf_matching_EnumValues_with_wildcard_parameters() : Void {
+        AnyTypes.isValueOf(C(1, 2), TestEnum).isTrue();
+    }
 }
 
 private class Test {
@@ -168,4 +189,10 @@ private class InterfaceSubTest extends SubTest implements ITest {
     public function new() {
         super();
     }
+}
+
+private enum TestEnum {
+    A;
+    B(value : Int);
+    C(value0 : Int, value1 : Int);
 }

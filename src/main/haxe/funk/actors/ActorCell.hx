@@ -237,8 +237,7 @@ class ActorCell implements Cell implements ActorContext {
         var msg : AnyRef = message.message();
         try {
             switch(msg) {
-                case _ if(AnyTypes.isEnum(msg) && EnumValues.getEnum(msg) == ActorMessages):
-                    autoReceiveMessage(message);
+                case _ if(AnyTypes.isEnum(msg) && EnumValues.getEnum(msg) == ActorMessages): autoReceiveMessage(message);
                 case _: receiveMessage(msg);
             }
         } catch (e : Dynamic) {
@@ -257,11 +256,6 @@ class ActorCell implements Cell implements ActorContext {
 
     public function unbecome() : Void {
         _becomingStack = _becomingStack.tail();
-
-        // Make sure we add the actor receiver back onto the stack
-        if (_becomingStack.isEmpty()) {
-            _becomingStack = _becomingStack.prepend(actorRecieve());
-        }
     }
 
     public function initChild(ref : ActorRef) : Option<ChildStats> return _children.initChild(ref);
@@ -289,12 +283,21 @@ class ActorCell implements Cell implements ActorContext {
 
     private function receiveMessage(message : AnyRef) : Void {
         var p = _becomingStack;
-        while(p.nonEmpty()) {
-            var func = p.head();
-            if (!func(message)) {
-                break;
+        if (p.isEmpty()) _actor.receive(message);
+        else {
+            while(p.nonEmpty()) {
+                var func = p.head();
+                if (!func(message)) {
+                    break;
+                }
+
+                p = p.tail();
+
+                // Make sure we call the actor receive at the very end if required.
+                if (p.isEmpty()) {
+                    _actor.receive(message);
+                }
             }
-            p = p.tail();
         }
     }
 
@@ -604,7 +607,7 @@ class ActorCell implements Cell implements ActorContext {
                     publish(Error, ErrorMessage(    e, 
                                                     _self.path().toString(), 
                                                     Type.getClass(_actor),
-                                                    'restaring $child'
+                                                    'restarting $child'
                                                     ));
                 }
             });
@@ -624,17 +627,20 @@ class ActorCell implements Cell implements ActorContext {
                     return Nil;
                 }
 
-                var skip = switch(_currentMessage) {
-                    case Envelope(msg, child):
-                        switch(cast msg) {
-                            case Failed(_, _):
-                                setFailed(child); 
-                                Nil.prepend(child);
-                            case _: fail();
-                        }
-                    case _: fail();
-                }
-
+                var skip = if (AnyTypes.toBool(_currentMessage)) {
+                    switch(_currentMessage) {
+                        case Envelope(msg, child) if (AnyTypes.isValueOf(msg, ActorMessages)):
+                            var message : ActorMessages = cast msg;
+                            switch(message) {
+                                case Failed(_, _): 
+                                    setFailed(child); 
+                                    Nil.prepend(child);
+                                case _: fail();
+                            }
+                        case _: fail();
+                    }
+                } else fail();
+                
                 suspendChildren(skip.prependAll(childrenNotToSuspend));
 
                 _parent.send(Failed(error, _uid), _self);
@@ -654,7 +660,7 @@ class ActorCell implements Cell implements ActorContext {
 
     private function isNormal() : Bool return _children.isNormal();
 
-    private function isFailed() : Bool return !AnyTypes.toBool(_failed);
+    private function isFailed() : Bool return AnyTypes.toBool(_failed);
 
     private function setFailed(perpetrator : ActorRef) : Void _failed = perpetrator;
 
@@ -678,16 +684,16 @@ class ActorCell implements Cell implements ActorContext {
     private function resumeNonRecursive() : Void _dispatcher.resume(this);
 
     private function finishTerminate() : Void {
-        /* The following order is crucial for things to work properly. Only change this if you're very confident and lucky.
-         *
-         * Please note that if a parent is also a watcher then ChildTerminated and Terminated must be processed in this
-         * specific order.
-         */
-        try if (AnyTypes.toBool(_actor)) _actor.context().stop()
-        catch (e : Dynamic) publish(Error, ErrorMessage(e, _self.path().toString(), Type.getClass(_actor), Std.string(e)));
+        try {
+            if (AnyTypes.toBool(_actor) && AnyTypes.toBool(_actor.context())) {
+                _actor.context().stop();
+            }
+        } catch (e : Dynamic) {
+            publish(Error, ErrorMessage(e, _self.path().toString(), Type.getClass(_actor), Std.string(e)));
+        }
 
         try _dispatcher.detach(this) catch(e : Dynamic) {}
-        try _parent.sendSystemMessage(ChildTerminated(_self)) catch(e : Dynamic) {}
+        try _parent.sendSystemMessage(ChildTerminated(_self)) catch(e : Dynamic) {}       
         try unwatchWatchedActors(_actor) catch(e : Dynamic) {}
 
         try {

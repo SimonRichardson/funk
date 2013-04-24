@@ -214,9 +214,9 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
             switch(dequeue()) {
                 case Some(msg):
                     _actor.invoke(msg);
-                    
-                    processAllSystemMessages();
 
+                    processAllSystemMessages();
+                    
                     if (left > 1 &&
                         (   (_dispatcher.isThroughputDeadlineTimeDefined() == false) ||
                             (Process.stamp() - deadlineNs < 0))
