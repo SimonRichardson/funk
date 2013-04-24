@@ -100,7 +100,7 @@ class Children {
                     case None: None;
                     case _: Some(c.reason());
                 }
-            case _: 
+            case _:
                 removeChild(child);
                 None;
         }

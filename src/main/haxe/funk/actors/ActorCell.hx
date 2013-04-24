@@ -237,14 +237,14 @@ class ActorCell implements Cell implements ActorContext {
         var msg : AnyRef = message.message();
         try {
             switch(msg) {
-                case _ if(AnyTypes.isEnum(msg) && EnumValues.getEnum(msg) == ActorMessages): autoReceiveMessage(message);
+                case _ if(AnyTypes.isValueOf(msg, ActorMessages)): autoReceiveMessage(message);
                 case _: receiveMessage(msg);
             }
         } catch (e : Dynamic) {
             _currentMessage = null;
             handleInvokeFailure(Nil, e);
         }
-        
+
         _currentMessage = null;
     }
 
@@ -270,8 +270,8 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     private function autoReceiveMessage(message : EnvelopeMessage) : Void {
-        // TODO (Simon) : Work on auto received messages.
-        switch(cast message.message()) {
+        var msg : ActorMessages = message.message();
+        switch(msg) {
             case Failed(cause, uid): handleFailure(sender().getOrElse(function() return null), cause, uid);
             case Terminated(t) : watchedActorTerminated(t);
             case Kill: Funk.error(ActorKillError("Kill"));
@@ -420,18 +420,18 @@ class ActorCell implements Cell implements ActorContext {
 
     private function handleFailure(child : ActorRef, cause : Dynamic, uid : String) {
         switch(_children.getChildByRef(child)) {
-            case Some(stats) if (ChildStatsTypes.uid(stats) == uid): 
+            case Some(stats) if (ChildStatsTypes.uid(stats) == uid):
                 if (!_actor.supervisorStrategy().handleFailure(this, child, cause, stats, _children.getAllChildStats())) {
                     throw cause;
                 }
-            case Some(stats): 
-                publish(Debug, DebugMessage(    _self.path().toString(), 
-                                                Type.getClass(_actor), 
+            case Some(stats):
+                publish(Debug, DebugMessage(    _self.path().toString(),
+                                                Type.getClass(_actor),
                                                 'dropping Failed($cause) from old child $child (uid=${ChildStatsTypes.uid(stats)} != $uid)'
                                                 ));
             case None:
-                publish(Debug, DebugMessage(    _self.path().toString(), 
-                                                Type.getClass(_actor), 
+                publish(Debug, DebugMessage(    _self.path().toString(),
+                                                Type.getClass(_actor),
                                                 'dropping Failed($cause) from unknown child $child'
                                                 ));
         }
@@ -449,9 +449,9 @@ class ActorCell implements Cell implements ActorContext {
 
         // TODO (Simon) : Work out if we need to handle termination correctly c.dequeueAll etc.
         switch(status) {
-            case Some(Recreation(cause)): finishRecreate(cause, _actor); 
-            case Some(Creation): finishCreate(); 
-            case Some(Termination): finishTerminate(); 
+            case Some(Recreation(cause)): finishRecreate(cause, _actor);
+            case Some(Creation): finishCreate();
+            case Some(Termination): finishTerminate();
             case _:
         }
     }
@@ -490,8 +490,8 @@ class ActorCell implements Cell implements ActorContext {
         } else if(!watcheeSelf && watcherSelf) {
             watch(watchee);
         } else {
-            publish(Warn, WarnMessage(  _self.path().toString(), 
-                                        Type.getClass(_actor), 
+            publish(Warn, WarnMessage(  _self.path().toString(),
+                                        Type.getClass(_actor),
                                         'BUG: illegal Watch($watchee, $watcher) for $_self'
                                         ));
         }
@@ -509,8 +509,8 @@ class ActorCell implements Cell implements ActorContext {
         } else if(!watcheeSelf && watcherSelf) {
             unwatch(watchee);
         } else {
-            publish(Warn, WarnMessage(  _self.path().toString(), 
-                                        Type.getClass(_actor), 
+            publish(Warn, WarnMessage(  _self.path().toString(),
+                                        Type.getClass(_actor),
                                         'BUG: illegal Unwatch($watchee, $watcher) for $_self'
                                         ));
         }
@@ -523,16 +523,16 @@ class ActorCell implements Cell implements ActorContext {
 
     private function faultRecreate(cause : Dynamic) : Void {
         if (!AnyTypes.toBool(_actor)) {
-            publish(Error, ErrorMessage(    cause, 
-                                            _self.path().toString(), 
+            publish(Error, ErrorMessage(    cause,
+                                            _self.path().toString(),
                                             Type.getClass(_actor),
                                             'changing Recreate into Create after $cause'
                                             ));
             faultCreate();
-        } else if(isNormal()) { 
+        } else if(isNormal()) {
             var failedActor = _actor;
 
-            publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'restarting')); 
+            publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'restarting'));
 
             if (AnyTypes.toBool(failedActor)) {
                 var optionalMessage = AnyTypes.toBool(_currentMessage) ? Some(_currentMessage.message()) : None;
@@ -559,8 +559,8 @@ class ActorCell implements Cell implements ActorContext {
             publish(Error, ErrorMessage(e, _self.path().toString(), null, 'changing Resume into Create after $e'));
             faultCreate();
         } else if (!AnyTypes.toBool(_actor.context()) && !AnyTypes.toBool(causedByFailure)) {
-            publish(Error, ErrorMessage(    e, 
-                                            _self.path().toString(), 
+            publish(Error, ErrorMessage(    e,
+                                            _self.path().toString(),
                                             Type.getClass(_actor),
                                             'changing Resume into Restart after $e'
                                             ));
@@ -604,8 +604,8 @@ class ActorCell implements Cell implements ActorContext {
 
             survivors.foreach(function(child) {
                 try AnyTypes.asInstanceOf(child, InternalActorRef).restart(cause) catch(e : Dynamic) {
-                    publish(Error, ErrorMessage(    e, 
-                                                    _self.path().toString(), 
+                    publish(Error, ErrorMessage(    e,
+                                                    _self.path().toString(),
                                                     Type.getClass(_actor),
                                                     'restarting $child'
                                                     ));
@@ -623,7 +623,7 @@ class ActorCell implements Cell implements ActorContext {
                 suspendNonRecursive();
 
                 function fail() {
-                    setFailed(_self); 
+                    setFailed(_self);
                     return Nil;
                 }
 
@@ -632,22 +632,22 @@ class ActorCell implements Cell implements ActorContext {
                         case Envelope(msg, child) if (AnyTypes.isValueOf(msg, ActorMessages)):
                             var message : ActorMessages = cast msg;
                             switch(message) {
-                                case Failed(_, _): 
-                                    setFailed(child); 
+                                case Failed(_, _):
+                                    setFailed(child);
                                     Nil.prepend(child);
                                 case _: fail();
                             }
                         case _: fail();
                     }
                 } else fail();
-                
+
                 suspendChildren(skip.prependAll(childrenNotToSuspend));
 
-                _parent.send(Failed(error, _uid), _self);
+                _parent.send(Failed(error, _self.uid()), _self);
             }
         } catch (e : Dynamic) {
-            publish(Error, ErrorMessage(    e, 
-                                            _self.path().toString(), 
+            publish(Error, ErrorMessage(    e,
+                                            _self.path().toString(),
                                             Type.getClass(_actor),
                                             "emergency stop: exception in failure handling"
                                             ));
@@ -671,8 +671,8 @@ class ActorCell implements Cell implements ActorContext {
     private function handleException(e : Dynamic) : Void {
         // TODO (Simon) : Handle other errors.
         switch(e){
-            case _: publish(Error, ErrorMessage(    e, 
-                                                    _self.path().toString(), 
+            case _: publish(Error, ErrorMessage(    e,
+                                                    _self.path().toString(),
                                                     Type.getClass(_actor),
                                                     "exception during system message send"
                                                     ));
@@ -693,7 +693,7 @@ class ActorCell implements Cell implements ActorContext {
         }
 
         try _dispatcher.detach(this) catch(e : Dynamic) {}
-        try _parent.sendSystemMessage(ChildTerminated(_self)) catch(e : Dynamic) {}       
+        try _parent.sendSystemMessage(ChildTerminated(_self)) catch(e : Dynamic) {}
         try unwatchWatchedActors(_actor) catch(e : Dynamic) {}
 
         try {
