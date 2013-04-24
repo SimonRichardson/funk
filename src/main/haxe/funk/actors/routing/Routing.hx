@@ -87,11 +87,7 @@ class RoutedActorCell extends ActorCell {
 
     override public function sendMessage(msg : EnvelopeMessage) : Void {
         var message : EnvelopeMessage = switch (msg) {
-            case RouterEnvelope(routerMessage, _):
-                switch(Type.typeof(routerMessage)) {
-                    case TEnum(e) if(e == EnvelopeMessage): routerMessage;
-                    case _: msg;
-                }
+            case RouterEnvelope(routerMessage, _) if(AnyTypes.isValueOf(routerMessage, EnvelopeMessage)): routerMessage;
             case _: msg;
         };
 
