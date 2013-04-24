@@ -607,7 +607,7 @@ class ActorCell implements Cell implements ActorContext {
             _actor = freshActor;
             if (freshActor == failedActor) setActorFields(freshActor, this, self());
 
-            freshActor.postRestart(cause);
+            freshActor.postRestart(asError(cause));
 
             survivors.foreach(function(child) {
                 try AnyTypes.asInstanceOf(child, InternalActorRef).restart(cause) catch(e : Dynamic) {
