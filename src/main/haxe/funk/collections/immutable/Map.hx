@@ -72,6 +72,10 @@ class MapTypes {
         return Nil.prependIterator(nativeKeys(map));
     }
 
+    public static function values<K : String, V>(map : Map<K, V>) : List<V> {
+        return Nil.prependIterator(nativeValues(map));
+    }
+
     public static function map<K1 : String, V1, K2 : String, V2>(   map : Map<K1, V1>,
                                                                     func : Function1<Tuple2<K1, V1>, Tuple2<K2, V2>>
                                                                     ) : Map<K2, V2> {
@@ -157,6 +161,13 @@ class MapTypes {
     private static function nativeKeys<K : String, V>(map : Map<K, V>) : Iterator<K> {
         return switch(map) {
             case Node(m, _, _): m.keys();
+            case _: [].iterator();
+        }
+    }
+
+    private static function nativeValues<K : String, V>(map : Map<K, V>) : Iterator<V> {
+        return switch(map) {
+            case Node(m, _, _): m.iterator();
             case _: [].iterator();
         }
     }

@@ -13,11 +13,34 @@ using funk.types.Option;
 using funk.collections.immutable.Map;
 using funk.collections.immutable.List;
 
-enum Containers {
+enum SuspendReason {
     Normal;
     Termination;
     Creation;
+    UserRequest;
     Recreation(cause : Dynamic);
+}
+
+enum ChildStats {
+    ChildNameReserved;
+    ChildRestartStats(child : ActorRef, uid : String);
+}
+
+class ChildStatsTypes {
+
+    public static function child(stats : ChildStats) : ActorRef {
+        return switch (stats) {
+            case ChildRestartStats(c, _): c;
+            case _: null;
+        }
+    }
+
+    public static function uid(stats : ChildStats) : String {
+        return switch (stats) {
+            case ChildRestartStats(_, uid): uid;
+            case _: null;
+        }
+    }
 }
 
 class Children {
@@ -36,7 +59,7 @@ class Children {
         var name = ref.path().name();
         var opt = _container.getByName(name);
         return switch(opt) {
-            case Some(ChildRestartStats(_)): opt;
+            case Some(ChildRestartStats(_, _)): opt;
             case Some(ChildNameReserved):
                 _container = _container.add(name, ref);
                 _container.getByName(name);
@@ -49,7 +72,7 @@ class Children {
             case _ if(AnyTypes.isInstanceOf(_container, TerminatedChildrenContainer)): None;
             case _:
                 switch(_container.getByRef(ref)) {
-                    case Some(ChildRestartStats(a)):
+                    case Some(ChildRestartStats(a, _)):
                         _container = _container.remove(a);
                         Some(ref);
                     case _: None;
@@ -57,7 +80,7 @@ class Children {
         }
     }
 
-    public function setChildrenTerminationReason(reason : Containers) : Bool {
+    public function setChildrenTerminationReason(reason : SuspendReason) : Bool {
         // Return true on change
         return switch(reason) {
             case Termination if(AnyTypes.isInstanceOf(_container, NormalChildrenContainer)):
@@ -69,6 +92,20 @@ class Children {
         }
     }
 
+    public function removeChildAndGetStateChange(child : ActorRef) : Option<SuspendReason> {
+        return switch(_container) {
+            case _ if(AnyTypes.isInstanceOf(_container, TerminatingChildrenContainer)):
+                var c : TerminatingChildrenContainer = AnyTypes.asInstanceOf(_container, TerminatingChildrenContainer);
+                switch(removeChild(child)) {
+                    case None: None;
+                    case _: Some(c.reason());
+                }
+            case _: 
+                removeChild(child);
+                None;
+        }
+    }
+
     // TODO (Simon) : Implement waiting for children for Terminating containers.
     public function waitingForChildren() : Option<WaitingForChildren> return None;
 
@@ -76,13 +113,17 @@ class Children {
 
     public function children() : List<ActorRef> return _container.children();
 
+    public function getAllChildStats() : List<ChildStats> return _container.stats();
+
     public function child(name : String) : Option<ActorRef> return getChild(name).toOption();
 
     public function getChildByName(name : String) : Option<ChildStats> return _container.getByName(name);
 
+    public function getChildByRef(actor : ActorRef) : Option<ChildStats> return _container.getByRef(actor);
+
     public function getChild(name : String) : ActorRef {
         return switch(_container.getByName(name)) {
-            case Some(ChildRestartStats(a)): a;
+            case Some(ChildRestartStats(a, _)): a;
             case _: null;
         }
     }
@@ -174,6 +215,8 @@ interface ChildrenContainer {
 
     function children() : List<ActorRef>;
 
+    function stats() : List<ChildStats>;
+
     function reserve(name : String) : ChildrenContainer;
 
     function unreserve(name : String) : ChildrenContainer;
@@ -181,11 +224,6 @@ interface ChildrenContainer {
     function isTerminating() : Bool;
 
     function isNormal() : Bool;
-}
-
-enum ChildStats {
-    ChildNameReserved;
-    ChildRestartStats(child : ActorRef);
 }
 
 class NormalChildrenContainer implements ChildrenContainer {
@@ -197,7 +235,7 @@ class NormalChildrenContainer implements ChildrenContainer {
     }
 
     public function add(name : String, child : ActorRef) : ChildrenContainer {
-        var map = _map.add(name, ChildRestartStats(child));
+        var map = _map.add(name, ChildRestartStats(child, child.uid()));
         return new NormalChildrenContainer(map);
     }
 
@@ -221,7 +259,18 @@ class NormalChildrenContainer implements ChildrenContainer {
         var list = Nil;
         for(i in _map.indices()) {
             switch(getByName(i)) {
-                case Some(ChildRestartStats(child)): list = list.prepend(child);
+                case Some(ChildRestartStats(child, _)): list = list.prepend(child);
+                case _:
+            }
+        }
+        return list;
+    }
+
+    public function stats() : List<ChildStats> {
+        var list = Nil;
+        for(i in _map.values()) {
+            switch(i) {
+                case ChildRestartStats(_): list = list.prepend(i);
                 case _:
             }
         }
@@ -250,24 +299,19 @@ class NormalChildrenContainer implements ChildrenContainer {
     public function isNormal() : Bool return true;
 }
 
-enum TerminationReason {
-    UserRequest;
-    Termination;
-}
-
 class TerminatingChildrenContainer implements ChildrenContainer {
 
     private var _map : Map<String, ChildStats>;
 
-    private var _reason : TerminationReason;
+    private var _reason : SuspendReason;
 
-    public function new(map : Map<String, ChildStats>, reason : TerminationReason) {
+    public function new(map : Map<String, ChildStats>, reason : SuspendReason) {
         _map = map;
         _reason = reason;
     }
 
     public function add(name : String, child : ActorRef) : ChildrenContainer {
-        var map = _map.add(name, ChildRestartStats(child));
+        var map = _map.add(name, ChildRestartStats(child, child.uid()));
         return new TerminatingChildrenContainer(map, _reason);
     }
 
@@ -297,7 +341,18 @@ class TerminatingChildrenContainer implements ChildrenContainer {
         var list = Nil;
         for(i in _map.indices()) {
             switch(getByName(i)) {
-                case Some(ChildRestartStats(child)): list = list.prepend(child);
+                case Some(ChildRestartStats(child, _)): list = list.prepend(child);
+                case _:
+            }
+        }
+        return list;
+    }
+
+    public function stats() : List<ChildStats> {
+        var list = Nil;
+        for(i in _map.values()) {
+            switch(i) {
+                case ChildRestartStats(_): list = list.prepend(i);
                 case _:
             }
         }
@@ -314,6 +369,8 @@ class TerminatingChildrenContainer implements ChildrenContainer {
             new TerminatingChildrenContainer(map, _reason);
         } else this;
     }
+
+    public function reason() : SuspendReason return _reason;
 
     public function isTerminating() : Bool return EnumValues.equals(_reason, Termination);
 
@@ -337,6 +394,8 @@ class TerminatedChildrenContainer implements ChildrenContainer {
     public function getByRef(actor : ActorRef) : Option<ChildStats> return None;
 
     public function children() : List<ActorRef> return Nil;
+
+    public function stats() : List<ChildStats> return Nil;
 
     public function reserve(name : String) : ChildrenContainer {
         return Funk.error(ActorError('cannot reserve actor name ${name} already terminated'));

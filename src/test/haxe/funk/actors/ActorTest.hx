@@ -36,6 +36,7 @@ class ActorTest {
     @Test
     public function calling_send_which_will_fail_should_recover() : Void {
         _actor.send(FailWithError);
+        _actor.send(GetActorOf);
     }
 }
 
@@ -54,7 +55,9 @@ private class MockClass extends Actor {
 
     override public function receive(value : AnyRef) : Void {
         switch(cast value) {
-            case GetActorOf: Actor = actorOf(new Props(MockClass), "test");
+            case GetActorOf: 
+                trace("GetActorOf");
+                Actor = actorOf(new Props(MockClass), "test");
             case FailWithError: 
                 trace('Fail with error');
                 throw "Fail with error";

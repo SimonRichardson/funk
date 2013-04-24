@@ -84,6 +84,8 @@ class ActorCell implements Cell implements ActorContext {
 
     private var _watching : List<ActorRef>;
 
+    private var _watchedBy : List<ActorRef>;
+
     private var _becomingStack : List<Predicate1<AnyRef>>;
 
     private var _failed : ActorRef;
@@ -275,6 +277,14 @@ class ActorCell implements Cell implements ActorContext {
 
     private function autoReceiveMessage(message : EnvelopeMessage) : Void {
         // TODO (Simon) : Work on auto received messages.
+        switch(cast message.message()) {
+            case Failed(cause, uid): handleFailure(sender().getOrElse(function() return null), cause, uid);
+            case Terminated(t) : watchedActorTerminated(t);
+            case Kill: Funk.error(ActorKillError("Kill"));
+            case PoisonPill: _self.stop();
+            case SelectParent(m): _parent.send(m, message.sender());
+            case _:
+        }
     }
 
     private function receiveMessage(message : AnyRef) : Void {
@@ -381,7 +391,7 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
-    private function setChildrenTerminationReason(reason : Containers) : Bool {
+    private function setChildrenTerminationReason(reason : SuspendReason) : Bool {
         return _children.setChildrenTerminationReason(reason);
     }
 
@@ -405,25 +415,42 @@ class ActorCell implements Cell implements ActorContext {
         _children.resumeChildren(causedByFailure, perp);
     }
 
+    private function handleFailure(child : ActorRef, cause : Dynamic, uid : String) {
+        switch(_children.getChildByRef(child)) {
+            case Some(stats) if (ChildStatsTypes.uid(stats) == uid): 
+                if (!_actor.supervisorStrategy().handleFailure(this, child, cause, stats, _children.getAllChildStats())) {
+                    throw cause;
+                }
+            case Some(stats): 
+                publish(Debug, DebugMessage(    _self.path().toString(), 
+                                                Type.getClass(_actor), 
+                                                'dropping Failed($cause) from old child $child (uid=${ChildStatsTypes.uid(stats)} != $uid)'
+                                                ));
+            case None:
+                publish(Debug, DebugMessage(    _self.path().toString(), 
+                                                Type.getClass(_actor), 
+                                                'dropping Failed($cause) from unknown child $child'
+                                                ));
+        }
+    }
+
     private function handleChildTerminated(child : ActorRef) : Void {
-        // TODO (Simon) : Implement strategies 
-        var status = removeChildAndGetStateChange(child);
+        var status = _children.removeChildAndGetStateChange(child);
 
         if (AnyTypes.toBool(_actor)) {
-            try _actor.supervisorStrategy().handleChildTerminated(this, child, children) catch(e : Dynamic) {
+            try _actor.supervisorStrategy().handleChildTerminated(this, child, _children.children()) catch(e : Dynamic) {
                 publish(Error, ErrorMessage(e, _self.path().toString(), Type.getClass(_actor), 'handleChildTerminated failed'));
                 handleInvokeFailure(Nil, e);
             }
         }
 
-        /*
+        // TODO (Simon) : Work out if we need to handle termination correctly c.dequeueAll etc.
         switch(status) {
-          case Some(c @ ChildrenContainer.Recreation(cause)) ⇒ { finishRecreate(cause, actor); c.dequeueAll() }
-          case Some(c @ ChildrenContainer.Creation()) ⇒ { finishCreate(); c.dequeueAll() }
-          case Some(ChildrenContainer.Termination) ⇒ { finishTerminate(); null }
-          case _ ⇒ null
+            case Some(Recreation(cause)): finishRecreate(cause, _actor); 
+            case Some(Creation): finishCreate(); 
+            case Some(Termination): finishTerminate(); 
+            case _:
         }
-        */
     }
 
     private function unwatchWatchedActors(actor : Actor) : Void {
@@ -439,12 +466,51 @@ class ActorCell implements Cell implements ActorContext {
         }
     }
 
-    private function addWatcher(watchee : ActorRef, watcher : ActorRef) : Void {
+    private function watchedActorTerminated(actor : ActorRef) {
+        // TODO (Simon) : Work this out.
+        /*if (_watching.contains(actor)) {
+            // TODO (Simon) : maintain address of terminated actors.
+            unwatchWatchedActors(actor);
+            receiveMessage(Terminated(actor));
+        }*/
+    }
 
+    private function addWatcher(watchee : ActorRef, watcher : ActorRef) : Void {
+        var watcheeSelf = watchee == _self;
+        var watcherSelf = watcher == _self;
+
+        if (watcheeSelf && !watcherSelf) {
+            if (!_watchedBy.contains(watcher)) {
+                _watchedBy = _watchedBy.prepend(watcher);
+                publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'now monitoring $watcher'));
+            }
+        } else if(!watcheeSelf && watcherSelf) {
+            watch(watchee);
+        } else {
+            publish(Warn, WarnMessage(  _self.path().toString(), 
+                                        Type.getClass(_actor), 
+                                        'BUG: illegal Watch($watchee, $watcher) for $_self'
+                                        ));
+        }
     }
 
     private function remWatcher(watchee : ActorRef, watcher : ActorRef) : Void {
+        var watcheeSelf = watchee == _self;
+        var watcherSelf = watcher == _self;
 
+        if (watcheeSelf && !watcherSelf) {
+            if (_watchedBy.contains(watcher)) {
+                _watchedBy = _watchedBy.filterNot(function(w) return w == watcher);
+                publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'stopped monitoring $watcher'));
+            }
+        } else if(!watcheeSelf && watcherSelf) {
+            unwatch(watchee);
+        } else {
+            publish(Warn, WarnMessage(  _self.path().toString(), 
+                                        Type.getClass(_actor), 
+                                        'BUG: illegal Unwatch($watchee, $watcher) for $_self'
+                                        ));
+        }
     }
 
     private function faultSuspend() : Void {

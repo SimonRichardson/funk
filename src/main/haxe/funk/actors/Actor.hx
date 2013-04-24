@@ -2,6 +2,7 @@ package funk.actors;
 
 import funk.Funk;
 import funk.actors.ActorContext;
+import funk.actors.SupervisorStrategy;
 
 using funk.futures.Promise;
 using funk.types.AnyRef;
@@ -11,6 +12,9 @@ using funk.collections.immutable.List;
 enum ActorMessages {
     Failed(cause : Dynamic, uid : String);
     Terminated(child : ActorRef);
+    Kill;
+    PoisonPill;
+    SelectParent(message : AnyRef);
     UnhandledMessage(message : AnyRef, sender : Option<ActorRef>, self : ActorRef);
 }
 
@@ -22,12 +26,16 @@ class Actor implements ActorRef {
     @:allow(funk.actors.ActorCell)
     private var _self : ActorRef;
 
+    private var _supervisorStrategy : SupervisorStrategy;
+
     public function new() {
         var context = ActorContextInjector.currentContext();
         if (context.isEmpty()) Funk.error(ActorError("No Context Error"));
 
         _context = context.get();
         _self = _context.self();
+
+        _supervisorStrategy = new OneForOneStrategy();
     }
 
     public function preStart() : Void {}
@@ -53,11 +61,15 @@ class Actor implements ActorRef {
 
     public function path() : ActorPath return _self.path();
 
+    public function uid() : String return _self.uid();
+
     public function name() : String return path().name();
 
     public function sender() : Option<ActorRef> return _context.sender();
 
     public function context() : ActorContext return _context;
+
+    public function supervisorStrategy() : SupervisorStrategy return _supervisorStrategy;
 
     public function isTerminated() : Bool return _self.isTerminated();
 

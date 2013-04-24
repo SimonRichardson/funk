@@ -8,6 +8,7 @@ enum Errors {
     Abstract;
     AbstractMethod;
     ActorError(message : String);
+    ActorKillError(message : String);
     ArgumentError(?message : String);
     BindingError(message : String);
     Error(message : String);
@@ -61,6 +62,7 @@ class Funk {
             case Abstract: 'Type is abstract, you must extend it';
             case AbstractMethod: 'Method is abstract, you must override it';
             case ActorError(msg): msg;
+            case ActorKillError(msg): msg;
             case ArgumentError(msg): msg == null ? 'Arguments supplied are not expected' : msg;
             case BindingError(msg): msg;
             case Error(msg): msg;

@@ -16,6 +16,8 @@ using funk.collections.immutable.List;
 
 interface ActorRef {
 
+    function uid() : String;
+
     function name() : String;
 
     function path() : ActorPath;
@@ -105,6 +107,8 @@ class LocalActorRef implements InternalActorRef {
 
     public function path() : ActorPath return _path;
 
+    public function uid() : String return _uid;
+
     public function name() : String return path().name();
 
     public function context() : ActorContext return _actorContext;
@@ -137,7 +141,7 @@ class LocalActorRef implements InternalActorRef {
 
     private function getSingleChild(name : String) : Option<InternalActorRef> {
         return switch(_actorCell.getChildByName(name)) {
-            case Some(ChildRestartStats(val)) if(AnyTypes.isInstanceOf(val, InternalActorRef)): Some(cast val);
+            case Some(ChildRestartStats(val, _)) if(AnyTypes.isInstanceOf(val, InternalActorRef)): Some(cast val);
             case _: None;
         }
     }
@@ -186,6 +190,8 @@ class EmptyActorRef implements InternalActorRef {
     public function actorFor(path : ActorPath) : Option<ActorRef> return None;
 
     public function path() : ActorPath return _path;
+
+    public function uid() : String return '';
 
     public function name() : String return path().name();
 
