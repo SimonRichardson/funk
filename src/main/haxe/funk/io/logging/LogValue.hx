@@ -3,12 +3,13 @@ package funk.io.logging;
 import funk.types.Any;
 import funk.types.AnyRef;
 import funk.io.logging.LogLevel;
+import haxe.PosInfos;
 
 using funk.types.Option;
 
 enum LogValue<T> {
-    Data(level : LogLevel, data : T);
-    DataWithValue(level : LogLevel, data : T, value : String);
+    Data(level : LogLevel, data : T, ?pos : PosInfos);
+    DataWithValue(level : LogLevel, data : T, value : String, ?pos : PosInfos);
 }
 
 class LogValueTypes {
@@ -19,8 +20,8 @@ class LogValueTypes {
 
     public static function value<T>(logValue : LogValue<T>) : Option<String> {
         return switch(logValue) {
-            case Data(_, _): None;
-            case DataWithValue(_, _, val): Some(val);
+            case Data(_, _, _): None;
+            case DataWithValue(_, _, val, _): Some(val);
         };
     }
 
@@ -30,8 +31,10 @@ class LogValueTypes {
 
     public static function toString<T>(logValue : LogValue<T>) : String {
         return switch(logValue) {
-            case Data(level, data): '${LogLevelTypes.toString(level)} ${AnyTypes.toString(data)}';
-            case DataWithValue(level, data, value): '${LogLevelTypes.toString(level)} ${AnyTypes.toString(data)}${value}';
+            case Data(level, data, pos):
+                '${LogLevelTypes.toString(level)} ${AnyTypes.toString(data)}\n${pos}';
+            case DataWithValue(level, data, value, pos):
+                '${LogLevelTypes.toString(level)} ${AnyTypes.toString(data)}${value}\n${pos}';
         };
     }
 }

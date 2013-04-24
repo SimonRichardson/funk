@@ -20,6 +20,7 @@ import funk.types.extensions.EnumValues;
 import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
 import haxe.ds.StringMap;
+import haxe.PosInfos;
 import haxe.Serializer;
 import haxe.Unserializer;
 
@@ -537,7 +538,7 @@ class ActorCell implements Cell implements ActorContext {
             if (AnyTypes.toBool(failedActor)) {
                 var optionalMessage = AnyTypes.toBool(_currentMessage) ? Some(_currentMessage.message()) : None;
                 try {
-                    if (AnyTypes.toBool(failedActor.context())) failedActor.preRestart(cause, optionalMessage);
+                    if (AnyTypes.toBool(failedActor.context())) failedActor.preRestart(asError(cause), optionalMessage);
                 } catch (e : Dynamic) {
                     publish(Error, ErrorMessage(e, _self.path().toString(), Type.getClass(_actor), Std.string(e)));
                 }
@@ -551,6 +552,12 @@ class ActorCell implements Cell implements ActorContext {
         } else {
             faultResume(null);
         }
+    }
+
+    private function asError(error : Dynamic) : Errors {
+        return if (error == null) Error(Std.string(error));
+        else if (AnyTypes.isValueOf(error, Errors)) error;
+        else Error(error);
     }
 
     private function faultResume(causedByFailure : Dynamic) : Void {
@@ -706,8 +713,8 @@ class ActorCell implements Cell implements ActorContext {
         _actor = null;
     }
 
-    private function publish(level : LogLevel, event : LogMessages) : Void {
-        system().eventStream().publish(Data(level, event));
+    private function publish(level : LogLevel, event : LogMessages, ?pos : PosInfos) : Void {
+        system().eventStream().publish(Data(level, event, pos));
     }
 
     @:allow(funk.actors)
@@ -747,6 +754,10 @@ private class PostRestartException {
         _self = self;
         _error = error;
         _cause = cause;
+    }
+
+    public function toString() : String {
+        return '${_error}\n${_cause}';
     }
 }
 

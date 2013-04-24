@@ -4,6 +4,7 @@ import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
 import funk.reactives.Stream;
 import funk.types.AnyRef;
+import haxe.PosInfos;
 
 class Log {
 
@@ -25,63 +26,63 @@ class Log {
         return output;
     }
 
-    public static function trace<T>(output : T) : T {
-        log(Data(Trace, output));
+    public static function trace<T>(output : T, ?pos : PosInfos) : T {
+        log(Data(Trace, output, pos));
         return output;
     }
 
-    public static function traceWithValue<T>(output : T, value : String) : T {
-        log(DataWithValue(Trace, output, value));
+    public static function traceWithValue<T>(output : T, value : String, ?pos : PosInfos) : T {
+        log(DataWithValue(Trace, output, value, pos));
         return output;
     }
 
-    public static function debug<T>(output : T) : T {
-        log(Data(Debug, output));
+    public static function debug<T>(output : T, ?pos : PosInfos) : T {
+        log(Data(Debug, output, pos));
         return output;
     }
 
-    public static function debugWithValue<T>(output : T, value : String) : T {
-        log(DataWithValue(Debug, output, value));
+    public static function debugWithValue<T>(output : T, value : String, ?pos : PosInfos) : T {
+        log(DataWithValue(Debug, output, value, pos));
         return output;
     }
 
-    public static function info<T>(output : T) : T {
-        log(Data(Info, output));
+    public static function info<T>(output : T, ?pos : PosInfos) : T {
+        log(Data(Info, output, pos));
         return output;
     }
 
-    public static function infoWithValue<T>(output : T, value : String) : T {
-        log(DataWithValue(Info, output, value));
+    public static function infoWithValue<T>(output : T, value : String, ?pos : PosInfos) : T {
+        log(DataWithValue(Info, output, value, pos));
         return output;
     }
 
-    public static function warn<T>(output : T) : T {
-        log(Data(Warn, output));
+    public static function warn<T>(output : T, ?pos : PosInfos) : T {
+        log(Data(Warn, output, pos));
         return output;
     }
 
-    public static function warnWithValue<T>(output : T, value : String) : T {
-        log(DataWithValue(Warn, output, value));
+    public static function warnWithValue<T>(output : T, value : String, ?pos : PosInfos) : T {
+        log(DataWithValue(Warn, output, value, pos));
         return output;
     }
 
-    public static function error<T>(output : T) : T {
-        log(Data(Error, output));
+    public static function error<T>(output : T, ?pos : PosInfos) : T {
+        log(Data(Error, output, pos));
         return output;
     }
 
-    public static function errorWithValue<T>(output : T, value : String) : T {
-        log(DataWithValue(Error, output, value));
+    public static function errorWithValue<T>(output : T, value : String, ?pos : PosInfos) : T {
+        log(DataWithValue(Error, output, value, pos));
         return output;
     }
 
-    public static function fatal<T>(output : T) : T {
-        log(Data(Fatal, output));
+    public static function fatal<T>(output : T, ?pos : PosInfos) : T {
+        log(Data(Fatal, output, pos));
         return output;
     }
 
-    public static function fatalWithValue<T>(output : T, value : String) : T {
-        log(DataWithValue(Fatal, output, value));
+    public static function fatalWithValue<T>(output : T, value : String, ?pos : PosInfos) : T {
+        log(DataWithValue(Fatal, output, value, pos));
         return output;
     }
 }

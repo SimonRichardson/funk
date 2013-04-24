@@ -33,18 +33,18 @@ class SupervisorStrategy {
 
     public function handleChildTerminated(context : ActorContext, child : ActorRef, children : List<ActorRef>) : Void {}
 
-    public function processFailure( context : ActorContext, 
-                                    restart : Bool, 
-                                    child : ActorRef, 
-                                    cause : Dynamic, 
-                                    stats : ChildStats, 
+    public function processFailure( context : ActorContext,
+                                    restart : Bool,
+                                    child : ActorRef,
+                                    cause : Dynamic,
+                                    stats : ChildStats,
                                     children : List<ChildStats>
                                     ) : Void {}
 
-    public function handleFailure(  context : ActorContext, 
-                                    child : ActorRef, 
-                                    cause : Dynamic, 
-                                    stats : ChildStats, 
+    public function handleFailure(  context : ActorContext,
+                                    child : ActorRef,
+                                    cause : Dynamic,
+                                    stats : ChildStats,
                                     children: List<ChildStats>
                                     ) : Bool {
         var directive = _decider.decide(cause);
@@ -96,11 +96,11 @@ class OneForOneStrategy extends SupervisorStrategy {
         super(decider);
     }
 
-    override public function processFailure(    context : ActorContext, 
-                                                restart : Bool, 
-                                                child : ActorRef, 
-                                                cause : Dynamic, 
-                                                stats : ChildStats, 
+    override public function processFailure(    context : ActorContext,
+                                                restart : Bool,
+                                                child : ActorRef,
+                                                cause : Dynamic,
+                                                stats : ChildStats,
                                                 children : List<ChildStats>
                                                 ) : Void {
         if (restart) restartChild(child, cause, false);
@@ -113,8 +113,6 @@ private class DefaultDecider implements Decider {
     public function new() {}
 
     public function decide(exception : Dynamic) : Strategies {
-        return switch(exception) {
-            case _ : Restart;
-        }
+        return Restart;
     }
 }
