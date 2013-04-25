@@ -51,4 +51,4 @@
 -D HXCPP_M64
 -D test
 -D parallel
--D net
+#-D net
