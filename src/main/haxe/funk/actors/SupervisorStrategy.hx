@@ -81,6 +81,7 @@ class SupervisorStrategy {
     private function publish(context : ActorContext, level : LogLevel, msg : LogMessages) : Void {
         try context.system().eventStream().publish(Data(level, msg)) catch (e : Dynamic) {
             // TODO (Simon) : Decide what to do here.
+            throw e;
         }
     }
 }

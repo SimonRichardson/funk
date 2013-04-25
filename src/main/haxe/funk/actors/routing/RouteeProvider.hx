@@ -1,6 +1,7 @@
 package funk.actors.routing;
 
 import funk.Funk;
+import funk.actors.Actor;
 import funk.actors.ActorContext;
 import funk.actors.Props;
 import funk.actors.routing.Routing;
@@ -47,8 +48,7 @@ class RouteeProvider {
             var abandon = currentRoutees.dropLeft(currentRoutees.size() - nrOfInstances);
             unregisterRoutees(abandon);
 
-            // TODO (Simon) : PoisonPill
-            // if (abandon.nonEmpty) abandon.foreach(function(ref) ref.send(PoisonPill, ref));
+            if (abandon.nonEmpty()) abandon.foreach(function(ref) ref.send(PoisonPill));
         }
     }
 

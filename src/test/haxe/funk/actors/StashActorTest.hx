@@ -31,7 +31,7 @@ class StashActorTest {
 
         _actor.react().foreach(function(value) {
             if(AnyTypes.isInstanceOf(value, Array)) {
-                actual = cast value;
+                actual = AnyTypes.asInstanceOf(value, Array);
             }
         });
 
@@ -64,16 +64,19 @@ private class MockClass extends StashActor {
     }
 
     override public function receive(value : AnyRef) : Void {
-        switch(cast value) {
-            case Item(v) if(v < 3 && !_stashed): stash();
-            case Item(v) if(v == 0 && _stashed): 
-                _values.push(value);
-                sender().get().send(_values);
-            case _ if(AnyTypes.isInstanceOf(value, Array)):
-            case _: 
-                _stashed = true;
-                unstashAll();
-                _values.push(value);
+        switch (value) {
+            case _ if(AnyTypes.isValueOf(value, Items)): 
+                switch(cast value) {
+                    case Item(v) if(v < 3 && !_stashed): stash();
+                    case Item(v) if(v == 0 && _stashed): 
+                        _values.push(value);
+                        sender().get().send(_values);
+                    case _:
+                        _stashed = true;
+                        unstashAll();
+                        _values.push(value);
+                }
+            case _:
         }
     }
 }
