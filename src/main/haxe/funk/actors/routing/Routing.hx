@@ -15,14 +15,15 @@ import funk.types.Function2;
 import funk.types.Pass;
 import funk.types.extensions.Strings;
 
+using funk.types.Option;
 using funk.actors.dispatch.EnvelopeMessage;
 using funk.actors.routing.Destination;
-using funk.types.Option;
 using funk.collections.immutable.List;
 
 typedef Route = Function2<ActorRef, AnyRef, List<Destination>>;
 
-enum RouterRoutees {
+enum RouterMessages {
+    CurrentRoutees;
     RouterRoutees(routees : List<ActorRef>);
 }
 
@@ -68,9 +69,12 @@ class RoutedActorCell extends ActorCell {
 
     public function applyRoute(sender : ActorRef, message : AnyRef) : List<Destination> {
         return switch(message) {
+            case _ if (AnyTypes.isValueOf(message, ActorMessages)): Nil.prepend(Destination(sender, _self));
+            case _ if (AnyTypes.isValueOf(message, CurrentRoutees)): sender.send(RouterRoutees(_routees)); Nil;
             case _ if (AnyTypes.toBool(sender) && AnyTypes.toBool(message)): _route(sender, message);
             case _: Nil;
         }
+        return Nil;
     }
 
     public function addRoutees(routees : List<ActorRef>) : Void {
@@ -91,7 +95,8 @@ class RoutedActorCell extends ActorCell {
             case _: msg;
         };
 
-        var destinations = applyRoute(msg.sender(), msg.message());
+        var sender = msg.sender();
+        var destinations = applyRoute(sender, msg.message());
 
         // Note (Simon) : Haxe issue.
         // We have to do it this way, as we're not allowed to call the super in a local function.
@@ -99,10 +104,13 @@ class RoutedActorCell extends ActorCell {
             var dest = destinations.head();
 
             switch(dest) {
-                case Destination(_, s) if(s == self()): super.sendMessage(message);
-                case Destination(sender, recipient):
+                case Destination(_, s) if(s == self()): 
+                    var recipient = AnyTypes.toBool(sender) ? sender : _system.deadLetters();
+                    super.sendMessage(Envelope(msg.message(), recipient));
+                case Destination(sender, recipient) if (AnyTypes.isInstanceOf(recipient, ActorRef)):
                     // TODO (Simon) : Resize?
                     recipient.send(message, sender);
+                case _: // TODO (Simon) : What do we do here?
             }
 
             destinations = destinations.tail();
@@ -141,7 +149,7 @@ class Router extends Actor {
 
     override public function receive(value : AnyRef) : Void {
         switch(value) {
-            case _ if(AnyTypes.isInstanceOf(value, ActorMessages)):
+            case _ if(AnyTypes.isValueOf(value, ActorMessages)):
                 var actorMsg : ActorMessages = cast value;
                 switch(actorMsg) {
                     case Terminated(child):
@@ -155,9 +163,7 @@ class Router extends Actor {
 
     override public function preRestart(reason : Errors, message : Option<AnyRef>) : Void {}
 
-    public function routerReceive(value : AnyRef) : Void {
-
-    }
+    public function routerReceive(value : AnyRef) : Void {}
 
     override public function toString() return '[Router (path=${path()})]';
 }

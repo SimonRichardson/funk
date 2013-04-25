@@ -98,6 +98,8 @@ class ActorCell implements Cell implements ActorContext {
         _parent = parent;
 
         _watching = Nil;
+        _watchedBy = Nil;
+
         _becomingStack = Nil.prepend(actorRecieve());
 
         _children = new Children(this);
@@ -176,7 +178,7 @@ class ActorCell implements Cell implements ActorContext {
 
     public function watch(actor : ActorRef) : Void {
         var a = AnyTypes.asInstanceOf(actor, InternalActorRef);
-        if(a != self() && !_watching.exists(function(child) return child == a)) {
+        if(a != self() && !_watching.contains(a)) {
             a.sendSystemMessage(Watch(a, self()));
             _watching = _watching.prepend(a);
         }
@@ -421,7 +423,7 @@ class ActorCell implements Cell implements ActorContext {
 
     private function handleFailure(child : ActorRef, cause : Dynamic, uid : String) {
         switch(_children.getChildByRef(child)) {
-            case Some(stats) if (ChildStatsTypes.uid(stats) == uid):
+            case Some(stats) if (AnyTypes.toBool(_actor) && ChildStatsTypes.uid(stats) == uid):
                 if (!_actor.supervisorStrategy().handleFailure(this, child, cause, stats, _children.getAllChildStats())) {
                     throw cause;
                 }
@@ -430,7 +432,7 @@ class ActorCell implements Cell implements ActorContext {
                                                 Type.getClass(_actor),
                                                 'dropping Failed($cause) from old child $child (uid=${ChildStatsTypes.uid(stats)} != $uid)'
                                                 ));
-            case None:
+            case _:
                 publish(Debug, DebugMessage(    _self.path().toString(),
                                                 Type.getClass(_actor),
                                                 'dropping Failed($cause) from unknown child $child'
@@ -639,7 +641,7 @@ class ActorCell implements Cell implements ActorContext {
                         case Envelope(msg, child) if (AnyTypes.isValueOf(msg, ActorMessages)):
                             var message : ActorMessages = cast msg;
                             switch(message) {
-                                case Failed(_, _):
+                                case Failed(_, _) if (AnyTypes.isInstanceOf(child, ActorRef)):
                                     setFailed(child);
                                     Nil.prepend(child);
                                 case _: fail();
@@ -653,6 +655,7 @@ class ActorCell implements Cell implements ActorContext {
                 _parent.send(Failed(error, _self.uid()), _self);
             }
         } catch (e : Dynamic) {
+
             publish(Error, ErrorMessage(    e,
                                             _self.path().toString(),
                                             Type.getClass(_actor),

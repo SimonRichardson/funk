@@ -32,9 +32,17 @@ class LogValueTypes {
     public static function toString<T>(logValue : LogValue<T>) : String {
         return switch(logValue) {
             case Data(level, data, pos):
-                '${LogLevelTypes.toString(level)} ${AnyTypes.toString(data)}\n${pos}';
+                '${LogLevelTypes.toString(level)} ${AnyTypes.toString(data)}\n${PosInfoTypes.toString(pos)}';
             case DataWithValue(level, data, value, pos):
-                '${LogLevelTypes.toString(level)} ${AnyTypes.toString(data)}${value}\n${pos}';
+                '${LogLevelTypes.toString(level)} ${AnyTypes.toString(data)}${value}\n${PosInfoTypes.toString(pos)}';
         };
+    }
+}
+
+private class PosInfoTypes {
+
+    public static function toString(pos : PosInfos) : String {
+        var className = pos.className.substr(pos.className.lastIndexOf(".") + 1);
+        return 'at ${pos.fileName}:${pos.lineNumber} in method ${className}::${pos.methodName}';
     }
 }
