@@ -9,7 +9,7 @@ import funk.types.Function1;
 
 using funk.types.Any;
 using funk.types.Option;
-using funk.collections.Collection;
+using funk.ds.Collection;
 using funk.reactives.Stream;
 
 enum State<T> {

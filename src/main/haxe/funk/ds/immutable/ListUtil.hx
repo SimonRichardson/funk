@@ -1,4 +1,4 @@
-package funk.collections.immutable;
+package funk.ds.immutable;
 
 import funk.Funk;
 import funk.types.Function0;
@@ -8,8 +8,8 @@ import funk.types.Option;
 import funk.types.extensions.EnumValues;
 import funk.types.extensions.Strings;
 
-using funk.collections.Collection;
-using funk.collections.immutable.List;
+using funk.ds.Collection;
+using funk.ds.immutable.List;
 
 class ListUtil {
 

@@ -1,15 +1,15 @@
 package funk.reactives;
 
-import funk.collections.CollectionTestBase;
+import funk.ds.CollectionTestBase;
 import funk.reactives.StreamValues;
 
 using massive.munit.Assert;
 using funk.types.Option;
 using funk.types.Tuple2;
 
-using funk.collections.Collection;
-using funk.collections.CollectionUtil;
-using funk.collections.immutable.List;
+using funk.ds.Collection;
+using funk.ds.CollectionUtil;
+using funk.ds.immutable.List;
 using unit.Asserts;
 
 class StreamValuesTest extends CollectionTestBase {

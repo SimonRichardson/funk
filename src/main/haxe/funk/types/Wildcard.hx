@@ -1,9 +1,9 @@
 package funk.types;
 
-import funk.collections.Collection;
-import funk.collections.CollectionUtil;
-import funk.collections.immutable.List;
-import funk.collections.immutable.ListUtil;
+import funk.ds.Collection;
+import funk.ds.CollectionUtil;
+import funk.ds.immutable.List;
+import funk.ds.immutable.ListUtil;
 import funk.types.Any;
 import funk.types.Wildcard;
 

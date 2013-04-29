@@ -6,7 +6,7 @@ import js.html.CanvasRenderingContext2D;
 import js.html.Event;
 import funk.reactives.events.RenderEvents;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.reactives.Stream;
 
 class CanvasPainter {

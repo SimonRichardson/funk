@@ -5,7 +5,7 @@ import massive.munit.client.JUnitReportClient;
 import massive.munit.TestRunner;
 
 import suites.ActorsSuite;
-import suites.CollectionsSuite;
+import suites.DataStructuresSuite;
 import suites.FuturesSuite;
 import suites.FoldablesSuite;
 import suites.IocSuite;
@@ -41,7 +41,7 @@ class TestMain {
         var suites = new Array<Class<massive.munit.TestSuite>>();
 
         suites.push(ActorsSuite);
-        suites.push(CollectionsSuite);
+        suites.push(DataStructuresSuite);
         suites.push(FuturesSuite);
         suites.push(FoldablesSuite);
         suites.push(IocSuite);

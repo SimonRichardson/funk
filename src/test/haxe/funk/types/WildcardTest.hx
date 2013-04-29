@@ -1,6 +1,6 @@
 package funk.types;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.Wildcard;
 using massive.munit.Assert;
 

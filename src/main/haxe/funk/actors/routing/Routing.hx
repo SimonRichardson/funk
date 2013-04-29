@@ -17,7 +17,7 @@ import funk.types.extensions.Strings;
 using funk.types.Option;
 using funk.actors.dispatch.EnvelopeMessage;
 using funk.actors.routing.Destination;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 typedef Route = Function2<ActorRef, AnyRef, List<Destination>>;
 

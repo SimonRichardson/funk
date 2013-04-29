@@ -2,7 +2,7 @@ package funk.futures;
 
 import funk.Funk;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.futures.Deferred;
 using funk.types.Attempt;
 using funk.types.Function1;

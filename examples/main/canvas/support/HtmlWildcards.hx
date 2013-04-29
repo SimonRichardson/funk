@@ -5,7 +5,7 @@ import js.html.CanvasElement;
 import funk.types.Function1;
 import funk.types.Wildcard;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.reactives.events.MouseEvents;
 using funk.reactives.Stream;
 

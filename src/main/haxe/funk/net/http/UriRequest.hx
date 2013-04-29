@@ -6,8 +6,8 @@ import funk.net.http.HttpHeader;
 import funk.io.http.MimeType;
 
 using funk.types.Option;
-using funk.collections.immutable.List;
-using funk.collections.immutable.Map;
+using funk.ds.immutable.List;
+using funk.ds.immutable.Map;
 using funk.io.http.Loader;
 
 enum UriRequest {

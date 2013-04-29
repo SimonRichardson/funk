@@ -7,7 +7,7 @@ import funk.types.Any;
 
 using funk.futures.Promise;
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 enum ActorMessages {
     Failed(cause : Dynamic, uid : String);

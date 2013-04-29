@@ -1,9 +1,9 @@
-package funk.collections;
+package funk.ds;
 
-import funk.collections.CollectionTestBase;
+import funk.ds.CollectionTestBase;
 
-using funk.collections.Collection;
-using funk.collections.CollectionUtil;
+using funk.ds.Collection;
+using funk.ds.CollectionUtil;
 using massive.munit.Assert;
 
 class CollectionTest extends CollectionTestBase {

@@ -3,7 +3,7 @@ package funk.reactives.streams;
 import funk.reactives.Propagation;
 import funk.types.Option;
 
-using funk.collections.CollectionUtil;
+using funk.ds.CollectionUtil;
 using funk.reactives.Pulse;
 using funk.reactives.Stream;
 

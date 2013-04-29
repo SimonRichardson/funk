@@ -1,9 +1,9 @@
-package funk.collections.immutable;
+package funk.ds.immutable;
 
-import funk.collections.CollectionTestBase;
+import funk.ds.CollectionTestBase;
 
-using funk.collections.immutable.List;
-using funk.collections.immutable.ListUtil;
+using funk.ds.immutable.List;
+using funk.ds.immutable.ListUtil;
 
 class ListCollectionsTest extends CollectionTestBase {
 

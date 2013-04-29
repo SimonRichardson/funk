@@ -11,7 +11,7 @@ import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
 
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 interface Dispatcher {
 

@@ -1,13 +1,13 @@
-package funk.collections.immutable;
+package funk.ds.immutable;
 
-import funk.collections.Collection;
-import funk.collections.immutable.ListUtil;
+import funk.ds.Collection;
+import funk.ds.immutable.ListUtil;
 import funk.types.Any;
 import funk.types.Function1;
 import funk.types.Predicate1;
 import haxe.ds.StringMap;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.Option;
 using funk.types.Tuple2;
 

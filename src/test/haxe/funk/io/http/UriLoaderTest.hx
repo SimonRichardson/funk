@@ -11,7 +11,7 @@ import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.net.http.HttpHeader;
 using funk.net.http.HttpStatusCode;
 using funk.net.http.UriRequest;

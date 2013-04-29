@@ -3,12 +3,12 @@ package ;
 import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
-import funk.collections.immutable.ListUtil;
+import funk.ds.immutable.ListUtil;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.Tuple2;
 using support.SpriteWildcards;
 

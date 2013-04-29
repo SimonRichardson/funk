@@ -1,7 +1,7 @@
-package funk.collections.extensions;
+package funk.ds.extensions;
 
 using funk.types.Option;
-using funk.collections.extensions.Foldable;
+using funk.ds.extensions.Foldable;
 using massive.munit.Assert;
 
 class FoldableTestBase {

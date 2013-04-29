@@ -13,7 +13,7 @@ using funk.io.logging.LogValue;
 using funk.io.logging.Logging;
 using funk.types.Any;
 using funk.types.Tuple2;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 enum LogMessages {
     DebugMessage(path : String, ref : Class<AnyRef>, message : String);

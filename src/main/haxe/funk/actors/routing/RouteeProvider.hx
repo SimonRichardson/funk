@@ -5,11 +5,11 @@ import funk.actors.Actor;
 import funk.actors.ActorContext;
 import funk.actors.Props;
 import funk.actors.routing.Routing;
-import funk.collections.immutable.ListUtil;
+import funk.ds.immutable.ListUtil;
 import funk.types.extensions.Strings;
 
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 class RouteeProvider {
 

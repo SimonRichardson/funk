@@ -1,6 +1,6 @@
 package funk.net.http;
 
-import funk.collections.immutable.List;
+import funk.ds.immutable.List;
 import funk.types.Tuple2;
 import funk.types.extensions.Strings;
 

@@ -2,7 +2,7 @@ package funk.types;
 
 import funk.types.Selector;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using massive.munit.Assert;
 using unit.Asserts;
 

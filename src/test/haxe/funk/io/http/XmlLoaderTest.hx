@@ -16,7 +16,7 @@ using funk.net.http.HttpHeader;
 using funk.net.http.HttpStatusCode;
 using funk.net.http.UriRequest;
 using funk.net.http.Uri;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using massive.munit.Assert;
 using unit.Asserts;
 

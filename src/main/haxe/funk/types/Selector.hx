@@ -3,8 +3,8 @@ package funk.types;
 import funk.Funk;
 import funk.types.Function1;
 
-using funk.collections.immutable.List;
-using funk.collections.immutable.ListUtil;
+using funk.ds.immutable.List;
+using funk.ds.immutable.ListUtil;
 using funk.types.Any;
 using funk.types.Option;
 using funk.types.Tuple2;

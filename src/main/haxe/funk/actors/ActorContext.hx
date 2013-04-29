@@ -4,7 +4,7 @@ import funk.actors.ActorRef;
 import funk.actors.ActorRefProvider;
 
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 interface ActorContext extends ActorRefFactory {
 

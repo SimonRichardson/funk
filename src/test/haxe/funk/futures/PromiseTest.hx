@@ -3,8 +3,8 @@ package funk.futures;
 import funk.Funk;
 import funk.types.Any;
 
-using funk.collections.Collection;
-using funk.collections.CollectionUtil;
+using funk.ds.Collection;
+using funk.ds.CollectionUtil;
 using funk.futures.Deferred;
 using funk.futures.Promise;
 using funk.types.Attempt;

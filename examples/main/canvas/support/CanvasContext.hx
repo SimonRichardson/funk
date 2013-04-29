@@ -6,7 +6,7 @@ import js.html.CanvasRenderingContext2D;
 import funk.reactives.events.RenderEvents;
 import support.CanvasCommands;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.reactives.Stream;
 
 class CanvasContext {

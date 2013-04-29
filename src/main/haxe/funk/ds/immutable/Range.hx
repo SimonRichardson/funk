@@ -1,6 +1,6 @@
-package funk.collections.immutable;
+package funk.ds.immutable;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 class Range {
 

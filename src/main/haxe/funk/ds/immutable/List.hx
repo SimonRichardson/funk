@@ -1,8 +1,8 @@
-package funk.collections.immutable;
+package funk.ds.immutable;
 
 import funk.Funk;
-import funk.collections.Collection;
-import funk.collections.immutable.List;
+import funk.ds.Collection;
+import funk.ds.immutable.List;
 import funk.types.Function1;
 import funk.types.Function2;
 import funk.types.Option;
@@ -11,8 +11,8 @@ import funk.types.Predicate2;
 import funk.types.Tuple2;
 import funk.types.Any;
 
-using funk.collections.extensions.Foldable;
-using funk.collections.extensions.Reducible;
+using funk.ds.extensions.Foldable;
+using funk.ds.extensions.Reducible;
 using funk.types.Option;
 
 enum ListType<T> {

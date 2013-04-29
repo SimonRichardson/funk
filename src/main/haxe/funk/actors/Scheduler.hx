@@ -8,7 +8,7 @@ import funk.types.Function0;
 using funk.actors.ActorRef;
 using funk.types.Any;
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 typedef Cancellable = {
 

@@ -6,8 +6,8 @@ import unit.Asserts;
 
 using funk.net.http.UriRequest;
 using funk.net.http.Uri;
-using funk.collections.immutable.Map;
-using funk.collections.immutable.List;
+using funk.ds.immutable.Map;
+using funk.ds.immutable.List;
 using massive.munit.Assert;
 using unit.Asserts;
 

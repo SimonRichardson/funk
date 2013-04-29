@@ -1,4 +1,4 @@
-package funk.collections;
+package funk.ds;
 
 import funk.types.Function1;
 import funk.types.Function2;
@@ -7,11 +7,11 @@ import funk.types.Predicate1;
 import funk.types.Predicate2;
 import funk.types.Tuple2;
 
-using funk.collections.Collection.CollectionTypes;
-using funk.collections.CollectionUtil;
-using funk.collections.IteratorUtil;
-using funk.collections.extensions.Foldable;
-using funk.collections.extensions.Reducible;
+using funk.ds.Collection.CollectionTypes;
+using funk.ds.CollectionUtil;
+using funk.ds.IteratorUtil;
+using funk.ds.extensions.Foldable;
+using funk.ds.extensions.Reducible;
 using funk.types.Any;
 using funk.types.Option;
 

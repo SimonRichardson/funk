@@ -3,7 +3,7 @@ package funk.ioc;
 import funk.Funk;
 import funk.types.Any;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.ioc.Module;
 using funk.types.Option;
 using funk.types.Tuple2;

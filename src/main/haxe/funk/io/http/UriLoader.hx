@@ -18,9 +18,9 @@ using funk.types.extensions.Bools;
 using funk.types.Attempt;
 using funk.net.http.HttpStatusCode;
 using funk.reactives.Stream;
-using funk.collections.Collection;
-using funk.collections.immutable.Map;
-using funk.collections.immutable.List;
+using funk.ds.Collection;
+using funk.ds.immutable.Map;
+using funk.ds.immutable.List;
 
 class UriLoader<T> {
 

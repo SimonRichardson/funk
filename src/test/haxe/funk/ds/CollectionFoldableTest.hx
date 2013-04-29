@@ -1,10 +1,10 @@
-package funk.collections;
+package funk.ds;
 
-import funk.collections.CollectionTestBase;
-import funk.collections.extensions.FoldableTestBase;
+import funk.ds.CollectionTestBase;
+import funk.ds.extensions.FoldableTestBase;
 
-using funk.collections.Collection;
-using funk.collections.CollectionUtil;
+using funk.ds.Collection;
+using funk.ds.CollectionUtil;
 using massive.munit.Assert;
 
 class CollectionFoldableTest extends FoldableTestBase {

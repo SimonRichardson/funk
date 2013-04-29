@@ -2,7 +2,7 @@ package funk.signals;
 
 import funk.Funk;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.Function1;
 using funk.types.Function2;
 using funk.types.Predicate1;

@@ -1,8 +1,8 @@
-package funk.collections.immutable;
+package funk.ds.immutable;
 
 using massive.munit.Assert;
 using funk.types.Option;
-using funk.collections.immutable.Map;
+using funk.ds.immutable.Map;
 
 class MapTestBase {
 

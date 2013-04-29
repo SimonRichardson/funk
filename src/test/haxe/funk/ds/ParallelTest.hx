@@ -1,14 +1,14 @@
-package funk.collections;
+package funk.ds;
 
-import funk.collections.CollectionTestBase;
+import funk.ds.CollectionTestBase;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 
 using funk.types.Option;
-using funk.collections.Collection;
-using funk.collections.CollectionUtil;
-using funk.collections.Parallel;
+using funk.ds.Collection;
+using funk.ds.CollectionUtil;
+using funk.ds.Parallel;
 using massive.munit.Assert;
 
 class ParallelTest {

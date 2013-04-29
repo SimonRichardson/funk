@@ -3,8 +3,8 @@ package funk.io.logging;
 import funk.io.logging.Log;
 import funk.io.logging.LogValue;
 
-using funk.collections.immutable.List;
-using funk.collections.immutable.ListUtil;
+using funk.ds.immutable.List;
+using funk.ds.immutable.ListUtil;
 
 enum LogLevel {
     Trace;

@@ -9,9 +9,9 @@ import funk.types.Function2;
 import funk.types.Predicate2;
 
 using funk.types.Option;
-using funk.collections.Collection;
-using funk.collections.CollectionUtil;
-using funk.collections.immutable.List;
+using funk.ds.Collection;
+using funk.ds.CollectionUtil;
+using funk.ds.immutable.List;
 using funk.types.Tuple2;
 using funk.reactives.Pulse;
 

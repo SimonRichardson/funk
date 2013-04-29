@@ -21,9 +21,9 @@ using funk.net.http.UriRequest;
 using funk.net.http.Uri;
 using funk.reactives.Stream;
 using funk.types.Option;
-using funk.collections.Collection;
-using funk.collections.immutable.List;
-using funk.collections.immutable.Map;
+using funk.ds.Collection;
+using funk.ds.immutable.List;
+using funk.ds.immutable.Map;
 
 #if !js
 class JsonLoader<T : Dynamic> {

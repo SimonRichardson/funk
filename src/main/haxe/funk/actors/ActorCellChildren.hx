@@ -10,8 +10,8 @@ import funk.types.extensions.EnumValues;
 
 using funk.types.Any;
 using funk.types.Option;
-using funk.collections.immutable.Map;
-using funk.collections.immutable.List;
+using funk.ds.immutable.Map;
+using funk.ds.immutable.List;
 
 enum SuspendReason {
     Normal;

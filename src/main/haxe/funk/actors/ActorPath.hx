@@ -6,8 +6,8 @@ import funk.actors.Address;
 
 using funk.actors.Address;
 using funk.types.extensions.Strings;
-using funk.collections.immutable.ListUtil;
-using funk.collections.immutable.List;
+using funk.ds.immutable.ListUtil;
+using funk.ds.immutable.List;
 
 interface ActorPath {
 

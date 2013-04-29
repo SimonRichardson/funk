@@ -1,4 +1,4 @@
-package funk.collections.extensions;
+package funk.ds.extensions;
 
 import funk.types.Function2;
 

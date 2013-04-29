@@ -3,14 +3,14 @@ package ;
 import js.Browser;
 import js.html.Element;
 import js.html.CSSStyleDeclaration;
-import funk.collections.immutable.ListUtil;
+import funk.ds.immutable.ListUtil;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
 import funk.reactives.events.Events;
 import support.HtmlDivElement;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.reactives.events.MouseEvents;
 using funk.reactives.Stream;
 using funk.types.Tuple2;

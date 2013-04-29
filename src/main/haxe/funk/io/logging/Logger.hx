@@ -2,7 +2,7 @@ package funk.io.logging;
 
 import funk.io.logging.Log;
 
-using funk.collections.CollectionUtil;
+using funk.ds.CollectionUtil;
 using funk.io.logging.LogLevel;
 using funk.io.logging.LogValue;
 using funk.types.Option;

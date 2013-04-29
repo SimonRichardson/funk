@@ -1,9 +1,9 @@
-package funk.collections.immutable;
+package funk.ds.immutable;
 
 using massive.munit.Assert;
 using funk.types.Option;
 using funk.types.Tuple2;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 class ListTestBase {
 

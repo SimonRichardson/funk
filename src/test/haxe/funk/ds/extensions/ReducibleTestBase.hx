@@ -1,7 +1,7 @@
-package funk.collections.extensions;
+package funk.ds.extensions;
 
 using funk.types.Option;
-using funk.collections.extensions.Reducible;
+using funk.ds.extensions.Reducible;
 using massive.munit.Assert;
 
 class ReducibleTestBase {

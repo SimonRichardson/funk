@@ -26,8 +26,8 @@ import haxe.Unserializer;
 using funk.actors.dispatch.EnvelopeMessage;
 using funk.types.Any;
 using funk.types.Option;
-using funk.collections.immutable.Map;
-using funk.collections.immutable.List;
+using funk.ds.immutable.Map;
+using funk.ds.immutable.List;
 
 interface Cell extends ActorContext {
 

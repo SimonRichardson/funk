@@ -7,8 +7,8 @@ import haxe.ds.StringMap;
 using funk.types.Any;
 using funk.types.Tuple2;
 using funk.types.Option;
-using funk.collections.immutable.Map;
-using funk.collections.immutable.List;
+using funk.ds.immutable.Map;
+using funk.ds.immutable.List;
 
 typedef Event = AnyRef;
 typedef Classifier = AnyRef;

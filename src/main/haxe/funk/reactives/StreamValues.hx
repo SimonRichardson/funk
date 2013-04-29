@@ -5,7 +5,7 @@ import funk.reactives.Propagation;
 import funk.reactives.Stream;
 import funk.types.Function0;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.Option;
 
 class StreamValues<T> {

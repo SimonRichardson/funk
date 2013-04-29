@@ -13,7 +13,7 @@ import funk.types.Any;
 import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.Option;
 using funk.types.Tuple2;
 

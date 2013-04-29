@@ -1,4 +1,4 @@
-package funk.collections;
+package funk.ds;
 
 class IteratorUtil {
 

@@ -12,7 +12,7 @@ import funk.actors.Scheduler;
 
 using funk.actors.ActorRef;
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.extensions.Strings;
 using funk.types.Any;
 using funk.futures.Promise;

@@ -8,8 +8,8 @@ import funk.reactives.Pulse;
 
 using funk.reactives.Pulse;
 using funk.reactives.Stream;
-using funk.collections.Collection;
-using funk.collections.CollectionUtil;
+using funk.ds.Collection;
+using funk.ds.CollectionUtil;
 using funk.types.Tuple2;
 
 class Behaviour<T> {

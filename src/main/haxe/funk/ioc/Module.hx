@@ -8,7 +8,7 @@ using funk.types.Option;
 using funk.types.Function0;
 using funk.types.Predicate2;
 using funk.types.Tuple2;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 interface IModule {
 

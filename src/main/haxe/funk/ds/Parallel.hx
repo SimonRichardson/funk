@@ -1,4 +1,4 @@
-package funk.collections;
+package funk.ds;
 
 import funk.Funk;
 import funk.futures.Deferred;
@@ -11,7 +11,7 @@ import funk.types.Predicate2;
 import funk.types.Any;
 
 using funk.types.Option;
-using funk.collections.Collection;
+using funk.ds.Collection;
 using funk.types.Tuple2;
 
 #if neko

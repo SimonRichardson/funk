@@ -5,7 +5,7 @@ import funk.Funk;
 using funk.signals.Signal2;
 using funk.types.Function2;
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 class PrioritySignal2<T1, T2> extends Signal2<T1, T2> {
 

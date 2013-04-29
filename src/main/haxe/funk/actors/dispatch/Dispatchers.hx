@@ -5,7 +5,7 @@ import funk.actors.events.EventStream;
 import funk.actors.events.LoggingBus;
 import funk.types.Any;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.Option;
 
 @:keep

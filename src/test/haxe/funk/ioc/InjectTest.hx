@@ -5,7 +5,7 @@ import funk.ioc.Inject;
 import funk.ioc.Module;
 import funk.types.Any;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.Option;
 using massive.munit.Assert;
 using unit.Asserts;

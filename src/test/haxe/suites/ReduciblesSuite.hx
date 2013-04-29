@@ -1,15 +1,15 @@
 package suites;
 
 import massive.munit.TestSuite;
-import funk.collections.CollectionReducibleTest;
-import funk.collections.immutable.ListReducibleTest;
+import funk.ds.CollectionReducibleTest;
+import funk.ds.immutable.ListReducibleTest;
 
 class ReduciblesSuite extends TestSuite {
 
     public function new() {
         super();
 
-        add(funk.collections.CollectionReducibleTest);
-        add(funk.collections.immutable.ListReducibleTest);
+        add(funk.ds.CollectionReducibleTest);
+        add(funk.ds.immutable.ListReducibleTest);
     }
 }

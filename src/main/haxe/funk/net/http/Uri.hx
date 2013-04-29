@@ -4,8 +4,8 @@ using Lambda;
 using funk.types.Option;
 using funk.types.Tuple2;
 using funk.types.extensions.Strings;
-using funk.collections.immutable.Map;
-using funk.collections.immutable.List;
+using funk.ds.immutable.Map;
+using funk.ds.immutable.List;
 
 class UriTypes {
 

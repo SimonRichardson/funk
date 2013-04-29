@@ -1,10 +1,10 @@
-package funk.collections;
+package funk.ds;
 
 using funk.types.Option;
 using funk.types.Tuple2;
 using massive.munit.Assert;
 using unit.Asserts;
-using funk.collections.Collection;
+using funk.ds.Collection;
 
 class CollectionTestBase {
 

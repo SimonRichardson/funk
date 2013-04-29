@@ -4,8 +4,8 @@ import funk.reactives.Behaviour;
 import massive.munit.util.Timer;
 
 using funk.types.Option;
-using funk.collections.Collection;
-using funk.collections.CollectionUtil;
+using funk.ds.Collection;
+using funk.ds.CollectionUtil;
 using funk.reactives.Stream;
 using massive.munit.Assert;
 using unit.Asserts;

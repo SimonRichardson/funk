@@ -1,8 +1,8 @@
-package funk.collections;
+package funk.ds;
 
 import Type;
 import funk.Funk;
-import funk.collections.Collection;
+import funk.ds.Collection;
 import funk.types.extensions.Strings;
 import funk.types.Any;
 import funk.types.Function0;
@@ -11,7 +11,7 @@ import funk.reactives.Behaviour;
 import funk.reactives.Process;
 import funk.reactives.Stream;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using Lambda;
 
 class CollectionUtil {

@@ -3,15 +3,15 @@ package ;
 import js.Browser;
 import js.html.Element;
 import js.html.CSSStyleDeclaration;
-import funk.collections.immutable.ListUtil;
-import funk.collections.immutable.Range;
+import funk.ds.immutable.ListUtil;
+import funk.ds.immutable.Range;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Pass;
 import funk.types.Wildcard;
 import support.HtmlDivElement;
 
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 using funk.types.Tuple2;
 using support.HtmlWildcards;
 

@@ -1,6 +1,6 @@
-package funk.collections.immutable;
+package funk.ds.immutable;
 
-using funk.collections.immutable.Map;
+using funk.ds.immutable.Map;
 
 class MapTest extends MapTestBase {
 

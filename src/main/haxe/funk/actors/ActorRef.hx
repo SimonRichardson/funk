@@ -11,7 +11,7 @@ import funk.types.extensions.Strings;
 
 using funk.futures.Promise;
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 interface ActorRef {
 

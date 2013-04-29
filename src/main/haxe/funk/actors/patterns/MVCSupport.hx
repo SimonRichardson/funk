@@ -9,7 +9,7 @@ import funk.io.logging.LogValue;
 import funk.actors.events.LoggingBus;
 
 using funk.types.Option;
-using funk.collections.immutable.List;
+using funk.ds.immutable.List;
 
 enum Notifications {
     AddListener(who : ActorRef);
