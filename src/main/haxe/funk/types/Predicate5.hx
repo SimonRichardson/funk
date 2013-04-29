@@ -36,11 +36,7 @@ class Predicate5Types {
                                                             elseFunc : Function0<R>
                                                             ) : Function5<T1, T2, T3, T4, T5, R> {
         return function(value0, value1, value2, value3, value4) {
-            return if (p(value0, value1, value2, value3, value4)) {
-                ifFunc();
-            } else {
-                elseFunc();
-            }
+            return p(value0, value1, value2, value3, value4) ? ifFunc() : elseFunc();
         };
     }
 }

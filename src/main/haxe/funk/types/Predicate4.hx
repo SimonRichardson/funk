@@ -17,9 +17,7 @@ class Predicate4Types {
     }
 
     public static function not<T1, T2, T3, T4>(p : Predicate4<T1, T2, T3, T4>) : Predicate4<T1, T2, T3, T4> {
-        return function(value0, value1, value2, value3) {
-            return !p(value0, value1, value2, value3);
-        };
+        return function(value0, value1, value2, value3) return !p(value0, value1, value2, value3);
     }
 
     public static function or<T1, T2, T3, T4>(  p0 : Predicate4<T1, T2, T3, T4>,
@@ -35,11 +33,7 @@ class Predicate4Types {
                                                         elseFunc : Function0<R>
                                                         ) : Function4<T1, T2, T3, T4, R> {
         return function(value0, value1, value2, value3) {
-            return if (p(value0, value1, value2, value3)) {
-                ifFunc();
-            } else {
-                elseFunc();
-            }
+            return p(value0, value1, value2, value3) ? ifFunc() : elseFunc();
         };
     }
 }
