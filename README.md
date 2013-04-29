@@ -1,3 +1,9 @@
+----
+# THIS DOES NOT COMPILE WITH THE LASTEST SVN HAXE3. 
+# See issue : https://code.google.com/p/haxe/issues/detail?id=1726
+
+----
+
 ```haxe
 "HELLO WORLD" == "dlrow olleh".toList().map(_.toUpperCase).reduceRight(_.plus_).get()
 ```
