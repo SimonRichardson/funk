@@ -1,9 +1,3 @@
-----
-# THIS DOES NOT COMPILE WITH THE LASTEST SVN HAXE3. 
-# See issue : https://code.google.com/p/haxe/issues/detail?id=1726
-
-----
-
 ```haxe
 "HELLO WORLD" == "dlrow olleh".toList().map(_.toUpperCase).reduceRight(_.plus_).get()
 ```
@@ -31,7 +25,7 @@ The Funk library supports functional development in Haxe. Some of its key featur
 * Logging
 
 # Building
-The Funk library doesn't not necessarily build anything as it's a library. So the idea is to import 
+The Funk library doesn't not necessarily build anything as it's a library. So the idea is to import
 those into your project, which you can do in the following ways.
 
 ## Haxelib - Stable Release
@@ -54,17 +48,17 @@ those into your project, which you can do in the following ways.
 More information about building can be found here [using_haxelib](http://haxe.org/doc/haxelib/using_haxelib)
 
 # Testing
-The Funk library is unit tested with [munit](https://github.com/massiveinteractive/MassiveUnit) 
-testing library for more information refer to the guide. Suffice it to say you'll need to install 
+The Funk library is unit tested with [munit](https://github.com/massiveinteractive/MassiveUnit)
+testing library for more information refer to the guide. Suffice it to say you'll need to install
 munit via haxelib
 
 * ``` haxelib install munit ```
 * ``` haxelib install hamcrest ```
 
-Once that's in installed (installs other dependencies) you can then run the tests by calling the 
-following command from the root directory. 
+Once that's in installed (installs other dependencies) you can then run the tests by calling the
+following command from the root directory.
 
 ``` haxelib run munit test -nogen -js -as3 ```
 
-Note: There is an issue building neko so the ci server is also down, once this has been rectified 
+Note: There is an issue building neko so the ci server is also down, once this has been rectified
 then I'll post commands to get this also running.
