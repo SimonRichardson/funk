@@ -86,4 +86,9 @@ class Function4Types {
         var value : R = null;
         return function() return (value == null) ? value = func(value0, value1, value2, value3) : value;
     }
+
+    public static function effectOf<T1, T2, T3, T4, R>( func : Function4<T1, T2, T3, T4, R>
+                                                        ) : Function4<T1, T2, T3, T4, Void> {
+        return function(value0 : T1, value1 : T2, value2 : T3, value3 : T4) func(value0, value1, value2, value3);
+    }
 }

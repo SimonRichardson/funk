@@ -106,4 +106,8 @@ class Function3Types {
         var value : R = null;
         return function() return (value == null) ? value = func(value0, value1, value2) : value;
     }
+
+    public static function effectOf<T1, T2, T3, R>(func : Function3<T1, T2, T3, R>) : Function3<T1, T2, T3, Void> {
+        return function(value0 : T1, value1 : T2, value2 : T3) func(value0, value1, value2);
+    }
 }

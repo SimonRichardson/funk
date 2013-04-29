@@ -23,5 +23,7 @@ class Function0Types {
         var value : R = null;
         return function() return (value == null) ? value = func() : value;
     }
+
+    public static function effectOf<R>(func : Function0<R>) : Function0<Void> return function() func();
 }
 

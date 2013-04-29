@@ -165,4 +165,15 @@ class Function5Test {
         lax();
         amount.areEqual(1);
     }
+
+    @Test
+    public function when_effectOf_is_called_should_be_called_correctly() : Void {
+        var called = false;
+        var effect = function(a, b, c, d, e) {
+            called = true;
+            return 1;
+        }.effectOf();
+        effect(1, 2, 3, 4, 5);
+        called.isTrue();
+    }
 }

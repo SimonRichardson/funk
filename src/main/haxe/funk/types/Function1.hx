@@ -38,4 +38,8 @@ class Function1Types {
         var value : R = null;
         return function() return (value == null) ? value = func(value0) : value;
     }
+
+    public static function effectOf<T1, R>(func : Function1<T1, R>) : Function1<T1, Void> {
+        return function(value0 : T1) func(value0);
+    }
 }

@@ -76,4 +76,8 @@ class Function2Types {
         var value : R = null;
         return function() return (value == null) ? value = func(value0, value1) : value;
     }
+
+    public static function effectOf<T1, T2, R>(func : Function2<T1, T2, R>) : Function2<T1, T2, Void> {
+        return function(value0 : T1, value1 : T2) func(value0, value1);
+    }
 }
