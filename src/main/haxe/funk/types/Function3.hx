@@ -9,6 +9,13 @@ using funk.types.Option;
 using funk.types.Tuple3;
 
 typedef Function3<T1, T2, T3, R> = T1 -> T2 -> T3 -> R;
+typedef Dispatcher3<T1, T2, T3, R> = {
+    function dispatch(value0 : T1, value1 : T2, value2 : T3) : R;
+}
+typedef Executioner3<T1, T2, T3, R> = {
+    function execute(value0 : T1, value1 : T2, value2 : T3) : R;
+}
+
 
 private typedef Curry3<T1, T2, T3, R> = Function1<T1, Function1<T2, Function1<T3, R>>>;
 

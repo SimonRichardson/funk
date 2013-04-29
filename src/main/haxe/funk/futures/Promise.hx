@@ -67,6 +67,8 @@ class PromiseTypes {
         return promise;
     }
 
+    public static function pure<T>(value : T) : Promise<T> return dispatch(value);
+
     public static function dispatch<T>(value : T) : Promise<T> {
         var deferred = new Deferred();
         var promise = deferred.promise();

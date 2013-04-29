@@ -5,6 +5,13 @@ using funk.types.Option;
 using funk.types.Tuple1;
 
 typedef Function1<T1, R> = T1 -> R;
+typedef Dispatcher1<T1, R> = {
+    function dispatch(value0 : T1) : R;
+}
+typedef Executioner1<T1, R> = {
+    function execute(value0 : T1) : R;
+}
+
 
 class Function1Types {
 

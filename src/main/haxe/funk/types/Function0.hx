@@ -4,6 +4,12 @@ using funk.types.Function1;
 using funk.types.Option;
 
 typedef Function0<R> = Void -> R;
+typedef Dispatcher0<R> = {
+    function dispatch() : R;
+}
+typedef Executioner0<R> = {
+    function execute() : R;
+}
 
 class Function0Types {
 

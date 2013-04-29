@@ -6,6 +6,13 @@ using funk.types.Option;
 using funk.types.Tuple5;
 
 typedef Function5<T1, T2, T3, T4, T5, R> = T1 -> T2 -> T3 -> T4 -> T5 -> R;
+typedef Dispatcher5<T1, T2, T3, T4, T5, R> = {
+    function dispatch(value0 : T1, value1 : T2, value2 : T3, value3 : T4, value4 : T5) : R;
+}
+typedef Executioner5<T1, T2, T3, T4, T5, R> = {
+    function execute(value0 : T1, value1 : T2, value2 : T3, value3 : T4, value4 : T5) : R;
+}
+
 
 private typedef Curry5<T1, T2, T3, T4, T5, R> = Function1<T1, Function1<T2, Function1<T3, Function1<T4, Function1<T5, R>>>>>;
 
