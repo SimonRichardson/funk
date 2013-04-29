@@ -120,4 +120,10 @@ class Function5Types {
             func(value0, value1, value2, value3, value4);
         }
     }
+
+    public static function swallowWith<T1, T2, T3, T4, T5, R>(  func : Function5<T1, T2, T3, T4, T5, R>, 
+                                                                res : R
+                                                                ) : Function5<T1, T2, T3, T4, T5, R> {
+        return function(a, b, c, d, e) return try func(a, b, c, d, e) catch (error : Dynamic) res; 
+    }
 }

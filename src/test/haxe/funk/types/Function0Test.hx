@@ -106,4 +106,16 @@ class Function0Test {
         effect();
         called.isTrue();
     }
+
+    @Test
+    public function when_swallowWith_is_called_should_return_func_value() : Void {
+        var res = function() { return 1; }.swallowWith(2)();
+        res.areEqual(1);
+    }
+
+    @Test
+    public function when_swallowWith_is_called_should_return_default_value() : Void {
+        var res = function() { throw "error"; return 1; }.swallowWith(2)();
+        res.areEqual(2);
+    }
 }

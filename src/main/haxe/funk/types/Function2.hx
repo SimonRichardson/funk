@@ -80,4 +80,8 @@ class Function2Types {
     public static function effectOf<T1, T2, R>(func : Function2<T1, T2, R>) : Function2<T1, T2, Void> {
         return function(value0 : T1, value1 : T2) func(value0, value1);
     }
+
+    public static function swallowWith<T1, T2, R>(func : Function2<T1, T2, R>, res : R) : Function2<T1, T2, R> {
+        return function(a, b) return try func(a, b) catch (e : Dynamic) res; 
+    }
 }

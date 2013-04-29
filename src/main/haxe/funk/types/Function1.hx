@@ -42,4 +42,8 @@ class Function1Types {
     public static function effectOf<T1, R>(func : Function1<T1, R>) : Function1<T1, Void> {
         return function(value0 : T1) func(value0);
     }
+
+    public static function swallowWith<T1, R>(func : Function1<T1, R>, res : R) : Function1<T1, R> {
+        return function(a) return try func(a) catch (e : Dynamic) res; 
+    }
 }

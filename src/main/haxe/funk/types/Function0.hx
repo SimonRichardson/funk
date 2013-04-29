@@ -25,5 +25,9 @@ class Function0Types {
     }
 
     public static function effectOf<R>(func : Function0<R>) : Function0<Void> return function() func();
+
+    public static function swallowWith<R>(func : Function0<R>, res : R) : Function0<R> {
+        return function() return try func() catch (e : Dynamic) res; 
+    }
 }
 
