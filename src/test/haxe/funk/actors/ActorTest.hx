@@ -2,7 +2,6 @@ package funk.actors;
 
 import funk.futures.Promise;
 import funk.types.Any;
-import funk.types.AnyRef;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
 

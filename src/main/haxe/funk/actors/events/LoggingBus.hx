@@ -12,7 +12,6 @@ using funk.io.logging.LogLevel;
 using funk.io.logging.LogValue;
 using funk.io.logging.Logging;
 using funk.types.Any;
-using funk.types.AnyRef;
 using funk.types.Tuple2;
 using funk.collections.immutable.List;
 

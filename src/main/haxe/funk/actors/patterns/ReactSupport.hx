@@ -3,7 +3,6 @@ package funk.actors.patterns;
 import funk.actors.ActorRef;
 import funk.reactives.Stream;
 import funk.types.Any;
-import funk.types.AnyRef;
 
 using funk.types.Option;
 

@@ -6,11 +6,10 @@ import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.dispatch.SystemMessage;
 import funk.actors.Props;
 import funk.Funk;
-import funk.types.Any.AnyTypes;
+import funk.types.Any;
 import funk.types.extensions.Strings;
 
 using funk.futures.Promise;
-using funk.types.AnyRef;
 using funk.types.Option;
 using funk.collections.immutable.List;
 

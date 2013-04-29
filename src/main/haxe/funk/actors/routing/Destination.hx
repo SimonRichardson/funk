@@ -1,6 +1,6 @@
 package funk.actors.routing;
 
-import funk.types.AnyRef;
+import funk.types.Any;
 
 using funk.Funk;
 

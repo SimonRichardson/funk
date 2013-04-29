@@ -2,7 +2,6 @@ package funk.actors.patterns;
 
 import funk.actors.Props.Creator;
 import funk.types.Any;
-import funk.types.AnyRef;
 import funk.types.extensions.EnumValues;
 import funk.types.Pass;
 import funk.io.logging.LogLevel;

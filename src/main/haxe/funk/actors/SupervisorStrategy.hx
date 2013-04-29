@@ -5,8 +5,6 @@ import funk.actors.ActorCell;
 import funk.actors.ActorCellChildren;
 import funk.actors.ActorContext;
 import funk.actors.events.LoggingBus;
-import funk.types.Any;
-import funk.types.AnyRef;
 import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
 

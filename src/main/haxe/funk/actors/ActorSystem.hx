@@ -9,7 +9,6 @@ import funk.actors.dispatch.Mailbox;
 import funk.actors.dispatch.MessageQueue;
 import funk.actors.events.EventStream;
 import funk.actors.Scheduler;
-import funk.types.AnyRef;
 
 using funk.actors.ActorRef;
 using funk.types.Option;

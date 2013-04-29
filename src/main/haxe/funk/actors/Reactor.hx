@@ -1,6 +1,6 @@
 package funk.actors;
 
-import funk.types.AnyRef;
+import funk.types.Any;
 import funk.types.Option;
 
 using funk.reactives.Stream;

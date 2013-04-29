@@ -3,9 +3,9 @@ package funk.actors;
 import funk.Funk;
 import funk.actors.ActorContext;
 import funk.actors.SupervisorStrategy;
+import funk.types.Any;
 
 using funk.futures.Promise;
-using funk.types.AnyRef;
 using funk.types.Option;
 using funk.collections.immutable.List;
 

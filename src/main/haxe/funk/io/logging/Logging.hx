@@ -1,6 +1,6 @@
 package funk.io.logging;
 
-import funk.types.AnyRef;
+import funk.types.Any;
 
 class Logging {
 

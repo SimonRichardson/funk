@@ -13,7 +13,6 @@ import funk.actors.ActorRef;
 import funk.actors.ActorRefProvider;
 import funk.actors.events.LoggingBus;
 import funk.types.Any.AnyTypes;
-import funk.types.AnyRef;
 import funk.types.Function0;
 import funk.types.Predicate1;
 import funk.types.extensions.EnumValues;

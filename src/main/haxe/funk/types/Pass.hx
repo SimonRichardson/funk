@@ -5,23 +5,15 @@ import funk.types.Any;
 class Pass {
 
     public static function instanceOf<T>(type : Class<T>, ?args : Array<Dynamic> = null) : Function0<T> {
-        return function() : T {
-            return createInstance(type, AnyTypes.toBool(args) ? args : []);
-        };
+        return function() : T return createInstance(type, AnyTypes.toBool(args) ? args : []);
     }
 
-    inline private static function createEmptyInstance<T>(type : Class<T>) : T {
-        return createInstance(type, []);
-    }
+    inline private static function createEmptyInstance<T>(type : Class<T>) : T return createInstance(type, []);
 
     private static function createInstance<T>(type : Class<T>, args : Array<Dynamic>) : T {
         // Cover the native std types.
         function capture(type : Dynamic, args : Array<Dynamic>, defaultValue : Dynamic) : Dynamic {
-            return if (args.length == 1 && AnyTypes.isInstanceOf(args[0], type)) {
-                args[0];
-            } else {
-                defaultValue;
-            }
+            return args.length == 1 && AnyTypes.isInstanceOf(args[0], type) ? args[0] : defaultValue;
         };
 
         return switch (Type.typeof(type)) {

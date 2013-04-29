@@ -9,8 +9,7 @@ import funk.actors.events.EventStream;
 import funk.actors.events.LoggingBus;
 import funk.actors.Scheduler;
 import funk.reactives.Process;
-import funk.types.Any.AnyTypes;
-import funk.types.AnyRef;
+import funk.types.Any;
 import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
 

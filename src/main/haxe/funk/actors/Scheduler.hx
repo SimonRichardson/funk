@@ -6,7 +6,7 @@ import funk.reactives.Process;
 import funk.types.Function0;
 
 using funk.actors.ActorRef;
-using funk.types.AnyRef;
+using funk.types.Any;
 using funk.types.Option;
 using funk.collections.immutable.List;
 

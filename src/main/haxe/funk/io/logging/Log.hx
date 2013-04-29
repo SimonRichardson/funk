@@ -3,7 +3,7 @@ package funk.io.logging;
 import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
 import funk.reactives.Stream;
-import funk.types.AnyRef;
+import funk.types.Any;
 import haxe.PosInfos;
 
 class Log {

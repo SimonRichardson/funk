@@ -6,7 +6,6 @@ import funk.actors.ActorCell;
 import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.dispatch.Mailbox;
 import funk.actors.dispatch.MessageQueue;
-import funk.types.AnyRef;
 
 using funk.types.Any;
 using funk.types.Option;

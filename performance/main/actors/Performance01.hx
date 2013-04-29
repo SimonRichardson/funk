@@ -4,7 +4,7 @@ import funk.actors.Actor;
 import funk.actors.ActorSystem;
 import funk.actors.Props;
 import funk.reactives.Process;
-import funk.types.AnyRef;
+import funk.types.Any;
 
 using funk.types.Option;
 using funk.actors.patterns.ReactSupport;

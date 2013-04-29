@@ -4,7 +4,6 @@ import funk.actors.dispatch.Dispatchers;
 import funk.Funk;
 import funk.actors.routing.Routing;
 import funk.types.Any;
-import funk.types.AnyRef;
 import funk.types.Function0;
 import funk.types.Pass;
 

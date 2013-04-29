@@ -1,7 +1,7 @@
 package funk.actors.patterns;
 
 import funk.actors.Props;
-import funk.types.AnyRef;
+import funk.types.Any;
 import funk.types.Function1;
 import funk.types.Pass;
 

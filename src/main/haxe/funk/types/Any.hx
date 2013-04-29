@@ -1,6 +1,5 @@
 package funk.types;
 
-import funk.types.AnyRef;
 import funk.types.Attempt;
 import funk.types.Either;
 import funk.types.Function1;
@@ -13,6 +12,7 @@ import funk.types.Wildcard;
 import funk.types.extensions.Strings;
 
 typedef Any<T> = T;
+typedef AnyRef = Dynamic;
 
 class AnyTypes {
 

@@ -3,7 +3,7 @@ package funk.actors.patterns;
 import funk.actors.ActorRef;
 import funk.actors.Props;
 import funk.futures.Deferred;
-import funk.types.AnyRef;
+import funk.types.Any;
 import funk.types.Attempt;
 import funk.types.Pass;
 import funk.types.extensions.Strings;

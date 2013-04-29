@@ -10,8 +10,7 @@ import funk.actors.ActorPath;
 import funk.actors.ActorRef;
 import funk.actors.routing.RoundRobinRouter;
 import funk.actors.routing.Routing;
-import funk.types.Any.AnyTypes;
-import funk.types.AnyRef;
+import funk.types.Any;
 import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
 

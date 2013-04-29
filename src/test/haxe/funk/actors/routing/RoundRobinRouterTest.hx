@@ -3,7 +3,7 @@ package funk.actors.routing;
 import funk.actors.ActorSystem;
 import funk.actors.dispatch.EnvelopeMessage;
 import funk.actors.routing.RoundRobinRouter;
-import funk.types.AnyRef;
+import funk.types.Any;
 import funk.types.extensions.Strings;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;

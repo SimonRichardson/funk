@@ -5,7 +5,6 @@ import funk.actors.ActorSystem;
 import haxe.ds.StringMap;
 
 using funk.types.Any;
-using funk.types.AnyRef;
 using funk.types.Tuple2;
 using funk.types.Option;
 using funk.collections.immutable.Map;

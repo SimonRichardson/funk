@@ -1,7 +1,6 @@
 package funk.io.logging;
 
 import funk.types.Any;
-import funk.types.AnyRef;
 import funk.io.logging.LogLevel;
 import haxe.PosInfos;
 

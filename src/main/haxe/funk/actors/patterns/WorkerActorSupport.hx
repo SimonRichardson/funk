@@ -4,7 +4,6 @@ import funk.actors.ActorRef;
 import funk.actors.Props;
 import funk.futures.Deferred;
 import funk.types.Any;
-import funk.types.AnyRef;
 import funk.types.Function1;
 import funk.types.Pass;
 
