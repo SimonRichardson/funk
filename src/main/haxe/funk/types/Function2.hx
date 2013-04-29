@@ -68,4 +68,12 @@ class Function2Types {
     public static function tuple<T1, T2, R>(func : Function1<Tuple2<T1, T2>, R>) : Function2<T1, T2, R> {
         return function(value0, value1) return func(tuple2(value0, value1));
     }
+
+    public static function lazy<T1, T2, R>( func : Function2<T1, T2, R>, 
+                                            value0 : T1, 
+                                            value1 : T2
+                                            ) : Function0<R> {
+        var value : R = null;
+        return function() return (value == null) ? value = func(value0, value1) : value;
+    }
 }

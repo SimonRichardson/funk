@@ -11,7 +11,6 @@ import funk.types.Function2Test;
 import funk.types.Function3Test;
 import funk.types.Function4Test;
 import funk.types.Function5Test;
-import funk.types.LazyTest;
 import funk.types.Predicate0Test;
 import funk.types.Predicate1Test;
 import funk.types.Predicate2Test;
@@ -45,8 +44,6 @@ class TypesSuite extends TestSuite {
         add(funk.types.Function3Test);
         add(funk.types.Function4Test);
         add(funk.types.Function5Test);
-
-        add(funk.types.LazyTest);
 
         add(funk.types.Predicate0Test);
         add(funk.types.Predicate1Test);

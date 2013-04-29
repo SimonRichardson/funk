@@ -33,4 +33,9 @@ class Function1Types {
     public static function tuple<T1, R>(func : Function1<Tuple1<T1>, R>) : Function1<T1, R> {
         return function(value0) return func(tuple1(value0));
     }
+
+    public static function lazy<T1, R>(func : Function1<T1, R>, value0 : T1) : Function0<R> {
+        var value : R = null;
+        return function() return (value == null) ? value = func(value0) : value;
+    }
 }

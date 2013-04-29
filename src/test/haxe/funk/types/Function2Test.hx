@@ -125,4 +125,42 @@ class Function2Test {
         }.carries(1, 2);
         Assert.areEqual(a, 3);
     }
+
+    @Test
+    public function when_calling_lazy__should_return_value() : Void {
+        var instance = Math.random();
+        function(a, b) {
+            return instance + a + b;
+        }.lazy(1, 2)().areEqual(instance + 1 + 2);
+    }
+
+    @Test
+    public function when_calling_lazy_twice__should_return_same_value() : Void {
+        var instance = Math.random();
+        var lax = function(a, b) {
+            return instance + a + b;
+        };
+        lax.lazy(1, 2)();
+        lax.lazy(1, 2)().areEqual(instance + 1 + 2);
+    }
+
+    @Test
+    public function when_calling_lazy_twice__should_return_same_instance() : Void {
+        var lax = function(a, b) {
+            return Math.random();
+        }.lazy(1, 2);
+        lax().areEqual(lax());
+    }
+
+    @Test
+    public function when_calling_lazy_twice__should_be_called_once() : Void {
+        var amount = 0;
+        var lax = function(a, b) {
+            amount++;
+            return {};
+        }.lazy(1, 2);
+        lax();
+        lax();
+        amount.areEqual(1);
+    }
 }

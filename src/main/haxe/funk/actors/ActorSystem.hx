@@ -17,7 +17,6 @@ using funk.collections.immutable.List;
 using funk.types.extensions.Strings;
 using funk.types.Any;
 using funk.futures.Promise;
-using funk.types.Lazy;
 
 class ActorSystem {
 

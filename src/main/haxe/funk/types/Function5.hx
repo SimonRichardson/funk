@@ -102,4 +102,15 @@ class Function5Types {
             return func(tuple5(value0, value1, value2, value3, value4));
         };
     }
+
+    public static function lazy<T1, T2, T3, T4, T5, R>( func : Function5<T1, T2, T3, T4, T5, R>, 
+                                                        value0 : T1, 
+                                                        value1 : T2,
+                                                        value2 : T3,
+                                                        value3 : T4,
+                                                        value4 : T5
+                                                        ) : Function0<R> {
+        var value : R = null;
+        return function() return (value == null) ? value = func(value0, value1, value2, value3, value4) : value;
+    }
 }

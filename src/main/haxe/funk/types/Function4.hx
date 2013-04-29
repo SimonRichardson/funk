@@ -76,4 +76,14 @@ class Function4Types {
                                                         ) : Function4<T1, T2, T3, T4, R> {
         return function(value0, value1, value2, value3) return func(tuple4(value0, value1, value2, value3));
     }
+
+    public static function lazy<T1, T2, T3, T4, R>( func : Function4<T1, T2, T3, T4, R>, 
+                                                    value0 : T1, 
+                                                    value1 : T2,
+                                                    value2 : T3,
+                                                    value3 : T4
+                                                    ) : Function0<R> {
+        var value : R = null;
+        return function() return (value == null) ? value = func(value0, value1, value2, value3) : value;
+    }
 }

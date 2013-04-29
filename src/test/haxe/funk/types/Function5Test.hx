@@ -127,4 +127,42 @@ class Function5Test {
         }.tuple()(false, true, false, false, false);
         a.areEqual(tuple5(false, true, false, false, false));
     }
+
+    @Test
+    public function when_calling_lazy__should_return_value() : Void {
+        var instance = Math.random();
+        function(a, b, c, d, e) {
+            return instance + a + b + c + d + e;
+        }.lazy(1, 2, 3, 4, 5)().areEqual(instance + 1 + 2 + 3 + 4 + 5);
+    }
+
+    @Test
+    public function when_calling_lazy_twice__should_return_same_value() : Void {
+        var instance = Math.random();
+        var lax = function(a, b, c, d, e) {
+            return instance + a + b + c + d + e;
+        };
+        lax.lazy(1, 2, 3, 4, 5)();
+        lax.lazy(1, 2, 3, 4, 5)().areEqual(instance + 1 + 2 + 3 + 4 + 5);
+    }
+
+    @Test
+    public function when_calling_lazy_twice__should_return_same_instance() : Void {
+        var lax = function(a, b, c, d, e) {
+            return Math.random();
+        }.lazy(1, 2, 3, 4, 5);
+        lax().areEqual(lax());
+    }
+
+    @Test
+    public function when_calling_lazy_twice__should_be_called_once() : Void {
+        var amount = 0;
+        var lax = function(a, b, c, d, e) {
+            amount++;
+            return {};
+        }.lazy(1, 2, 3, 4, 5);
+        lax();
+        lax();
+        amount.areEqual(1);
+    }
 }

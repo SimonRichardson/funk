@@ -97,4 +97,13 @@ class Function3Types {
     public static function tuple<T1, T2, T3, R>(func : Function1<Tuple3<T1, T2, T3>, R>) : Function3<T1, T2, T3, R> {
         return function(value0, value1, value2) return func(tuple3(value0, value1, value2));
     }
+
+    public static function lazy<T1, T2, T3, R>( func : Function3<T1, T2, T3, R>, 
+                                                value0 : T1, 
+                                                value1 : T2,
+                                                value2 : T3
+                                                ) : Function0<R> {
+        var value : R = null;
+        return function() return (value == null) ? value = func(value0, value1, value2) : value;
+    }
 }

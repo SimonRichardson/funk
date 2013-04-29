@@ -81,4 +81,42 @@ class Function1Test {
         }.tuple()(true);
         a.areEqual(tuple1(true));
     }
+
+    @Test
+    public function when_calling_lazy__should_return_value() : Void {
+        var instance = Math.random();
+        function(a) {
+            return instance + a;
+        }.lazy(1)().areEqual(instance + 1);
+    }
+
+    @Test
+    public function when_calling_lazy_twice__should_return_same_value() : Void {
+        var instance = Math.random();
+        var lax = function(a) {
+            return instance + a;
+        };
+        lax.lazy(1)();
+        lax.lazy(1)().areEqual(instance + 1);
+    }
+
+    @Test
+    public function when_calling_lazy_twice__should_return_same_instance() : Void {
+        var lax = function(a) {
+            return Math.random();
+        }.lazy(1);
+        lax().areEqual(lax());
+    }
+
+    @Test
+    public function when_calling_lazy_twice__should_be_called_once() : Void {
+        var amount = 0;
+        var lax = function(a) {
+            amount++;
+            return {};
+        }.lazy(1);
+        lax();
+        lax();
+        amount.areEqual(1);
+    }
 }

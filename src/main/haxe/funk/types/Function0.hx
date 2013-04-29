@@ -18,5 +18,10 @@ class Function0Types {
     }
 
     public static function promote<T1, R>(func : Function0<R>) : Function1<T1, R> return function(x) return func();
+
+    public static function lazy<R>(func : Function0<R>) : Function0<R> {
+        var value : R = null;
+        return function() return (value == null) ? value = func() : value;
+    }
 }
 
