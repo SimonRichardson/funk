@@ -7,13 +7,11 @@ import massive.munit.TestRunner;
 import suites.ActorsSuite;
 import suites.DataStructuresSuite;
 import suites.FuturesSuite;
-import suites.FoldablesSuite;
 import suites.IocSuite;
 import suites.IoSuite;
 import suites.LoggingSuite;
 import suites.NetSuite;
 import suites.ReactivesSuite;
-import suites.ReduciblesSuite;
 import suites.SignalsSuite;
 import suites.TypesSuite;
 
@@ -43,13 +41,11 @@ class TestMain {
         suites.push(ActorsSuite);
         suites.push(DataStructuresSuite);
         suites.push(FuturesSuite);
-        suites.push(FoldablesSuite);
         suites.push(IocSuite);
         suites.push(IoSuite);
         suites.push(LoggingSuite);
         suites.push(NetSuite);
         suites.push(ReactivesSuite);
-        suites.push(ReduciblesSuite);
         suites.push(SignalsSuite);
         suites.push(TypesSuite);
 

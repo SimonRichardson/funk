@@ -12,6 +12,7 @@ using funk.ds.CollectionUtil;
 using funk.ds.IteratorUtil;
 using funk.ds.extensions.Foldable;
 using funk.ds.extensions.Reducible;
+using funk.ds.extensions.Dropable;
 using funk.types.Any;
 using funk.types.Option;
 
@@ -51,14 +52,21 @@ abstract Collection<T>(CollectionType<T>) from CollectionType<T> to CollectionTy
     inline public function toReducible<T>() : Reducible<T> {
         var collection : Collection<T> = this;
         var reducible : Reducible<T> = {
-            reduceLeft: function(func : Function2<T, T, T>) {
-                return CollectionTypes.reduceLeft(collection, func);
-            },
-            reduceRight: function(func : Function2<T, T, T>) {
-                return CollectionTypes.reduceRight(collection, func);
-            }
+            reduceLeft: function(func : Function2<T, T, T>) return CollectionTypes.reduceLeft(collection, func),
+            reduceRight: function(func : Function2<T, T, T>) return CollectionTypes.reduceRight(collection, func)
         };
         return reducible;
+    }
+
+    @:to
+    inline public function toDropable<T>() : Dropable<T> {
+        var collection : Collection<T> = this;
+        var dropable : Dropable<T> = {
+            dropLeft: function(amount : Int) return CollectionTypes.dropLeft(collection, amount),
+            dropRight: function(amount : Int) return CollectionTypes.dropRight(collection, amount),
+            dropWhile: function(func : Predicate1<T>) return CollectionTypes.dropWhile(collection, func)
+        };
+        return dropable;
     }
 
     @:from

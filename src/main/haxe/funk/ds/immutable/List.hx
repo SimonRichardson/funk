@@ -13,6 +13,7 @@ import funk.types.Any;
 
 using funk.ds.extensions.Foldable;
 using funk.ds.extensions.Reducible;
+using funk.ds.extensions.Dropable;
 using funk.types.Option;
 
 enum ListType<T> {
@@ -40,24 +41,16 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
         }
     }
 
-    inline public function iterator() : Iterator<T> {
-        return ListTypes.iterator(this);
-    }
+    inline public function iterator() : Iterator<T> return ListTypes.iterator(this);
 
-    inline public function size() : Int {
-        return ListTypes.size(this);
-    }
+    inline public function size() : Int return ListTypes.size(this);
 
     @:to
     inline public function toFoldable<T>() : Foldable<T> {
         var list : List<T> = this;
         var foldable : Foldable<T> = {
-            foldLeft: function(value : T, func : Function2<T, T, T>) {
-                return ListTypes.foldLeft(list, value, func);
-            },
-            foldRight: function(value : T, func : Function2<T, T, T>) {
-                return ListTypes.foldRight(list, value, func);
-            }
+            foldLeft: function(value : T, func : Function2<T, T, T>) return ListTypes.foldLeft(list, value, func),
+            foldRight: function(value : T, func : Function2<T, T, T>) return ListTypes.foldRight(list, value, func)
         };
         return foldable;
     }
@@ -66,20 +59,25 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
     inline public function toReducible<T>() : Reducible<T> {
         var list : List<T> = this;
         var reducible : Reducible<T> = {
-            reduceLeft: function(func : Function2<T, T, T>) {
-                return ListTypes.reduceLeft(list, func);
-            },
-            reduceRight: function(func : Function2<T, T, T>) {
-                return ListTypes.reduceRight(list, func);
-            }
+            reduceLeft: function(func : Function2<T, T, T>) return ListTypes.reduceLeft(list, func),
+            reduceRight: function(func : Function2<T, T, T>) return ListTypes.reduceRight(list, func)
         };
         return reducible;
     }
 
-    @:from
-    inline public static function fromArray<T>(array : Array<T>) : List<T> {
-        return ListUtil.toList(array);
+    @:to
+    inline public function toDropable<T>() : Dropable<T> {
+        var list : List<T> = this;
+        var dropable : Dropable<T> = {
+            dropLeft: function(amount : Int) return ListTypes.collection(ListTypes.dropLeft(list, amount)),
+            dropRight: function(amount : Int) return ListTypes.collection(ListTypes.dropRight(list, amount)),
+            dropWhile: function(func : Predicate1<T>) return ListTypes.collection(ListTypes.dropWhile(list, func))
+        };
+        return dropable;
     }
+
+    @:from
+    inline public static function fromArray<T>(array : Array<T>) : List<T> return ListUtil.toList(array);
 
     @:to
     inline public static function toArray<T>(list : ListType<T>) : Array<T> {
@@ -92,14 +90,10 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
     }
 
     @:to
-    inline public static function toCollection<T>(list : ListType<T>) : Collection<T> {
-        return ListTypes.collection(list);
-    }
+    inline public static function toCollection<T>(list : ListType<T>) : Collection<T> return ListTypes.collection(list);
 
     @:to
-    inline public static function toString<T>(list : ListType<T>) : String {
-        return ListTypes.toString(list);
-    }
+    inline public static function toString<T>(list : ListType<T>) : String return ListTypes.toString(list);
 }
 
 class ListTypes {
@@ -223,9 +217,7 @@ class ListTypes {
 
     inline public static function flatten<T1, T2>(list : List<T1>) : List<T2> {
         var p = list;
-        return flatMap(p, function(x) {
-            return ListUtil.toList(x);
-        });
+        return flatMap(p, function(x) return ListUtil.toList(x));
     }
 
     public static function filter<T>(list : List<T>, func : Predicate1<T>) : List<T> {
@@ -396,9 +388,7 @@ class ListTypes {
             p = tail(p);
         }
 
-        if (!added) {
-            stack = prepend(stack, value);
-        }
+        if (!added) stack = prepend(stack, value);
 
         return reverse(stack);
     }
@@ -420,11 +410,9 @@ class ListTypes {
         var p = list;
         while (nonEmpty(p)) {
             var h = head(p);
-            if (func(h)) {
-                left = prepend(left, h);
-            } else {
-                right = prepend(right, h);
-            }
+            if (func(h)) left = prepend(left, h);
+            else right = prepend(right, h);
+            
             p = tail(p);
         }
 
@@ -433,9 +421,8 @@ class ListTypes {
 
     public static function reduceLeft<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
         var p = list;
-        return if (size(p) < 1) {
-            None;
-        } else {
+        return if (size(p) < 1) None;
+        else {
 
             var value = head(p);
             p = tail(p);
@@ -450,9 +437,8 @@ class ListTypes {
 
     public static function reduceRight<T>(list : List<T>, func : Function2<T, T, T>) : Option<T> {
         var p = list;
-        return if (size(p) < 1) {
-            None;
-        } else {
+        return if (size(p) < 1) None;
+        else {
 
             p = reverse(p);
             var value = head(p);
@@ -468,13 +454,10 @@ class ListTypes {
 
     public static function takeLeft<T>(list : List<T>, amount : Int) : List<T> {
         var p = list;
-        return if (amount < 0) {
-            Funk.error(ArgumentError('Amount must be positive'));
-        } else if (amount == 0) {
-            Nil;
-        } else if (amount > size(p)) {
-            p;
-        } else {
+        return if (amount < 0) Funk.error(ArgumentError('Amount must be positive'));
+        else if (amount == 0) Nil;
+        else if (amount > size(p)) p;
+        else {
 
             var stack = Nil;
             for (i in 0...amount) {
@@ -488,13 +471,10 @@ class ListTypes {
 
     public static function takeRight<T>(list : List<T>, amount : Int) : List<T> {
         var p = list;
-        return if (amount < 0) {
-            Funk.error(ArgumentError('Amount must be positive'));
-        } else if (amount == 0) {
-            Nil;
-        } else if (amount > size(p)) {
-            p;
-        } else {
+        return if (amount < 0) Funk.error(ArgumentError('Amount must be positive'));
+        else if (amount == 0) Nil;
+        else if (amount > size(p)) p;
+        else {
 
             p = reverse(p);
 
@@ -513,9 +493,7 @@ class ListTypes {
         var p = list;
         while (nonEmpty(p)) {
             var h = head(p);
-            if (func(h)) {
-                stack = prepend(stack, h);
-            }
+            if (func(h)) stack = prepend(stack, h);
             p = tail(p);
         }
         return reverse(stack);
@@ -525,9 +503,8 @@ class ListTypes {
         var p = list;
         var amount = Std.int(Math.min(size(p), size(other)));
 
-        return if (amount <= 0) {
-            Nil;
-        } else {
+        return if (amount <= 0) Nil;
+        else {
 
             var stack = Nil;
             for (i in 0...amount) {
@@ -542,8 +519,7 @@ class ListTypes {
     }
 
     inline public static function append<T>(list : List<T>, item : T) : List<T> {
-        var p = list;
-        return appendAll(p, Cons(item, Nil));
+        return appendAll(list, Cons(item, Nil));
     }
 
     public static function appendAll<T>(list : List<T>, items : List<T>) : List<T> {
@@ -568,14 +544,10 @@ class ListTypes {
     }
 
     public static function appendIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
-        var p = list;
-        return appendIterator(p, iterable.iterator());
+        return appendIterator(list, iterable.iterator());
     }
 
-    inline public static function prepend<T>(list : List<T>, item : T) : List<T> {
-        var p = list;
-        return Cons(item, p);
-    }
+    inline public static function prepend<T>(list : List<T>, item : T) : List<T> return Cons(item, list);
 
     public static function prependAll<T>(list : List<T>, items : List<T>) : List<T> {
         var p = list;
@@ -598,8 +570,7 @@ class ListTypes {
     }
 
     public static function prependIterable<T>(list : List<T>, iterable : Iterable<T>) : List<T> {
-        var p = list;
-        return prependIterator(p, iterable.iterator());
+        return prependIterator(list, iterable.iterator());
     }
 
     inline public static function head<T>(list : List<T>) : T {
@@ -628,9 +599,8 @@ class ListTypes {
 
     inline public static function tailOption<T>(list : List<T>) : Option<List<T>> {
         var p = list;
-        return if (null == p) {
-            None;
-        } else {
+        return if (null == p) None;
+        else {
             switch(p) {
                 case Cons(_, tail): Some(tail);
                 case _: None;
@@ -672,10 +642,7 @@ class ListTypes {
         return stack;
     }
 
-    inline public static function init<T>(list : List<T>) : List<T> {
-        var p = list;
-        return dropRight(p, 1);
-    }
+    inline public static function init<T>(list : List<T>) : List<T> return dropRight(list, 1);
 
     public static function last<T>(list : List<T>) : Option<T> {
         var value = None;
@@ -713,10 +680,7 @@ class ListTypes {
         };
     }
 
-    inline public static function nonEmpty<T>(list : List<T>) : Bool {
-        var p = list;
-        return !isEmpty(p);
-    }
+    inline public static function nonEmpty<T>(list : List<T>) : Bool return !isEmpty(list);
 
     inline public static function hasDefinedSize<T>(list : List<T>) : Bool {
         var p = list;
@@ -726,17 +690,11 @@ class ListTypes {
         };
     }
 
-    inline public static function collection<T>(list : List<T>) : Collection<T> {
-        return new ListInstanceImpl(list);
-    }
+    inline public static function collection<T>(list : List<T>) : Collection<T> return new ListInstanceImpl(list);
 
-    inline public static function iterable<T>(list : List<T>) : Iterable<T> {
-        return new ListInstanceImpl(list);
-    }
+    inline public static function iterable<T>(list : List<T>) : Iterable<T> return new ListInstanceImpl(list);
 
-    inline public static function iterator<T>(list : List<T>) : Iterator<T> {
-        return iterable(list).iterator();
-    }
+    inline public static function iterator<T>(list : List<T>) : Iterator<T> return iterable(list).iterator();
 
     inline public static function toString<T>(list : List<T>, ?func : Function1<T, String>) : String {
         var p = list;
@@ -778,17 +736,13 @@ private class ListInstanceImpl<T> {
                     var value = ListTypes.head(list);
                     list = ListTypes.tail(list);
                     value;
-                } else {
-                    Funk.error(NoSuchElementError);
-                }
+                } else Funk.error(NoSuchElementError);
             }
         };
     }
 
     public function size() : Int {
-        if (_knownSize) {
-            return _size;
-        }
+        if (_knownSize) return _size;
 
         _size = ListTypes.size(_list);
         _knownSize = true;
