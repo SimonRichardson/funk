@@ -118,7 +118,7 @@ class UriTest {
 
     @Test
     public function should_calling_a_url_on_parameters_return_Empty() : Void {
-        "http://www.localhost.com:8080#hash".fromUri().parameters().areEqual(Empty);
+        "http://www.localhost.com:8080#hash".fromUri().parameters().areEqual(MapType.Nil);
     }
 
     @Test

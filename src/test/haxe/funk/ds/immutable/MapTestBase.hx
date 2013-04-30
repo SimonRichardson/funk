@@ -71,7 +71,7 @@ class MapTestBase {
 
     @Test
     public function map_toString_should_return_correct_value_for_empty_map() : Void {
-        empty.toString().areEqual("Empty");
+        empty.toString().areEqual("Nil");
     }
 
     @Test

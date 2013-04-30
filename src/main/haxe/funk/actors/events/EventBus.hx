@@ -19,7 +19,7 @@ class EventBus {
     private var _subscriptions : Map<String, List<Subscriber>>;
 
     public function new() {
-        _subscriptions = Empty;
+        _subscriptions = MapType.Nil;
     }
 
     public function subscribe(subscriber : Subscriber, to : Classifier) : Bool {

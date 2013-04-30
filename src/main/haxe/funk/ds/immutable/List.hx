@@ -82,10 +82,7 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
     @:to
     inline public static function toArray<T>(list : ListType<T>) : Array<T> {
         var stack = [];
-        var p = ListTypes.iterator(list);
-        for(i in p) {
-            stack.push(i);
-        }
+        for(i in ListTypes.iterator(list)) stack.push(i);
         return stack;
     }
 

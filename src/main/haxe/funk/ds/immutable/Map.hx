@@ -14,9 +14,36 @@ using funk.types.Tuple2;
 /**
  * Usage : var map = Empty.add('key', 'value');
 */
-enum Map<K : String, V> {
-    Node(map : StringMap<V>, key : K, value : V);
-    Empty;
+enum MapType<K : String, V> {
+    Nil;
+    Cons(key : K, value : V, map : StringMap<V>);
+}
+
+abstract Map<K : String, V>(MapType<K, V>) from MapType<K, V> to MapType<K, V> {
+
+    inline function new(map : MapType<K, V>) {
+        this = map;
+    }
+
+    inline public function iterator() : Iterator<Tuple2<K, V>> return MapTypes.iterator(this);
+
+    @:to
+    inline public static function toMap<K : String, V>(map : MapType<K, V>) : StringMap<V> return MapTypes.toMap(map);
+
+    @:to
+    inline public static function toArray<K : String, V>(map : MapType<K, V>) : Array<Tuple2<K, V>> {
+        var stack = [];
+        for(i in MapTypes.iterator(map)) stack.push(i);
+        return stack;
+    }
+
+    @:to
+    inline public static function toCollection<K : String, V>(map : MapType<K, V>) : Collection<Tuple2<K, V>> {
+        return MapTypes.collection(map);
+    }
+
+    @:to
+    inline public static function toString<K : String, V>(map : MapType<K, V>) : String return MapTypes.toString(map);
 }
 
 class MapTypes {
@@ -37,16 +64,16 @@ class MapTypes {
 
     public static function exists<K : String, V>(map : Map<K, V>, key : K) : Bool {
         return switch (map) {
-            case Node(_, k, _) if(k == key): true;
-            case Node(m, _, _): m.exists(key);
+            case Cons(k, _, _) if(k == key): true;
+            case Cons(_, _, m): m.exists(key);
             case _: false;
         }
     }
 
     public static function get<K : String, V>(map : Map<K, V>, key : K) : Option<V> {
         return switch (map) {
-            case Node(_, k, v) if(k == key): Some(v);
-            case Node(m, _, _): OptionTypes.toOption(m.get(key));
+            case Cons(k, v, _) if(k == key): Some(v);
+            case Cons(_, _, m): OptionTypes.toOption(m.get(key));
             case _: None;
         }
     }
@@ -69,17 +96,17 @@ class MapTypes {
     }
 
     public static function indices<K : String, V>(map : Map<K, V>) : List<K> {
-        return Nil.prependIterator(nativeKeys(map));
+        return ListType.Nil.prependIterator(nativeKeys(map));
     }
 
     public static function values<K : String, V>(map : Map<K, V>) : List<V> {
-        return Nil.prependIterator(nativeValues(map));
+        return ListType.Nil.prependIterator(nativeValues(map));
     }
 
     public static function map<K1 : String, V1, K2 : String, V2>(   map : Map<K1, V1>,
                                                                     func : Function1<Tuple2<K1, V1>, Tuple2<K2, V2>>
                                                                     ) : Map<K2, V2> {
-        var result = Empty;
+        var result = Nil;
         for(i in nativeKeys(map)) {
             var f = func(tuple2(i, nativeGet(map, i)));
             result = add(result, f._1(), f._2());
@@ -88,7 +115,7 @@ class MapTypes {
     }
 
     public static function remove<K : String, V>(map : Map<K, V>, key : K) : Map<K, V> {
-        var result = Empty;
+        var result = Nil;
         for(i in nativeKeys(map)) {
             if(i != key) {
                 result = add(result, i, nativeGet(map, i));
@@ -99,21 +126,26 @@ class MapTypes {
 
     public static function isEmpty<K : String, V>(map : Map<K, V>) : Bool {
         return switch(map) {
-            case Node(_, _, _): false;
+            case Cons(_, _, _): false;
             case _: true;
         }
     }
 
-    public static function nonEmpty<K : String, V>(map : Map<K, V>) : Bool {
-        return !isEmpty(map);
-    }
+    public static function nonEmpty<K : String, V>(map : Map<K, V>) : Bool return !isEmpty(map);
 
     public static function collection<K : String, V>(map : Map<K, V>) : Collection<Tuple2<K, V>> {
         return new MapInstanceImpl(map);
     }
 
+    public static function toMap<K : String, V>(map : Map<K, V>) : StringMap<V> {
+        return switch(map) {
+            case Cons(_, _, m): m;
+            case _: new StringMap();
+        }
+    }
+
     public static function list<K : String, V>(map : Map<K, V>) : List<Tuple2<K, V>> {
-        var result = Nil;
+        var result = ListType.Nil;
         MapTypes.foreach(map, function(value) result = result.prepend(value));
         return result;
     }
@@ -129,7 +161,7 @@ class MapTypes {
     public static function toString<K : String, V>(map : Map<K, V>, ?func : Function1<Tuple2<K, V>, String>) : String {
         var p = map;
         return switch(p) {
-            case Node(_, _, _):
+            case Cons(_, _, _):
                 var mappedFunc : Function1<Tuple2<K, V>, String> = AnyTypes.toBool(func) ? func : function(tuple) {
                     return '${tuple._1()} => ${tuple._2()}';
                 };
@@ -140,7 +172,7 @@ class MapTypes {
                     return index < 1 ? b : '$a, $b';
                 });
                 'Map(${folded.get()})';
-            case _: 'Empty';
+            case _: 'Nil';
         }
     }
 
@@ -160,21 +192,21 @@ class MapTypes {
 
     private static function nativeKeys<K : String, V>(map : Map<K, V>) : Iterator<K> {
         return switch(map) {
-            case Node(m, _, _): m.keys();
+            case Cons(_, _, m): m.keys();
             case _: [].iterator();
         }
     }
 
     private static function nativeValues<K : String, V>(map : Map<K, V>) : Iterator<V> {
         return switch(map) {
-            case Node(m, _, _): m.iterator();
+            case Cons(_, _, m): m.iterator();
             case _: [].iterator();
         }
     }
 
     private static function nativeGet<K : String, V>(map : Map<K, V>, key : K) : V {
         return switch (map) {
-            case Node(m, _, _):
+            case Cons(_, _, m):
                 var v = m.get(key);
                 AnyTypes.toBool(v) ? v : Funk.error(NoSuchElementError);
             case _: Funk.error(NoSuchElementError);
@@ -187,14 +219,14 @@ class MapTypes {
                                                         func : Function1<StringMap<V>, StringMap<V>>
                                                         ) : Map<K, V> {
         return switch (map) {
-            case Node(map, _, _):
+            case Cons(_, _, map):
                 var m = nativeClone(map);
                 m = func(m);
-                Node(m, key, value);
+                Cons(key, value, m);
             case _:
                 var m = new StringMap();
                 m.set(key, value);
-                Node(m, key, value);
+                Cons(key, value, m);
         }
     }
 }
@@ -208,11 +240,9 @@ private class MapInstanceImpl<K : String, V> {
     private var _size : Int;
 
     public function new(map : Map<K, V>) {
-        _list = Nil;
+        _list = ListType.Nil;
 
-        MapTypes.foreach(map, function(value) {
-            _list = _list.prepend(value);
-        });
+        MapTypes.foreach(map, function(value) _list = _list.prepend(value));
 
         _size = 0;
         _knownSize = false;
@@ -227,17 +257,13 @@ private class MapInstanceImpl<K : String, V> {
                     var value = ListTypes.head(list);
                     list = ListTypes.tail(list);
                     value;
-                } else {
-                    Funk.error(NoSuchElementError);
-                }
+                } else Funk.error(NoSuchElementError);
             }
         };
     }
 
     public function size() : Int {
-        if (_knownSize) {
-            return _size;
-        }
+        if (_knownSize) return _size;
 
         _size = ListTypes.size(_list);
         _knownSize = true;

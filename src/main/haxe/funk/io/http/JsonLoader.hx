@@ -98,7 +98,7 @@ class JsonLoader<T : Dynamic> {
                 _deferred.resolve({
                     code: statusValue,
                     body: Some(data),
-                    headers: Nil
+                    headers: ListType.Nil
                 });
             } catch (error : Dynamic) {
                 _statusStream.dispatch(HttpSuccess(NoContent).toOption());

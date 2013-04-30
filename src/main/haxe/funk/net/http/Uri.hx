@@ -104,7 +104,7 @@ class UriTypes {
     }
 
     public static function parameters(request : UriRequest) : Map<String, Option<String>> {
-        var map = Empty;
+        var map = MapType.Nil;
 
         // TODO (Simon) : This seems weak
         var opt = match(uri(request), 10);
