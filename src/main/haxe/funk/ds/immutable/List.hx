@@ -670,8 +670,7 @@ class ListTypes {
     }
 
     inline public static function isEmpty<T>(list : List<T>) : Bool {
-        var p = list;
-        return switch(p) {
+        return switch(list) {
             case Cons(_, _): false;
             case _: true;
         };
@@ -680,8 +679,7 @@ class ListTypes {
     inline public static function nonEmpty<T>(list : List<T>) : Bool return !isEmpty(list);
 
     inline public static function hasDefinedSize<T>(list : List<T>) : Bool {
-        var p = list;
-        return switch (p) {
+        return switch (list) {
             case Cons(_, _): true;
             case _: false;
         };
