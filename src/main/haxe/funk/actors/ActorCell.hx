@@ -238,6 +238,8 @@ class ActorCell implements Cell implements ActorContext {
 
         var msg : AnyRef = message.message();
         try {
+            // Note (Simon) : This is slow, because we're trying to check if the msg is a ActorMessage (AnyRef > Enum), 
+            // would be a lot better if the ActorMessages was a class. Or find a way to speed this up some what.
             switch(msg) {
                 case _ if(AnyTypes.isValueOf(msg, ActorMessages)): autoReceiveMessage(message);
                 case _: receiveMessage(msg);
