@@ -10,6 +10,7 @@ import funk.ds.ParallelTest;
 import funk.ds.immutable.ListTest;
 import funk.ds.immutable.ListCollectionsTest;
 import funk.ds.immutable.MapTest;
+import funk.ds.immutable.BinaryTreeTest;
 
 class DataStructuresSuite extends TestSuite {
 
@@ -28,6 +29,8 @@ class DataStructuresSuite extends TestSuite {
         add(funk.ds.immutable.ListReducibleTest);
 
         add(funk.ds.immutable.MapTest);
+
+        add(funk.ds.immutable.BinaryTreeTest);
 
         #if parallel
         add(funk.ds.ParallelTest);
