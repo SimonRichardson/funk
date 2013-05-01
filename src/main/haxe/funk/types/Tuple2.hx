@@ -1,6 +1,7 @@
 package funk.types;
 
 import funk.types.Any;
+import funk.types.extensions.EnumValues;
 
 enum Tuple2Type<T1, T2> {
     tuple2(t1 : T1, t2 : T2);
@@ -28,13 +29,9 @@ abstract Tuple2<T1, T2>(Tuple2Type<T1, T2>) from Tuple2Type<T1, T2> to Tuple2Typ
 
 class Tuple2Types {
 
-    public static function _1<T1, T2>(tuple : Tuple2<T1, T2>) : T1 {
-        return Type.enumParameters(tuple)[0];
-    }
+    public static function _1<T1, T2>(tuple : Tuple2<T1, T2>) : T1 return EnumValues.getValueByIndex(tuple, 0);
 
-    public static function _2<T1, T2>(tuple : Tuple2<T1, T2>) : T2 {
-        return Type.enumParameters(tuple)[1];
-    }
+    public static function _2<T1, T2>(tuple : Tuple2<T1, T2>) : T2 return EnumValues.getValueByIndex(tuple, 1);
 
     public static function swap<T1, T2>(tuple : Tuple2<T1, T2>) : Tuple2<T2, T1> {
         return switch (tuple) {
@@ -62,9 +59,7 @@ class Tuple2Types {
         return '${AnyTypes.toString(_1(tuple))}${AnyTypes.toString(_2(tuple))}';
     }
 
-    public static function toArray<T1, T2>(tuple : Tuple2<T1, T2>) : Array<Dynamic> {
-        return Type.enumParameters(tuple);
-    }
+    public static function toArray<T1, T2>(tuple : Tuple2<T1, T2>) : Array<Dynamic> return EnumValues.getValues(tuple);
 
     public static function toString<T1, T2>(    tuple : Tuple2<T1, T2>,
                                                 ?func0 : Function1<T1, String>,

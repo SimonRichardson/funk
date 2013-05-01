@@ -1,6 +1,7 @@
 package funk.types;
 
 import funk.types.Any;
+import funk.types.extensions.EnumValues;
 
 enum Tuple4Type<T1, T2, T3, T4> {
     tuple4(t1 : T1, t2 : T2, t3 : T3, t4 : T4);
@@ -40,22 +41,22 @@ abstract Tuple4<T1, T2, T3, T4>(Tuple4Type<T1, T2, T3, T4>)
 class Tuple4Types {
 
     public static function _1<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : T1 {
-        return Type.enumParameters(tuple)[0];
+        return EnumValues.getValueByIndex(tuple, 0);
     }
 
     public static function _2<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : T2 {
-        return Type.enumParameters(tuple)[1];
+        return EnumValues.getValueByIndex(tuple, 1);
     }
 
     public static function _3<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : T3 {
-        return Type.enumParameters(tuple)[2];
+        return EnumValues.getValueByIndex(tuple, 2);
     }
 
     public static function _4<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : T4 {
-        return Type.enumParameters(tuple)[3];
+        return EnumValues.getValueByIndex(tuple, 3);
     }
 
-    public static function equals<T1, T2, T3, T4>(    a : Tuple4<T1, T2, T3, T4>,
+    public static function equals<T1, T2, T3, T4>(  a : Tuple4<T1, T2, T3, T4>,
                                                     b : Tuple4<T1, T2, T3, T4>,
                                                     ?func1 : Predicate2<T1, T1>,
                                                     ?func2 : Predicate2<T2, T2>,
@@ -79,7 +80,7 @@ class Tuple4Types {
     }
 
     public static function toArray<T1, T2, T3, T4>(tuple : Tuple4<T1, T2, T3, T4>) : Array<Dynamic> {
-        return Type.enumParameters(tuple);
+        return EnumValues.getValues(tuple);
     }
 
     public static function toString<T1, T2, T3, T4>(    tuple : Tuple4<T1, T2, T3, T4>,

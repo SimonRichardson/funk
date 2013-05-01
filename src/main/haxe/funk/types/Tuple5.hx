@@ -1,6 +1,7 @@
 package funk.types;
 
 import funk.types.Any;
+import funk.types.extensions.EnumValues;
 
 enum Tuple5Type<T1, T2, T3, T4, T5> {
     tuple5(t1 : T1, t2 : T2, t3 : T3, t4 : T4, t5 : T5);
@@ -44,23 +45,23 @@ abstract Tuple5<T1, T2, T3, T4, T5>(Tuple5Type<T1, T2, T3, T4, T5>)
 class Tuple5Types {
 
     public static function _1<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T1 {
-        return Type.enumParameters(tuple)[0];
+        return EnumValues.getValueByIndex(tuple, 0);
     }
 
     public static function _2<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T2 {
-        return Type.enumParameters(tuple)[1];
+        return EnumValues.getValueByIndex(tuple, 1);
     }
 
     public static function _3<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T3 {
-        return Type.enumParameters(tuple)[2];
+        return EnumValues.getValueByIndex(tuple, 2);
     }
 
     public static function _4<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T4 {
-        return Type.enumParameters(tuple)[3];
+        return EnumValues.getValueByIndex(tuple, 3);
     }
 
     public static function _5<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : T5 {
-        return Type.enumParameters(tuple)[4];
+        return EnumValues.getValueByIndex(tuple, 4);
     }
 
     public static function equals<T1, T2, T3, T4, T5>(    a : Tuple5<T1, T2, T3, T4, T5>,
@@ -90,7 +91,7 @@ class Tuple5Types {
 
 
     public static function toArray<T1, T2, T3, T4, T5>(tuple : Tuple5<T1, T2, T3, T4, T5>) : Array<Dynamic> {
-        return Type.enumParameters(tuple);
+        return EnumValues.getValues(tuple);
     }
 
     public static function toString<T1, T2, T3, T4, T5>(    tuple : Tuple5<T1, T2, T3, T4, T5>,

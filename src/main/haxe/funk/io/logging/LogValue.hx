@@ -1,6 +1,7 @@
 package funk.io.logging;
 
 import funk.types.Any;
+import funk.types.extensions.EnumValues;
 import funk.io.logging.LogLevel;
 import haxe.PosInfos;
 
@@ -13,9 +14,9 @@ enum LogValue<T> {
 
 class LogValueTypes {
 
-    public static function level<T>(logValue : LogValue<T>) : LogLevel return Type.enumParameters(logValue)[0];
+    public static function level<T>(logValue : LogValue<T>) : LogLevel return EnumValues.getValueByIndex(logValue, 0);
 
-    public static function data<T>(logValue : LogValue<T>) : T return Type.enumParameters(logValue)[1];
+    public static function data<T>(logValue : LogValue<T>) : T return EnumValues.getValueByIndex(logValue, 1);
 
     public static function value<T>(logValue : LogValue<T>) : Option<String> {
         return switch(logValue) {

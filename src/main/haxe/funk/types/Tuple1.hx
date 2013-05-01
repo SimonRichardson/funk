@@ -1,6 +1,7 @@
 package funk.types;
 
 import funk.types.Any;
+import funk.types.extensions.EnumValues;
 
 enum Tuple1Type<T1> {
     tuple1(t1 : T1);
@@ -24,9 +25,7 @@ abstract Tuple1<T1>(Tuple1Type<T1>) from Tuple1Type<T1> to Tuple1Type<T1> {
 
 class Tuple1Types {
 
-    public static function _1<T1>(tuple : Tuple1<T1>) : T1 {
-        return Type.enumParameters(tuple)[0];
-    }
+    public static function _1<T1>(tuple : Tuple1<T1>) : T1 return EnumValues.getValueByIndex(tuple, 0);
 
     public static function equals<T1>(a : Tuple1<T1>, b : Tuple1<T1>, ?func : Predicate2<T1, T1>) : Bool {
         return switch (a) {
@@ -43,10 +42,7 @@ class Tuple1Types {
         return '${AnyTypes.toString(_1(tuple))}';
     }
 
-
-    public static function toArray<T1>(tuple : Tuple1<T1>) : Array<Dynamic> {
-        return Type.enumParameters(tuple);
-    }
+    public static function toArray<T1>(tuple : Tuple1<T1>) : Array<Dynamic> return EnumValues.getValues(tuple);
 
     public static function toString<T1>(tuple : Tuple1<T1>, ?func0 : Function1<T1, String>) : String {
         return '(${AnyTypes.toString(_1(tuple), func0)})';

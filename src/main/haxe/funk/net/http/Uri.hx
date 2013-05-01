@@ -1,5 +1,7 @@
 package funk.net.http;
 
+import funk.types.extensions.EnumValues;
+
 using Lambda;
 using funk.types.Option;
 using funk.types.Tuple2;
@@ -9,9 +11,7 @@ using funk.ds.immutable.List;
 
 class UriTypes {
 
-    public static function uri(request : UriRequest) : String {
-        return Type.enumParameters(request)[0];
-    }
+    public static function uri(request : UriRequest) : String return EnumValues.getValueByIndex(request, 0);
 
     public static function url(request : UriRequest) : Option<String> {
         var parts = {
