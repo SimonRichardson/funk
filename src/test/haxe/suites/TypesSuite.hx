@@ -12,6 +12,7 @@ import funk.types.Function3Test;
 import funk.types.Function4Test;
 import funk.types.Function5Test;
 import funk.types.PartialFunction1Test;
+import funk.types.PartialFunction2Test;
 import funk.types.Predicate0Test;
 import funk.types.Predicate1Test;
 import funk.types.Predicate2Test;
@@ -47,6 +48,7 @@ class TypesSuite extends TestSuite {
         add(funk.types.Function5Test);
 
         add(funk.types.PartialFunction1Test);
+        add(funk.types.PartialFunction2Test);
 
         add(funk.types.Predicate0Test);
         add(funk.types.Predicate1Test);

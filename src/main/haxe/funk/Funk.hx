@@ -14,6 +14,7 @@ enum Errors {
     Error(message : String);
     HttpError(message : String);
     IllegalOperationError(?message : String);
+    IndexOutOfBoundsError(index : Int);
     InjectorError(message : String);
     NoSuchElementError;
     RangeError;
@@ -68,6 +69,7 @@ class Funk {
             case Error(msg): msg;
             case HttpError(msg): msg;
             case IllegalOperationError(msg): msg == null ? 'Required operation can not be executed' : msg;
+            case IndexOutOfBoundsError(index): 'No element exists with in the bounds $index';
             case InjectorError(msg): msg;
             case NoSuchElementError: 'No such element exists';
             case RangeError: 'Value is outside of the expected range';
