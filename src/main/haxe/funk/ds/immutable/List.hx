@@ -82,10 +82,7 @@ abstract List<T>(ListType<T>) from ListType<T> to ListType<T> {
     @:to
     inline public static function toArray<T>(list : ListType<T>) : Array<T> {
         var stack = [];
-        var p = ListTypes.iterator(list);
-        for(i in p) {
-            stack.push(i);
-        }
+        for(i in ListTypes.iterator(list)) stack.push(i);
         return stack;
     }
 
@@ -673,8 +670,7 @@ class ListTypes {
     }
 
     inline public static function isEmpty<T>(list : List<T>) : Bool {
-        var p = list;
-        return switch(p) {
+        return switch(list) {
             case Cons(_, _): false;
             case _: true;
         };
@@ -683,8 +679,7 @@ class ListTypes {
     inline public static function nonEmpty<T>(list : List<T>) : Bool return !isEmpty(list);
 
     inline public static function hasDefinedSize<T>(list : List<T>) : Bool {
-        var p = list;
-        return switch (p) {
+        return switch (list) {
             case Cons(_, _): true;
             case _: false;
         };

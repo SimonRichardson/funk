@@ -52,7 +52,7 @@ class Children {
     public function new(cell : ActorCell) {
         _cell = cell;
 
-        _container = new NormalChildrenContainer(Empty);
+        _container = new NormalChildrenContainer(MapType.Nil);
     }
 
     public function initChild(ref : ActorRef) : Option<ChildStats> {
