@@ -57,9 +57,9 @@ class Function1Types {
     }
 
     public static function trampoline<T1>(func : Function1<T1, Void>, ?bounce : Int = 0) : Function1<T1, Void> {
-        return function(x : T1) : Void {
-            if (bounce < 1) func(x);
-            else Process.start(function() : Void func(x), bounce);
+        return function(value0 : T1) : Void {
+            if (bounce < 1) func(value0);
+            else Process.start(function() : Void func(value0), bounce);
         };
     }
 }

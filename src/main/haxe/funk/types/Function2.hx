@@ -1,5 +1,6 @@
 package funk.types;
 
+import funk.reactives.Process;
 import funk.types.Any;
 import funk.types.Wildcard;
 
@@ -90,5 +91,14 @@ class Function2Types {
 
     public static function swallowWith<T1, T2, R>(func : Function2<T1, T2, R>, res : R) : Function2<T1, T2, R> {
         return function(a, b) return try func(a, b) catch (e : Dynamic) res; 
+    }
+
+    public static function trampoline<T1, T2>(  func : Function2<T1, T2, Void>, 
+                                                ?bounce : Int = 0
+                                                ) : Function2<T1, T2, Void> {
+        return function(value0 : T1, value1 : T2) : Void {
+            if (bounce < 1) func(value0, value1);
+            else Process.start(function() : Void func(value0, value1), bounce);
+        };
     }
 }

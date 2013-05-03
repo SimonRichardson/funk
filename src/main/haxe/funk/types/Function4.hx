@@ -1,5 +1,7 @@
 package funk.types;
 
+import funk.reactives.Process;
+
 using funk.types.Function0;
 using funk.types.Function1;
 using funk.types.Option;
@@ -103,5 +105,14 @@ class Function4Types {
                                                             res : R
                                                             ) : Function4<T1, T2, T3, T4, R> {
         return function(a, b, c, d) return try func(a, b, c, d) catch (e : Dynamic) res; 
+    }
+
+    public static function trampoline<T1, T2, T3, T4>(  func : Function4<T1, T2, T3, T4, Void>, 
+                                                        ?bounce : Int = 0
+                                                        ) : Function4<T1, T2, T3, T4, Void> {
+        return function(value0 : T1, value1 : T2, value2 : T3, value3 : T4) : Void {
+            if (bounce < 1) func(value0, value1, value2, value3);
+            else Process.start(function() : Void func(value0, value1, value2, value3), bounce);
+        };
     }
 }

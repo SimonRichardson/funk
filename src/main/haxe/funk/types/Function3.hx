@@ -1,5 +1,6 @@
 package funk.types;
 
+import funk.reactives.Process;
 import funk.types.Any;
 import funk.types.Wildcard;
 
@@ -122,5 +123,14 @@ class Function3Types {
                                                         res : R
                                                         ) : Function3<T1, T2, T3, R> {
         return function(a, b, c) return try func(a, b, c) catch (e : Dynamic) res; 
+    }
+
+    public static function trampoline<T1, T2, T3>(  func : Function3<T1, T2, T3, Void>, 
+                                                    ?bounce : Int = 0
+                                                    ) : Function3<T1, T2, T3, Void> {
+        return function(value0 : T1, value1 : T2, value2 : T3) : Void {
+            if (bounce < 1) func(value0, value1, value2);
+            else Process.start(function() : Void func(value0, value1, value2), bounce);
+        };
     }
 }
