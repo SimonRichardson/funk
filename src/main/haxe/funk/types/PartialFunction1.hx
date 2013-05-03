@@ -34,7 +34,7 @@ interface PartialFunction1<T1, R> {
 
     function applyOrElse(value0 : T1, func : Function1<T1, R>) : R;
 
-    function call(value : T1) : R;
+    function apply(value : T1) : R;
 
     function toFunction() : Function1<T1, Option<R>>;
 }
@@ -76,7 +76,7 @@ private class PartialFunction1Type<T1, R> implements PartialFunction1<T1, R> {
     }
 
     public function orElse(other : PartialFunction1<T1, R>) : PartialFunction1<T1, R> {
-        return create(_definitions.prepend(Partial1(other.isDefinedAt, other.call)));
+        return create(_definitions.prepend(Partial1(other.isDefinedAt, other.apply)));
     }
 
     public function orAlways(func : Function1<T1, R>) : PartialFunction1<T1, R> {
@@ -84,10 +84,10 @@ private class PartialFunction1Type<T1, R> implements PartialFunction1<T1, R> {
     }
 
     public function applyOrElse(value0 : T1, func : Function1<T1, R>) : R {
-        return isDefinedAt(value0) ? call(value0) : func(value0);
+        return isDefinedAt(value0) ? apply(value0) : func(value0);
     }
     
-    public function call(value : T1) : R {
+    public function apply(value : T1) : R {
         return switch(_definitions.find(function(partial) return Partial1Types.define(partial)(value))) {
             case Some(partial): Partial1Types.partial(partial)(value);
             case _: Funk.error(NoSuchElementError);
@@ -95,6 +95,6 @@ private class PartialFunction1Type<T1, R> implements PartialFunction1<T1, R> {
     }
 
     public function toFunction() : Function1<T1, Option<R>> {
-        return function(value) return isDefinedAt(value) ? Some(call(value)) : None;
+        return function(value) return isDefinedAt(value) ? Some(apply(value)) : None;
     }
 }

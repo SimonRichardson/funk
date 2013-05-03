@@ -33,7 +33,7 @@ interface PartialFunction3<T1, T2, T3, R> {
 
     function applyOrElse(value0 : T1, value1 : T2, value2 : T3, func : Function3<T1, T2, T3, R>) : R;
 
-    function call(value0 : T1, value1 : T2, value2 : T3) : R;
+    function apply(value0 : T1, value1 : T2, value2 : T3) : R;
 
     function toFunction() : Function3<T1, T2, T3, Option<R>>;
 }
@@ -78,7 +78,7 @@ private class PartialFunction3Type<T1, T2, T3, R> implements PartialFunction3<T1
     }
 
     public function orElse(other : PartialFunction3<T1, T2, T3, R>) : PartialFunction3<T1, T2, T3, R> {
-        return create(_definitions.prepend(Partial3(other.isDefinedAt, other.call)));
+        return create(_definitions.prepend(Partial3(other.isDefinedAt, other.apply)));
     }
 
     public function orAlways(func : Function3<T1, T2, T3, R>) : PartialFunction3<T1, T2, T3, R> {
@@ -86,10 +86,10 @@ private class PartialFunction3Type<T1, T2, T3, R> implements PartialFunction3<T1
     }
 
     public function applyOrElse(value0 : T1, value1 : T2, value2 : T3, func : Function3<T1, T2, T3, R>) : R {
-        return isDefinedAt(value0, value1, value2) ? call(value0, value1, value2) : func(value0, value1, value2);
+        return isDefinedAt(value0, value1, value2) ? apply(value0, value1, value2) : func(value0, value1, value2);
     }
 
-    public function call(value0 : T1, value1 : T2, value2 : T3) : R {
+    public function apply(value0 : T1, value1 : T2, value2 : T3) : R {
         return switch(_definitions.find(function(partial) {
             return Partial3Types.define(partial)(value0, value1, value2);
         })) {
@@ -100,7 +100,7 @@ private class PartialFunction3Type<T1, T2, T3, R> implements PartialFunction3<T1
 
     public function toFunction() : Function3<T1, T2, T3, Option<R>> {
         return function(value0, value1, value2) {
-            return isDefinedAt(value0, value1, value2) ? Some(call(value0, value1, value2)) : None;
+            return isDefinedAt(value0, value1, value2) ? Some(apply(value0, value1, value2)) : None;
         }
     }
 }

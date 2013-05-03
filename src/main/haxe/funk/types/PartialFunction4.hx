@@ -34,7 +34,7 @@ interface PartialFunction4<T1, T2, T3, T4, R> {
 
     function applyOrElse(value0 : T1, value1 : T2, value2 : T3, value3 : T4, func : Function4<T1, T2, T3, T4, R>) : R;
 
-    function call(value0 : T1, value1 : T2, value2 : T3, value3 : T4) : R;
+    function apply(value0 : T1, value1 : T2, value2 : T3, value3 : T4) : R;
 
     function toFunction() : Function4<T1, T2, T3, T4, Option<R>>;
 }
@@ -79,7 +79,7 @@ private class PartialFunction4Type<T1, T2, T3, T4, R> implements PartialFunction
     }
 
     public function orElse(other : PartialFunction4<T1, T2, T3, T4, R>) : PartialFunction4<T1, T2, T3, T4, R> {
-        return create(_definitions.prepend(Partial4(other.isDefinedAt, other.call)));
+        return create(_definitions.prepend(Partial4(other.isDefinedAt, other.apply)));
     }
 
     public function orAlways(func : Function4<T1, T2, T3, T4, R>) : PartialFunction4<T1, T2, T3, T4, R> {
@@ -93,11 +93,11 @@ private class PartialFunction4Type<T1, T2, T3, T4, R> implements PartialFunction
                                     func : Function4<T1, T2, T3, T4, R>
                                     ) : R {
         return isDefinedAt(value0, value1, value2, value3) ? 
-                    call(value0, value1, value2, value3) : 
+                    apply(value0, value1, value2, value3) : 
                     func(value0, value1, value2, value3);
     }
 
-    public function call(value0 : T1, value1 : T2, value2 : T3, value3 : T4) : R {
+    public function apply(value0 : T1, value1 : T2, value2 : T3, value3 : T4) : R {
         return switch(_definitions.find(function(partial) {
             return Partial4Types.define(partial)(value0, value1, value2, value3);
         })) {
@@ -108,7 +108,7 @@ private class PartialFunction4Type<T1, T2, T3, T4, R> implements PartialFunction
 
     public function toFunction() : Function4<T1, T2, T3, T4, Option<R>> {
         return function(value0, value1, value2, value3) {
-            return isDefinedAt(value0, value1, value2, value3) ? Some(call(value0, value1, value2, value3)) : None;
+            return isDefinedAt(value0, value1, value2, value3) ? Some(apply(value0, value1, value2, value3)) : None;
         }
     }
 }

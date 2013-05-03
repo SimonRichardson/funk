@@ -21,19 +21,19 @@ class PartialFunction3Test {
     @Test
     public function when_partial_call_with_2_should_be_4() : Void {
         var partial = Partial3(function(v0, v1, v2) return v0 > 0, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
-        Assert.areEqual(partial.call(2, 2, 2), 8);
+        Assert.areEqual(partial.apply(2, 2, 2), 8);
     }
 
     @Test
     public function when_partial_call_with_2_should_not_be_5() : Void {
         var partial = Partial3(function(v0, v1, v2) return v0 > 0, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
-        Assert.areNotEqual(partial.call(2, 2, 2), 5);
+        Assert.areNotEqual(partial.apply(2, 2, 2), 5);
     }
 
     @Test
     public function when_partial_call_with_minus_2_should_throw_error() : Void {
         var partial = Partial3(function(v0, v1, v2) return v0 > 0, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
-        var called = try { partial.call(-2, -2, -2); false; } catch (e : Dynamic) true;
+        var called = try { partial.apply(-2, -2, -2); false; } catch (e : Dynamic) true;
         called.isTrue();
     }
 
@@ -66,7 +66,7 @@ class PartialFunction3Test {
         var partial0 = Partial3(function(v0, v1, v2) return v0 == 1, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
         var partial1 = Partial3(function(v0, v1, v2) return v1 == 2, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
         var partial = partial0.orElse(partial1);
-        Assert.areEqual(partial.call(1, 1, 1), 1);
+        Assert.areEqual(partial.apply(1, 1, 1), 1);
     }
 
     @Test
@@ -74,7 +74,7 @@ class PartialFunction3Test {
         var partial0 = Partial3(function(v0, v1, v2) return v0 == 1, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
         var partial1 = Partial3(function(v0, v1, v2) return v1 == 2, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
         var partial = partial0.orElse(partial1);
-        Assert.areEqual(partial.call(2, 2, 2), 8);
+        Assert.areEqual(partial.apply(2, 2, 2), 8);
     }
 
     @Test
@@ -82,7 +82,7 @@ class PartialFunction3Test {
         var partial0 = Partial3(function(v0, v1, v2) return v0 == 1, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
         var partial1 = Partial3(function(v0, v1, v2) return v1 == 2, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
         var partial = partial0.orElse(partial1);
-        Assert.areNotEqual(partial.call(2, 2, 2), 5);
+        Assert.areNotEqual(partial.apply(2, 2, 2), 5);
     }
 
     @Test
@@ -90,7 +90,7 @@ class PartialFunction3Test {
         var partial0 = Partial3(function(v0, v1, v2) return v0 == 1, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
         var partial1 = Partial3(function(v0, v1, v2) return v1 == 2, function(v0, v1, v2) return v0 * v1 * v2).fromPartial();
         var partial = partial0.orElse(partial1);
-        var called = try { partial.call(-2, -2, -2); false; } catch(e : Dynamic) true;
+        var called = try { partial.apply(-2, -2, -2); false; } catch(e : Dynamic) true;
         called.isTrue();
     }
 }
