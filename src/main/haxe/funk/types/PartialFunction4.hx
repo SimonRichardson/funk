@@ -32,6 +32,8 @@ interface PartialFunction4<T1, T2, T3, T4, R> {
 
     function orAlways(func : Function4<T1, T2, T3, T4, R>) : PartialFunction4<T1, T2, T3, T4, R>;
 
+    function applyOrElse(value0 : T1, value1 : T2, value2 : T3, value3 : T4, func : Function4<T1, T2, T3, T4, R>) : R;
+
     function call(value0 : T1, value1 : T2, value2 : T3, value3 : T4) : R;
 
     function toFunction() : Function4<T1, T2, T3, T4, Option<R>>;
@@ -82,6 +84,17 @@ private class PartialFunction4Type<T1, T2, T3, T4, R> implements PartialFunction
 
     public function orAlways(func : Function4<T1, T2, T3, T4, R>) : PartialFunction4<T1, T2, T3, T4, R> {
         return create(_definitions.prepend(Partial4(function(value0, value1, value2, value3) return true, func)));
+    }
+
+    public function applyOrElse(    value0 : T1, 
+                                    value1 : T2, 
+                                    value2 : T3, 
+                                    value3 : T4, 
+                                    func : Function4<T1, T2, T3, T4, R>
+                                    ) : R {
+        return isDefinedAt(value0, value1, value2, value3) ? 
+                    call(value0, value1, value2, value3) : 
+                    func(value0, value1, value2, value3);
     }
 
     public function call(value0 : T1, value1 : T2, value2 : T3, value3 : T4) : R {

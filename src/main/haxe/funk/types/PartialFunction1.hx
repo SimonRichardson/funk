@@ -32,7 +32,7 @@ interface PartialFunction1<T1, R> {
 
     function orAlways(func : Function1<T1, R>) : PartialFunction1<T1, R>;
 
-    function applyOrElse(value : T1, func : Function1<T1, R>) : R;
+    function applyOrElse(value0 : T1, func : Function1<T1, R>) : R;
 
     function call(value : T1) : R;
 
@@ -83,8 +83,8 @@ private class PartialFunction1Type<T1, R> implements PartialFunction1<T1, R> {
         return create(_definitions.prepend(Partial1(function(value) return true, func)));
     }
 
-    public function applyOrElse(value : T1, func : Function1<T1, R>) : R {
-        return isDefinedAt(value) ? call(value) : func(value);
+    public function applyOrElse(value0 : T1, func : Function1<T1, R>) : R {
+        return isDefinedAt(value0) ? call(value0) : func(value0);
     }
     
     public function call(value : T1) : R {

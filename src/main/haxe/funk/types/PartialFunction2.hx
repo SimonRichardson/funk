@@ -31,6 +31,8 @@ interface PartialFunction2<T1, T2, R> {
 
     function orAlways(func : Function2<T1, T2, R>) : PartialFunction2<T1, T2, R>;
 
+    function applyOrElse(value0 : T1, value1 : T2, func : Function2<T1, T2, R>) : R;
+
     function call(value0 : T1, value1 : T2) : R;
 
     function toFunction() : Function2<T1, T2, Option<R>>;
@@ -80,6 +82,10 @@ private class PartialFunction2Type<T1, T2, R> implements PartialFunction2<T1, T2
 
     public function orAlways(func : Function2<T1, T2, R>) : PartialFunction2<T1, T2, R> {
         return create(_definitions.prepend(Partial2(function(value0, value1) return true, func)));
+    }
+
+    public function applyOrElse(value0 : T1, value1 : T2, func : Function2<T1, T2, R>) : R {
+        return isDefinedAt(value0, value1) ? call(value0, value1) : func(value0, value1);
     }
 
     public function call(value0 : T1, value1 : T2) : R {

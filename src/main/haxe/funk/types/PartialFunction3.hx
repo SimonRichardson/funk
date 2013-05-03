@@ -31,6 +31,8 @@ interface PartialFunction3<T1, T2, T3, R> {
 
     function orAlways(func : Function3<T1, T2, T3, R>) : PartialFunction3<T1, T2, T3, R>;
 
+    function applyOrElse(value0 : T1, value1 : T2, value2 : T3, func : Function3<T1, T2, T3, R>) : R;
+
     function call(value0 : T1, value1 : T2, value2 : T3) : R;
 
     function toFunction() : Function3<T1, T2, T3, Option<R>>;
@@ -81,6 +83,10 @@ private class PartialFunction3Type<T1, T2, T3, R> implements PartialFunction3<T1
 
     public function orAlways(func : Function3<T1, T2, T3, R>) : PartialFunction3<T1, T2, T3, R> {
         return create(_definitions.prepend(Partial3(function(value0, value1, value2) return true, func)));
+    }
+
+    public function applyOrElse(value0 : T1, value1 : T2, value2 : T3, func : Function3<T1, T2, T3, R>) : R {
+        return isDefinedAt(value0, value1, value2) ? call(value0, value1, value2) : func(value0, value1, value2);
     }
 
     public function call(value0 : T1, value1 : T2, value2 : T3) : R {
