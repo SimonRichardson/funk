@@ -4,6 +4,7 @@ import funk.Funk;
 import funk.actors.ActorContext;
 import funk.actors.SupervisorStrategy;
 import funk.types.Any;
+import funk.types.PartialFunction1;
 
 using funk.futures.Promise;
 using funk.types.Option;
@@ -18,7 +19,13 @@ enum ActorMessages {
     UnhandledMessage(message : AnyRef, sender : Option<ActorRef>, self : ActorRef);
 }
 
+typedef Receive = PartialFunction1<AnyRef, Void>;
+
 class Actor implements ActorRef {
+
+    public static var emptyBehaviour : Receive = PartialFunction1Types.fromPartial(Partial1(function(x) return false, 
+                                                                                            function(x) return Funk.error(IllegalOperationError("Empty behavior apply()"))
+                                                                                            ));
 
     @:allow(funk.actors.ActorCell)
     private var _context : ActorContext;
@@ -73,6 +80,7 @@ class Actor implements ActorRef {
 
     public function isTerminated() : Bool return _self.isTerminated();
 
+    @:allow(funk.actors.ActorCell)
     private function unhandled(message : AnyRef) : Void {
         // handle termination
         switch(message) {

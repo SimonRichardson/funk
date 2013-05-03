@@ -5,6 +5,7 @@ import funk.reactives.Stream;
 import funk.types.Any;
 
 using funk.types.Option;
+using funk.types.PartialFunction1;
 
 class ReactSupport {
 
@@ -16,10 +17,12 @@ class ReactSupport {
         var stream = StreamTypes.identity(None);
 
         var local : LocalActorRef = cast actor;
-        local.underlying().become(function(value : AnyRef) {
+
+        var partial = Partial1(function(x) return true, function(value : AnyRef) {
             stream.dispatch(value);
-            return bubble;
+            return local.underlying().actor().receive(value);
         });
+        local.underlying().become(partial.fromPartial());
 
         return stream;
     }

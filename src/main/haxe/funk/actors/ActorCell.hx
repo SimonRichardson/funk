@@ -23,6 +23,7 @@ import haxe.PosInfos;
 import haxe.Serializer;
 import haxe.Unserializer;
 
+using funk.types.PartialFunction1;
 using funk.actors.dispatch.EnvelopeMessage;
 using funk.types.Any;
 using funk.types.Option;
@@ -53,7 +54,7 @@ interface Cell extends ActorContext {
 
     function getChildByName(name : String) : Option<ChildStats>;
 
-    function become(value : Predicate1<AnyRef>, ?discardLast : Bool = false) : Void;
+    function become(value : Receive, ?discardLast : Bool = false) : Void;
 
     function unbecome() : Void;
 }
@@ -86,7 +87,7 @@ class ActorCell implements Cell implements ActorContext {
 
     private var _watchedBy : List<ActorRef>;
 
-    private var _becomingStack : List<Predicate1<AnyRef>>;
+    private var _becomingStack : List<Receive>;
 
     private var _failed : ActorRef;
 
@@ -99,7 +100,7 @@ class ActorCell implements Cell implements ActorContext {
         _watching = Nil;
         _watchedBy = Nil;
 
-        _becomingStack = Nil.prepend(actorRecieve());
+        _becomingStack = Nil;
 
         _children = new Children(this);
 
@@ -252,57 +253,38 @@ class ActorCell implements Cell implements ActorContext {
         _currentMessage = null;
     }
 
-    public function become(value : Predicate1<AnyRef>, ?discardLast : Bool = false) : Void {
+    public function become(value : Receive, ?discardLast : Bool = false) : Void {
         // Note: discard last can actually be very dangerous, by removing the last actor receive.
-        if(discardLast) _becomingStack = _becomingStack.tail();
+        if(discardLast && _becomingStack.nonEmpty()) _becomingStack = _becomingStack.tail();
         _becomingStack = _becomingStack.prepend(value);
     }
 
-    public function unbecome() : Void {
-        _becomingStack = _becomingStack.tail();
-    }
+    public function unbecome() : Void _becomingStack = _becomingStack.tail();
 
     public function initChild(ref : ActorRef) : Option<ChildStats> return _children.initChild(ref);
 
     public function attachChild(props : Props, name : String) : ActorRef return _children.attachChild(props, name);
 
-    private function actorRecieve() : Predicate1<AnyRef> {
-        return function(value : AnyRef) : Bool {
-            _actor.receive(value);
-            return false;
-        };
-    }
-
     private function autoReceiveMessage(message : EnvelopeMessage) : Void {
         var msg : ActorMessages = message.message();
+
+        publish(Debug, DebugMessage(    self().path().toString(), 
+                                        Type.getClass(_actor), 
+                                        'received AutoReceiveMessage $msg'
+                                        ));
+        
         switch(msg) {
             case Failed(cause, uid): handleFailure(sender().getOrElse(function() return null), cause, uid);
             case Terminated(t) : watchedActorTerminated(t);
             case Kill: Funk.error(ActorKillError("Kill"));
             case PoisonPill: _self.stop();
             case SelectParent(m): _parent.send(m, message.sender());
-            case _:
+            case _: // Ignore everything else.
         }
     }
 
     private function receiveMessage(message : AnyRef) : Void {
-        var p = _becomingStack;
-        if (p.isEmpty()) _actor.receive(message);
-        else {
-            while(p.nonEmpty()) {
-                var func = p.head();
-                if (!func(message)) {
-                    break;
-                }
-
-                p = p.tail();
-
-                // Make sure we call the actor receive at the very end if required.
-                if (p.isEmpty()) {
-                    _actor.receive(message);
-                }
-            }
-        }
+        _becomingStack.head().applyOrElse(message, _actor.receive);
     }
 
     private function newActor() : Actor {
@@ -319,6 +301,10 @@ class ActorCell implements Cell implements ActorContext {
             if (!AnyTypes.toBool(instance)) {
                 Funk.error(ActorError("Actor instance passed to actorOf can't be 'null'"));
             }
+
+            var partial = Partial1(function(x) return true, function(x) return instance.receive(x));
+            _becomingStack = (_becomingStack.isEmpty()) ? Nil.prepend(partial.fromPartial()) : _becomingStack;
+
         } catch(e : Dynamic) {
             finally();
             publish(Error, ErrorMessage(e, self().path().toString(), null, 'unable to create new actor'));
@@ -336,6 +322,8 @@ class ActorCell implements Cell implements ActorContext {
         try {
             _actor = newActor();
             _actor.preStart();
+
+            publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'started ($_actor)'));
         } catch (e : Dynamic) {
             if (AnyTypes.toBool(_actor)) {
                 clearActorFields(_actor);
