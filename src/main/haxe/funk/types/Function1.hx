@@ -1,5 +1,7 @@
 package funk.types;
 
+import funk.reactives.Process;
+
 using funk.types.Function0;
 using funk.types.Option;
 using funk.types.Tuple1;
@@ -52,5 +54,12 @@ class Function1Types {
 
     public static function swallowWith<T1, R>(func : Function1<T1, R>, res : R) : Function1<T1, R> {
         return function(a) return try func(a) catch (e : Dynamic) res; 
+    }
+
+    public static function trampoline<T1>(func : Function1<T1, Void>, ?bounce : Int = 0) : Function1<T1, Void> {
+        return function(x : T1) : Void {
+            if (bounce < 1) func(x);
+            else Process.start(function() : Void func(x), bounce);
+        };
     }
 }
