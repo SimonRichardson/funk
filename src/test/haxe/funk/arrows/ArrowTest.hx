@@ -7,21 +7,26 @@ using funk.futures.Promise;
 
 class ArrowTest {
 
+    private var _arrow : Arrow<Dynamic, Dynamic>;
+
+    @Before
+    public function setup() : Void {
+        _arrow = Arrow.unit();
+    }
+
     @Test
     public function when() : Void {
-        var a = Arrow.unit();
-        var b = function(x) return x + 1;
-        var c = a.then(b.lift());
+        var func = function(x) return x + 1;
+        var arrow = _arrow.then(func.lift());
 
-        c.apply(10).then(function(v) trace(v));
+        arrow.apply(10).then(function(v) trace(v));
     }
 
     @Test
     public function when2() : Void {
-        var a = Arrow.unit();
-        var b = function(x) return x < 10 ? Cont(x + 1) : Done(x);
-        var c = a.then(b.lift().repeat());
+        var func = function(x) return x < 10 ? Cont(x + 1) : Done(x);
+        var arrow = _arrow.then(func.lift().repeat());
 
-        c.apply(0).then(function(v) trace(v));
+        arrow.apply(0).then(function(v) trace(v));
     }
 }
