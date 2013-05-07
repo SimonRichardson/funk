@@ -35,7 +35,7 @@ class ArrowTest {
         var actual = -1;
         var expected = 10;
 
-        var func = function(x) return x < 10 ? Cont(x + 1) : Done(x);
+        var func = function(x) return x < 10 ? Continue(x + 1) : Done(x);
         var arrow = _arrow.then(func.lift().repeat());
 
         arrow.apply(0).then(function(v) actual = v);
@@ -91,6 +91,20 @@ class ArrowTest {
         var arrow = _arrow.then(func.lift().option());
 
         arrow.apply(None).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
+
+    @Test
+    public function when_creating_a_either_arrow_should_return_first_either() : Void {
+        var actual = -1.0;
+        var expected = 2.0;
+
+        var func0 = function(x) return x + 1.0;
+        var func1 = function(x) return x + .5;
+        var arrow = func0.lift().either(func1.lift());
+
+        arrow.apply(1.0).then(function(v) actual = v);
 
         actual.areEqual(expected);
     }

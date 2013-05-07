@@ -1,5 +1,6 @@
 package funk.arrows;
 
+import funk.arrows.EitherArrow;
 import funk.arrows.RepeatArrow;
 import funk.futures.Deferred;
 import funk.types.Function2;
@@ -42,11 +43,13 @@ class ArrowTypes {
         return then(arrow, Arrow.future());
     }
 
+    public static function either<A, B>(a : Arrow<A, B>, b : Arrow<A, B>) : Arrow<A, B> return new EitherArrow(a, b);
+
     public static function option<I, O>(arrow : Arrow<I, O>) : Arrow<Option<I>, Option<O>> {
         return new OptionArrow(arrow);
     }
 
-    public static function repeat<I, O>(arrow : Arrow<I, FreeM<I, O>>) : Arrow<I, O> return new RepeatArrow(arrow);
+    public static function repeat<I, O>(arrow : Arrow<I, Repetition<I, O>>) : Arrow<I, O> return new RepeatArrow(arrow);
 
     public static function then<A, B, C>(before : Arrow<A, B>, after : Arrow<B, C>) : Arrow<A, C> {
         return new ThenArrow(before, after);
