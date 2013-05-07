@@ -5,6 +5,7 @@ import funk.types.Function1;
 
 using funk.types.Option;
 using funk.types.Tuple2;
+using funk.futures.Promise;
 
 typedef ArrowOption<I, O> = Arrow<Option<I>, Option<O>>;
 
@@ -18,6 +19,10 @@ abstract OptionArrow<I, O>(ArrowOption<I, O>) from ArrowOption<I, O> to ArrowOpt
             }
         });
     }
+
+    inline public function arrow() return this;
+
+    inline public function apply(input : Option<I>) : Promise<Option<O>> return this.apply(input);
 
     public static function unit<I>() : OptionArrow<I, I> return new OptionArrow(Arrow.unit());
 

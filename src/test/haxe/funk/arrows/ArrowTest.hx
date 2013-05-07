@@ -2,6 +2,7 @@ package funk.arrows;
 
 import funk.arrows.FutureArrow;
 import funk.arrows.RepeatArrow;
+import funk.types.Either;
 import funk.types.Option;
 
 using funk.arrows.Arrow;
@@ -105,6 +106,50 @@ class ArrowTest {
         var arrow = func0.lift().either(func1.lift());
 
         arrow.apply(1.0).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
+
+    @Test
+    public function when_creating_arrow_with_left_choice_should_return_left_either() : Void {
+        var actual = Left(-1);
+        var expected = Left(2);
+
+        var func = function(x) return x + 1;
+        func.lift().left().apply(Left(1)).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
+
+    @Test
+    public function when_creating_arrow_with_left_choice_with_right_either_should_return_right_either_unmodified() : Void {
+        var actual = Right(-1);
+        var expected = Right(1);
+
+        var func = function(x) return x + 1;
+        func.lift().left().apply(Right(1)).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
+
+    @Test
+    public function when_creating_arrow_with_right_choice_should_return_right_either() : Void {
+        var actual = Right(-1);
+        var expected = Right(2);
+
+        var func = function(x) return x + 1;
+        func.lift().right().apply(Right(1)).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
+
+    @Test
+    public function when_creating_arrow_with_right_choice_with_left_either_should_return_left_either_unmodified() : Void {
+        var actual = Left(-1);
+        var expected = Left(1);
+
+        var func = function(x) return x + 1;
+        func.lift().right().apply(Left(1)).then(function(v) actual = v);
 
         actual.areEqual(expected);
     }

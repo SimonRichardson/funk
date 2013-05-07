@@ -40,4 +40,8 @@ abstract EitherArrow<I, O>(Arrow<I, O>) from Arrow<I, O> to Arrow<I, O> {
             b.apply(input).map(function(x) return Right(x)).when(handler);
         });
     }
+
+    inline public function arrow() return this;
+
+    inline public function apply(input : I) : Promise<O> return this.apply(input);
 }

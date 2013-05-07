@@ -1,6 +1,7 @@
 package funk.arrows;
 
 using funk.types.Function1;
+using funk.futures.Promise;
 
 enum Repetition<A, B> {
     Continue(value : A);
@@ -20,4 +21,8 @@ abstract RepeatArrow<I, O>(Arrow<I, O>) from Arrow<I, O> to Arrow<I, O> {
             arrow.withInput(input, withResult);
         });
     }
+
+    inline public function arrow() return this;
+
+    inline public function apply(input : I) : Promise<O> return this.apply(input);
 }
