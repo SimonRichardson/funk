@@ -153,4 +153,28 @@ class ArrowTest {
 
         actual.areEqual(expected);
     }
+
+    @Test
+    public function when_creating_or_arrow_with_left_should_be_left_either_with_2() : Void {
+        var actual = -1;
+        var expected = 2;
+
+        var func0 = function(x) return x + 1;
+        var func1 = function(x) return x + 2;
+        func0.lift().or(func1.lift()).apply(Left(1)).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
+
+    @Test
+    public function when_creating_or_arrow_with_right_should_be_right_either_with_2() : Void {
+        var actual = -1;
+        var expected = 3;
+
+        var func0 = function(x) return x + 1;
+        var func1 = function(x) return x + 2;
+        func0.lift().or(func1.lift()).apply(Right(1)).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
 }
