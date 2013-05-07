@@ -190,4 +190,28 @@ class ArrowTest {
 
         actual.areEqual(expected);
     }
+
+    @Test
+    public function when_creating_split_arrow_with_value_1_should_result_in_correct_tuple2() : Void {
+        var actual = tuple2(-1, -1);
+        var expected = tuple2(2, 3);
+
+        var func0 = function(x) return x + 1;
+        var func1 = function(x) return x + 2;
+
+        func0.lift().split(func1.lift()).apply(1).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
+
+    @Test
+    public function when_creating_fan_arrow_with_value_1_should_result_in_correct_tuple2() : Void {
+        var actual = tuple2(-1, -1);
+        var expected = tuple2(2, 2);
+
+        var func = function(x) return x + 1;
+        func.lift().fan().apply(1).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
 }

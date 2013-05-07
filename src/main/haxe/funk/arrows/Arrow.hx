@@ -7,6 +7,7 @@ import funk.arrows.OrArrow;
 import funk.arrows.PairArrow;
 import funk.arrows.RepeatArrow;
 import funk.arrows.RightChoiceArrow;
+import funk.arrows.SplitArrow;
 import funk.futures.Deferred;
 import funk.types.Either;
 import funk.types.Function2;
@@ -56,6 +57,10 @@ class ArrowTypes {
 
     public static function either<A, B>(a : Arrow<A, B>, b : Arrow<A, B>) : Arrow<A, B> return new EitherArrow(a, b);
 
+    public static function fan<I, O>(a : Arrow<I, O>) : Arrow<I, Tuple2<O, O>> {
+        return ArrowTypes.then(a, Arrow1.lift(function(x) : Tuple2<O, O> return tuple2(x, x)));
+    }
+
     public static function left<A, B, C>(arrow : Arrow<A, B>) : ArrowLeftChoice<A, B, C> {
         return new LeftChoiceArrow(arrow);
     }
@@ -76,6 +81,10 @@ class ArrowTypes {
 
     public static function right<A, B, C>(arrow : Arrow<A, B>) : ArrowRightChoice<A, B, C> {
         return new RightChoiceArrow(arrow);
+    }
+
+    public static function split<A, B, C>(left : Arrow<A, B>, right : Arrow<A, C>) : ArrowSplit<A, B, C> {
+        return new SplitArrow(left, right);
     }
 
     public static function then<A, B, C>(before : Arrow<A, B>, after : Arrow<B, C>) : Arrow<A, C> {
