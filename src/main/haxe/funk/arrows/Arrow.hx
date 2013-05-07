@@ -37,6 +37,11 @@ abstract Arrow<I, O>(ArrowFunction<I, O>) {
         withInput(this, input, deferred.resolve.effectOf());
         return promise;
     }
+
+    @:from
+    public static function toArrow<I, O>(func : Function1<I, O>) : Arrow<I, O> {
+        return new Arrow(function(input : I, cont : Function1<O, Void>) cont(func(input)));
+    }
 }
 
 class ArrowTypes {
