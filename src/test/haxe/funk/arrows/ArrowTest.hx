@@ -4,6 +4,7 @@ import funk.arrows.FutureArrow;
 import funk.arrows.RepeatArrow;
 import funk.types.Either;
 import funk.types.Option;
+import funk.types.Tuple2;
 
 using funk.arrows.Arrow;
 using funk.futures.Promise;
@@ -174,6 +175,18 @@ class ArrowTest {
         var func0 = function(x) return x + 1;
         var func1 = function(x) return x + 2;
         func0.lift().or(func1.lift()).apply(Right(1)).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
+
+    @Test
+    public function when_creating_pair_arrow_with_tuple_should_zip_it() : Void {
+        var actual = tuple2(-1, -1);
+        var expected = tuple2(2, 3);
+
+        var func0 = function(x) return x + 1;
+        var func1 = function(x) return x + 2;
+        func0.lift().pair(func1.lift()).apply(tuple2(1, 1)).then(function(v) actual = v);
 
         actual.areEqual(expected);
     }

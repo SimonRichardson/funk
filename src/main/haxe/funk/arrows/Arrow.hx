@@ -4,6 +4,7 @@ import funk.arrows.ApplyArrow;
 import funk.arrows.EitherArrow;
 import funk.arrows.LeftChoiceArrow;
 import funk.arrows.OrArrow;
+import funk.arrows.PairArrow;
 import funk.arrows.RepeatArrow;
 import funk.arrows.RightChoiceArrow;
 import funk.futures.Deferred;
@@ -16,7 +17,7 @@ using funk.futures.Promise;
 using funk.types.Function1;
 
 typedef ArrowFunction<I, O> = Function2<I, Function1<O, Void>, Void>;
-    
+
 abstract Arrow<I, O>(ArrowFunction<I, O>) {
 
     inline public function new(func : ArrowFunction<I, O>) {
@@ -65,6 +66,10 @@ class ArrowTypes {
 
     public static function or<L, R, P>(left : Arrow<L, P>, right : Arrow<R, P>) : ArrowOr<L, R, P> {
         return new OrArrow(left, right);
+    }
+
+    public static function pair<A, B, C, D>(left : Arrow<A, B>, right : Arrow<C, D>) : ArrowPair<A, B, C, D> {
+        return new PairArrow(left, right);
     }
 
     public static function repeat<I, O>(arrow : Arrow<I, Repetition<I, O>>) : Arrow<I, O> return new RepeatArrow(arrow);
