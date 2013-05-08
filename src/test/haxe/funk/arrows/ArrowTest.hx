@@ -286,6 +286,18 @@ class ArrowTest {
 
         actual.areEqual(expected);
     }
+
+    @Test
+    public function when_creating_join_arrow_should_be_correct_tuple() : Void {
+        var actual = tuple2(tuple2(-1, -1), tuple2(-1, -1));
+        var expected = tuple2(tuple2(2, 1), tuple2(2, 1));
+
+        var func0 = function(x : Tuple2<Int, Int>) return x.swap();
+        var func1 = function(x) return x;
+        func0.lift().join(func1.lift()).apply(tuple2(1, 2)).then(function(v) actual = cast v);
+
+        actual.areEqual(expected);
+    }
 }
 
 private class Something {

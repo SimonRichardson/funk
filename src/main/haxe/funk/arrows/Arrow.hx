@@ -76,6 +76,10 @@ class ArrowTypes {
         return ArrowTypes.then(arrow, Arrow1.lift(function(x) : Tuple2<O, O> return tuple2(x, x)));
     }
 
+    public static function join<A, B, C>(left : Arrow<A, B>, right : Arrow<B, C>) : Arrow<A, Tuple2<B, C>> {
+        return new ThenArrow(left, split(Arrow.unit(), right));
+    }
+
     public static function left<A, B, C>(arrow : Arrow<A, B>) : ArrowLeftChoice<A, B, C> {
         return new LeftChoiceArrow(arrow);
     }
