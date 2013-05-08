@@ -252,6 +252,17 @@ class ArrowTest {
 
         actual.areEqual(expected);
     }
+
+    @Test
+    public function when_creating_a_pinch_arrow_should_be_correct_tuple() : Void {
+        var actual = tuple2(-1, -1);
+        var expected = tuple2(1, 1);
+
+        var func = function(x) return x;
+        func.lift().pinch().apply(1).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
 }
 
 private class Something {

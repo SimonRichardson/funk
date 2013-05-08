@@ -84,6 +84,10 @@ class ArrowTypes {
         return new PairArrow(left, right);
     }
 
+    public static function pinch<A, B, C>(a : Arrow<Tuple2<A, A>, Tuple2<B, C>>) : Arrow<A, Tuple2<B, C>> {
+        return then(fan(Arrow.unit()), a);
+    }
+
     public static function repeat<I, O>(arrow : Arrow<I, Repetition<I, O>>) : Arrow<I, O> return new RepeatArrow(arrow);
 
     public static function right<A, B, C>(arrow : Arrow<A, B>) : ArrowRightChoice<A, B, C> {
