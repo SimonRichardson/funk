@@ -214,4 +214,19 @@ class ArrowTest {
 
         actual.areEqual(expected);
     }
+
+    @Test
+    public function when_casting_a_arrow_value_should_be_Int() : Void {
+        var actual = null;
+        var expected = new Something();
+
+        var func = function(x) return x;
+        func.lift().as(Something).apply(expected).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
+}
+
+private class Something {
+    public function new(){}
 }

@@ -9,6 +9,7 @@ import funk.arrows.RepeatArrow;
 import funk.arrows.RightChoiceArrow;
 import funk.arrows.SplitArrow;
 import funk.futures.Deferred;
+import funk.types.Any;
 import funk.types.Either;
 import funk.types.Function2;
 import funk.types.Tuple2;
@@ -53,6 +54,10 @@ class ArrowTypes {
     public static function arrowOf<I, O>(func : Function1<I, Promise<O>>) : Arrow<I, O> {
         var arrow : Arrow<I, Promise<O>> = Arrow1.lift(func);
         return then(arrow, Arrow.future());
+    }
+
+    public static function as<A, B, C>(a : Arrow<A, B>, type : Class<C>) : Arrow<A, C> {
+        return then(a, Arrow1.lift(function(x : B) : C return AnyTypes.asInstanceOf(x, type)));
     }
 
     public static function either<A, B>(a : Arrow<A, B>, b : Arrow<A, B>) : Arrow<A, B> return new EitherArrow(a, b);
