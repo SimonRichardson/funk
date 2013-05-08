@@ -98,6 +98,10 @@ class ArrowTypes {
         return new SplitArrow(left, right);
     }
 
+    public static function swap<A, B, C>(arrow : Arrow<A, Tuple2<B, C>>) : Arrow<A, Tuple2<C, B>> {
+        return then(arrow, Arrow1.lift(Tuple2Types.swap));
+    }
+
     public static function then<A, B, C>(before : Arrow<A, B>, after : Arrow<B, C>) : Arrow<A, C> {
         return new ThenArrow(before, after);
     }
