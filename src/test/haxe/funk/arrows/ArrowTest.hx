@@ -241,6 +241,17 @@ class ArrowTest {
 
         called.isTrue();
     }
+
+    @Test
+    public function when_creating_a_both_arrow_should_be_correct_tuple() : Void {
+        var actual = tuple2(-1, -1);
+        var expected = tuple2(2, 3);
+
+        var func = function(x) return x + 1;
+        func.lift().both().apply(tuple2(1, 2)).then(function(v) actual = v);
+
+        actual.areEqual(expected);
+    }
 }
 
 private class Something {

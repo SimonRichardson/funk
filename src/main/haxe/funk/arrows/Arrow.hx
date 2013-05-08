@@ -60,6 +60,8 @@ class ArrowTypes {
         return then(a, Arrow1.lift(function(x : B) : C return AnyTypes.asInstanceOf(x, type)));
     }
 
+    public static function both<A, B>(a : Arrow<A, B>) : Arrow<Tuple2<A, A>, Tuple2<B, B>> return pair(a, a);
+
     public static function either<A, B>(a : Arrow<A, B>, b : Arrow<A, B>) : Arrow<A, B> return new EitherArrow(a, b);
 
     public static function fan<I, O>(a : Arrow<I, O>) : Arrow<I, Tuple2<O, O>> {
