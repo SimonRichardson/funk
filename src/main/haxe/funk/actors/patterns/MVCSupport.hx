@@ -110,6 +110,29 @@ class Controller extends Actor {
     private function model() : ActorRef return _model;
 }
 
+class GuardController extends Controller {
+
+    private var _notifications : List<AnyRef>;
+
+    public function new(model : Model) {
+        super(model);
+
+        _notifications = listNotificationInterests();
+    }
+
+    public function listNotificationInterests() : List<AnyRef> return Nil;
+
+    public function handleNotification(value : AnyRef) : AnyRef return value;
+
+    override public function receive(value : AnyRef) : Void {
+        // TODO (Simon) - Make this a macro!
+        var found = _notifications.exists(function(possible) return AnyTypes.isValueOf(value, possible));
+        if (found) super.receive(handleNotification(value));
+        else context().system().deadLetters().send(value);
+    }
+}
+
+
 class FacadeCreator implements Creator {
 
     private var _model : Props;
