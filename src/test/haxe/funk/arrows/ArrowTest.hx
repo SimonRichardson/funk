@@ -216,7 +216,7 @@ class ArrowTest {
     }
 
     @Test
-    public function when_casting_a_arrow_value_should_be_Int() : Void {
+    public function when_casting_a_arrow_value_should_be_Something() : Void {
         var actual = null;
         var expected = new Something();
 
@@ -225,8 +225,28 @@ class ArrowTest {
 
         actual.areEqual(expected);
     }
+
+    @Test
+    public function when_casting_a_arrow_value_should_not_be_Something_Else() : Void {
+        var actual = null;
+        var expected = new Something();
+
+        var called = try {
+            var func = function(x) return x;
+            func.lift().as(SomethingElse).apply(expected).then(function(v) actual = v);
+            false;
+        } catch(e : Dynamic) {
+            true;
+        }
+
+        called.isTrue();
+    }
 }
 
 private class Something {
+    public function new(){}
+}
+
+private class SomethingElse {
     public function new(){}
 }
