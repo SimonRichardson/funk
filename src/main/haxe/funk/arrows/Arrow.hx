@@ -56,16 +56,24 @@ class ArrowTypes {
         return then(arrow, Arrow.future());
     }
 
-    public static function as<A, B, C>(a : Arrow<A, B>, type : Class<C>) : Arrow<A, C> {
-        return then(a, Arrow1.lift(function(x : B) : C return AnyTypes.asInstanceOf(x, type)));
+    public static function as<A, B, C>(arrow : Arrow<A, B>, type : Class<C>) : Arrow<A, C> {
+        return then(arrow, Arrow1.lift(function(x : B) : C return AnyTypes.asInstanceOf(x, type)));
     }
 
-    public static function both<A, B>(a : Arrow<A, B>) : Arrow<Tuple2<A, A>, Tuple2<B, B>> return pair(a, a);
+    public static function bind<A, B, C>(left : Arrow<A,B>, right : Arrow<Tuple2<A, B>, C>) : Arrow<A, C> {
+        return new ThenArrow(split(Arrow.unit(), left), right);
+    }
 
-    public static function either<A, B>(a : Arrow<A, B>, b : Arrow<A, B>) : Arrow<A, B> return new EitherArrow(a, b);
+    public static function both<A, B>(arrow : Arrow<A, B>) : Arrow<Tuple2<A, A>, Tuple2<B, B>> {
+        return pair(arrow, arrow);
+    }
 
-    public static function fan<I, O>(a : Arrow<I, O>) : Arrow<I, Tuple2<O, O>> {
-        return ArrowTypes.then(a, Arrow1.lift(function(x) : Tuple2<O, O> return tuple2(x, x)));
+    public static function either<A, B>(arrow : Arrow<A, B>, b : Arrow<A, B>) : Arrow<A, B> {
+        return new EitherArrow(arrow, b);
+    }
+
+    public static function fan<I, O>(arrow : Arrow<I, O>) : Arrow<I, Tuple2<O, O>> {
+        return ArrowTypes.then(arrow, Arrow1.lift(function(x) : Tuple2<O, O> return tuple2(x, x)));
     }
 
     public static function left<A, B, C>(arrow : Arrow<A, B>) : ArrowLeftChoice<A, B, C> {
@@ -84,8 +92,8 @@ class ArrowTypes {
         return new PairArrow(left, right);
     }
 
-    public static function pinch<A, B, C>(a : Arrow<Tuple2<A, A>, Tuple2<B, C>>) : Arrow<A, Tuple2<B, C>> {
-        return then(fan(Arrow.unit()), a);
+    public static function pinch<A, B, C>(arrow : Arrow<Tuple2<A, A>, Tuple2<B, C>>) : Arrow<A, Tuple2<B, C>> {
+        return then(fan(Arrow.unit()), arrow);
     }
 
     public static function repeat<I, O>(arrow : Arrow<I, Repetition<I, O>>) : Arrow<I, O> return new RepeatArrow(arrow);
