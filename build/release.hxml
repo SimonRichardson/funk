@@ -2,7 +2,7 @@
 -cmd cd ../
 -cmd rm -rf bin/release
 -cmd cp -r src/main/haxe bin/release
--cmd cp lib/haxelib.xml bin/release
+-cmd cp lib/haxelib.json bin/release
 -cmd cd bin/release
 -cmd find . -name '*.DS_Store' -type f -delete
 -cmd zip -r release.zip *
