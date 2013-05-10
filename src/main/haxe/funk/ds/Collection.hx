@@ -579,7 +579,7 @@ class CollectionTypes {
         return prependIterator(col, iterable.iterator());
     }
 
-    inline public static function head<T>(collection : Collection<T>) : T {
+    inline public static function head<T>(collection : Collection<T>) : Null<T> {
         var col = collection;
         return if (col.size() < 1) {
             null;

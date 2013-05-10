@@ -123,6 +123,11 @@ class CollectionTestBase {
     }
 
     @Test
+    public function when_headOption__should_be_not_be_null() : Void {
+        actual.headOption().isNotNull();
+    }
+
+    @Test
     public function when_headOption__should_be_Option() : Void {
         actual.headOption().areEqual(Some(1));
     }

@@ -37,7 +37,7 @@ abstract Arrow<I, O>(ArrowFunction<I, O>) {
     inline public function apply(input : I) : Promise<O> {
         var deferred = new Deferred();
         var promise = deferred.promise();
-        withInput(this, input, deferred.resolve.effectOf());
+        withInput(input, deferred.resolve.effectOf());
         return promise;
     }
 
