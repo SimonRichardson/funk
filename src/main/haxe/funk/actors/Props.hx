@@ -38,20 +38,11 @@ class Props {
 
     public function router() : RouterConfig return _router;
 
-    public function withCreator<T>(creator : Creator) : Props {
-        return clone({creator: creator});
-    }
+    public function withCreator<T>(creator : Creator) : Props return clone({creator: creator});
 
-    public function withDispatcher(dispatcher : String) : Props {
-        return clone({dispatcher: dispatcher});
-    }
+    public function withDispatcher(dispatcher : String) : Props return clone({dispatcher: dispatcher});
 
-    public function withRouter(router : RouterConfig) : Props {
-        return clone({router: router});
-    }
-
-    @:allow(funk.actors.patterns)
-    private function actor() : Class<Actor> return _actor;
+    public function withRouter(router : RouterConfig) : Props return clone({router: router});
 
     private function clone(overrides : AnyRef) : Props {
         var o = AnyTypes.toBool(overrides) ? overrides : {};

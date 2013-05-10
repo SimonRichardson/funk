@@ -7,9 +7,11 @@ import funk.types.Pass;
 import funk.io.logging.LogLevel;
 import funk.io.logging.LogValue;
 import funk.actors.events.LoggingBus;
+import funk.types.Function0;
 
 using funk.types.Option;
 using funk.ds.immutable.List;
+using funk.types.PartialFunction1;
 
 enum Notifications {
     AddListener(who : ActorRef);
@@ -31,8 +33,8 @@ class Facade extends Actor {
         super();
 
         _model = actorOf(model, "model");
-        _view = actorOf(view.withCreator(new Injector(view.actor(), _model)), "view");
-        _controller = actorOf(controller.withCreator(new Injector(controller.actor(), _model)), "controller");
+        _view = actorOf(view.withCreator(new Injector(view.creator(), _model)), "view");
+        _controller = actorOf(controller.withCreator(new Injector(controller.creator(), _model)), "controller");
     }
 
     override public function receive(value : AnyRef) : Void _controller.send(value);
@@ -51,10 +53,9 @@ class Model extends Actor {
     }
 
     override public function receive(value : AnyRef) : Void {
-        switch(Type.typeof(value)){
-            case TEnum(e) if(e == Notifications):
-                var note : Notifications = cast value;
-                switch(note) {
+        switch(value){
+             case _ if(AnyTypes.isInstanceOf(value, Notifications)):
+                switch(cast value) {
                     case AddListener(who): _listeners = _listeners.prepend(who);
                     case RemoveListener(who): _listeners = _listeners.filterNot(function(w) return w == who);
                     case SetState(what):
@@ -76,62 +77,105 @@ class Model extends Actor {
     }
 }
 
-class View extends Actor {
+class ProxyModelActor extends Actor {
 
     private var _model : ActorRef;
 
-    public function new(model : ActorRef) {
+    public function new() {
         super();
+    }
+
+    @:allow(funk.actors.patterns)
+    private function withModel(model : ActorRef) {
+        if (AnyTypes.toBool(_model)) {
+            _model.send(RemoveListener(this));
+            _model = null;
+        }
 
         _model = model;
         _model.send(AddListener(this));
     }
 
-    override public function receive(value : AnyRef) : Void {
-
-    }
-
     private function model() : ActorRef return _model;
 }
 
-class Controller extends Actor {
+class View extends ProxyModelActor {
 
-    private var _model : ActorRef;
-
-    public function new(model : ActorRef) {
+    public function new() {
         super();
+    }
+}
 
-        _model = model;
+class Controller extends ProxyModelActor {
+
+    public function new() {
+        super();
     }
 
     // Work out if we should do this on sending or receiving
-    override public function receive(value : AnyRef) : Void _model.send(SetState(value));
-
-    private function model() : ActorRef return _model;
+    override public function receive(value : AnyRef) : Void {
+        var from = sender().getOrElse(function() return context().system().deadLetters());
+        switch(value) {
+            case _ if(AnyTypes.isInstanceOf(value, Notifications)):
+                // Check to see if anything is coming back and forth.
+                switch(cast value) {
+                    case TheState(ref, val) if(ref.path().toString() != _model.path().toString()): 
+                        _model.send(SetState(val), from);
+                    case GetState: _model.send(GetState, from);
+                    case SetState(val): _model.send(SetState(val), from);
+                    case _: // Ignore.
+                }
+            case _: _model.send(SetState(value), from);
+        } 
+    }
 }
 
-class GuardController extends Controller {
+class GuardedController extends Controller {
 
-    private var _notifications : List<AnyRef>;
+    private var _guard : PartialFunction1<AnyRef, AnyRef>;
 
-    public function new(model : Model) {
-        super(model);
-
-        _notifications = listNotificationInterests();
+    public function new() {
+        super();
     }
-
-    public function listNotificationInterests() : List<AnyRef> return Nil;
-
-    public function handleNotification(value : AnyRef) : AnyRef return value;
 
     override public function receive(value : AnyRef) : Void {
-        // TODO (Simon) - Make this a macro!
-        var found = _notifications.exists(function(possible) return AnyTypes.isValueOf(value, possible));
-        if (found) super.receive(handleNotification(value));
+        if (_guard.isDefinedAt(value)) super.receive(_guard.apply(value));
+        else if(AnyTypes.isInstanceOf(value, Notifications)) super.receive(value);
         else context().system().deadLetters().send(value);
     }
+
+    @:allow(funk.actors.patterns)
+    private function withGuard(guard : PartialFunction1<AnyRef, AnyRef>) : Void _guard = guard;
 }
 
+class GuardedControllerProps extends Props {
+
+    private var _guard : PartialFunction1<AnyRef, AnyRef>;
+
+    public function new(controller : Class<GuardedController>) {
+        super(cast controller);
+
+        _guard = Partial1(function(x) return true, function(x) return x).fromPartial();
+        _creator = new GuardedCreator(_guard);
+    }
+
+    public function withGuard(guard : PartialFunction1<AnyRef, AnyRef>) : GuardedControllerProps {
+        var props : GuardedControllerProps = cast clone({guard: guard});
+        props._creator = new GuardedCreator(guard);
+        return props;
+    }
+
+    override private function clone(overrides : AnyRef) : Props {
+        var o = AnyTypes.toBool(overrides) ? overrides : {};
+
+        var props = new GuardedControllerProps(cast _actor);
+        props._router = Reflect.hasField(o, "router") ? Reflect.field(o, "router") : _router;
+        props._creator = Reflect.hasField(o, "creator") ? Reflect.field(o, "creator") : _creator;
+        props._dispatcher = Reflect.hasField(o, "dispatcher") ? Reflect.field(o, "dispatcher") : _dispatcher;
+        props._guard = Reflect.hasField(o, "guard") ? Reflect.field(o, "guard") : _guard;
+        return props;
+    }
+}
 
 class FacadeCreator implements Creator {
 
@@ -150,16 +194,37 @@ class FacadeCreator implements Creator {
     public function create() : Actor return Pass.instanceOf(Facade, [_model, _view, _controller])();
 }
 
+private class GuardedCreator implements Creator {
+
+    private var _guard : PartialFunction1<AnyRef, AnyRef>;
+
+    public function new(guard : PartialFunction1<AnyRef, AnyRef>) {
+        _guard = guard;
+    }
+
+    public function create() : Actor {
+        var actor : GuardedController = Pass.instanceOf(GuardedController)();
+        actor.withGuard(_guard);
+        return actor;
+    }
+}
+
 private class Injector implements Creator {
 
-    private var _type : Class<Actor>;
+    private var _creator : Function0<Actor>;
 
     private var _model : ActorRef;
 
-    public function new(type : Class<Actor>, model : ActorRef) {
-        _type = type;
+    public function new(creator : Function0<Actor>, model : ActorRef) {
+        _creator = creator;
         _model = model;
     }
 
-    public function create() : Actor return Pass.instanceOf(_type, [_model])();
+    public function create() : Actor {
+        var actor = _creator();
+        if (AnyTypes.isInstanceOf(actor, ProxyModelActor)) {
+            AnyTypes.asInstanceOf(actor, ProxyModelActor).withModel(_model);
+        }
+        return actor;
+    }
 }
