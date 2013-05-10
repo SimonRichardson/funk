@@ -4,7 +4,7 @@
   "license": "MIT",
   "tags": ["funk", "functional", "actors", "signals", "reactive"],
   "description": "The Funk library supports functional development in Haxe.",
-  "version": "1.5.6",
+  "version": "1.6.0",
   "releasenote": "Adding Arrows.",
   "contributors": ["stickupkid"],
   "dependencies": {
