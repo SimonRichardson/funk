@@ -48,6 +48,8 @@ those into your project, which you can do in the following ways.
 More information about building can be found here [using_haxelib](http://haxe.org/doc/haxelib/using_haxelib)
 
 # Testing
+
+## Setup
 The Funk library is unit tested with [munit](https://github.com/massiveinteractive/MassiveUnit)
 testing library for more information refer to the guide. Suffice it to say you'll need to install
 munit via haxelib
@@ -55,6 +57,7 @@ munit via haxelib
 * ``` haxelib install munit ```
 * ``` haxelib install hamcrest ```
 
+## Unit testing
 Once that's in installed (installs other dependencies) you can then run the tests by calling the
 following command from the root directory.
 
@@ -62,3 +65,10 @@ following command from the root directory.
 
 Note: There is an issue building neko so the ci server is also down, once this has been rectified
 then I'll post commands to get this also running.
+
+## Coverage 
+Alternatively you can also run full coverage as well, to help see what tests are covering what.
+
+``` haxelib run munit test -nogen -coverage -js -as3 ```
+
+Note: Actor coverage is really low and needs to be updated.

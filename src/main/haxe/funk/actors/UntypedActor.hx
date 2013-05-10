@@ -2,6 +2,7 @@ package funk.actors;
 
 import funk.actors.Actor;
 import funk.actors.Props;
+import funk.types.Pass;
 
 class UntypedActor extends Actor {
 
