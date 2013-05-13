@@ -36,6 +36,8 @@ interface PartialFunction1<T1, R> {
 
     function apply(value : T1) : R;
 
+    function applyToAll(value : T1) : List<R>;
+
     function toFunction() : Function1<T1, Option<R>>;
 }
 
@@ -92,6 +94,11 @@ private class PartialFunction1Type<T1, R> implements PartialFunction1<T1, R> {
             case Some(partial): Partial1Types.partial(partial)(value);
             case _: Funk.error(NoSuchElementError);
         }
+    }
+
+    public function applyToAll(value : T1) : List<R> {
+        var filtered = _definitions.filter(function(partial) return Partial1Types.define(partial)(value));
+        return filtered.map(function(partial) return Partial1Types.partial(partial)(value));
     }
 
     public function toFunction() : Function1<T1, Option<R>> {
