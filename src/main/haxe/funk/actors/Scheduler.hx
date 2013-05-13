@@ -154,27 +154,10 @@ private class DefaultTimer {
         var hasInterval = _interval > 0;
         var hasInitalDelay = _initialDelay > 0;
 
-        function callable0() {
-            // Execute it without delay or interval
-            if (_once) _runnable.run();
-            else Funk.error(ActorError("Invalid time interval for continuous execution"));
-
-            _deferred.resolve(this);
-        }
-
-        function callable1() {
-            _runnable.run();
-
-            if (_once) {
-                task().stop();
-                _deferred.resolve(this);
-            }
-        }
-
-        _task = if (!hasInterval && !hasInitalDelay) { callable0(); None; }
-        else if (!hasInterval && hasInitalDelay) Process.start(function() callable0(), _initialDelay);
-        else if (hasInterval && !hasInitalDelay) Process.start(function() callable1(), _interval);
-        else Process.start(function() _task = Process.start(function() callable1(), _interval), _initialDelay);
+        _task = if (!hasInterval && !hasInitalDelay) { executeWithoutDelay(); None; }
+        else if (!hasInterval && hasInitalDelay) Process.start(function() executeWithoutDelay(), _initialDelay);
+        else if (hasInterval && !hasInitalDelay) Process.start(function() executeWithDelay(), _interval);
+        else Process.start(function() _task = Process.start(function() executeWithDelay(), _interval), _initialDelay);
 
         return this;
     }
@@ -194,6 +177,23 @@ private class DefaultTimer {
     public function isCancelled() : Bool return task().isCancelled();
 
     public function promise() : Promise<DefaultTimer> return _deferred.promise();
+
+    private function executeWithoutDelay() {
+        // Execute it without delay or interval
+        if (_once) _runnable.run();
+        else Funk.error(ActorError("Invalid time interval for continuous execution"));
+
+        _deferred.resolve(this);
+    }
+
+    private function executeWithDelay() {
+        _runnable.run();
+
+        if (_once) {
+            task().stop();
+            _deferred.resolve(this);
+        }
+    }
 }
 
 private class Runner implements Runnable {

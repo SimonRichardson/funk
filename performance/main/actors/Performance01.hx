@@ -13,6 +13,15 @@ using funk.reactives.Stream;
 class Performance01 {
 
     public function new() {
+    }
+
+    public static function main() {
+        trace('Start');
+
+        Process.start(Performance01.run, 2000);
+    }
+
+    public static function run() : Void {
         var system = ActorSystem.create('system');
         var actor = system.actorOf(new Props(SimpleActor), 'simples');
 
@@ -23,10 +32,8 @@ class Performance01 {
         }
 
         trace((Process.stamp() - t) / 1000 + ' seconds');
-    }
 
-    public static function main() {
-        Process.start(function() new Performance01(), 2000);
+        Process.start(Performance01.run, 2000);
     }
 }
 

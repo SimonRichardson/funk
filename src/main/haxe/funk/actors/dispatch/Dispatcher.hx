@@ -114,6 +114,7 @@ class MessageDispatcher implements Dispatcher {
         if (mailbox.canBeScheduledForExecution(hasMessageHint, hasSystemMessageHint)) {
             if(mailbox.setAsScheduled()) {
                 // Essentially this is saying wait for next frame of execution.
+                // Note : Changing this value does change how the scheduler runs.
                 try _scheduler.scheduleRunnerOnce(0, 10, mailbox) catch (e : Dynamic) {
                     mailbox.setAsIdle();
                 }
