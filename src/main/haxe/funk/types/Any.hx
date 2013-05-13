@@ -100,37 +100,8 @@ class AnyTypes {
         return isInstanceOf(value, possible) ? cast value : throw 'Cannot cast $value to $possible';
     }
 
-    public static function isInstanceOf<T : AnyRef>(value : T, possible : AnyRef) : Bool {
-        // Performance optimisation.
-        #if js
-        untyped {
-            if(__js__('value === null || possible === null')) return false;
-
-            if(__js__('typeof(possible) === "function"')) {
-                if(__js__("value instanceof possible")) {
-                    if(possible == Array) return (value.__enum__ == null);
-                    return true;
-                }
-
-                if(__interfLoop(value.__class__, possible)) return true;
-            }
-
-            switch(possible) {
-                case Int: return __js__("Math.ceil(value % 2147483648.0) === value");
-                case Float: return __js__("typeof(value)") == "number";
-                case Bool: return __js__("value === true || value === false");
-                case String: return __js__("typeof(value)") == "string";
-                case Dynamic: return true;
-                default:
-                    // do not use isClass/isEnum here
-                    __feature__("Class.*", if(possible == Class && value.__name__ != null) return true);
-                    __feature__("Enum.*", if(possible == Enum && value.__ename__ != null) return true);
-                    return value.__enum__ == possible;
-            }
-        }
-        #else
+    inline public static function isInstanceOf<T : AnyRef>(value : T, possible : AnyRef) : Bool {
         return Std.is(value, possible);
-        #end
     }
 
     public static function isValueOf<T : AnyRef>(value : T, possible : AnyRef) : Bool {
@@ -157,19 +128,5 @@ class AnyTypes {
         // NOTE (Simon) : Workout if the value has a toString method
         return if(toBool(func)) func(value);
         else Std.string(value);
-    }
-
-    private static function __interfLoop(cc : Dynamic, cl : Dynamic) {
-        if(cc == null) return false;
-        if(cc == cl) return true;
-
-        var intf : Dynamic = cc.__interfaces__;
-        if(intf != null) {
-            for(i in 0...intf.length) {
-                var i : Dynamic = intf[i];
-                if(i == cl || __interfLoop(i,cl)) return true;
-            }
-        }
-        return __interfLoop(cc.__super__,cl);
     }
 }

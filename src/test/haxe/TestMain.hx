@@ -3,6 +3,7 @@ import massive.munit.client.RichPrintClient;
 import massive.munit.client.HTTPClient;
 import massive.munit.client.JUnitReportClient;
 import massive.munit.TestRunner;
+import massive.munit.Assert;
 
 import suites.ActorsSuite;
 import suites.ArrowsSuite;
@@ -72,6 +73,7 @@ class TestMain {
         for flash and html targets (useful for continous integration servers)
     */
     private function completionHandler(successful : Bool) : Void {
+        trace('Assertions made : ${Assert.assertionCount}');
         try {
             #if flash
                 flash.external.ExternalInterface.call("testResult", successful);

@@ -85,9 +85,7 @@ class DefaultScheduler implements Scheduler {
     }
 
     public function scheduleRunner(initialDelay : Float, interval : Float, runnable : Runnable) : Cancellable {
-        var hasInterval = interval > 0;
-
-        return if (hasInterval) {
+        return if (interval > 0) {
             var timer = new DefaultTimer(initialDelay, interval, runnable);
             timer.promise().then(function(timer){
                 _timers = _timers.filterNot(function(value) return value == timer);
@@ -101,11 +99,8 @@ class DefaultScheduler implements Scheduler {
     }
 
     public function scheduleRunnerOnce(initialDelay : Float, interval : Float, runnable : Runnable) : Cancellable {
-        var hasInterval = interval > 0;
-        var hasInitalDelay = initialDelay > 0;
-
         // If we inline this we get a massive speed upgrade.
-        return if (hasInterval && hasInitalDelay) {
+        return if (interval > 0 && initialDelay > 0) {
             var timer = new DefaultTimer(initialDelay, interval, runnable, true);
             timer.promise().then(function(timer){
                 _timers = _timers.filterNot(function(value) return value == timer);

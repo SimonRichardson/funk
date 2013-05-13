@@ -113,7 +113,8 @@ class MessageDispatcher implements Dispatcher {
     public function registerForExecution(mailbox : Mailbox, hasMessageHint: Bool, hasSystemMessageHint: Bool) : Void {
         if (mailbox.canBeScheduledForExecution(hasMessageHint, hasSystemMessageHint)) {
             if(mailbox.setAsScheduled()) {
-                try _scheduler.scheduleRunnerOnce(0, 0, mailbox) catch (e : Dynamic) {
+                // Essentially this is saying wait for next frame of execution.
+                try _scheduler.scheduleRunnerOnce(0, 10, mailbox) catch (e : Dynamic) {
                     mailbox.setAsIdle();
                 }
             }

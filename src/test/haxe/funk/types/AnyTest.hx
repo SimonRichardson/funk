@@ -71,11 +71,7 @@ class AnyTest {
 
     @Test
     public function calling_isInstanceOf_minus_2147483649_is_not_Int() : Void {
-        #if js
-        AnyTypes.isInstanceOf(-2147483648, Int).isFalse();
-        #else
         AnyTypes.isInstanceOf(-2147483648, Int).isTrue();
-        #end
     }
 
     @Test
