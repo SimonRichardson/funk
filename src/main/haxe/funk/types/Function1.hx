@@ -21,6 +21,8 @@ class Function1Types {
         return function() return func(value1);
     }
 
+    public static function indentity<T>() : Function1<T, T> return function(x) return x;
+
     public static function compose<T1, T2, R>(from : Function1<T2, R>, to : Function1<T1, T2>) : Function1<T1, R> {
         return function(value0 : T1) return from(to(value0));
     }

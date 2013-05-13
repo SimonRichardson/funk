@@ -152,8 +152,8 @@ class GuardedControllerProps extends Props {
 
     private var _guard : PartialFunction1<AnyRef, AnyRef>;
 
-    public function new(controller : Class<GuardedController>) {
-        super(cast controller);
+    public function new(?controller : Class<GuardedController>) {
+        super(cast (AnyTypes.toBool(controller) ? controller : GuardedController));
 
         _guard = Partial1(function(x) return true, function(x) return x).fromPartial();
         _creator = new GuardedCreator(_guard);
