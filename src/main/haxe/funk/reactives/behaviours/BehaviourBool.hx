@@ -19,19 +19,16 @@ class BehaviourBool {
     public static function ifThen<T>(    condition : Behaviour<Bool>,
                                         thenBlock : Behaviour<T>) : Behaviour<T> {
         return StreamBool.ifThen(condition.stream(), thenBlock.stream()).startsWith(
-            if(condition.value()) {
-                thenBlock.value();
-            });
+            if(condition.value()) thenBlock.value();
+        );
     }
 
     public static function ifThenElse<T>(    condition : Behaviour<Bool>,
                                             thenBlock : Behaviour<T>,
                                             elseBlock : Behaviour<T>) : Behaviour<T> {
         return StreamBool.ifThenElse(condition.stream(), thenBlock.stream(), elseBlock.stream()).startsWith(
-            if(condition.value()) {
-                thenBlock.value();
-            } else {
-                elseBlock.value();
-            });
+            if(condition.value()) thenBlock.value();
+            else elseBlock.value();
+        );
     }
 }

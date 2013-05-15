@@ -16,21 +16,9 @@ class StreamValues<T> {
         _lazyOption = lazyOption;
     }
 
-    public function iterator() : Iterator<T> {
-        var list : List<T> = getList();
-        return list.iterator();
-    }
+    public function iterator() : Iterator<T> return getList().iterator();
 
-    public function size() : Int {
-        var list : List<T> = getList();
-        return list.size();
-    }
+    public function size() : Int return getList().size();
 
-    inline private function getList() : List<T> {
-        return _lazyOption.getOrElse(function() {
-            return function() {
-                return Nil;
-            }
-        })();
-    }
+    inline private function getList() : List<T> return _lazyOption.getOrElse(function() return function() return Nil)();
 }

@@ -25,17 +25,11 @@ class Events {
                                                 ?useCapture : Bool = false
                                                 ) : Stream<T> {
         var stream = StreamTypes.identity(None);
+        var method = function(event) stream.dispatch(event);
 
-        var method = function (event) {
-            stream.dispatch(event);
-        };
-
+        stream.whenFinishedDo(function() target.removeEventListener(type, method, useCapture));
         target.addEventListener(type, method, useCapture);
-
-        stream.whenFinishedDo(function () {
-            target.removeEventListener(type, method, useCapture);
-        });
-
+        
         return cast stream;
     }
     #end

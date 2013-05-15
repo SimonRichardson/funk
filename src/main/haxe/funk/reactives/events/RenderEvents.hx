@@ -70,9 +70,8 @@ class RenderTarget {
 
             dispatchEvent(event);
 
-            if (!_running) {
-                win.requestAnimationFrame(_tick);
-            }
+            if (!_running) win.requestAnimationFrame(_tick);
+
             return true;
         };
     }
@@ -85,10 +84,7 @@ class RenderTarget {
             listeners.push(listener);
         }
 
-        if (!_running) {
-            var win = Browser.window;
-            win.requestAnimationFrame(_tick);
-        }
+        if (!_running) Browser.window.requestAnimationFrame(_tick);
     }
 
     public function removeEventListener( type : String, listener : Function1<Event, Void>, ?useCapture : Bool ) : Void {
@@ -106,24 +102,14 @@ class RenderTarget {
             }
         }
 
-        if (index >= 0) {
-            listeners.splice(index, 1);
-        }
-
-        if (listeners.length < 1) {
-            if (!_listeners.keys().hasNext()) {
-                _running = false;
-            }
-        }
+        if (index >= 0) listeners.splice(index, 1);
+        if (listeners.length < 1 && !_listeners.keys().hasNext()) _running = false;
     }
 
     public function dispatchEvent(event : Event) : Bool {
         return if (_listeners.exists(event.type)) {
             var listeners = _listeners.get(event.type);
-            for(i in 0...listeners.length) {
-                var listener = listeners[i];
-                listener(event);
-            }
+            for(i in 0...listeners.length) listeners[i](event);
             true;
         } else {
             false;

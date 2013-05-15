@@ -29,32 +29,23 @@ class Behaviour<T> {
         _stream = StreamTypes.create(function(pulse : Pulse<T>) : Propagation<T> {
             var prop = _pulse(pulse);
             switch(prop) {
-                case Propagate(value):
-                    _value = value.value();
-                case Negate:
+                case Propagate(value): _value = value.value();
+                case _:
             }
             return prop;
         }, collection);
     }
 
-    public function stream() : Stream<T> {
-        return _stream;
-    }
-
-    public function value() : T {
-        return _value;
-    }
+    public function stream() : Stream<T> return _stream;
+    
+    public function value() : T return _value;
 }
 
 class BehaviourTypes {
 
-    public static function constant<T>(value: T): Behaviour<T> {
-        return StreamTypes.identity(None).startsWith(value);
-    }
+    public static function constant<T>(value: T): Behaviour<T> return StreamTypes.identity(None).startsWith(value);
 
-    public static function dispatch<T>(behaviour : Behaviour<T>, value : T) : Void {
-        behaviour.stream().dispatch(value);
-    }
+    public static function dispatch<T>(behaviour : Behaviour<T>, value : T) : Void behaviour.stream().dispatch(value);
 
     public static function lift<T, R>(behaviour : Behaviour<T>, func : Function1<T, R>) : Behaviour<R> {
         return behaviour.stream().map(func).startsWith(func(behaviour.value()));
@@ -64,41 +55,27 @@ class BehaviourTypes {
                                         stream : Stream<T>,
                                         mapper : Behaviour<Function1<T, R>>
                                         ) : Behaviour<R> {
-        return stream.map(function(x) {
-            return mapper.value()(x);
-        }).startsWith(mapper.value()(behaviour.value()));
+        return stream.map(function(x) return mapper.value()(x)).startsWith(mapper.value()(behaviour.value()));
     }
 
     public static function sample(behaviour : Behaviour<Float>) : Behaviour<Float> {
         return StreamTypes.timer(behaviour).startsWith(Process.stamp());
     }
 
-    public static  function values<T>(behaviour : Behaviour<T>) : Collection<T> {
-        return behaviour.stream().values();
-    }
+    public static function values<T>(behaviour : Behaviour<T>) : Collection<T> return behaviour.stream().values();
 
     public static function zip<T1, T2>(behaviour : Behaviour<T1>, that : Behaviour<T2>) : Behaviour<Tuple2<T1, T2>> {
-        return zipWith(behaviour, that, function(a, b) {
-            var tuple : Tuple2<T1, T2> = tuple2(a, b);
-            return tuple;
-        });
+        return zipWith(behaviour, that, function(a, b) return tuple2(a, b));
     }
 
     public static function zipIterable<T>(    behaviours: Collection<Behaviour<T>>
                                             ) : Behaviour<Collection<T>>  {
         function mapToValue(): Collection<T> {
-            return behaviours.map(function(behaviour) {
-                return behaviour.value();
-            });
-          }
+            return behaviours.map(function(behaviour) return behaviour.value());
+        }
 
-          var sources : Collection<Stream<T>> = behaviours.map(function(behaviour) {
-            return behaviour.stream();
-        });
-
-        var stream = StreamTypes.create(function(pulse) {
-                return Propagate(pulse.withValue(mapToValue()));
-        }, sources);
+        var sources : Collection<Stream<T>> = behaviours.map(function(behaviour) return behaviour.stream());
+        var stream = StreamTypes.create(function(pulse) return Propagate(pulse.withValue(mapToValue())), sources);
 
         return stream.startsWith(mapToValue());
     }
@@ -111,9 +88,7 @@ class BehaviourTypes {
         var array : Array<Behaviour<Dynamic>> = [behaviour, that];
         var behaviours : Collection<Behaviour<Dynamic>> = array.toCollection();
 
-        var sources : Collection<Stream<Dynamic>> = behaviours.map(function(behaviour) {
-            return behaviour.stream();
-        });
+        var sources : Collection<Stream<Dynamic>> = behaviours.map(function(behaviour) return behaviour.stream());
 
         var stream = StreamTypes.create(function(pulse : Pulse<E1>) : Propagation<E2> {
             var result = func(behaviour.value(), that.value());
