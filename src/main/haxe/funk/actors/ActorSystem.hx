@@ -56,21 +56,21 @@ class ActorSystem {
         return this;
     }
 
-    public function actorPath() : ActorPath return _provider.rootPath();
+    inline public function actorPath() : ActorPath return _provider.rootPath();
 
-    public function child(name : String) : ActorPath return actorPath().child(name);
+    inline public function child(name : String) : ActorPath return actorPath().child(name);
 
-    public function name() : String return _name;
+    inline public function name() : String return _name;
 
-    public function deadLetters() : ActorRef return _provider.deadLetters();
+    inline public function deadLetters() : ActorRef return _provider.deadLetters();
 
-    public function dispatchers() : Dispatchers return _dispatchers;
+    inline public function dispatchers() : Dispatchers return _dispatchers;
 
-    public function eventStream() : EventStream return _provider.eventStream();
+    inline public function eventStream() : EventStream return _provider.eventStream();
 
-    public function settings() : Settings return _provider.settings();
+    inline public function settings() : Settings return _provider.settings();
 
-    public function scheduler() : Scheduler return _scheduler;
+    inline public function scheduler() : Scheduler return _scheduler;
 
     @:allow(funk.actors)
     private function provider() : ActorRefProvider return _provider;

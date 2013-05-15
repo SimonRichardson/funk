@@ -27,13 +27,11 @@ class Performance01 {
 
         var t = Process.stamp();
 
-        for (i in 0...99999) {
-            actor.send('hello ${i}', actor);
-        }
+        for (i in 0...99999) actor.send(i, actor);
 
         trace((Process.stamp() - t) / 1000 + ' seconds');
 
-        Process.start(Performance01.run, 2000);
+        // Process.start(Performance01.run, 2000);
     }
 }
 

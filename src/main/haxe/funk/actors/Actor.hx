@@ -58,27 +58,27 @@ class Actor implements ActorRef {
 
     public function receive(message : AnyRef) : Void unhandled(message);
 
-    public function actorOf(props : Props, name : String) : ActorRef return _self.actorOf(props, name);
+    inline public function actorOf(props : Props, name : String) : ActorRef return _self.actorOf(props, name);
 
-    public function actorFor(path : ActorPath) : Option<ActorRef> return _self.actorFor(path);
+    inline public function actorFor(path : ActorPath) : Option<ActorRef> return _self.actorFor(path);
 
-    public function send(value : AnyRef, ?sender : ActorRef = null) : Void _self.send(value, sender);
+    inline public function send(value : AnyRef, ?sender : ActorRef = null) : Void _self.send(value, sender);
 
-    public function stop() : Void _context.stop();
+    inline public function stop() : Void _context.stop();
 
-    public function path() : ActorPath return _self.path();
+    inline public function path() : ActorPath return _self.path();
 
-    public function uid() : String return _self.uid();
+    inline public function uid() : String return _self.uid();
 
-    public function name() : String return path().name();
+    inline public function name() : String return path().name();
 
-    public function sender() : Option<ActorRef> return _context.sender();
+    inline public function sender() : Option<ActorRef> return _context.sender();
 
-    public function context() : ActorContext return _context;
+    inline public function context() : ActorContext return _context;
 
-    public function supervisorStrategy() : SupervisorStrategy return _supervisorStrategy;
+    inline public function supervisorStrategy() : SupervisorStrategy return _supervisorStrategy;
 
-    public function isTerminated() : Bool return _self.isTerminated();
+    inline public function isTerminated() : Bool return _self.isTerminated();
 
     @:allow(funk.actors.ActorCell)
     private function unhandled(message : AnyRef) : Void {

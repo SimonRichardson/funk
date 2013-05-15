@@ -142,31 +142,31 @@ class ActorCell implements Cell implements ActorContext {
         try _dispatcher.systemDispatch(this, Recreate(cause)) catch (e : Dynamic) handleException(e);
     }
 
-    public function actorOf(props : Props, name : String) : ActorRef return _children.actorOf(props, name);
+    inline public function actorOf(props : Props, name : String) : ActorRef return _children.actorOf(props, name);
 
-    public function actorFor(path : ActorPath) : Option<ActorRef> return _system.provider().actorFor(path);
+    inline public function actorFor(path : ActorPath) : Option<ActorRef> return _system.provider().actorFor(path);
 
-    public function self() : InternalActorRef return _self;
+    inline public function self() : InternalActorRef return _self;
 
-    public function mailbox() : Mailbox return _mailbox;
+    inline public function mailbox() : Mailbox return _mailbox;
 
-    public function children() : List<ActorRef> return _children.children();
+    inline public function children() : List<ActorRef> return _children.children();
 
-    public function system() : ActorSystem return _system;
+    inline public function system() : ActorSystem return _system;
 
-    public function parent() : InternalActorRef return _parent;
+    inline public function parent() : InternalActorRef return _parent;
 
-    public function child(name : String) : Option<ActorRef> return _children.child(name);
+    inline public function child(name : String) : Option<ActorRef> return _children.child(name);
 
-    public function getChildByName(name : String) : Option<ChildStats> return _children.getChildByName(name);
+    inline public function getChildByName(name : String) : Option<ChildStats> return _children.getChildByName(name);
 
-    public function isTerminating() : Bool return _children.isTerminating();
+    inline public function isTerminating() : Bool return _children.isTerminating();
 
-    public function isTerminated() : Bool return _mailbox.isClosed();
+    inline public function isTerminated() : Bool return _mailbox.isClosed();
 
-    public function hasMessages() : Bool return _mailbox.hasMessages();
+    inline public function hasMessages() : Bool return _mailbox.hasMessages();
 
-    public function numberOfMessages() : Int return _mailbox.numberOfMessages();
+    inline public function numberOfMessages() : Int return _mailbox.numberOfMessages();
 
     public function sender() : Option<ActorRef> {
         return switch (_currentMessage) {
@@ -705,30 +705,30 @@ class ActorCell implements Cell implements ActorContext {
         _actor = null;
     }
 
-    private function publish(level : LogLevel, event : LogMessages, ?pos : PosInfos) : Void {
+    inline private function publish(level : LogLevel, event : LogMessages, ?pos : PosInfos) : Void {
         system().eventStream().publish(Data(level, event, pos));
     }
 
     @:allow(funk.actors)
-    private function actor() : Actor return _actor;
+    inline private function actor() : Actor return _actor;
 
     @:allow(funk.actors)
-    private function provider() : ActorRefProvider return _system.provider();
+    inline private function provider() : ActorRefProvider return _system.provider();
 
     @:allow(funk.actors)
-    private function dispatcher() : Dispatcher return _dispatcher;
+    inline private function dispatcher() : Dispatcher return _dispatcher;
 
     @:allow(funk.actors)
-    private function reserveChild(name : String) : Void _children.reserveChild(name);
+    inline private function reserveChild(name : String) : Void _children.reserveChild(name);
 
     @:allow(funk.actors)
-    private function unreserveChild(name : String) : Void _children.unreserveChild(name);
+    inline private function unreserveChild(name : String) : Void _children.unreserveChild(name);
 
     @:allow(funk.actors)
-    private function currentMessage() : EnvelopeMessage return _currentMessage;
+    inline private function currentMessage() : EnvelopeMessage return _currentMessage;
 
     @:allow(funk.actors)
-    private function childrenRefs() : ChildrenContainer return _children.container();
+    inline private function childrenRefs() : ChildrenContainer return _children.container();
 
     public function toString() return '[ActorCell (path=${self().path()})]';
 }

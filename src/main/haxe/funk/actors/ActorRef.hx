@@ -83,39 +83,39 @@ class LocalActorRef implements InternalActorRef {
         initCell();
     }
 
-    public function start() : Void _actorCell.start();
+    inline public function start() : Void _actorCell.start();
 
-    public function stop() : Void _actorCell.stop();
+    inline public function stop() : Void _actorCell.stop();
 
-    public function suspend() : Void _actorCell.suspend();
+    inline public function suspend() : Void _actorCell.suspend();
 
-    public function resume(causedByFailure : Dynamic) : Void _actorCell.resume(causedByFailure);
+    inline public function resume(causedByFailure : Dynamic) : Void _actorCell.resume(causedByFailure);
 
-    public function restart(cause : Dynamic) : Void _actorCell.restart(cause);
+    inline public function restart(cause : Dynamic) : Void _actorCell.restart(cause);
 
-    public function actorOf(props : Props, name : String) : ActorRef return _actorCell.actorOf(props, name);
+    inline public function actorOf(props : Props, name : String) : ActorRef return _actorCell.actorOf(props, name);
 
-    public function actorFor(path : ActorPath) : Option<ActorRef> return _actorCell.actorFor(path);
+    inline public function actorFor(path : ActorPath) : Option<ActorRef> return _actorCell.actorFor(path);
 
-    public function send(msg : AnyRef, ?sender : ActorRef = null) : Void {
+    inline public function send(msg : AnyRef, ?sender : ActorRef = null) : Void {
         var s = AnyTypes.toBool(sender) ? sender : this;
         _actorCell.sendMessage(Envelope(msg, s));
     }
 
-    public function sendSystemMessage(message : SystemMessage) : Void _actorCell.sendSystemMessage(message);
+    inline public function sendSystemMessage(message : SystemMessage) : Void _actorCell.sendSystemMessage(message);
 
-    public function path() : ActorPath return _path;
+    inline public function path() : ActorPath return _path;
 
-    public function uid() : String return _uid;
+    inline public function uid() : String return _uid;
 
-    public function name() : String return path().name();
+    inline public function name() : String return path().name();
 
-    public function context() : ActorContext return _actorContext;
+    inline public function context() : ActorContext return _actorContext;
 
     // FIXME (Simon) : This needs fixing.
-    public function isTerminated() : Bool return false;
+    inline public function isTerminated() : Bool return false;
 
-    public function getParent() : InternalActorRef return _actorCell.parent();
+    inline public function getParent() : InternalActorRef return _actorCell.parent();
 
     public function getChild(names : List<String>) : Option<InternalActorRef> {
         function rec(ref : InternalActorRef, names : Iterator<String>) : Option<InternalActorRef> {
@@ -148,7 +148,7 @@ class LocalActorRef implements InternalActorRef {
     @:allow(funk.actors)
     @:allow(funk.actors.dispatch)
     @:allow(funk.actors.patterns)
-    private function underlying() : ActorCell return cast _actorCell;
+    inline private function underlying() : ActorCell return cast _actorCell;
 
     private function newCell() : Cell return new ActorCell(_system, this, _props, _supervisor);
 
@@ -170,40 +170,40 @@ class EmptyActorRef implements InternalActorRef {
         _path = path;
     }
 
-    public function start() : Void {}
+    inline public function start() : Void {}
 
-    public function stop() : Void {}
+    inline public function stop() : Void {}
 
-    public function suspend() : Void {}
+    inline public function suspend() : Void {}
 
-    public function resume(causedByFailure : Dynamic) : Void {}
+    inline public function resume(causedByFailure : Dynamic) : Void {}
 
-    public function restart(cause : Dynamic) : Void {}
+    inline public function restart(cause : Dynamic) : Void {}
 
-    public function send(msg : AnyRef, ?sender : ActorRef = null) : Void {}
+    inline public function send(msg : AnyRef, ?sender : ActorRef = null) : Void {}
 
-    public function sendSystemMessage(message : SystemMessage) : Void {}
+    inline public function sendSystemMessage(message : SystemMessage) : Void {}
 
-    public function actorOf(props : Props, name : String) : ActorRef return null;
+    inline public function actorOf(props : Props, name : String) : ActorRef return null;
 
-    public function actorFor(path : ActorPath) : Option<ActorRef> return None;
+    inline public function actorFor(path : ActorPath) : Option<ActorRef> return None;
 
-    public function path() : ActorPath return _path;
+    inline public function path() : ActorPath return _path;
 
-    public function uid() : String return '';
+    inline public function uid() : String return '';
 
-    public function name() : String return path().name();
+    inline public function name() : String return path().name();
 
-    public function sender() : ActorRef return null;
+    inline public function sender() : ActorRef return null;
 
-    public function context() : ActorContext return null;
+    inline public function context() : ActorContext return null;
 
     // FIXME (Simon) : This needs fixing.
-    public function isTerminated() : Bool return false;
+    inline public function isTerminated() : Bool return false;
 
-    public function getParent() : InternalActorRef return null;
+    inline public function getParent() : InternalActorRef return null;
 
     public function getChild(names : List<String>) : Option<InternalActorRef> return None;
 
-    public function toString() return '[EmptyActorRef]';
+    inline public function toString() return '[EmptyActorRef]';
 }

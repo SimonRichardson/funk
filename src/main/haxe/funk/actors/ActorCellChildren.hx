@@ -107,19 +107,19 @@ class Children {
     }
 
     // TODO (Simon) : Implement waiting for children for Terminating containers.
-    public function waitingForChildren() : Option<WaitingForChildren> return None;
+    inline public function waitingForChildren() : Option<WaitingForChildren> return None;
 
-    public function actorOf(props : Props, name : String) : ActorRef return makeChild(_cell, props, checkName(name));
+    inline public function actorOf(props : Props, name : String) : ActorRef return makeChild(_cell, props, checkName(name));
 
-    public function children() : List<ActorRef> return _container.children();
+    inline public function children() : List<ActorRef> return _container.children();
 
-    public function getAllChildStats() : List<ChildStats> return _container.stats();
+    inline public function getAllChildStats() : List<ChildStats> return _container.stats();
 
-    public function child(name : String) : Option<ActorRef> return getChild(name).toOption();
+    inline public function child(name : String) : Option<ActorRef> return getChild(name).toOption();
 
-    public function getChildByName(name : String) : Option<ChildStats> return _container.getByName(name);
+    inline public function getChildByName(name : String) : Option<ChildStats> return _container.getByName(name);
 
-    public function getChildByRef(actor : ActorRef) : Option<ChildStats> return _container.getByRef(actor);
+    inline public function getChildByRef(actor : ActorRef) : Option<ChildStats> return _container.getByRef(actor);
 
     public function getChild(name : String) : ActorRef {
         return switch(_container.getByName(name)) {
@@ -128,11 +128,11 @@ class Children {
         }
     }
 
-    public function container() : ChildrenContainer return _container;
+    inline public function container() : ChildrenContainer return _container;
 
-    public function isTerminating() : Bool return _container.isTerminating();
+    inline public function isTerminating() : Bool return _container.isTerminating();
 
-    public function isNormal() : Bool return _container.isNormal();
+    inline public function isNormal() : Bool return _container.isNormal();
 
     @:allow(funk.actors)
     private function attachChild(props : Props, name : String) : ActorRef {
@@ -244,7 +244,7 @@ class NormalChildrenContainer implements ChildrenContainer {
         return new NormalChildrenContainer(map);
     }
 
-    public function getByName(name : String) : Option<ChildStats> return _map.get(name);
+    inline public function getByName(name : String) : Option<ChildStats> return _map.get(name);
 
     public function getByRef(actor : ActorRef) : Option<ChildStats> {
         var opt = getByName(actor.path().name());
@@ -290,13 +290,13 @@ class NormalChildrenContainer implements ChildrenContainer {
         } else this;
     }
 
-    public function toTermination() : TerminatingChildrenContainer {
+    inline public function toTermination() : TerminatingChildrenContainer {
         return new TerminatingChildrenContainer(_map, UserRequest);
     }
 
-    public function isTerminating() : Bool return false;
+    inline public function isTerminating() : Bool return false;
 
-    public function isNormal() : Bool return true;
+    inline public function isNormal() : Bool return true;
 }
 
 class TerminatingChildrenContainer implements ChildrenContainer {
@@ -326,7 +326,7 @@ class TerminatingChildrenContainer implements ChildrenContainer {
         } else new TerminatingChildrenContainer(map, UserRequest);
     }
 
-    public function getByName(name : String) : Option<ChildStats> return _map.get(name);
+    inline public function getByName(name : String) : Option<ChildStats> return _map.get(name);
 
     public function getByRef(actor : ActorRef) : Option<ChildStats> {
         var opt = getByName(actor.path().name());
@@ -370,11 +370,11 @@ class TerminatingChildrenContainer implements ChildrenContainer {
         } else this;
     }
 
-    public function reason() : SuspendReason return _reason;
+    inline public function reason() : SuspendReason return _reason;
 
-    public function isTerminating() : Bool return EnumValues.equals(_reason, Termination);
+    inline public function isTerminating() : Bool return EnumValues.equals(_reason, Termination);
 
-    public function isNormal() : Bool return EnumValues.equals(_reason, UserRequest);
+    inline public function isNormal() : Bool return EnumValues.equals(_reason, UserRequest);
 }
 
 class TerminatedChildrenContainer implements ChildrenContainer {
@@ -389,13 +389,13 @@ class TerminatedChildrenContainer implements ChildrenContainer {
         return Funk.error(ActorError('cannot reserve actor name ${child.path().name()} already terminated'));
     }
 
-    public function getByName(name : String) : Option<ChildStats> return None;
+    inline public function getByName(name : String) : Option<ChildStats> return None;
 
-    public function getByRef(actor : ActorRef) : Option<ChildStats> return None;
+    inline public function getByRef(actor : ActorRef) : Option<ChildStats> return None;
 
-    public function children() : List<ActorRef> return Nil;
+    inline public function children() : List<ActorRef> return Nil;
 
-    public function stats() : List<ChildStats> return Nil;
+    inline public function stats() : List<ChildStats> return Nil;
 
     public function reserve(name : String) : ChildrenContainer {
         return Funk.error(ActorError('cannot reserve actor name ${name} already terminated'));
@@ -405,7 +405,7 @@ class TerminatedChildrenContainer implements ChildrenContainer {
         return Funk.error(ActorError('cannot reserve actor name ${name} already terminated'));
     }
 
-    public function isTerminating() : Bool return true;
+    inline public function isTerminating() : Bool return true;
 
-    public function isNormal() : Bool return false;
+    inline public function isNormal() : Bool return false;
 }

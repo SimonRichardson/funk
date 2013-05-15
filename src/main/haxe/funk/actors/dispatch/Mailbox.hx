@@ -52,25 +52,25 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
         _status = Open;
     }
 
-    public function enqueue(receiver : ActorRef, envelope : EnvelopeMessage) : Void {
+    inline public function enqueue(receiver : ActorRef, envelope : EnvelopeMessage) : Void {
         _messageQueue.enqueue(receiver, envelope);
     }
 
-    public function dequeue() : Option<EnvelopeMessage> return _messageQueue.dequeue();
+    inline public function dequeue() : Option<EnvelopeMessage> return _messageQueue.dequeue();
 
-    public function numberOfMessages() : Int return _messageQueue.numberOfMessages();
+    inline public function numberOfMessages() : Int return _messageQueue.numberOfMessages();
 
-    public function hasMessages() : Bool return _messageQueue.hasMessages();
+    inline public function hasMessages() : Bool return _messageQueue.hasMessages();
 
-    public function systemEnqueue(receiver : ActorRef, message : SystemMessage) : Void {
+    inline public function systemEnqueue(receiver : ActorRef, message : SystemMessage) : Void {
         _systemMessageQueue.systemEnqueue(receiver, message);
     }
 
-    public function systemDequeue() : Option<SystemMessage> return _systemMessageQueue.systemDequeue();
+    inline public function systemDequeue() : Option<SystemMessage> return _systemMessageQueue.systemDequeue();
 
-    public function numberOfSystemMessages() : Int return _systemMessageQueue.numberOfSystemMessages();
+    inline public function numberOfSystemMessages() : Int return _systemMessageQueue.numberOfSystemMessages();
 
-    public function hasSystemMessages() : Bool return _systemMessageQueue.hasSystemMessages();
+    inline public function hasSystemMessages() : Bool return _systemMessageQueue.hasSystemMessages();
 
     public function run() : Void {
         function finally() {
@@ -100,13 +100,13 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
         finally();
     }
 
-    public function actor() : ActorCell return _actor;
+    inline public function actor() : ActorCell return _actor;
 
-    public function dispatcher() : Dispatcher return _dispatcher;
+    inline public function dispatcher() : Dispatcher return _dispatcher;
 
-    public function name() : String return _dispatcher.name();
+    inline public function name() : String return _dispatcher.name();
 
-    public function status() : Int return _status;
+    inline public function status() : Int return _status;
 
     public function resume() : Bool {
         return switch(_status) {
@@ -166,13 +166,13 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
         return (_status & Scheduled) != Scheduled;
     }
 
-    public function shouldProcessMessage() : Bool return (_status & Open) == Open;
+    inline public function shouldProcessMessage() : Bool return (_status & Open) == Open;
 
-    public function isSuspended() : Bool return (_status & Suspended) == Suspended;
+    inline public function isSuspended() : Bool return (_status & Suspended) == Suspended;
 
-    public function isClosed() : Bool return _status == Closed;
+    inline public function isClosed() : Bool return _status == Closed;
 
-    public function isScheduled() : Bool return (_status & Scheduled) != 0;
+    inline public function isScheduled() : Bool return (_status & Scheduled) != 0;
 
     public function canBeScheduledForExecution(hasMessageHint : Bool, hasSystemMessageHint : Bool) : Bool {
         return switch(_status) {
@@ -227,9 +227,9 @@ class Mailbox implements MessageQueue implements SystemMessageQueue implements R
         }
     }
 
-    public function messageQueue() : MessageQueue return _messageQueue;
+    inline public function messageQueue() : MessageQueue return _messageQueue;
 
-    public function cleanUp(owner : ActorRef, deadLetters : MessageQueue) : Void {
+    inline public function cleanUp(owner : ActorRef, deadLetters : MessageQueue) : Void {
         // We could dispose of things here.
         dispose();
     }

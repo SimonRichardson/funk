@@ -167,9 +167,7 @@ private class PromiseImpl<T> implements Promise<T> {
         });
 
         _progressStream = progressStream;
-        _progressStream.foreach(function(value) {
-            _progress.dispatch(value);
-        });
+        _progressStream.foreach(function(value) _progress.dispatch(value));
     }
 
     public function then<R>(func : Function1<T, R>) : Promise<R> {

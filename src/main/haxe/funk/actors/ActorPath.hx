@@ -51,19 +51,19 @@ class RelativeActorPath implements ActorPath {
         _names = parts.toList();
     }
 
-    public function address() : AddressType return null;
+    inline public function address() : AddressType return null;
 
-    public function name() : String return _name;
+    inline public function name() : String return _name;
 
-    public function root() : RootActorPath return null;
+    inline public function root() : RootActorPath return null;
 
-    public function parent() : ActorPath return null;
+    inline public function parent() : ActorPath return null;
 
-    public function child(name : String) : ActorPath return null;
+    inline public function child(name : String) : ActorPath return null;
 
-    public function childs(names : List<String>) : ActorPath return null;
+    inline public function childs(names : List<String>) : ActorPath return null;
 
-    public function elements() : List<String> return _names;
+    inline public function elements() : List<String> return _names;
 
     public function toString() : String return _names.toString();
 }
@@ -79,22 +79,22 @@ class RootActorPath implements ActorPath {
         _name = name;
     }
 
-    public function address() : AddressType return _address;
+    inline public function address() : AddressType return _address;
 
-    public function name() : String return _name;
+    inline public function name() : String return _name;
 
-    public function root() : RootActorPath return this;
+    inline public function root() : RootActorPath return this;
 
-    public function parent() : ActorPath return this;
+    inline public function parent() : ActorPath return this;
 
-    public function child(name : String) : ActorPath return new ChildActorPath(this, name);
+    inline public function child(name : String) : ActorPath return new ChildActorPath(this, name);
 
-    public function childs(names : List<String>) : ActorPath {
+    inline public function childs(names : List<String>) : ActorPath {
         return if (names.isEmpty()) this;
         else child(names.head()).childs(names.tail());
     }
 
-    public function elements() : List<String> return Nil;
+    inline public function elements() : List<String> return Nil;
 
     public function toString() : String return _address.toString();
 }
@@ -112,9 +112,9 @@ class ChildActorPath implements ActorPath {
         _name = name;
     }
 
-    public function address() : AddressType return root().address();
+    inline public function address() : AddressType return root().address();
 
-    public function name() : String return _name;
+    inline public function name() : String return _name;
 
     public function root() : RootActorPath {
         function rec(p : ActorPath) : RootActorPath {
@@ -126,11 +126,11 @@ class ChildActorPath implements ActorPath {
         return rec(this);
     }
 
-    public function parent() : ActorPath return _parent;
+    inline public function parent() : ActorPath return _parent;
 
-    public function child(name : String) : ActorPath return new ChildActorPath(this, name);
+    inline public function child(name : String) : ActorPath return new ChildActorPath(this, name);
 
-    public function childs(names : List<String>) : ActorPath {
+    inline public function childs(names : List<String>) : ActorPath {
         return if (names.isEmpty()) this;
         else child(names.head()).childs(names.tail());
     }

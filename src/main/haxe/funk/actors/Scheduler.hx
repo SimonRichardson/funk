@@ -162,21 +162,21 @@ private class DefaultTimer {
         return this;
     }
 
-    public function task() : Task return _task.getOrElse(function() {
+    inline public function task() : Task return _task.getOrElse(function() {
         return Funk.error(ActorError("No valid task"));
     });
 
-    public function runnable() : Runnable return _runnable;
+    inline public function runnable() : Runnable return _runnable;
 
-    public function cancel() : Void {
+    inline public function cancel() : Void {
         task().stop();
 
         _deferred.resolve(this);
     }
 
-    public function isCancelled() : Bool return task().isCancelled();
+    inline public function isCancelled() : Bool return task().isCancelled();
 
-    public function promise() : Promise<DefaultTimer> return _deferred.promise();
+    inline public function promise() : Promise<DefaultTimer> return _deferred.promise();
 
     private function executeWithoutDelay() {
         // Execute it without delay or interval

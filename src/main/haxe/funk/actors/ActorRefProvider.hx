@@ -128,17 +128,17 @@ class LocalActorRefProvider implements ActorRefProvider {
         _eventStream.setupDefaultLoggers(system, Trace);
     }
 
-    public function rootPath() : ActorPath return _guardian.path();
+    inline public function rootPath() : ActorPath return _guardian.path();
 
-    public function guardian() : ActorRef return _guardian;
+    inline public function guardian() : ActorRef return _guardian;
 
-    public function systemGuardian() : ActorRef return _systemGuardian;
+    inline public function systemGuardian() : ActorRef return _systemGuardian;
 
-    public function deadLetters() : ActorRef return _deadLetters;
+    inline public function deadLetters() : ActorRef return _deadLetters;
 
-    public function eventStream() : EventStream return _eventStream;
+    inline public function eventStream() : EventStream return _eventStream;
 
-    public function settings() : Settings return _settings;
+    inline public function settings() : Settings return _settings;
 
     public function actorOf(    system : ActorSystem,
                                 props : Props,
