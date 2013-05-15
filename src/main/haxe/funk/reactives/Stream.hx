@@ -140,9 +140,27 @@ class StreamTypes {
 
     private static function toCollection<T>(stream : Stream<T>) : Collection<Stream<T>> return [stream].toCollection();
 
-    public static function asStream<T>(func : Function0<T>) : Stream<T> {
+    public static function fromAny<T>(any : T) : Stream<T> {
+        var stream = identity(None);
+        Function0Types.trampoline(function() stream.dispatch(any), 1)();
+        return stream;
+    }
+
+    public static function fromFunction<T>(func : Function0<T>) : Stream<T> {
         var stream = identity(None);
         Function0Types.trampoline(function() stream.dispatch(func()), 1)();
+        return stream;
+    }
+
+    public static function fromIterable<T>(iterable : Iterable<T>) : Stream<T> return fromIterator(iterable.iterator());
+
+    public static function fromIterator<T>(iterator : Iterator<T>) : Stream<T> {
+        var stream = identity(None);
+        Function0Types.trampoline(function() {
+            while(iterator.hasNext()) {
+                stream.dispatch(iterator.next());
+            }
+        }, 1)();
         return stream;
     }
 
