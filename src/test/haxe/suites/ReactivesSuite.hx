@@ -3,6 +3,7 @@ package suites;
 import massive.munit.TestSuite;
 
 import funk.reactives.CollectionTest;
+import funk.reactives.StreamAsyncTest;
 import funk.reactives.StreamTest;
 import funk.reactives.StreamTypesTest;
 import funk.reactives.StreamValuesTest;
@@ -18,6 +19,7 @@ class ReactivesSuite extends TestSuite {
         super();
 
         add(funk.reactives.CollectionTest);
+        add(funk.reactives.StreamAsyncTest);
         add(funk.reactives.StreamTest);
         add(funk.reactives.StreamTypesTest);
         add(funk.reactives.StreamValuesTest);

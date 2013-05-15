@@ -4,6 +4,7 @@ using funk.reactives.Behaviour;
 using funk.types.Tuple2;
 using funk.types.Option;
 using funk.ds.Collection;
+using funk.ds.CollectionUtil;
 using funk.reactives.Stream;
 using massive.munit.Assert;
 using unit.Asserts;

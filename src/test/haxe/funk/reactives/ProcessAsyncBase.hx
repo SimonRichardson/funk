@@ -40,9 +40,7 @@ class ProcessAsyncBase {
                 _tasks.push(task);
 
                 Some(task);
-            } else {
-                None;
-            }
+            } else None;
         };
         Process.stop = function(task : Option<Task>) : Option<Task> {
             switch(task) {
@@ -53,9 +51,7 @@ class ProcessAsyncBase {
             }
             return None;
         };
-        Process.stamp = function() : Float {
-            return _stamp;
-        };
+        Process.stamp = function() : Float return _stamp;
     }
 
     @After
@@ -71,9 +67,7 @@ class ProcessAsyncBase {
     private function advanceProcessBy(time : Float, ?callAssert : Bool = true) : Void {
         var start = Std.int(_stamp);
 
-        if (callAssert) {
-            assertTaskExistsAt(start + time);
-        }
+        if (callAssert) assertTaskExistsAt(start + time);
 
         for(delta in start...Std.int(start + time + 1)) {
             _stamp = delta;
@@ -89,9 +83,7 @@ class ProcessAsyncBase {
     }
 
     private function advanceProcessByWithIncrements(time : Float, increments : Int) : Void {
-        for(i in 0...increments) {
-            advanceProcessBy(time);
-        }
+        for(i in 0...increments) advanceProcessBy(time);
     }
 
     private function assertTaskExistsAt(time : Float) : Void {
@@ -103,8 +95,6 @@ class ProcessAsyncBase {
             }
         }
 
-        if(!found) {
-            Assert.fail("Expecting to find a funk.reactives.Task at time " + time + ", but none was found");
-        }
+        if(!found) Assert.fail('Expecting to find a funk.reactives.Task at time $time, but none was found');
     }
 }

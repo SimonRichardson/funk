@@ -5,7 +5,6 @@ import funk.futures.Promise;
 import funk.types.Any;
 import funk.types.extensions.Strings;
 import massive.munit.async.AsyncFactory;
-import massive.munit.util.Timer;
 
 using massive.munit.Assert;
 using funk.types.Attempt;

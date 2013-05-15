@@ -3,7 +3,6 @@ package funk.actors;
 import funk.actors.ActorSystem;
 import funk.types.Any;
 import massive.munit.async.AsyncFactory;
-import massive.munit.util.Timer;
 
 using massive.munit.Assert;
 using funk.actors.patterns.ReactSupport;

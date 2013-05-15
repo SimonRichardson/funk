@@ -3,6 +3,7 @@ package funk.reactives;
 import funk.reactives.Propagation;
 import funk.reactives.Stream;
 import funk.reactives.Process;
+import funk.types.Any;
 import funk.types.Function0;
 import funk.types.Function1;
 import funk.types.Function2;
@@ -16,8 +17,6 @@ using funk.types.Tuple2;
 using funk.reactives.Pulse;
 
 class Stream<T> {
-
-    public var weakRef(get_weakRef, set_weakRef) : Bool;
 
     private var _rank : Int;
 
@@ -51,9 +50,7 @@ class Stream<T> {
                 item._rank = Rank.next();
 
                 var itemListeners = item._listeners;
-                if(itemListeners.length > 0) {
-                    listeners = listeners.concat(itemListeners);
-                }
+                if(itemListeners.length > 0) listeners = listeners.concat(itemListeners);
             }
         }
     }
@@ -70,9 +67,7 @@ class Stream<T> {
             }
         }
 
-        if(weakReference && _listeners.length == 0) {
-            weakRef = true;
-        }
+        if(weakReference && _listeners.length == 0) finish();
 
         return removed;
     }
@@ -99,18 +94,15 @@ class Stream<T> {
                     var weak = true;
 
                     for (listener in stream._listeners) {
-                        weak = weak && listener.weakRef;
+                        weak = weak && listener.weakRef();
 
-                        var index = listener._rank;
-                        queue.insert(index, {stream: listener, pulse: p});
+                        queue.insert(listener._rank, {stream: listener, pulse: p});
                     }
 
-                    if(stream._listeners.length > 0 && weak) {
-                        stream.weakRef = true;
-                    }
+                    if(stream._listeners.length > 0 && weak) stream.finish();
                 }
 
-                case Negate:
+                case _:
             }
         }
 
@@ -118,8 +110,17 @@ class Stream<T> {
     }
 
     public function finish() : Void {
-        weakRef = true;
         // TODO : We should prevent it from coming back.
+        var value = true;
+
+        if(_weakRef != value) {
+            _weakRef = value;
+
+            if(_weakRef) {
+                _finishedListeners.foreach(function(func) func());
+                _finishedListeners = Nil;
+            }
+        }
     }
 
     public function whenFinishedDo(func : Function0<Void>) : Void {
@@ -132,34 +133,21 @@ class Stream<T> {
         }
     }
 
-    public function get_weakRef() : Bool {
-        return _weakRef;
-    }
-
-    public function set_weakRef(value : Bool) : Bool {
-        if(_weakRef != value) {
-            _weakRef = value;
-
-            if(_weakRef) {
-                _finishedListeners.foreach(function(func) func());
-                _finishedListeners = Nil;
-            }
-        }
-
-        return value;
-    }
+    public function weakRef() : Bool return _weakRef;
 }
 
 class StreamTypes {
 
-    private static function toCollection<T>(stream : Stream<T>) : Collection<Stream<T>> {
-        return [stream].toCollection();
+    private static function toCollection<T>(stream : Stream<T>) : Collection<Stream<T>> return [stream].toCollection();
+
+    public static function asStream<T>(func : Function0<T>) : Stream<T> {
+        var stream = identity(None);
+        Function0Types.trampoline(function() stream.dispatch(func()), 1)();
+        return stream;
     }
 
     public static function bindTo<T>(func : Function1<T, Void>, stream : Stream<T>) : Stream<T> {
-        foreach(stream, function(v) {
-            func(v);
-        });
+        foreach(stream, function(v) func(v));
         return stream;
     }
 
@@ -170,9 +158,7 @@ class StreamTypes {
         create(function(pulse : Pulse<T>) : Propagation<T> {
 
             task = Process.stop(task);
-            task = Process.start(function() {
-                stream.dispatch(pulse.value());
-            }, behaviour.value());
+            task = Process.start(function() stream.dispatch(pulse.value()), behaviour.value());
 
             return Negate;
         }, toCollection(stream));
@@ -181,9 +167,7 @@ class StreamTypes {
     }
 
     public static function constant<T1, T2>(stream : Stream<T1>, value : T2) : Stream<T2> {
-        return map(stream, function(v) {
-            return value;
-        });
+        return map(stream, function(v) return value);
     }
 
     @:noUsing
@@ -195,7 +179,7 @@ class StreamTypes {
         sources.foreach(function (source : Stream<T1>) {
             switch(source.toOption()) {
                 case Some(val): val.attach(cast stream);
-                case None:
+                case _:
             }
         });
 
@@ -215,10 +199,7 @@ class StreamTypes {
     }
 
     public static function dispatchWithDelay<T>(stream : Stream<T>, value : T, delay : Int) : Stream<T> {
-        Process.start(function() {
-            stream.dispatch(value);
-        }, delay);
-
+        Process.start(function() stream.dispatch(value), delay);
         return stream;
     }
 
@@ -227,13 +208,10 @@ class StreamTypes {
         var out = identity(None);
 
         create(function(pulse : Pulse<T1>) : Propagation<T2> {
-            previous.foreach(function(s) {
-                s.detach(out);
-            });
+            previous.foreach(function(s) s.detach(out));
+
             previous = func(pulse.value()).toOption();
-            previous.foreach(function(s) {
-                s.attach(out);
-            });
+            previous.foreach(function(s) s.attach(out));
 
             return Negate;
         }, toCollection(stream));
@@ -252,23 +230,19 @@ class StreamTypes {
     }
 
     public static function identity<T>(sources: Option<Collection<Stream<T>>>) : Stream<T> {
-        return create(function(pulse) {
-                return Propagate(pulse);
-            }, sources.getOrElse(function() return CollectionUtil.zero()));
+        return create(  function(pulse) return Propagate(pulse), 
+                        sources.getOrElse(function() return CollectionUtil.zero())
+                        );
     }
 
     public static function map<T1, T2>(stream : Stream<T1>, func : Function1<T1, T2>) : Stream<T2> {
-        return create(function(pulse : Pulse<T1>) : Propagation<T2> {
-            return Propagate(pulse.map(func));
-        }, toCollection(stream));
+        return create(  function(pulse : Pulse<T1>) : Propagation<T2> return Propagate(pulse.map(func)), 
+                        toCollection(stream)
+                        );
     }
 
     public static function merge<T>(streams : Collection<Stream<T>>) : Stream<T> {
-        return if(streams.size() == 0) {
-            zero();
-        } else {
-            identity(Some(streams));
-        };
+        return streams.size() == 0 ? zero() : identity(Some(streams));
     }
 
     public static function once<T>(value : T) : Stream<T> {
@@ -290,12 +264,9 @@ class StreamTypes {
 
     public static function random(time : Behaviour<Float>) : Stream<Float> {
         var timerStream : Stream<Float> = timer(time);
-        var mapStream : Stream<Float> = map(timerStream, function(value) {
-            return Math.random();
-        });
-        mapStream.whenFinishedDo(function() : Void {
-            timerStream.finish();
-        });
+
+        var mapStream : Stream<Float> = map(timerStream, function(value) return Math.random());
+        mapStream.whenFinishedDo(function() : Void timerStream.finish());
 
         return mapStream;
     }
@@ -305,12 +276,9 @@ class StreamTypes {
         var angle : Float = Math.PI * 2 / resolution;
 
         var timerStream : Stream<Float> = timer(time);
-        var mapStream : Stream<Float> = map(timerStream, function(value) {
-            return Math.sin(Process.stamp() + angle);
-        });
-        mapStream.whenFinishedDo(function() : Void {
-            timerStream.finish();
-        });
+
+        var mapStream : Stream<Float> = map(timerStream, function(value) return Math.sin(Process.stamp() + angle));
+        mapStream.whenFinishedDo(function() : Void timerStream.finish());
 
         return mapStream;
     }
@@ -321,18 +289,12 @@ class StreamTypes {
         return create(function(pulse : Pulse<T>) : Propagation<T> {
             queue.push(pulse.value());
 
-            return if (queue.length <= value) {
-                Negate;
-            } else {
-                Propagate(pulse.withValue(queue.shift()));
-            }
+            return (queue.length <= value) ? Negate : Propagate(pulse.withValue(queue.shift()));
         }, toCollection(stream));
     }
 
     public static function startsWith<T>(stream : Stream<T>, value : T) : Behaviour<T> {
-        return new Behaviour(stream, value, function(pulse : Pulse<T>) : Propagation<T> {
-            return Propagate(pulse);
-        });
+        return new Behaviour(stream, value, function(pulse : Pulse<T>) : Propagation<T> return Propagate(pulse));
     }
 
     public static function steps<T>(stream : Stream<T>) : Stream<T> {
@@ -343,9 +305,7 @@ class StreamTypes {
                 time = pulse.time();
 
                 Propagate(pulse);
-            } else {
-                Negate;
-            }
+            } else Negate;
         }, toCollection(stream));
     }
 
@@ -353,9 +313,7 @@ class StreamTypes {
         var stream : Stream<Float> = identity(None);
         var task : Option<Task> = None;
 
-        stream.whenFinishedDo(function() {
-            task = Process.stop(task);
-        });
+        stream.whenFinishedDo(function() task = Process.stop(task));
 
         var pulser : Function0<Void> = null;
         pulser = function() {
@@ -363,9 +321,7 @@ class StreamTypes {
 
             task = Process.stop(task);
 
-            if(!stream.weakRef) {
-                task = Process.start(pulser, time.value());
-            }
+            if(!stream.weakRef()) task = Process.start(pulser, time.value());
         };
 
         task = Process.start(pulser, time.value());
@@ -376,13 +332,9 @@ class StreamTypes {
     public static function values<T>(stream : Stream<T>) : Collection<T> {
         var list : List<T> = Nil;
 
-        var collection = new StreamValues<T>(Some(function() {
-            return list;
-        }));
+        var collection = new StreamValues<T>(Some(function() return list));
 
-        foreach(stream, function(value : T) : Void {
-            list = list.append(value);
-        });
+        foreach(stream, function(value : T) : Void list = list.append(value));
 
         return collection;
     }
@@ -405,9 +357,7 @@ class StreamTypes {
         return zipWith(stream0, stream1, function (a, b) {
             var tuple : Tuple2<T1, T2> = tuple2(a, b);
             return tuple;
-        }, function (t0, t1) {
-            return true;
-        });
+        }, function (t0, t1) return true);
     }
 
     public static function zipWith<T1, T2, R>(  stream0 : Stream<T1>,
@@ -418,13 +368,7 @@ class StreamTypes {
         var time = -1.0;
         var value : Option<T1> = None;
 
-        var guarded = if (null == guard) {
-            function (t0, t1) {
-                return t0 == t1;
-            }
-        } else {
-            guard;
-        }
+        var guarded = !AnyTypes.toBool(guard) ? function (t0, t1) return t0 == t1 : guard;
 
         create(function(pulse : Pulse<T1>) : Propagation<T1> {
             time = pulse.time();
@@ -434,11 +378,8 @@ class StreamTypes {
         }, toCollection(stream0));
 
         return create(function(pulse : Pulse<T2>) : Propagation<R> {
-            return if (guarded(time, pulse.time())) {
-                Propagate(pulse.withValue(func(value.get(), pulse.value())));
-            } else {
-                Negate;
-            }
+            return if (guarded(time, pulse.time())) Propagate(pulse.withValue(func(value.get(), pulse.value())));
+            else Negate;
         }, toCollection(stream1));
     }
 }
@@ -448,13 +389,9 @@ private class Rank {
 
     private static var _value : Int = 0;
 
-    public static function last(): Int {
-        return _value;
-    }
+    public static function last(): Int return _value;
 
-    public static function next(): Int {
-        return _value++;
-    }
+    public static function next(): Int return _value++;
 }
 
 private typedef KeyValue<T> = {
@@ -490,16 +427,10 @@ private class PriorityQueue<T> {
             }
         }
 
-        if (!added) {
-            _values.push(keyValue);
-        }
+        if (!added) _values.push(keyValue);
     }
 
-    public function pop() : KeyValue<T> {
-        return _values.pop();
-    }
+    public function pop() : KeyValue<T> return _values.pop();
 
-    public function size(): Int {
-        return _values.length;
-    }
+    public function size(): Int return _values.length;
 }
