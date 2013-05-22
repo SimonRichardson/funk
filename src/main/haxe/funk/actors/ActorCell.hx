@@ -239,13 +239,18 @@ class ActorCell implements Cell implements ActorContext {
 
         var msg : AnyRef = message.message();
         try {
-            // Note (Simon) : This is slow, because we're trying to check if the msg is a ActorMessage (AnyRef > Enum), 
+            // Note (Simon) : This is slow, because we're trying to check if the msg is a ActorMessage (AnyRef > Enum),
             // would be a lot better if the ActorMessages was a class. Or find a way to speed this up some what.
             switch(msg) {
                 case _ if(AnyTypes.isValueOf(msg, ActorMessages)): autoReceiveMessage(message);
                 case _: receiveMessage(msg);
             }
         } catch (e : Dynamic) {
+            publish(Error, ErrorMessage(    e,
+                                            self().path().toString(),
+                                            Type.getClass(_actor),
+                                            'Invoke error when handling $message, resulting in $e'
+                                            ));
             _currentMessage = null;
             handleInvokeFailure(Nil, e);
         }
@@ -268,11 +273,13 @@ class ActorCell implements Cell implements ActorContext {
     private function autoReceiveMessage(message : EnvelopeMessage) : Void {
         var msg : ActorMessages = message.message();
 
-        publish(Debug, DebugMessage(    self().path().toString(), 
-                                        Type.getClass(_actor), 
+        #if debug
+        publish(Debug, DebugMessage(    self().path().toString(),
+                                        Type.getClass(_actor),
                                         'received AutoReceiveMessage $msg'
                                         ));
-        
+        #end
+
         switch(msg) {
             case Failed(cause, uid): handleFailure(sender().getOrElse(function() return null), cause, uid);
             case Terminated(t) : watchedActorTerminated(t);
@@ -323,7 +330,10 @@ class ActorCell implements Cell implements ActorContext {
             _actor = newActor();
             _actor.preStart();
 
+            #if debug
             publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'started ($_actor)'));
+            #end
+
         } catch (e : Dynamic) {
             if (AnyTypes.toBool(_actor)) {
                 clearActorFields(_actor);
@@ -417,20 +427,28 @@ class ActorCell implements Cell implements ActorContext {
                     throw cause;
                 }
             case Some(stats):
+                #if debug
                 publish(Debug, DebugMessage(    _self.path().toString(),
                                                 Type.getClass(_actor),
                                                 'dropping Failed($cause) from old child $child (uid=${ChildStatsTypes.uid(stats)} != $uid)'
                                                 ));
+                #end
             case _:
+                #if debug
                 publish(Debug, DebugMessage(    _self.path().toString(),
                                                 Type.getClass(_actor),
                                                 'dropping Failed($cause) from unknown child $child'
                                                 ));
+                #end
         }
     }
 
     private function handleChildTerminated(child : ActorRef) : Void {
         var status = _children.removeChildAndGetStateChange(child);
+
+        #if debug
+        publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'Terminating child ($child)'));
+        #end
 
         if (AnyTypes.toBool(_actor)) {
             try _actor.supervisorStrategy().handleChildTerminated(this, child, _children.children()) catch(e : Dynamic) {
@@ -477,7 +495,10 @@ class ActorCell implements Cell implements ActorContext {
         if (watcheeSelf && !watcherSelf) {
             if (!_watchedBy.contains(watcher)) {
                 _watchedBy = _watchedBy.prepend(watcher);
+
+                #if debug
                 publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'now monitoring $watcher'));
+                #end
             }
         } else if(!watcheeSelf && watcherSelf) {
             watch(watchee);
@@ -496,7 +517,10 @@ class ActorCell implements Cell implements ActorContext {
         if (watcheeSelf && !watcherSelf) {
             if (_watchedBy.contains(watcher)) {
                 _watchedBy = _watchedBy.filterNot(function(w) return w == watcher);
+
+                #if debug
                 publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'stopped monitoring $watcher'));
+                #end
             }
         } else if(!watcheeSelf && watcherSelf) {
             unwatch(watchee);
@@ -616,6 +640,10 @@ class ActorCell implements Cell implements ActorContext {
     }
 
     private function handleInvokeFailure(childrenNotToSuspend : List<ActorRef>, error : Dynamic) : Void {
+        #if debug
+        publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), "Handling failure ${error}"));
+        #end
+
         try {
             if (!isFailed()) {
                 suspendNonRecursive();
@@ -684,9 +712,7 @@ class ActorCell implements Cell implements ActorContext {
 
     private function finishTerminate() : Void {
         try {
-            if (AnyTypes.toBool(_actor) && AnyTypes.toBool(_actor.context())) {
-                _actor.context().stop();
-            }
+            if (AnyTypes.toBool(_actor) && AnyTypes.toBool(_actor.context())) _actor.context().stop();
         } catch (e : Dynamic) {
             publish(Error, ErrorMessage(e, _self.path().toString(), Type.getClass(_actor), Std.string(e)));
         }
@@ -696,7 +722,9 @@ class ActorCell implements Cell implements ActorContext {
         try unwatchWatchedActors(_actor) catch(e : Dynamic) {}
 
         try {
+            #if debug
             publish(Debug, DebugMessage(_self.path().toString(), Type.getClass(_actor), 'stopped'));
+            #end
 
             clearActorFields(_actor);
             clearActorCellFields(this);

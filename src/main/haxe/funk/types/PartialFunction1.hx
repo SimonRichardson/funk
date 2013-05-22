@@ -15,11 +15,11 @@ enum Partial1<T1, R> {
 
 class Partial1Types {
 
-    public static function define<T1, R>(value : Partial1<T1, R>) : Predicate1<T1> {
+    inline public static function define<T1, R>(value : Partial1<T1, R>) : Predicate1<T1> {
         return EnumValues.getValueByIndex(value, 0);
     }
 
-    public static function partial<T1, R>(value : Partial1<T1, R>) : Function1<T1, R> {
+    inline public static function partial<T1, R>(value : Partial1<T1, R>) : Function1<T1, R> {
         return EnumValues.getValueByIndex(value, 1);
     }
 }
@@ -73,35 +73,35 @@ private class PartialFunction1Type<T1, R> implements PartialFunction1<T1, R> {
         return new PartialFunction1Type(definitions);
     }
 
-    public function isDefinedAt(value : T1) : Bool {
+    inline public function isDefinedAt(value : T1) : Bool {
         return _definitions.exists(function(partial) return Partial1Types.define(partial)(value));
     }
 
-    public function orElse(other : PartialFunction1<T1, R>) : PartialFunction1<T1, R> {
+    inline public function orElse(other : PartialFunction1<T1, R>) : PartialFunction1<T1, R> {
         return create(_definitions.prepend(Partial1(other.isDefinedAt, other.apply)));
     }
 
-    public function orAlways(func : Function1<T1, R>) : PartialFunction1<T1, R> {
+    inline public function orAlways(func : Function1<T1, R>) : PartialFunction1<T1, R> {
         return create(_definitions.prepend(Partial1(function(value) return true, func)));
     }
 
-    public function applyOrElse(value0 : T1, func : Function1<T1, R>) : R {
+    inline public function applyOrElse(value0 : T1, func : Function1<T1, R>) : R {
         return isDefinedAt(value0) ? apply(value0) : func(value0);
     }
-    
-    public function apply(value : T1) : R {
+
+    inline public function apply(value : T1) : R {
         return switch(_definitions.find(function(partial) return Partial1Types.define(partial)(value))) {
             case Some(partial): Partial1Types.partial(partial)(value);
             case _: Funk.error(NoSuchElementError);
         }
     }
 
-    public function applyToAll(value : T1) : List<R> {
+    inline public function applyToAll(value : T1) : List<R> {
         var filtered = _definitions.filter(function(partial) return Partial1Types.define(partial)(value));
         return filtered.map(function(partial) return Partial1Types.partial(partial)(value));
     }
 
-    public function toFunction() : Function1<T1, Option<R>> {
+    inline public function toFunction() : Function1<T1, Option<R>> {
         return function(value) return isDefinedAt(value) ? Some(apply(value)) : None;
     }
 }
