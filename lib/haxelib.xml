@@ -1,5 +1,5 @@
 <project name="funk" url="https://github.com/simonrichardson/funk" license="GPL">
     <user name="stickupkid"/>
     <description>The Funk library supports functional development in Haxe.</description>
-    <version name="1.6.1">Performance improvements in actors, also removed the Std.is hack.</version>
+    <version name="1.6.2">Implementing signal listeners as partial functions.</version>
 </project>
