@@ -7,6 +7,7 @@ using funk.types.Function1;
 using funk.types.Function2;
 using funk.types.Function5;
 using funk.types.Predicate5;
+using funk.types.PartialFunction1;
 using funk.types.Option;
 using funk.types.Tuple2;
 using funk.types.Tuple5;
@@ -178,11 +179,11 @@ class Signal5Types {
                                                         ) : Signal5<T1, T2, T3, T4, T5> {
         var result = new Signal5<T1, T2, T3, T4, T5>();
 
-        signal.add(function (value) {
+        signal.add(function (value : Signal5<T1, T2, T3, T4, T5>) {
             value.add(function (value0, value1, value2, value3, value4) {
                 result.dispatch(value0, value1, value2, value3, value4);
             });
-        });
+        }.fromFunction());
 
         return result;
     }

@@ -3,6 +3,7 @@ package funk.signals;
 import funk.signals.Signal1;
 
 using funk.types.Option;
+using funk.types.PartialFunction1;
 using massive.munit.Assert;
 using unit.Asserts;
 
@@ -26,7 +27,7 @@ class Slot1Test {
         var listener = function(value0) {
             called = true;
         };
-        var slot = new Slot1<Int>(signal, listener, false);
+        var slot = new Slot1<Int>(signal, listener.fromFunction(), false);
         slot.execute(1);
         called.isTrue();
     }
@@ -34,7 +35,7 @@ class Slot1Test {
     @Test
     public function when_calling_execute__should_leave_signal_with_one() : Void {
         var listener = function(value0) {};
-        var slot = signal.add(listener).get();
+        var slot = signal.add(listener.fromFunction()).get();
         slot.execute(1);
         signal.size().areEqual(1);
     }
@@ -42,7 +43,7 @@ class Slot1Test {
     @Test
     public function when_calling_execute_with_once__should_leave_signal_with_zero() : Void {
         var listener = function(value0) {};
-        var slot = signal.addOnce(listener).get();
+        var slot = signal.addOnce(listener.fromFunction()).get();
         slot.execute(1);
         signal.size().areEqual(0);
     }
@@ -50,7 +51,7 @@ class Slot1Test {
     @Test
     public function when_calling_remove_twice__should_signal_with_zero_listeners() : Void {
         var listener = function(value0) {};
-        var slot = signal.add(listener).get();
+        var slot = signal.add(listener.fromFunction()).get();
         slot.remove();
         slot.remove();
         signal.size().areEqual(0);
@@ -58,8 +59,8 @@ class Slot1Test {
 
     @Test
     public function when_calling_listener__should_return_same_listener() : Void {
-        var listener = function(value0) {};
+        var listener = function(value0) {}.fromFunction();
         var slot = new Slot1<Int>(signal, listener, false);
-        slot.getListener().areEqual(listener);
+        slot.listener().areEqual(listener);
     }
 }

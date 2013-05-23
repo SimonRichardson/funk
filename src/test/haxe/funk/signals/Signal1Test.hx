@@ -33,7 +33,7 @@ class Signal1Test {
     @Test
     public function when_adding_listener__should_return_option_with_same_listener() : Void {
         var listener = function(value0) {}.fromFunction();
-        signal.add(listener).get().getListener().areEqual(listener);
+        signal.add(listener).get().listener().areEqual(listener);
     }
 
     @Test
@@ -69,7 +69,7 @@ class Signal1Test {
     @Test
     public function when_adding_once_listener__should_return_option_with_same_listener() : Void {
         var listener = function(value0) {}.fromFunction();
-        signal.addOnce(listener).get().getListener().areEqual(listener);
+        signal.addOnce(listener).get().listener().areEqual(listener);
     }
 
     @Test

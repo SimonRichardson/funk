@@ -6,6 +6,7 @@ using funk.ds.immutable.List;
 using funk.types.Function1;
 using funk.types.Function2;
 using funk.types.Predicate2;
+using funk.types.PartialFunction1;
 using funk.types.Option;
 using funk.types.Tuple2;
 
@@ -157,11 +158,11 @@ class Signal2Types {
     public static function flatten<T1, T2>(signal : Signal1<Signal2<T1, T2>>) : Signal2<T1, T2> {
         var result = new Signal2<T1, T2>();
 
-        signal.add(function (value) {
+        signal.add(function (value : Signal2<T1, T2>) {
             value.add(function (value0, value1) {
                 result.dispatch(value0, value1);
             });
-        });
+        }.fromFunction());
 
         return result;
     }

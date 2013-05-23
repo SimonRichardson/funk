@@ -5,6 +5,7 @@ import funk.Funk;
 using funk.ds.immutable.List;
 using funk.types.Function1;
 using funk.types.Function2;
+using funk.types.PartialFunction1;
 using funk.types.Predicate1;
 using funk.types.Option;
 using funk.types.Tuple2;
@@ -57,7 +58,7 @@ class Signal1<T1> {
         });
     }
 
-    private function registrationPossible(func : Function1<T1, Void>, once : Bool) : Bool {
+    private function registrationPossible(func : PartialFunction1<T1, Void>, once : Bool) : Bool {
         if(!_list.nonEmpty()) return true;
 
         var slot = _list.find(function(s : Slot1<T1>) : Bool {
@@ -118,7 +119,7 @@ class Signal1Types {
             if (func(value0)) {
                 result.dispatch(value0);
             }
-        });
+        }.fromFunction());
 
         return result;
     }
@@ -129,8 +130,8 @@ class Signal1Types {
         signal.add(function (value0) {
             func(value0).add(function (value1) {
                 result.dispatch(value1);
-            });
-        });
+            }.fromFunction());
+        }.fromFunction());
 
         return result;
     }
@@ -138,11 +139,11 @@ class Signal1Types {
     public static function flatten<T>(signal : Signal1<Signal1<T>>) : Signal1<T> {
         var result = new Signal1<T>();
 
-        signal.add(function (value) {
+        signal.add(function (value : Signal1<T>) {
             value.add(function (value) {
                 result.dispatch(value);
-            });
-        });
+            }.fromFunction());
+        }.fromFunction());
 
         return result;
     }
@@ -162,11 +163,11 @@ class Signal1Types {
             a.add(function (value) {
                 aa.push(value);
                 check();
-            });
+            }.fromFunction());
             b.add(function (value) {
                 bb.push(value);
                 check();
-            });
+            }.fromFunction());
 
             return signal;
         };
@@ -177,7 +178,7 @@ class Signal1Types {
 
         signal.add(function (value) {
             result.dispatch(func(value));
-        });
+        }.fromFunction());
 
         return result;
     }

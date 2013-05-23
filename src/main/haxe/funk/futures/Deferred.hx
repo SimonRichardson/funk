@@ -9,6 +9,7 @@ import funk.types.Function1;
 
 using funk.types.Any;
 using funk.types.Option;
+using funk.types.PartialFunction1;
 using funk.ds.Collection;
 using funk.reactives.Stream;
 
@@ -174,7 +175,9 @@ private class PromiseImpl<T> implements Promise<T> {
         var deferred = new Deferred();
         var promise = deferred.promise();
         switch(_state){
-            case Pending: _then.add(function(v) return deferred.resolve(func(v)));
+            case Pending: _then.add(function(v) { 
+                deferred.resolve(func(v)); 
+            }.fromFunction());
             case Resolved(option): deferred.resolve(func(option.get()));
             case _:
         }
@@ -186,10 +189,9 @@ private class PromiseImpl<T> implements Promise<T> {
         var promise = deferred.promise();
         switch(_state){
             case Pending: _but.add(function(v) {
-                var result = func(v);
+                func(v);
                 deferred.reject(v);
-                return result;
-            });
+            }.fromFunction());
             case Rejected(value): deferred.reject(cast func(value));
             case _:
         }
@@ -201,11 +203,11 @@ private class PromiseImpl<T> implements Promise<T> {
         var promise = deferred.promise();
         switch(_state){
             case Pending: _when.add(function(attempt) {
-                return switch(attempt) {
+                switch(attempt) {
                     case Success(_): deferred.resolve(func(attempt));
                     case _: cast deferred.reject(cast func(attempt));
                 };
-            });
+            }.fromFunction());
             case Resolved(option): deferred.resolve(func(Success(option.get())));
             case Rejected(value): deferred.reject(cast func(Failure(value)));
             case _:
@@ -214,7 +216,7 @@ private class PromiseImpl<T> implements Promise<T> {
     }
 
     public function progress(func : Function1<Float, Void>) : Promise<T> {
-        _progress.add(func);
+        _progress.add(func.fromFunction());
         return this;
     }
 }

@@ -7,6 +7,7 @@ using funk.types.Function1;
 using funk.types.Function2;
 using funk.types.Function4;
 using funk.types.Predicate4;
+using funk.types.PartialFunction1;
 using funk.types.Option;
 using funk.types.Tuple2;
 using funk.types.Tuple4;
@@ -167,11 +168,11 @@ class Signal4Types {
                                                     ) : Signal4<T1, T2, T3, T4> {
         var result = new Signal4<T1, T2, T3, T4>();
 
-        signal.add(function (value) {
+        signal.add(function (value : Signal4<T1, T2, T3, T4>) {
             value.add(function (value0, value1, value2, value3) {
                 result.dispatch(value0, value1, value2, value3);
             });
-        });
+        }.fromFunction());
 
         return result;
     }

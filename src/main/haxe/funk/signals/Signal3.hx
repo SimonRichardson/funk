@@ -7,6 +7,7 @@ using funk.types.Function1;
 using funk.types.Function2;
 using funk.types.Function3;
 using funk.types.Predicate3;
+using funk.types.PartialFunction1;
 using funk.types.Option;
 using funk.types.Tuple2;
 using funk.types.Tuple3;
@@ -161,11 +162,11 @@ class Signal3Types {
     public static function flatten<T1, T2, T3>(signal : Signal1<Signal3<T1, T2, T3>>) : Signal3<T1, T2, T3> {
         var result = new Signal3<T1, T2, T3>();
 
-        signal.add(function (value) {
+        signal.add(function (value : Signal3<T1, T2, T3>) {
             value.add(function (value0, value1, value2) {
                 result.dispatch(value0, value1, value2);
             });
-        });
+        }.fromFunction());
 
         return result;
     }

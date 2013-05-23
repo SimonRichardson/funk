@@ -4,6 +4,7 @@ import funk.Funk;
 
 using funk.signals.Signal1;
 using funk.types.Function1;
+using funk.types.PartialFunction1;
 using funk.types.Option;
 using funk.ds.immutable.List;
 
@@ -13,17 +14,17 @@ class PrioritySignal1<T1> extends Signal1<T1> {
         super();
     }
 
-    public function addWithPriority(    func : Function1<T1, Void>,
+    public function addWithPriority(    func : PartialFunction1<T1, Void>,
                                         ?priority : Int = 0) : Option<Slot1<T1>> {
         return registerListenerWithPriority(func, false, priority);
     }
 
-    public function addOnceWithPriority(    func : Function1<T1, Void>,
-                                            ?priority:Int = 0) : Option<Slot1<T1>> {
+    public function addOnceWithPriority(    func : PartialFunction1<T1, Void>,
+                                            ?priority : Int = 0) : Option<Slot1<T1>> {
         return registerListenerWithPriority(func, true, priority);
     }
 
-    private function registerListenerWithPriority(    func : Function1<T1, Void>,
+    private function registerListenerWithPriority(  func : PartialFunction1<T1, Void>,
                                                     once : Bool,
                                                     priority : Int) : Option<Slot1<T1>> {
         if(registrationPossible(func, once)) {
@@ -34,7 +35,7 @@ class PrioritySignal1<T1> extends Signal1<T1> {
                 var prioritySlot : PrioritySlot1<T1> = cast value;
 
                 var list = Nil.prepend(value);
-                return if(priority >= prioritySlot.getPriority()) {
+                return if(priority >= prioritySlot.priority()) {
                     added = true;
                     list.append(slot);
                 } else {
@@ -50,7 +51,7 @@ class PrioritySignal1<T1> extends Signal1<T1> {
         }
 
         return _list.find(function(s : Slot1<T1>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
+            return Reflect.compareMethods(s.listener(), func);
         });
     }
 }
@@ -60,7 +61,7 @@ class PrioritySlot1<T1> extends Slot1<T1> {
     private var _priority : Int;
 
     public function new(    signal : Signal1<T1>,
-                            listener : Function1<T1, Void>,
+                            listener : PartialFunction1<T1, Void>,
                             once : Bool,
                             priority : Int) {
         super(signal, listener, once);
@@ -68,7 +69,7 @@ class PrioritySlot1<T1> extends Slot1<T1> {
         _priority = priority;
     }
 
-    public function getPriority() : Int {
+    public function priority() : Int {
         return _priority;
     }
 
