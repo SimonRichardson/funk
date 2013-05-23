@@ -101,7 +101,7 @@ class AttemptTypes {
         return switch(attempt) {
             case Success(value): funcSuccess(value);
             case Failure(error): funcFailure(error);
-            case _: Failure(Error("Failure"));
+            case _: Funk.error(IllegalOperationError());
         }
     }
 

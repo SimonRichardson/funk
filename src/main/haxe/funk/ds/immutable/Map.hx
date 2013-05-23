@@ -192,7 +192,7 @@ class MapTypes {
 
     private static function nativeKeys<K : String, V>(map : Map<K, V>) : Iterator<K> {
         return switch(map) {
-            case Cons(_, _, m): m.keys();
+            case Cons(_, _, m): cast m.keys();
             case _: [].iterator();
         }
     }

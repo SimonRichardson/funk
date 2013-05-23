@@ -282,9 +282,8 @@ private class Parser {
                     case LeftBracket: openBlock();
                     case RightBracket:
                         closeBlock();
-                        if (hasNext()) {
-                            matchToken(next());
-                        }
+                        if (hasNext()) matchToken(next());
+                        else null;
                     case Plus: fold(Next);
                     case Star: fold(All);
                     case Tilde: fold(Sibling);

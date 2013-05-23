@@ -9,7 +9,7 @@ class ListTestBase {
 
     public var alpha : List<String>;
 
-    public var actual : List<Int>;
+    public var actual : List<Null<Int>>;
 
     public var actualTotal : Int;
 

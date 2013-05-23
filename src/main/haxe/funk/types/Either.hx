@@ -126,7 +126,7 @@ class EitherTypes {
         return switch(either) {
             case Left(value): Left(funcLeft(value));
             case Right(value): Right(funcRight(value));
-            case _: Left(Error("Failure"));
+            case _: Funk.error(IllegalOperationError());
         }
     }
 
