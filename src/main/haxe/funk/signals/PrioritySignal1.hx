@@ -38,9 +38,7 @@ class PrioritySignal1<T1> extends Signal1<T1> {
                 return if(priority >= prioritySlot.priority()) {
                     added = true;
                     list.append(slot);
-                } else {
-                    list;
-                };
+                } else list;
             });
 
             if(!added) _list = _list.prepend(slot);

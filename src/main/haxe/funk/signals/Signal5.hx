@@ -8,6 +8,7 @@ using funk.types.Function2;
 using funk.types.Function5;
 using funk.types.Predicate5;
 using funk.types.PartialFunction1;
+using funk.types.PartialFunction5;
 using funk.types.Option;
 using funk.types.Tuple2;
 using funk.types.Tuple5;
@@ -20,37 +21,29 @@ class Signal5<T1, T2, T3, T4, T5> {
         _list = Nil;
     }
 
-    public function add(    func : Function5<T1, T2, T3, T4, T5, Void>
+    public function add(    func : PartialFunction5<T1, T2, T3, T4, T5, Void>
                             ) : Option<Slot5<T1, T2, T3, T4, T5>> {
 
         return registerListener(func, false);
     }
 
-    public function addOnce(    func : Function5<T1, T2, T3, T4, T5, Void>
+    public function addOnce(    func : PartialFunction5<T1, T2, T3, T4, T5, Void>
                                 ) : Option<Slot5<T1, T2, T3, T4, T5>> {
 
         return registerListener(func, true);
     }
 
-    public function remove(    func : Function5<T1, T2, T3, T4, T5, Void>
+    public function remove(    func : PartialFunction5<T1, T2, T3, T4, T5, Void>
                             ) : Option<Slot5<T1, T2, T3, T4, T5>> {
 
-        var o = _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
-        });
-
-        _list = _list.filterNot(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
-        });
-
+        var o = _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool return s.listener() == func);
+        _list = _list.filterNot(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool return s.listener() == func);
         return o;
     }
 
-    public function removeAll() : Void {
-        _list = Nil;
-    }
+    public function removeAll() : Void _list = Nil;
 
-    public function dispatch(    value0 : T1,
+    public function dispatch(   value0 : T1,
                                 value1 : T2,
                                 value2 : T3,
                                 value3 : T4,
@@ -59,10 +52,10 @@ class Signal5<T1, T2, T3, T4, T5> {
         while(slots.nonEmpty()) {
             slots.head().execute(value0, value1, value2, value3, value4);
             slots = slots.tail();
-          }
+        }
     }
 
-    private function registerListener(    func : Function5<T1, T2, T3, T4, T5, Void>,
+    private function registerListener(    func : PartialFunction5<T1, T2, T3, T4, T5, Void>,
                                         once : Bool) : Option<Slot5<T1, T2, T3, T4, T5>> {
 
         if(registrationPossible(func, once)) {
@@ -71,24 +64,18 @@ class Signal5<T1, T2, T3, T4, T5> {
             return Some(slot);
         }
 
-        return _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
-        });
+        return _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool return s.listener() == func);
     }
 
-    private function registrationPossible(    func : Function5<T1, T2, T3, T4, T5, Void>,
+    private function registrationPossible(  func : PartialFunction5<T1, T2, T3, T4, T5, Void>,
                                             once : Bool) : Bool {
-        if(!_list.nonEmpty()) {
-            return true;
-        }
+        if(!_list.nonEmpty()) return true;
 
-        var slot = _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
-        });
+        var slot = _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool return s.listener() == func);
 
         return switch(slot) {
             case Some(x):
-                if(x.getOnce() != once) {
+                if(x.once() != once) {
                     Funk.error(IllegalOperationError('You cannot addOnce() then add() the same ' +
                      'listener without removing the relationship first.'));
                 }
@@ -97,21 +84,19 @@ class Signal5<T1, T2, T3, T4, T5> {
         }
     }
 
-    public function size() : Int {
-        return _list.size();
-    }
+    inline public function size() : Int return _list.size();
 }
 
 class Slot5<T1, T2, T3, T4, T5> {
 
-    private var _listener : Function5<T1, T2, T3, T4, T5, Void>;
+    private var _listener : PartialFunction5<T1, T2, T3, T4, T5, Void>;
 
     private var _signal : Signal5<T1, T2, T3, T4, T5>;
 
     private var _once : Bool;
 
     public function new(    signal : Signal5<T1, T2, T3, T4, T5>,
-                            listener : Function5<T1, T2, T3, T4, T5, Void>,
+                            listener : PartialFunction5<T1, T2, T3, T4, T5, Void>,
                             once : Bool) {
         _signal = signal;
         _listener = listener;
@@ -123,25 +108,19 @@ class Slot5<T1, T2, T3, T4, T5> {
                                 value2 : T3,
                                 value3 : T4,
                                 value4 : T5) : Void {
-        if(getOnce()) {
-            remove();
+        var l = listener();
+        if (l.isDefinedAt(value0, value1, value2, value3, value4)) {
+            if(once()) remove();
+   
+            l.apply(value0, value1, value2, value3, value4);
         }
-
-        var listener = getListener();
-        listener(value0, value1, value2, value3, value4);
     }
 
-    public function remove() : Void {
-        _signal.remove(getListener());
-    }
+    inline public function remove() : Void _signal.remove(listener());
 
-    public function getListener() : Function5<T1, T2, T3, T4, T5, Void> {
-        return _listener;
-    }
-
-    public function getOnce() : Bool {
-        return _once;
-    }
+    inline public function listener() : PartialFunction5<T1, T2, T3, T4, T5, Void> return _listener;
+    
+    inline public function once() : Bool return _once;
 }
 
 class Signal5Types {
@@ -155,7 +134,7 @@ class Signal5Types {
             if (func(value0, value1, value2, value3, value4)) {
                 result.dispatch(value0, value1, value2, value3, value4);
             }
-        });
+        }.fromFunction());
 
         return result;
     }
@@ -169,8 +148,8 @@ class Signal5Types {
         signal.add(function (value0, value1, value2, value3, value4) {
             func(value0, value1, value2, value3, value4).add(function (value5, value6, value7, value8, value9) {
                 result.dispatch(value5, value6, value7, value8, value9);
-            });
-        });
+            }.fromFunction());
+        }.fromFunction());
 
         return result;
     }
@@ -182,7 +161,7 @@ class Signal5Types {
         signal.add(function (value : Signal5<T1, T2, T3, T4, T5>) {
             value.add(function (value0, value1, value2, value3, value4) {
                 result.dispatch(value0, value1, value2, value3, value4);
-            });
+            }.fromFunction());
         }.fromFunction());
 
         return result;
@@ -209,11 +188,11 @@ class Signal5Types {
             a.add(function (value0, value1, value2, value3, value4) {
                 Function5Types.tuple(aa.push)(value0, value1, value2, value3, value4);
                 check();
-            });
+            }.fromFunction());
             b.add(function (value0, value1, value2, value3, value4) {
                 Function5Types.tuple(bb.push)(value0, value1, value2, value3, value4);
                 check();
-            });
+            }.fromFunction());
 
             return signal;
         };
@@ -226,7 +205,7 @@ class Signal5Types {
 
         signal.add(function (value0, value1, value2, value3, value4) {
             Function5Types.untuple(result.dispatch)(func(value0, value1, value2, value3, value4));
-        });
+        }.fromFunction());
 
         return result;
     }

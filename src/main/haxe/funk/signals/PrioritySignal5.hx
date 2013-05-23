@@ -4,6 +4,7 @@ import funk.Funk;
 
 using funk.signals.Signal5;
 using funk.types.Function5;
+using funk.types.PartialFunction5;
 using funk.types.Option;
 using funk.ds.immutable.List;
 
@@ -13,18 +14,18 @@ class PrioritySignal5<T1, T2, T3, T4, T5> extends Signal5<T1, T2, T3, T4, T5> {
         super();
     }
 
-    public function addWithPriority(    func : Function5<T1, T2, T3, T4, T5, Void>,
+    public function addWithPriority(    func : PartialFunction5<T1, T2, T3, T4, T5, Void>,
                                         ?priority : Int = 0) : Option<Slot5<T1, T2, T3, T4, T5>> {
         return registerListenerWithPriority(func, false, priority);
     }
 
-    public function addOnceWithPriority(    func : Function5<T1, T2, T3, T4, T5, Void>,
+    public function addOnceWithPriority(    func : PartialFunction5<T1, T2, T3, T4, T5, Void>,
                                             ?priority:Int = 0
                                             ) : Option<Slot5<T1, T2, T3, T4, T5>> {
         return registerListenerWithPriority(func, true, priority);
     }
 
-    private function registerListenerWithPriority(    func : Function5<T1, T2, T3, T4, T5, Void>,
+    private function registerListenerWithPriority(    func : PartialFunction5<T1, T2, T3, T4, T5, Void>,
                                                     once : Bool,
                                                     priority : Int
                                                     ) : Option<Slot5<T1, T2, T3, T4, T5>> {
@@ -39,24 +40,18 @@ class PrioritySignal5<T1, T2, T3, T4, T5> extends Signal5<T1, T2, T3, T4, T5> {
                 var prioritySlot : PrioritySlot5<T1, T2, T3, T4, T5> = cast value;
 
                 var list = Nil.prepend(value);
-                return if(priority >= prioritySlot.getPriority()) {
+                return if(priority >= prioritySlot.priority()) {
                     added = true;
                     list.append(slot);
-                } else {
-                    list;
-                };
+                } else list;
             });
 
-            if(!added) {
-                _list = _list.prepend(slot);
-            }
+            if(!added) _list = _list.prepend(slot);
 
             return Some(slot);
         }
 
-        return _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
-        });
+        return _list.find(function(s : Slot5<T1, T2, T3, T4, T5>) : Bool return s.listener() == func);
     }
 }
 
@@ -65,7 +60,7 @@ class PrioritySlot5<T1, T2, T3, T4, T5> extends Slot5<T1, T2, T3, T4, T5> {
     private var _priority : Int;
 
     public function new(    signal : Signal5<T1, T2, T3, T4, T5>,
-                            listener : Function5<T1, T2, T3, T4, T5, Void>,
+                            listener : PartialFunction5<T1, T2, T3, T4, T5, Void>,
                             once : Bool,
                             priority : Int) {
         super(signal, listener, once);
@@ -73,8 +68,5 @@ class PrioritySlot5<T1, T2, T3, T4, T5> extends Slot5<T1, T2, T3, T4, T5> {
         _priority = priority;
     }
 
-    public function getPriority() : Int {
-        return _priority;
-    }
-
+    public function priority() : Int return _priority;
 }

@@ -41,9 +41,7 @@ class PrioritySignal3<T1, T2, T3> extends Signal3<T1, T2, T3> {
                 return if(priority >= prioritySlot.priority()) {
                     added = true;
                     list.append(slot);
-                } else {
-                    list;
-                };
+                } else list;
             });
 
             if(!added) _list = _list.prepend(slot);
