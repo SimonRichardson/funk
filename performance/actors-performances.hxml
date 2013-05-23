@@ -7,6 +7,7 @@
 -cp main/actors
 -cp ../src/main/haxe
 -cp ../src/test/haxe
+#-debug
 
 --next
 -cmd echo "<html lang='en-GB'>\n<head>\n<meta charset='UTF-8'>\n<title>Performance01</title>\n</head>\n<body>\n<script type='text/javascript' src='Performance01.js'></script>\n</body>\n</html>" >> ../bin/actors/Performance01.html
