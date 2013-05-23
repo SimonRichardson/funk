@@ -570,7 +570,7 @@ class ListTypes {
         return prependIterator(list, iterable.iterator());
     }
 
-    inline public static function head<T>(list : List<T>) : T {
+    public static function head<T>(list : List<T>) : T {
         return switch(list) {
             case _ if(list == null): null;
             case Cons(head, _): head;
@@ -578,7 +578,7 @@ class ListTypes {
         }
     }
 
-    inline public static function headOption<T>(list : List<T>) : Option<T> {
+    public static function headOption<T>(list : List<T>) : Option<T> {
         return switch(list) {
             case _ if(list == null): None;
             case Cons(head, _): Some(head);
@@ -586,7 +586,7 @@ class ListTypes {
         }
     }
 
-    inline public static function tail<T>(list : List<T>) : List<T> {
+    public static function tail<T>(list : List<T>) : List<T> {
         return switch(list) {
             case _ if(list == null): Nil;
             case Cons(_, tail): tail;
@@ -594,7 +594,7 @@ class ListTypes {
         }
     }
 
-    inline public static function tailOption<T>(list : List<T>) : Option<List<T>> {
+    public static function tailOption<T>(list : List<T>) : Option<List<T>> {
         var p = list;
         return if (null == p) None;
         else {
