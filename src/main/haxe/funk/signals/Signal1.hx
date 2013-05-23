@@ -61,10 +61,7 @@ class Signal1<T1> {
     private function registrationPossible(func : PartialFunction1<T1, Void>, once : Bool) : Bool {
         if(!_list.nonEmpty()) return true;
 
-        var slot = _list.find(function(s : Slot1<T1>) : Bool {
-            return s.listener() == func;
-        });
-
+        var slot = _list.find(function(s : Slot1<T1>) : Bool return s.listener() == func);
         return switch(slot) {
             case Some(x):
                 if(x.once() != once) {
@@ -76,7 +73,7 @@ class Signal1<T1> {
         }
     }
 
-    public function size() : Int return _list.size();
+    inline public function size() : Int return _list.size();
 }
 
 class Slot1<T1> {

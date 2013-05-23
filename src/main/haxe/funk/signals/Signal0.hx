@@ -5,6 +5,7 @@ import funk.Funk;
 using funk.ds.immutable.List;
 using funk.types.Function0;
 using funk.types.Function2;
+using funk.types.PartialFunction1;
 using funk.types.PartialFunction0;
 using funk.types.Predicate0;
 using funk.types.Option;

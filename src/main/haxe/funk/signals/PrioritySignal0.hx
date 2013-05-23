@@ -59,5 +59,5 @@ class PrioritySlot0 extends Slot0 {
         _priority = priority;
     }
 
-    public function priority() : Int return _priority;
+    inline public function priority() : Int return _priority;
 }

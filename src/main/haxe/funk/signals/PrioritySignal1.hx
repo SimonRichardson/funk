@@ -43,16 +43,12 @@ class PrioritySignal1<T1> extends Signal1<T1> {
                 };
             });
 
-            if(!added) {
-                _list = _list.prepend(slot);
-            }
+            if(!added) _list = _list.prepend(slot);
 
             return Some(slot);
         }
 
-        return _list.find(function(s : Slot1<T1>) : Bool {
-            return Reflect.compareMethods(s.listener(), func);
-        });
+        return _list.find(function(s : Slot1<T1>) : Bool return s.listener() == func);
     }
 }
 
@@ -69,8 +65,5 @@ class PrioritySlot1<T1> extends Slot1<T1> {
         _priority = priority;
     }
 
-    public function priority() : Int {
-        return _priority;
-    }
-
+    inline public function priority() : Int return _priority;
 }
