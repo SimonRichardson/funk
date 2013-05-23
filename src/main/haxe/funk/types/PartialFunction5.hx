@@ -54,6 +54,11 @@ class PartialFunction5Types {
         return fromPartial(Partial5(define, partial));
     }
 
+    public static function fromFunction<T1, T2, T3, T4, T5, R>( func : Function5<T1, T2, T3, T4, T5, R>
+                                                                ) : PartialFunction5<T1, T2, T3, T4, T5, R> {
+        return fromPartial(Partial5(function(value0, value1, value3, value4, value5) return true, func));
+    }
+
     public static function fromPartial<T1, T2, T3, T4, T5, R>(  definition : Partial5<T1, T2, T3, T4, T5, R>
                                                                 ) : PartialFunction5<T1, T2, T3, T4, T5, R> {
         return PartialFunction5Type.create(Nil.prepend(definition));

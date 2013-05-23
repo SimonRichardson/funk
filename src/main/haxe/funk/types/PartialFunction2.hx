@@ -46,6 +46,10 @@ class PartialFunction2Types {
         return fromPartial(Partial2(define, partial));
     }
 
+    public static function fromFunction<T1, T2, R>(func : Function2<T1, T2, R>) : PartialFunction2<T1, T2, R> {
+        return fromPartial(Partial2(function(value0, value1) return true, func));
+    }
+
     public static function fromPartial<T1, T2, R>(  definition : Partial2<T1, T2, R>
                                                     ) : PartialFunction2<T1, T2, R> {
         return PartialFunction2Type.create(Nil.prepend(definition));

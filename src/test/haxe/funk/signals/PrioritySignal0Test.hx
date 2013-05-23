@@ -3,6 +3,7 @@ package funk.signals;
 import funk.signals.PrioritySignal0;
 
 using funk.types.Option;
+using funk.types.PartialFunction0;
 using massive.munit.Assert;
 using unit.Asserts;
 
@@ -35,12 +36,12 @@ class PrioritySignal0Test extends Signal0Test {
 
         prioritySignal.addWithPriority(function(){
             called0 = true;
-        }, 1);
+        }.fromFunction(), 1);
         prioritySignal.addWithPriority(function(){
             if(called0) {
                 called1 = true;
             }
-        }, 2);
+        }.fromFunction(), 2);
         prioritySignal.dispatch();
 
         called1.isTrue();
@@ -54,17 +55,17 @@ class PrioritySignal0Test extends Signal0Test {
 
         prioritySignal.addWithPriority(function(){
             called0 = true;
-        }, 1);
+        }.fromFunction(), 1);
         prioritySignal.addWithPriority(function(){
             if(called0) {
                 called1 = true;
             }
-        }, 2);
+        }.fromFunction(), 2);
         prioritySignal.addWithPriority(function(){
             if(called1) {
                 called2 = true;
             }
-        }, 3);
+        }.fromFunction(), 3);
         prioritySignal.dispatch();
 
         called2.isTrue();
@@ -79,10 +80,10 @@ class PrioritySignal0Test extends Signal0Test {
             if(called0) {
                 called1 = true;
             }
-        }, 2);
+        }.fromFunction(), 2);
         prioritySignal.addWithPriority(function(){
             called0 = true;
-        }, 1);
+        }.fromFunction(), 1);
         prioritySignal.dispatch();
 
         called1.isTrue();
@@ -98,15 +99,15 @@ class PrioritySignal0Test extends Signal0Test {
             if(called1) {
                 called2 = true;
             }
-        }, 3);
+        }.fromFunction(), 3);
         prioritySignal.addWithPriority(function(){
             if(called0) {
                 called1 = true;
             }
-        }, 2);
+        }.fromFunction(), 2);
         prioritySignal.addWithPriority(function(){
             called0 = true;
-        }, 1);
+        }.fromFunction(), 1);
         prioritySignal.dispatch();
 
         called2.isTrue();
@@ -122,15 +123,15 @@ class PrioritySignal0Test extends Signal0Test {
             if(called0) {
                 called1 = true;
             }
-        }, 2);
+        }.fromFunction(), 2);
         prioritySignal.addWithPriority(function(){
             if(called1) {
                 called2 = true;
             }
-        }, 3);
+        }.fromFunction(), 3);
         prioritySignal.addWithPriority(function(){
             called0 = true;
-        }, 1);
+        }.fromFunction(), 1);
         prioritySignal.dispatch();
 
         called2.isTrue();
@@ -138,38 +139,33 @@ class PrioritySignal0Test extends Signal0Test {
 
     @Test
     public function when_adding_with_priority__should_size_be_1() : Void {
-        prioritySignal.addWithPriority(function(){
-        });
+        prioritySignal.addWithPriority(function(){}.fromFunction());
         prioritySignal.size().areEqual(1);
     }
 
     @Test
     public function when_adding_with_priority_after_dispatch__should_size_be_1() : Void {
-        prioritySignal.addWithPriority(function(){
-        });
+        prioritySignal.addWithPriority(function(){}.fromFunction());
         prioritySignal.dispatch();
         prioritySignal.size().areEqual(1);
     }
 
     @Test
     public function when_adding_once_with_priority__should_size_be_1() : Void {
-        prioritySignal.addOnceWithPriority(function(){
-        });
+        prioritySignal.addOnceWithPriority(function(){}.fromFunction());
         prioritySignal.size().areEqual(1);
     }
 
     @Test
     public function when_adding_once_with_priority_after_dispatch__should_size_be_1() : Void {
-        prioritySignal.addOnceWithPriority(function(){
-        });
+        prioritySignal.addOnceWithPriority(function(){}.fromFunction());
         prioritySignal.dispatch();
         prioritySignal.size().areEqual(0);
     }
 
     @Test
     public function when_adding_adding_same_function_twice__should_return_same_slot() : Void {
-        var func = function(){
-        };
+        var func = function(){}.fromFunction();
 
         var slot = prioritySignal.addWithPriority(func);
         prioritySignal.addWithPriority(func).get().areEqual(slot.get());

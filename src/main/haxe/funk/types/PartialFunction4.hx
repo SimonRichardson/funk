@@ -47,6 +47,11 @@ class PartialFunction4Types {
         return fromPartial(Partial4(define, partial));
     }
 
+    public static function fromFunction<T1, T2, T3, T4, R>( func : Function4<T1, T2, T3, T4, R>
+                                                            ) : PartialFunction4<T1, T2, T3, T4, R> {
+        return fromPartial(Partial4(function(value0, value1, value3, value4) return true, func));
+    }
+
     public static function fromPartial<T1, T2, T3, T4, R>(  definition : Partial4<T1, T2, T3, T4, R>
                                                             ) : PartialFunction4<T1, T2, T3, T4, R> {
         return PartialFunction4Type.create(Nil.prepend(definition));

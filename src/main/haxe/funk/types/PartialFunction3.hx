@@ -46,6 +46,11 @@ class PartialFunction3Types {
         return fromPartial(Partial3(define, partial));
     }
 
+    public static function fromFunction<T1, T2, T3, R>( func : Function3<T1, T2, T3, R>
+                                                        ) : PartialFunction3<T1, T2, T3, R> {
+        return fromPartial(Partial3(function(value0, value1, value3) return true, func));
+    }
+
     public static function fromPartial<T1, T2, T3, R>(  definition : Partial3<T1, T2, T3, R>
                                                         ) : PartialFunction3<T1, T2, T3, R> {
         return PartialFunction3Type.create(Nil.prepend(definition));
