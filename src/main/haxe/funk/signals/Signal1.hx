@@ -17,29 +17,23 @@ class Signal1<T1> {
         _list = Nil;
     }
 
-    public function add(func : Function1<T1, Void>) : Option<Slot1<T1>> {
-        return registerListener(func, false);
-    }
+    public function add(func : PartialFunction1<T1, Void>) : Option<Slot1<T1>> return registerListener(func, false);
 
-    public function addOnce(func : Function1<T1, Void>) : Option<Slot1<T1>> {
-        return registerListener(func, true);
-    }
+    public function addOnce(func : PartialFunction1<T1, Void>) : Option<Slot1<T1>> return registerListener(func, true);
 
-    public function remove(func : Function1<T1, Void>) : Option<Slot1<T1>> {
+    public function remove(func : PartialFunction1<T1, Void>) : Option<Slot1<T1>> {
         var o = _list.find(function(s : Slot1<T1>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
+            return s.listener() == func;
         });
 
         _list = _list.filterNot(function(s : Slot1<T1>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
+            return s.listener() == func;
         });
 
         return o;
     }
 
-    public function removeAll() : Void {
-        _list = Nil;
-    }
+    public function removeAll() : Void _list = Nil;
 
     public function dispatch(value0 : T1) : Void {
         var slots = _list;
@@ -49,7 +43,7 @@ class Signal1<T1> {
           }
     }
 
-    private function registerListener(    func : Function1<T1, Void>,
+    private function registerListener(  func : PartialFunction1<T1, Void>,
                                         once : Bool) : Option<Slot1<T1>> {
 
         if(registrationPossible(func, once)) {
@@ -59,22 +53,20 @@ class Signal1<T1> {
         }
 
         return _list.find(function(s : Slot1<T1>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
+            return s.listener() == func;
         });
     }
 
     private function registrationPossible(func : Function1<T1, Void>, once : Bool) : Bool {
-        if(!_list.nonEmpty()) {
-            return true;
-        }
+        if(!_list.nonEmpty()) return true;
 
         var slot = _list.find(function(s : Slot1<T1>) : Bool {
-            return Reflect.compareMethods(s.getListener(), func);
+            return s.listener() == func;
         });
 
         return switch(slot) {
             case Some(x):
-                if(x.getOnce() != once) {
+                if(x.once() != once) {
                     Funk.error(IllegalOperationError('You cannot addOnce() then add() the same ' +
                      'listener without removing the relationship first.'));
                 }
@@ -83,45 +75,38 @@ class Signal1<T1> {
         }
     }
 
-    public function size() : Int {
-        return _list.size();
-    }
+    public function size() : Int return _list.size();
 }
 
 class Slot1<T1> {
 
-    private var _listener : Function1<T1, Void>;
+    private var _listener : PartialFunction1<T1, Void>;
 
     private var _signal : Signal1<T1>;
 
     private var _once : Bool;
 
-    public function new(signal : Signal1<T1>, listener : Function1<T1, Void>, once : Bool) {
+    public function new(signal : Signal1<T1>, listener : PartialFunction1<T1, Void>, once : Bool) {
         _signal = signal;
         _listener = listener;
         _once = once;
     }
 
     public function execute(value0 : T1) : Void {
-        if(getOnce()) {
-            remove();
+        var l = listener();
+        if (l.isDefinedAt(value0)) {
+
+            if(once()) remove();
+
+            l.apply(value0);
         }
-
-        var listener = getListener();
-        listener(value0);
     }
 
-    public function remove() : Void {
-        _signal.remove(getListener());
-    }
+    inline public function remove() : Void _signal.remove(listener());
 
-    public function getListener() : Function1<T1, Void> {
-        return _listener;
-    }
+    inline public function listener() : PartialFunction1<T1, Void> return _listener;
 
-    public function getOnce() : Bool {
-        return _once;
-    }
+    inline public function once() : Bool return _once;
 }
 
 class Signal1Types {
@@ -171,9 +156,7 @@ class Signal1Types {
             var bb = [];
 
             function check() {
-                if (aa.length > 0 && bb.length > 0) {
-                    signal.dispatch(func(aa.shift(), bb.shift()));
-                }
+                if (aa.length > 0 && bb.length > 0) signal.dispatch(func(aa.shift(), bb.shift()));
             }
 
             a.add(function (value) {
