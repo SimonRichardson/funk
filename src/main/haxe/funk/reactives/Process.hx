@@ -13,7 +13,8 @@ import cpp.vm.Thread;
 
 class Process {
 
-    #if js
+    #if hx_node_api
+    #elseif js 
     private static var _performance = untyped __js__('performance || {}; 
             performance.now = (function() {
                 return  performance.now || 
@@ -51,7 +52,9 @@ class Process {
     inline
     #end
     public static function stamp() : Float {
-        #if js
+        #if hx_node_api
+        return Date.now().getTime();
+        #elseif js
         return _performance.now(); 
         #else
         return Date.now().getTime();

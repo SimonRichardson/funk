@@ -68,7 +68,6 @@ class EitherTypes {
         return switch(either) {
             case Left(value): Right(value);
             case Right(value): Left(value);
-            case _: Funk.error(IllegalOperationError());
         }
     }
 
@@ -76,7 +75,6 @@ class EitherTypes {
         return switch(either) {
             case Left(value): value;
             case Right(value): value;
-            case _: Funk.error(IllegalOperationError());
         }
     }
 
@@ -101,7 +99,6 @@ class EitherTypes {
         return switch(either) {
             case Left(value): funcLeft(value);
             case Right(value): funcRight(value);
-            case _: Funk.error(IllegalOperationError());
         }
     }
 
@@ -126,7 +123,6 @@ class EitherTypes {
         return switch(either) {
             case Left(value): Left(funcLeft(value));
             case Right(value): Right(funcRight(value));
-            case _: Funk.error(IllegalOperationError());
         }
     }
 
@@ -160,7 +156,6 @@ class EitherTypes {
                     case Right(right1): AnyTypes.equals(right0, right1, funcRight);
                     case _: false;
                 }
-            case _: false;
         }
     }
 
@@ -195,7 +190,6 @@ class EitherTypes {
         return switch (either) {
             case Left(value): 'Left(${AnyTypes.toString(value, funcLeft)})';
             case Right(value): 'Right(${AnyTypes.toString(value, funcRight)})';
-            case _: 'Left(Invalid)';
         }
     }
 }

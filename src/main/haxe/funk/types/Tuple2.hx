@@ -36,7 +36,6 @@ class Tuple2Types {
     public static function swap<T1, T2>(tuple : Tuple2<T1, T2>) : Tuple2<T2, T1> {
         return switch (tuple) {
             case tuple2(a, b): tuple2(b, a);
-            case _: Funk.error(IllegalOperationError());
         }
     }
 
@@ -49,9 +48,7 @@ class Tuple2Types {
             case tuple2(t1_0, t2_0):
                 switch (b) {
                     case tuple2(t1_1, t2_1): AnyTypes.equals(t1_0, t1_1, func1) && AnyTypes.equals(t2_0, t2_1, func2);
-                    case _: false;
                 }
-            case _: false;
         }
     }
 
