@@ -24,7 +24,6 @@ class Inject {
             case _: with(type);
         };
     }
-
     @:noUsing
     public static function with<T>(type : Class<T>) : Option<T> {
         if (type.toBool().not()) Funk.error(ArgumentError());
