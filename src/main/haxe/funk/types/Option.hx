@@ -110,7 +110,6 @@ class OptionTypes {
                     case Some(_): false;
                     case _: true;
                 }
-            case _: false;
         }
     }
 
