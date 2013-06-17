@@ -21,7 +21,11 @@ class Log {
 
     public static function streamOut() : Stream<Message<AnyRef>> return defaultLogger.streamOut();
 
+    @:note("#0b1kn00b: Use of this without init causes infinite loop in nodejs when used from ActorSystem: go figure.")
     public static function log<T>(output : LogValue<T>) : LogValue<T> {
+        if(defaultLogger == null){
+            init();
+        }
         Log.streamIn().dispatch(output);
         return output;
     }
