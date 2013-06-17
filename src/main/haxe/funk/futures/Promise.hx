@@ -113,6 +113,7 @@ class PromiseTypes {
                         switch (attempt) {
                             case Failure(e): deferred.reject(e);
                             case Success(v): deferred.resolve(v);
+                            case _: deferred.reject(IllegalOperationError());
                         }
                     });
 
@@ -120,6 +121,7 @@ class PromiseTypes {
                         deferred.progress(0.5 + value * 0.5);
                     });
 
+                case _: deferred.reject(IllegalOperationError());
             }
         });
         promise.progress(function (value : Float) {
@@ -137,6 +139,7 @@ class PromiseTypes {
             switch (attempt) {
                 case Failure(e): deferred.reject(e);
                 case Success(p): pipe(p, deferred);
+                case _: deferred.reject(IllegalOperationError());
             }
         });
 
@@ -170,6 +173,7 @@ class PromiseTypes {
                 switch (attempt) {
                     case Failure(e): deferred.reject(e);
                     case Success(v): value0 = Some(v);
+                    case _: deferred.reject(IllegalOperationError());
                 }
 
                 check();
@@ -181,6 +185,7 @@ class PromiseTypes {
                 switch (attempt) {
                     case Failure(e): deferred.reject(e);
                     case Success(v): value1 = Some(v);
+                    case _: deferred.reject(IllegalOperationError());
                 }
 
                 check();
@@ -199,6 +204,7 @@ class PromiseTypes {
             switch (attempt) {
                 case Failure(error): deferred.reject(error);
                 case Success(value): deferred.resolve(value);
+                case _: deferred.reject(IllegalOperationError());
             }
         });
 
@@ -213,6 +219,7 @@ class PromiseTypes {
             switch (attempt) {
                 case Failure(error): deferred.reject(error);
                 case Success(value): deferred.resolve(func(value));
+                case _: deferred.reject(IllegalOperationError());
             }
         });
 

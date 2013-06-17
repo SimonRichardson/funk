@@ -32,7 +32,9 @@ class Tuple1Types {
             case tuple1(t1_0):
                 switch (b) {
                     case tuple1(t1_1): AnyTypes.equals(t1_0, t1_1, func);
+                    case _: false;
                 }
+            case _: false;
         }
     }
 
