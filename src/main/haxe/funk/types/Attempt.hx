@@ -76,6 +76,7 @@ class AttemptTypes {
         return switch(attempt) {
             case Success(value): value;
             case Failure(value): Failure(value);
+            case _: Failure(Error("Failure"));
         }
     }
 
@@ -100,6 +101,7 @@ class AttemptTypes {
         return switch(attempt) {
             case Success(value): funcSuccess(value);
             case Failure(error): funcFailure(error);
+            case _: Funk.error(IllegalOperationError());
         }
     }
 
@@ -124,6 +126,7 @@ class AttemptTypes {
         return switch(attempt) {
             case Success(value): Success(funcSuccess(value));
             case Failure(value): Failure(funcFailure(value));
+            case _: Failure(Error("Failure"));
         }
     }
 
@@ -157,6 +160,7 @@ class AttemptTypes {
                     case Failure(right1): AnyTypes.equals(right0, right1, funcFailure);
                     case _: false;
                 }
+            case _: false;
         }
     }
 
@@ -164,6 +168,7 @@ class AttemptTypes {
         return switch(attempt) {
             case Success(value): Right(value);
             case Failure(value): Left(value);
+            case _: Left(Error("Failure"));
         }
     }
 
@@ -191,6 +196,7 @@ class AttemptTypes {
         return switch (attempt) {
             case Success(value): 'Success(${AnyTypes.toString(value, funcSuccess)})';
             case Failure(value): 'Failure(${AnyTypes.toString(value, funcFailure)})';
+            case _: 'Failure(Invalid)';
         }
     }
 }
