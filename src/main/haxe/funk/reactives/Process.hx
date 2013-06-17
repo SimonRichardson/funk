@@ -143,7 +143,7 @@ class Task {
             var msg = Thread.readMessage(false);
             if (msg == "stop") {
                 shouldStop = true;
-                id = false;
+                id = null;
             }
         }
     }
