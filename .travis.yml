@@ -3,12 +3,15 @@ language: java
 env: LD_LIBRARY_PATH=/usr/lib/neko
 
 before_script:
+  # Install haxe 3.0 dependencies
   - sudo apt-get install ocaml camlp4 ocaml-findlib cvs zlib1g-dev make wget tar subversion libgc1c2
+  # Install haxe 3.0 (trunk)
   - svn checkout http://haxe.googlecode.com/svn/trunk haxe_trunk > /dev/null
   - cd haxe_trunk
   - make
   - sudo make install
   - cd ..
+  # Install neko 2.0
   - curl http://nekovm.org/_media/neko-2.0.0-linux64.tar.gz | tar xzf -
   - sudo mv neko-2.0.0-linux /usr/lib/neko
   - sudo cp /usr/lib/neko/neko /usr/bin/neko
