@@ -25,3 +25,8 @@ before_script:
 
 script:
   - haxe ciserver.hxml
+  
+branches:
+  only:
+    - master
+    - feature/haxe3-refactor
