@@ -2,6 +2,11 @@
 "HELLO WORLD" == "dlrow olleh".toList().map(_.toUpperCase).reduceRight(_.plus_).get()
 ```
 
+# Build status
+
+Development [Neko build failure issue](https://github.com/SimonRichardson/funk/issues/44)
+[![Build Status](https://travis-ci.org/SimonRichardson/funk.png?branch=feature/haxe3-refactor)](http://travis-ci.org/SimonRichardson/funk)
+
 # Introduction
 The Funk library supports functional development in Haxe. Some of its key features are:
 
