@@ -24,7 +24,7 @@ before_script:
   - mkdir bin
 
 script:
-  - haxe ciserver.hxml
+  - haxe build/ciserver.hxml
   
 branches:
   only:
