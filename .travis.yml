@@ -25,7 +25,8 @@ before_script:
 
 script:
   - haxe ciserver.hxml
-  
+  - haxelib run munit test -nogen -neko
+
 branches:
   only:
     - master
